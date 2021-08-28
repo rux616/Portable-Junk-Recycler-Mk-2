@@ -1,0 +1,19 @@
+{
+    // created by vscode papyrus-lang papyrus.skyrimSpecialEdition.generateProject
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "pyro",
+            "projectFile": "Scripts\\Source\\User\\Portable Recycler Mk 2.ppj",
+            "gamePath": "D:\\LAN Party Games\\Steam\\steamapps\\common\\Fallout 4",
+            "problemMatcher": [
+                "$PapyrusCompiler"
+            ],
+            "label": "pyro: Compile Project (Portable Recycler Mk 2)",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

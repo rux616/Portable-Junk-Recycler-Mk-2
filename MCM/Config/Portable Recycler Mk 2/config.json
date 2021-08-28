@@ -1,0 +1,282 @@
+{
+    "modName": "Portable Recycler Mk 2",
+    "displayName": "Portable Recycler Mk 2",
+    "minMemVersion": 2,
+    "content": [
+        {
+            "text": "placeholder",
+            "type": "text"
+        },
+        {
+            "type": "spacer",
+            "numLines": 1
+        },
+        {
+            "text": "Current Multipliers",
+            "type": "section"
+        },
+        {
+            "text": "Player-owned settlements",
+            "type": "text"
+        },
+        {
+            "text": "Everywhere else",
+            "type": "text"
+        }
+    ],
+    "pages": [
+        {
+            "pageDisplayName": "Settings",
+            "content": [
+                {
+                    "text": "General Settings",
+                    "type": "section"
+                },
+                {
+                    "id": "fMultiplierBase:General",
+                    "text": "Base multiplier",
+                    "type": "slider",
+                    "help": "TODO",
+                    "valueOptions": {
+                        "min": 0.0,
+                        "max": 3.0,
+                        "step": 0.1,
+                        "sourceType": "ModSettingFloat"
+                    }
+                },
+                {
+                    "id": "bScrapperPerkAdjustments:General",
+                    "text": "Scrapper perk adjusts multiplier",
+                    "type": "switcher",
+                    "help": "TODO",
+                    "valueOptions": {
+                        "sourceType": "ModSettingBool"
+                    },
+                    "groupControl": 1
+                },
+                {
+                    "type": "spacer",
+                    "numLines": 1
+                },
+                {
+                    "text": "Multiplier Adjustments",
+                    "type": "section"
+                },
+                {
+                    "text": "Scrapper: No Ranks",
+                    "type": "section",
+                    "groupCondition": 1
+                },
+                {
+                    "id": "fMultiplierAdjustOwnedSettlementsNoScrapper:Adjustments",
+                    "text": "In player-owned settlements",
+                    "type": "slider",
+                    "help": "TODO",
+                    "valueOptions": {
+                        "min": -3.0,
+                        "max": 3.0,
+                        "step": 0.1,
+                        "sourceType": "ModSettingFloat"
+                    }
+                },
+                {
+                    "id": "fMultiplierAdjustEverywhereElseNoScrapper:Adjustments",
+                    "text": "Everywhere else",
+                    "type": "slider",
+                    "help": "TODO",
+                    "valueOptions": {
+                        "min": -3.0,
+                        "max": 3.0,
+                        "step": 0.1,
+                        "sourceType": "ModSettingFloat"
+                    }
+                },
+                {
+                    "text": "Scrapper: Rank 1",
+                    "type": "section",
+                    "groupCondition": 1
+                },
+                {
+                    "id": "fMultiplierAdjustOwnedSettlementsScrapper01:Adjustments",
+                    "text": "In player-owned settlements",
+                    "type": "slider",
+                    "help": "TODO",
+                    "valueOptions": {
+                        "min": -3.0,
+                        "max": 3.0,
+                        "step": 0.1,
+                        "sourceType": "ModSettingFloat"
+                    },
+                    "groupCondition": 1
+                },
+                {
+                    "id": "fMultiplierAdjustEverywhereElseScrapper01:Adjustments",
+                    "text": "Everywhere else",
+                    "type": "slider",
+                    "help": "TODO",
+                    "valueOptions": {
+                        "min": -3.0,
+                        "max": 3.0,
+                        "step": 0.1,
+                        "sourceType": "ModSettingFloat"
+                    },
+                    "groupCondition": 1
+                },
+                {
+                    "text": "Scrapper: Rank 2",
+                    "type": "section",
+                    "groupCondition": 1
+                },
+                {
+                    "id": "fMultiplierAdjustOwnedSettlementsScrapper02:Adjustments",
+                    "text": "In player-owned settlements",
+                    "type": "slider",
+                    "help": "TODO",
+                    "valueOptions": {
+                        "min": -3.0,
+                        "max": 3.0,
+                        "step": 0.1,
+                        "sourceType": "ModSettingFloat"
+                    },
+                    "groupCondition": 1
+                },
+                {
+                    "id": "fMultiplierAdjustEverywhereElseScrapper02:Adjustments",
+                    "text": "Everywhere else",
+                    "type": "slider",
+                    "help": "TODO",
+                    "valueOptions": {
+                        "min": -3.0,
+                        "max": 3.0,
+                        "step": 0.1,
+                        "sourceType": "ModSettingFloat"
+                    },
+                    "groupCondition": 1
+                },
+                {
+                    "text": "Hidden",
+                    "type": "hiddenSwitcher",
+                    "valueOptions": {
+                        "sourceType": "PropertyValueBool",
+                        "sourceForm": "PortableRecyclerMarkII.esp|800",
+                        "propertyName": "Scrapper03PerkAvailable"
+                    },
+                    "groupControl": 3
+                },
+                {
+                    "text": "Scrapper: Rank 3",
+                    "type": "section",
+                    "groupCondition": {"AND": [1, 3]}
+                },
+                {
+                    "id": "fMultiplierAdjustOwnedSettlementsScrapper03:Adjustments",
+                    "text": "In player-owned settlements",
+                    "type": "slider",
+                    "help": "TODO",
+                    "valueOptions": {
+                        "min": -3.0,
+                        "max": 3.0,
+                        "step": 0.1,
+                        "sourceType": "ModSettingFloat"
+                    },
+                    "groupCondition": {"AND": [1, 3]}
+                },
+                {
+                    "id": "fMultiplierAdjustEverywhereElseScrapper03:Adjustments",
+                    "text": "Everywhere else",
+                    "type": "slider",
+                    "help": "TODO",
+                    "valueOptions": {
+                        "min": -3.0,
+                        "max": 3.0,
+                        "step": 0.1,
+                        "sourceType": "ModSettingFloat"
+                    },
+                    "groupCondition": {"AND": [1, 3]}
+                },
+                {
+                    "text": "Hidden",
+                    "type": "hiddenSwitcher",
+                    "valueOptions": {
+                        "sourceType": "PropertyValueBool",
+                        "sourceForm": "PortableRecyclerMarkII.esp|800",
+                        "propertyName": "Scrapper04PerkAvailable"
+                    },
+                    "groupControl": 4
+                },
+                {
+                    "text": "Scrapper: Rank 4",
+                    "type": "section",
+                    "groupCondition": {"AND": [1, 4]}
+                },
+                {
+                    "id": "fMultiplierAdjustOwnedSettlementsScrapper04:Adjustments",
+                    "text": "In player-owned settlements",
+                    "type": "slider",
+                    "help": "TODO",
+                    "valueOptions": {
+                        "min": -3.0,
+                        "max": 3.0,
+                        "step": 0.1,
+                        "sourceType": "ModSettingFloat"
+                    },
+                    "groupCondition": {"AND": [1, 4]}
+                },
+                {
+                    "id": "fMultiplierAdjustEverywhereElseScrapper04:Adjustments",
+                    "text": "Everywhere else",
+                    "type": "slider",
+                    "help": "TODO",
+                    "valueOptions": {
+                        "min": -3.0,
+                        "max": 3.0,
+                        "step": 0.1,
+                        "sourceType": "ModSettingFloat"
+                    },
+                    "groupCondition": {"AND": [1, 4]}
+                },
+                {
+                    "text": "Hidden",
+                    "type": "hiddenSwitcher",
+                    "valueOptions": {
+                        "sourceType": "PropertyValueBool",
+                        "sourceForm": "PortableRecyclerMarkII.esp|800",
+                        "propertyName": "Scrapper05PerkAvailable"
+                    },
+                    "groupControl": 5
+                },
+                {
+                    "text": "Scrapper: Rank 5",
+                    "type": "section",
+                    "groupCondition": {"AND": [1, 5]}
+                },
+                {
+                    "id": "fMultiplierAdjustOwnedSettlementsScrapper05:Adjustments",
+                    "text": "In player-owned settlements",
+                    "type": "slider",
+                    "help": "TODO",
+                    "valueOptions": {
+                        "min": -3.0,
+                        "max": 3.0,
+                        "step": 0.1,
+                        "sourceType": "ModSettingFloat"
+                    },
+                    "groupCondition": {"AND": [1, 5]}
+                },
+                {
+                    "id": "fMultiplierAdjustEverywhereElseScrapper05:Adjustments",
+                    "text": "Everywhere else",
+                    "type": "slider",
+                    "help": "TODO",
+                    "valueOptions": {
+                        "min": -3.0,
+                        "max": 3.0,
+                        "step": 0.1,
+                        "sourceType": "ModSettingFloat"
+                    },
+                    "groupCondition": {"AND": [1, 5]}
+                }
+            ]
+        }
+    ]
+}
