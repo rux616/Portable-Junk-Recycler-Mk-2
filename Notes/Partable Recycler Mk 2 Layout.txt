@@ -1,0 +1,74 @@
+base multiplier wilderness = [0.1 - 2.0, step 0.1, def 1.0]
+base multiplier in player-owned settlements = [0.1 - 2.0, step 0.1, def 1.0]
+scrapper perk gives bonus multiplier? = [yes/no, def no]
+    {yes}
+        scrapper 1
+            bonus = [0.0 - 2.0, step 0.1, def 0.0]
+            only in player-owned settlements? = [yes/no, def no]
+        scrapper 2
+            bonus = [0.0 - 2.0, step 0.1, def 0.0]
+            only in player-owned settlements? = [yes/no, def no]
+        scrapper 3
+            bonus = [0.0 - 2.0, step 0.1, def 0.0]
+            only in player-owned settlements? = [yes/no, def no]
+        {scrapper 4
+            bonus = [0.0 - 2.0, step 0.1, def 0.0]
+            only in player-owned settlements? = [yes/no, def no]}
+        {scrapper 5
+            bonus = [0.0 - 2.0, step 0.1, def 0.0]
+            only in player-owned settlements? = [yes/no, def no]}
+    {no}
+        (blank)
+
+
+
+General settings 
+    base multiplier = [0.05 - 10.0, step 0.05, def 1.0]
+    bonus multiplier in player-owned settlements = [0.05 - 10.0, step 0.05, def 0.0]
+scrapper perk bonus
+    scrapper perk gives bonus multiplier? = [yes/no, def no]
+        {yes}
+            scrapper 1
+                bonus = [0.0 - 2.0, step 0.1, def 0.0]
+                only in player-owned settlements? = [yes/no, def no]
+            scrapper 2
+                bonus = [0.0 - 2.0, step 0.1, def 0.0]
+                only in player-owned settlements? = [yes/no, def no]
+            scrapper 3
+                bonus = [0.0 - 2.0, step 0.1, def 0.0]
+                only in player-owned settlements? = [yes/no, def no]
+
+
+
+General Settings 
+    base multiplier = [0.00 - 3.0, step 0.01, def 1.0]
+Multiplier Adjustments
+    scrapper perk adjusts multiplier? = [yes/no, def no]
+        {if scrapper adjust multiplier == yes} {
+            no scrapper
+        }
+                multiplier adjustment in player-owned settlements = [-3.0 - 3.0, step 0.01, def 0.0]
+                multiplier adjustment everywhere else = [-3.0 - 3.0, step 0.01, def 0.0]
+        {if scrapper adjust multiplier == yes} {
+            scrapper 1
+                multiplier adjustment in player-owned settlements = [-3.0 - 3.0, step 0.01, def 0.0]
+                multiplier adjustment everywhere else = [-3.0 - 3.0, step 0.01, def 0.0]
+            scrapper 2
+                multiplier adjustment in player-owned settlements = [-3.0 - 3.0, step 0.01, def 0.0]
+                multiplier adjustment everywhere else = [-3.0 - 3.0, step 0.01, def 0.0]
+            {if scrapper 3 defined == yes} {
+                scrapper 3
+                    multiplier adjustment in player-owned settlements = [-3.0 - 3.0, step 0.01, def 0.0]
+                    multiplier adjustment everywhere else = [-3.0 - 3.0, step 0.01, def 0.0]
+            }
+            {if scrapper 4 defined == yes} {
+                scrapper 4
+                    multiplier adjustment in player-owned settlements = [-3.0 - 3.0, step 0.01, def 0.0]
+                    multiplier adjustment everywhere else = [-3.0 - 3.0, step 0.01, def 0.0]
+            }
+            {if scrapper 5 defined == yes} {
+                scrapper 5
+                    multiplier adjustment in player-owned settlements = [-3.0 - 3.0, step 0.01, def 0.0]
+                    multiplier adjustment everywhere else = [-3.0 - 3.0, step 0.01, def 0.0]
+            }
+        }
