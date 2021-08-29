@@ -40,27 +40,33 @@
         <Folder>.</Folder>
     </Folders>
     <Packages Output="@BuildPath\BA2">
-        <Package Name="@ModName" RootDir="@ModPath">
+        <Package Name="@ModName - Main" RootDir="@ModPath">
             <Include>Materials\**\*.BGSM</Include>
             <Include>Meshes\**\*.nif</Include>
             <Include>Scripts\**\*.pex</Include>
+        </Package>
+        <Package Name="High Res Textures\@ModName - Textures" RootDir="@ModPath">
             <Include>Textures\PortableRecyclerMk2\*.dds</Include>
         </Package>
+        <Package Name="Low Res Textures\@ModName - Textures" RootDir="@ModPath">
+            <Include Path="Textures\PortableRecyclerMk2">Textures\PortableRecyclerMk2\lowres\*.dds</Include>
+        </Package>
     </Packages>
-    <ZipFiles Output="@BuildPath\Release">
-        <ZipFile Name="@ModName v@ModVersion" RootDir="@ModPath" Compression="deflate">
+    <ZipFiles Output="@BuildPath\Release\@ModVersion">
+        <ZipFile Name="@ModName" RootDir="@ModPath" Compression="deflate">
             <Include>**\@ModName.esp</Include>
-            <Include Path=".">**\@ModName.ba2</Include>
+            <Include Path=".">**\@ModName - Main.ba2</Include>
+            <Include Path=".">**\High Res Textures\@ModName - Textures.ba2</Include>
             <Include>Docs\**\*.txt</Include>
             <Include>MCM\**\*.ini</Include>
             <Include>MCM\**\*.json</Include>
         </ZipFile>
-        <ZipFile Name="@ModName v@ModVersion - Source" RootDir="@ModPath" Compression="deflate">
+        <ZipFile Name="@ModName - Source" RootDir="@ModPath" Compression="deflate">
             <Include>**\*.psc</Include>
             <Include>**\*.ppj</Include>
         </ZipFile>
-        <ZipFile Name="@ModName v@ModVersion - Low Res Textures" RootDir="@ModPath" Compression="deflate">
-            <Include Path="Textures\PortableRecyclerMk2">Textures\PortableRecyclerMk2\lowres\*.dds</Include>
+        <ZipFile Name="@ModName - Low Res Textures" RootDir="@ModPath" Compression="deflate">
+            <Include Path=".">**\Low Res Textures\@ModName - Textures.ba2</Include>
         </ZipFile>
     </ZipFiles>
 </PapyrusProject>
