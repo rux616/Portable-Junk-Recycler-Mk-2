@@ -15,7 +15,7 @@
 >
     <Variables>
         <Variable Name="ModName" Value="Portable Recycler Mk 2"/>
-        <Variable Name="ModVersion" Value="0.0.3"/>
+        <Variable Name="ModVersion" Value="0.0.4"/>
         <Variable Name="ModPath" Value="..\..\.."/>
         <Variable Name="BuildPath" Value="@ModPath\Build"/>
         <Variable Name="CompilePath" Value="..\.."/>
@@ -57,16 +57,14 @@
             <Include>**\@ModName.esp</Include>
             <Include Path=".">**\@ModName - Main.ba2</Include>
             <Include Path=".">**\High Res Textures\@ModName - Textures.ba2</Include>
+            <Include Path="Options\Low Res Textures">**\Low Res Textures\@ModName - Textures.ba2</Include>
             <Include>Docs\**\*.txt</Include>
             <Include>MCM\**\*.ini</Include>
             <Include>MCM\**\*.json</Include>
+            <Include>fomod\*.*</Include>
         </ZipFile>
         <ZipFile Name="@ModName - Source" RootDir="@ModPath" Compression="deflate">
             <Include>**\*.psc</Include>
-            <Include>**\*.ppj</Include>
-        </ZipFile>
-        <ZipFile Name="@ModName - Low Res Textures" RootDir="@ModPath" Compression="deflate">
-            <Include Path=".">**\Low Res Textures\@ModName - Textures.ba2</Include>
         </ZipFile>
     </ZipFiles>
 </PapyrusProject>
