@@ -48,8 +48,8 @@
         <Package Name="High Res Textures\@ModName - Textures" RootDir="@ModPath">
             <Include>Textures\PortableRecyclerMk2\*.dds</Include>
         </Package>
-        <Package Name="Low Res Textures\@ModName - Textures" RootDir="@ModPath">
-            <Include Path="Textures\PortableRecyclerMk2">Textures\PortableRecyclerMk2\lowres\*.dds</Include>
+        <Package Name="Low Res Textures\@ModName - Textures" RootDir="@ModPath\Textures\PortableRecyclerMk2\lowres">
+            <Include Path="Textures\PortableRecyclerMk2">*.dds</Include>
         </Package>
     </Packages>
     <ZipFiles Output="@BuildPath\Release\@ModVersion">
