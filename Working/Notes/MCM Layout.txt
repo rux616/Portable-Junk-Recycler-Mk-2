@@ -40,10 +40,12 @@ scrapper perk bonus
 
 
 
-General Settings 
+General Settings
     base multiplier = [0.00 - 3.0, step 0.01, def 1.0]
-Multiplier Adjustments
+    always return at least 1 component? = [yes/no, def yes]
+    convert fractional components to full components? = [yes/no, def no]
     scrapper perk adjusts multiplier? = [yes/no, def no]
+Multiplier Adjustments
         {if scrapper adjust multiplier == yes} {
             no scrapper
         }
