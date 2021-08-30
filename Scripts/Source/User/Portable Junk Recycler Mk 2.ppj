@@ -14,7 +14,8 @@
     Zip="true"
 >
     <Variables>
-        <Variable Name="ModName" Value="Portable Recycler Mk 2"/>
+        <Variable Name="ModName" Value="Portable Junk Recycler Mk 2"/>
+        <Variable Name="ModResourceName" Value="PortableJunkRecyclerMk2"/>
         <Variable Name="ModVersion" Value="0.0.4"/>
         <Variable Name="ModPath" Value="..\..\.."/>
         <Variable Name="BuildPath" Value="@ModPath\Build"/>
@@ -46,10 +47,10 @@
             <Include>Scripts\**\*.pex</Include>
         </Package>
         <Package Name="High Res Textures\@ModName - Textures" RootDir="@ModPath">
-            <Include>Textures\PortableRecyclerMk2\*.dds</Include>
+            <Include>Textures\@ModResourceName\*.dds</Include>
         </Package>
-        <Package Name="Low Res Textures\@ModName - Textures" RootDir="@ModPath\Textures\PortableRecyclerMk2\lowres">
-            <Include Path="Textures\PortableRecyclerMk2">*.dds</Include>
+        <Package Name="Low Res Textures\@ModName - Textures" RootDir="@ModPath\Textures\@ModResourceName\lowres">
+            <Include Path="Textures\@ModResourceName">*.dds</Include>
         </Package>
     </Packages>
     <ZipFiles Output="@BuildPath\Release\@ModVersion">

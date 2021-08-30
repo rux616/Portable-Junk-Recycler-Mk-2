@@ -1,4 +1,4 @@
-ScriptName PortableRecyclerMk2:QuestScript extends Quest
+ScriptName PortableJunkRecyclerMk2:QuestScript extends Quest
 { foo }
 
 
@@ -16,19 +16,6 @@ Actor Property PlayerRef Auto Const
 
 Perk Property BaseScrapperPerk Auto Const
 { reference to the base scrapper perk }
-
-; small group of properties to allow MCM to determine which of the rank 3+ scrapper controls to show
-Group MCMHiddenSwitcherProperties Collapsed
-    bool Property Scrapper03PerkAvailable Auto
-    { determines whether to display the controls associated with scrapper rank 3 in the MCM }
-
-    bool Property Scrapper04PerkAvailable Auto
-    { determines whether to display the controls associated with scrapper rank 4 in the MCM }
-
-    bool Property Scrapper05PerkAvailable Auto
-    { determines whether to display the controls associated with scrapper rank 5 in the MCM }
-
-EndGroup
 
 float Property MultiplierCurrentOwnedSettlement Auto
 float Property MultiplierCurrentEverywhereElse Auto
@@ -99,31 +86,32 @@ EndEvent
 ; FUNCTIONS
 ; ---------
 
-; populate scrapper perk array and determine if scrapper perk ranks >= 3 (and <= 5) are available
+; populate scrapper perk array and determine if scrapper perk rank 3 is available
 Function RuntimeInit()
-    ; use the reference to the base scrapper perk to get how many ranks there are
-    int numScrapperRanks = BaseScrapperPerk.GetNumRanks()
-
-    ; scrapper rank 3 is available from Far Harbor, and there's a bit of cushion in case additional
-    ; ranks are added, for instance as part of a perk overhaul or something
-    Scrapper03PerkAvailable = numScrapperRanks >= 3
-    Scrapper04PerkAvailable = numScrapperRanks >= 4
-    Scrapper05PerkAvailable = numScrapperRanks >= 5
-
     ; create a scrapper perks array and seed it with the base scrapper perk
-    ; intentionally a size of 1 initially so that ScrapperPerks[0] represents having no perk
-    ScrapperPerks = new Perk[1]
-    ScrapperPerks.Add(BaseScrapperPerk)
+    ScrapperPerks = new Perk[0]
+    ScrapperPerks.Add(Game.GetFormFromFile(0x00065E65, "Fallout4.esm") as Perk) ; scrapper rank 1
+    ScrapperPerks.Add(Game.GetFormFromFile(0x001D2483, "Fallout4.esm") as Perk) ; scrapper rank 2
+    ScrapperPerks.Add(Game.GetFormFromFile(0x000423A5, "DLCCoast.esm") as Perk) ; scrapper rank 3
 
-    ; add the rest of the scrapper perks to the array
-    int currentIndex = 1
-    while currentIndex < numScrapperRanks
-        ScrapperPerks.Add(ScrapperPerks[currentIndex].GetNextPerk())
-        currentIndex += 1
-    EndWhile
+    ; if Far Harbor isn't installed, remove the last perk as it will be "none"
+    If ScrapperPerks[ScrapperPerks.Length - 1] == None
+        ScrapperPerks.RemoveLast()
+    EndIf
+
+    ; use the reference to the base scrapper perk to get how many ranks there are
+    int numScrapperRanks = ScrapperPerks.Length
 
     ; once all the perks are discovered, reinitialize the mutlipliers
     CurrentMultipliers = new Multiplier[ScrapperPerks.Length]
+EndFunction
+
+Function GlobalToMcmBridge()
+
+EndFunction
+
+Function GetCurrentMultipliers()
+    ; code
 EndFunction
 
 Function UpdateMultipliers()
@@ -146,7 +134,7 @@ EndFunction
 
 Function RegisterCustomEvents()
     RegisterForExternalEvent("OnMCMOpen", "OnMCMOpen");
-    RegisterForExternalEvent("OnMCMSettingChange|PortableRecyclerMarkII", "OnMCMSettingChange")
+    RegisterForExternalEvent("OnMCMSettingChange|Portable Recycler Mk 2", "OnMCMSettingChange")
 EndFunction
 
 Function Update()
@@ -166,7 +154,7 @@ Function OnMCMOpen()
 EndFunction
 
 Function OnMCMSettingChange(string modName, string id)
-    If (modName == "PortableRecyclerMarkII")
+    If (modName == "Portable Recycler Mk 2")
         If (id == "control_id")
             Debug.Notification("control_id value was changed!")
         EndIf
