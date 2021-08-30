@@ -16,7 +16,7 @@
     <Variables>
         <Variable Name="ModName" Value="Portable Junk Recycler Mk 2"/>
         <Variable Name="ModResourceName" Value="PortableJunkRecyclerMk2"/>
-        <Variable Name="ModVersion" Value="0.0.4"/>
+        <Variable Name="ModVersion" Value="0.0.5"/>
         <Variable Name="ModPath" Value="..\..\.."/>
         <Variable Name="BuildPath" Value="@ModPath\Build"/>
         <Variable Name="CompilePath" Value="..\.."/>

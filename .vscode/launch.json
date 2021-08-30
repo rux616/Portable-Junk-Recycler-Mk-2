@@ -11,11 +11,11 @@
         {
             "label": "Fallout 4 (use .ppj)",
             "body": {
-                "name": "Portable Recycler Mk 2",
+                "name": "Portable Junk Recycler Mk 2",
                 "type": "papyrus",
                 "request": "attach",
                 "game": "fallout4",
-                "projectPath": "${workspaceRoot}\\Scripts\\Source\\User\\Portable Recycler Mk 2.ppj"
+                "projectPath": "${workspaceRoot}\\Scripts\\Source\\User\\Portable Junk Recycler Mk 2.ppj"
             }
         }
     ]
