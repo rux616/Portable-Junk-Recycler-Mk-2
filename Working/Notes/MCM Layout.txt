@@ -39,38 +39,30 @@ scrapper perk bonus
                 only in player-owned settlements? = [yes/no, def no]
 
 
-
-General Settings
-    base multiplier = [0.00 - 3.0, step 0.01, def 1.0]
-    always return at least 1 component? = [yes/no, def yes]
-    convert fractional components to full components? = [yes/no, def no]
-    scrapper perk adjusts multiplier? = [yes/no, def no]
-Multiplier Adjustments
-        {if scrapper adjust multiplier == yes} {
-            no scrapper
-        }
-                multiplier adjustment in player-owned settlements = [-3.0 - 3.0, step 0.01, def 0.0]
-                multiplier adjustment everywhere else = [-3.0 - 3.0, step 0.01, def 0.0]
-        {if scrapper adjust multiplier == yes} {
-            scrapper 1
-                multiplier adjustment in player-owned settlements = [-3.0 - 3.0, step 0.01, def 0.0]
-                multiplier adjustment everywhere else = [-3.0 - 3.0, step 0.01, def 0.0]
-            scrapper 2
-                multiplier adjustment in player-owned settlements = [-3.0 - 3.0, step 0.01, def 0.0]
-                multiplier adjustment everywhere else = [-3.0 - 3.0, step 0.01, def 0.0]
-            {if scrapper 3 defined == yes} {
-                scrapper 3
+[page] Settings
+    [section] General Settings
+        base multiplier = [0.00 - 3.0, step 0.01, def 1.0]
+        always return at least 1 component? = [yes/no, def yes]
+        convert fractional components to full components? = [yes/no, def no]
+        scrapper perk adjusts multiplier? = [yes/no, def no]
+    [section] Multiplier Adjustments
+            {if scrapper adjust multiplier == yes} {
+                no scrapper
+            }
                     multiplier adjustment in player-owned settlements = [-3.0 - 3.0, step 0.01, def 0.0]
                     multiplier adjustment everywhere else = [-3.0 - 3.0, step 0.01, def 0.0]
-            }
-            {if scrapper 4 defined == yes} {
-                scrapper 4
+            {if scrapper adjust multiplier == yes} {
+                scrapper 1
                     multiplier adjustment in player-owned settlements = [-3.0 - 3.0, step 0.01, def 0.0]
                     multiplier adjustment everywhere else = [-3.0 - 3.0, step 0.01, def 0.0]
-            }
-            {if scrapper 5 defined == yes} {
-                scrapper 5
+                scrapper 2
                     multiplier adjustment in player-owned settlements = [-3.0 - 3.0, step 0.01, def 0.0]
                     multiplier adjustment everywhere else = [-3.0 - 3.0, step 0.01, def 0.0]
+                {if scrapper 3 defined == yes} {
+                    scrapper 3
+                        multiplier adjustment in player-owned settlements = [-3.0 - 3.0, step 0.01, def 0.0]
+                        multiplier adjustment everywhere else = [-3.0 - 3.0, step 0.01, def 0.0]
+                }
             }
-        }
+[page] Experimental
+    dynamic component detection = [yes/no, def no]

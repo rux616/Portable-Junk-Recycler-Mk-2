@@ -1,4 +1,4 @@
-ScriptName PortableRecyclerMk2:EffectScript Extends ActiveMagicEffect
+ScriptName PortableJunkRecyclerMk2:EffectScript Extends ActiveMagicEffect
 
 ;-- Properties --------------------------------------
 QuestScript Property PortableRecyclerQuest Auto Const
@@ -31,45 +31,52 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 
 		
 
-		float scrapMultiplier
+		float fScrapMultiplier
 
-		int version = 12
+		int iVersion = 12
 		If IsPlayerAtOwnedWorkshop()
-			scrapMultiplier = 10.0
-			Debug.MessageBox("v" + version + ": Friendly! Mult set to " + scrapMultiplier)
+			fScrapMultiplier = 10.0
+			Debug.MessageBox("v" + iVersion + ": Friendly! Mult set to " + fScrapMultiplier)
 		Else
-			scrapMultiplier = 1.0
-			Debug.MessageBox("v" + version + ": Not friendly! Mult set to " + scrapMultiplier)
+			fScrapMultiplier = 1.0
+			Debug.MessageBox("v" + iVersion + ": Not friendly! Mult set to " + fScrapMultiplier)
 		EndIf
 
-		ObjectReference containerRef = PlayerRef.PlaceAtMe(PortableRecyclerContainer as Form)
+		ObjectReference kContainerRef = PlayerRef.PlaceAtMe(PortableRecyclerContainer as Form)
 		Utility.Wait(1.0)
 
-		containerRef.Activate(PlayerRef as ObjectReference, true)
+		kContainerRef.Activate(PlayerRef as ObjectReference, true)
 		Utility.Wait(0.1)
 
-		If containerRef.GetInventoryItems().Length > 0
+		If kContainerRef.GetInventoryItems().Length > 0
 			PortableRecyclerSound.Play(PlayerRef as ObjectReference)
 		EndIf
 		
 		; only scrap things if the scrap multiplier is > 0, otherwise everything will just be lost
-		If scrapMultiplier > 0.0
-			int currentComponent = 0
-			int numComponents = Components.Length
-			int componentQuantity = 0
-			While currentComponent < numComponents
-				componentQuantity = containerRef.GetComponentCount(Components[currentComponent].ComponentPart)
-				containerRef.RemoveComponents(Components[currentComponent].ComponentPart, componentQuantity, true)
-				; TODO maybe use Math.Ciel() instead?
-				containerRef.AddItem(Components[currentComponent].ScrapPart, Math.Floor(componentQuantity * scrapMultiplier), true)
-				currentComponent += 1
+		If fScrapMultiplier > 0.0
+			int iCurrentComponent = 0
+			int iNumComponents = Components.Length
+			float fComponentQuantity = 0
+			While iCurrentComponent < iNumComponents
+				fComponentQuantity = kContainerRef.GetComponentCount(Components[iCurrentComponent].ComponentPart)
+				kContainerRef.RemoveComponents(Components[iCurrentComponent].ComponentPart, fComponentQuantity as int, true)
+				; TODO add support for 'always return at least one component' mode
+				; TODO add support for 'allow partial componenent' mode
+				; fComponentQuantity = Math.Max(bAlwaysReturnAtLeastOneComponent, fComponentQuantity * fScrapMultiplier)
+				; If bAllowPartialComponents
+				;     fComponentQuantity = Math.Ciel(fComponentQuantity)
+				; Else
+				;     fComponentQuantity = Math.Floor(fComponentQuantity)
+				; EndIf
+				kContainerRef.AddItem(Components[iCurrentComponent].ScrapPart, fComponentQuantity as int, true)
+				iCurrentComponent += 1
 			EndWhile
 		Else
 			; TODO show a notification 
 		EndIf
 
-		containerRef.RemoveAllItems(PlayerRef as ObjectReference, false)
-		containerRef.Delete()
+		kContainerRef.RemoveAllItems(PlayerRef as ObjectReference, false)
+		kContainerRef.Delete()
 		PlayerRef.AddItem(PortableRecyclerItem as Form, 1, true)
 		PortableRecyclerQuest.IsRunning = false
 		Debug.MessageBox("Portable Recycler Finished")
