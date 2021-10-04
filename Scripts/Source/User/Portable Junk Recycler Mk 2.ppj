@@ -16,25 +16,25 @@
     <Variables>
         <Variable Name="ModName" Value="Portable Junk Recycler Mk 2"/>
         <Variable Name="ModResourceName" Value="PortableJunkRecyclerMk2"/>
-        <Variable Name="ModVersion" Value="0.0.5"/>
+        <Variable Name="ModVersion" Value="0.1.1"/>
         <Variable Name="ModPath" Value="..\..\.."/>
         <Variable Name="BuildPath" Value="@ModPath\Build"/>
-        <Variable Name="CompilePath" Value="..\.."/>
-        <Variable Name="ScriptsPathMCM" Value="..\..\..\..\Mod Configuration Menu\Scripts\Source"/>
-        <Variable Name="ScriptsPathF4SE" Value="..\..\..\..\F4SE Scripts\Scripts\Source"/>
-        <Variable Name="ScriptsPathVanilla" Value="..\..\..\..\[NoDelete] Vanilla Scripts Source\Scripts\Source"/>
+        <Variable Name="CompilePath" Value="@ModPath\Scripts"/>
+        <Variable Name="ScriptsPathMCM" Value="@ModPath\..\Mod Configuration Menu\Scripts\Source"/>
+        <Variable Name="ScriptsPathF4SE" Value="@ModPath\..\F4SE Scripts\Scripts\Source"/>
+        <Variable Name="ScriptsPathVanilla" Value="@ModPath\..\[NoDelete] Vanilla Scripts Source\Scripts\Source"/>
     </Variables>
     <Imports>
         <Import>.</Import>
-        <Import>@ScriptsPathMCM\User</Import>
-        <Import>@ScriptsPathF4SE\User</Import>
-        <Import>@ScriptsPathVanilla\DLC06</Import>
-        <Import>@ScriptsPathVanilla\DLC05</Import>
-        <Import>@ScriptsPathVanilla\DLC04</Import>
-        <Import>@ScriptsPathVanilla\DLC03</Import>
-        <Import>@ScriptsPathVanilla\DLC02</Import>
-        <Import>@ScriptsPathVanilla\DLC01</Import>
-        <Import>@ScriptsPathVanilla\CreationClub</Import>
+        <!-- <Import>@ScriptsPathMCM\User</Import> -->
+        <!-- <Import>@ScriptsPathF4SE\User</Import> -->
+        <!-- <Import>@ScriptsPathVanilla\DLC06</Import> -->
+        <!-- <Import>@ScriptsPathVanilla\DLC05</Import> -->
+        <!-- <Import>@ScriptsPathVanilla\DLC04</Import> -->
+        <!-- <Import>@ScriptsPathVanilla\DLC03</Import> -->
+        <!-- <Import>@ScriptsPathVanilla\DLC02</Import> -->
+        <!-- <Import>@ScriptsPathVanilla\DLC01</Import> -->
+        <!-- <Import>@ScriptsPathVanilla\CreationClub</Import> -->
         <Import>@ScriptsPathVanilla\Base</Import>
     </Imports>
     <Folders>
@@ -42,7 +42,6 @@
     </Folders>
     <Packages Output="@BuildPath\BA2">
         <Package Name="@ModName - Main" RootDir="@ModPath">
-            <Include>Materials\**\*.BGSM</Include>
             <Include>Meshes\**\*.nif</Include>
             <Include>Scripts\**\*.pex</Include>
         </Package>
@@ -56,16 +55,18 @@
     <ZipFiles Output="@BuildPath\Release\@ModVersion">
         <ZipFile Name="@ModName" RootDir="@ModPath" Compression="deflate">
             <Include>**\@ModName.esp</Include>
-            <Include Path=".">**\@ModName - Main.ba2</Include>
-            <Include Path=".">**\High Res Textures\@ModName - Textures.ba2</Include>
-            <Include Path="Options\Low Res Textures">**\Low Res Textures\@ModName - Textures.ba2</Include>
             <Include>Docs\**\*.txt</Include>
+            <Include>fomod\*.*</Include>
             <Include>MCM\**\*.ini</Include>
             <Include>MCM\**\*.json</Include>
-            <Include>fomod\*.*</Include>
-        </ZipFile>
-        <ZipFile Name="@ModName - Source" RootDir="@ModPath" Compression="deflate">
-            <Include>**\*.psc</Include>
+            <Include Path=".">**\@ModName - Main.ba2</Include>
+            <Include Path=".">**\High Res Textures\@ModName - Textures.ba2</Include>
+            <Include Path="Options\Archives\Low Res Textures">**\Low Res Textures\@ModName - Textures.ba2</Include>
+            <Include Path="Options\Loose Files\High Res Textures\@ModResourceName">Textures\@ModResourceName\*.dds</Include>
+            <Include Path="Options\Loose Files\Low Res Textures\@ModResourceName">Textures\@ModResourceName\lowres\*.dds</Include>
+            <Include Path="Options\Loose Files\Meshes\@ModResourceName">Meshes\**\*.nif</Include>
+            <Include Path="Options\Loose Files\Scripts\@ModResourceName">Scripts\**\*.pex</Include>
+            <Include Path="Options\Source\Scripts\Source\User\@ModResourceName">Scripts\**\*.psc</Include>
         </ZipFile>
     </ZipFiles>
 </PapyrusProject>

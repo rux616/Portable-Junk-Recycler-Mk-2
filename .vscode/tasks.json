@@ -12,8 +12,28 @@
             "label": "pyro: Compile Project (Portable Junk Recycler Mk 2)",
             "group": {
                 "kind": "build",
-                "isDefault": true
-            }
+                "isDefault": true,
+            },
+            "dependsOn": ["Render JSON"],
+        },
+        {
+            "label": "Render JSON",
+            "type": "shell",
+            "command": "jsonnet",
+            "args": ["config.jsonnet", "-o", "config.json"],
+            "options": {
+                "cwd": "${workspaceFolder}/MCM/Config/Portable Junk Recycler Mk 2",
+            },
+            "dependsOn": ["Format Jsonnet"],
+        },
+        {
+            "label": "Format Jsonnet",
+            "type": "shell",
+            "command": "jsonnetfmt",
+            "args": ["-i", "config.jsonnet"],
+            "options": {
+                "cwd": "${workspaceFolder}/MCM/Config/Portable Junk Recycler Mk 2",
+            },
         }
     ]
 }
