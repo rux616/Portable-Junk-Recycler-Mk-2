@@ -1,0 +1,5 @@
+My reddit post asking for help: https://www.reddit.com/r/f4se/comments/pf0n96/ui_function_help/
+
+"Help using UI.Invoke" by u/QQBearsHijacker: https://www.reddit.com/r/f4se/comments/ak9155/help_using_uiinvoke/
+
+and that's pretty much it. The "Advanced Animation Framework" uses some of the UI functions, but it's pretty impenetrable to me atm
