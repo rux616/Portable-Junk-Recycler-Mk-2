@@ -1,235 +1,2248 @@
 {
-    "modName": "Portable Junk Recycler Mk 2",
-    "displayName": "Portable Junk Recycler Mk 2",
-    "minMcmVersion": 2,
-    "content": [
-        {
-            "text": "placeholder",
-            "type": "text"
-        },
-        {
-            "type": "spacer",
-            "numLines": 1
-        },
-        {
-            "text": "Current Multipliers",
-            "type": "section"
-        },
-        {
-            "text": "Player-owned settlements",
-            "type": "text"
-        },
-        {
-            "text": "Everywhere else",
-            "type": "text"
-        }
-    ],
-    "pages": [
-        {
-            "pageDisplayName": "Settings",
-            "content": [
-                {
-                    "text": "General Settings",
-                    "type": "section"
-                },
-                {
-                    "id": "fMultBase:General",
-                    "text": "Base multiplier",
-                    "type": "slider",
-                    "help": "TODO",
-                    "valueOptions": {
-                        "min": 0.0,
-                        "max": 3.0,
-                        "step": 0.1,
-                        "sourceType": "ModSettingFloat"
-                    }
-                },
-                {
-                    "id": "bReturnAtLeastOneComponent:General",
-                    "text": "Always return at least 1 component",
-                    "type": "switcher",
-                    "help": "TODO",
-                    "valueOptions": {
-                        "sourceType": "ModSettingBool"
-                    }
-                },
-                {
-                    "id": "bConvertFractionalToFull:General",
-                    "text": "Convert fractional components to full components",
-                    "type": "switcher",
-                    "help": "TODO",
-                    "valueOptions": {
-                        "sourceType": "ModSettingBool"
-                    }
-                },
-                {
-                    "id": "bScrapperPerkAdjustments:General",
-                    "text": "Scrapper perk adjusts multiplier",
-                    "type": "switcher",
-                    "help": "TODO",
-                    "valueOptions": {
-                        "sourceType": "ModSettingBool"
-                    },
-                    "groupControl": 1
-                },
-                {
-                    "type": "spacer",
-                    "numLines": 1
-                },
-                {
-                    "text": "Multiplier Adjustments",
-                    "type": "section"
-                },
-                {
-                    "text": "Scrapper: No Ranks",
-                    "type": "section",
-                    "groupCondition": 1
-                },
-                {
-                    "id": "fMultAdjustSettlement0:Adjustments",
-                    "text": "In player-owned settlements",
-                    "type": "slider",
-                    "help": "TODO",
-                    "valueOptions": {
-                        "min": -3.0,
-                        "max": 3.0,
-                        "step": 0.1,
-                        "sourceType": "ModSettingFloat"
-                    }
-                },
-                {
-                    "id": "fMultAdjustNotSettlement0:Adjustments",
-                    "text": "Everywhere else",
-                    "type": "slider",
-                    "help": "TODO",
-                    "valueOptions": {
-                        "min": -3.0,
-                        "max": 3.0,
-                        "step": 0.1,
-                        "sourceType": "ModSettingFloat"
-                    }
-                },
-                {
-                    "text": "Scrapper: Rank 1",
-                    "type": "section",
-                    "groupCondition": 1
-                },
-                {
-                    "id": "fMultAdjustSettlement1:Adjustments",
-                    "text": "In player-owned settlements",
-                    "type": "slider",
-                    "help": "TODO",
-                    "valueOptions": {
-                        "min": -3.0,
-                        "max": 3.0,
-                        "step": 0.1,
-                        "sourceType": "ModSettingFloat"
-                    },
-                    "groupCondition": 1
-                },
-                {
-                    "id": "fMultAdjustNotSettlement1:Adjustments",
-                    "text": "Everywhere else",
-                    "type": "slider",
-                    "help": "TODO",
-                    "valueOptions": {
-                        "min": -3.0,
-                        "max": 3.0,
-                        "step": 0.1,
-                        "sourceType": "ModSettingFloat"
-                    },
-                    "groupCondition": 1
-                },
-                {
-                    "text": "Scrapper: Rank 2",
-                    "type": "section",
-                    "groupCondition": 1
-                },
-                {
-                    "id": "fMultAdjustSettlement2:Adjustments",
-                    "text": "In player-owned settlements",
-                    "type": "slider",
-                    "help": "TODO",
-                    "valueOptions": {
-                        "min": -3.0,
-                        "max": 3.0,
-                        "step": 0.1,
-                        "sourceType": "ModSettingFloat"
-                    },
-                    "groupCondition": 1
-                },
-                {
-                    "id": "fMultAdjustNotSettlement2:Adjustments",
-                    "text": "Everywhere else",
-                    "type": "slider",
-                    "help": "TODO",
-                    "valueOptions": {
-                        "min": -3.0,
-                        "max": 3.0,
-                        "step": 0.1,
-                        "sourceType": "ModSettingFloat"
-                    },
-                    "groupCondition": 1
-                },
-                {
-                    "type": "hiddenSwitcher",
-                    "valueOptions": {
-                        "sourceType": "PropertyValueBool",
-                        "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
-                        "propertyName": "Scrapper03PerkAvailable"
-                    },
-                    "groupControl": 3
-                },
-                {
-                    "text": "Scrapper: Rank 3",
-                    "type": "section",
-                    "groupCondition": {"AND": [1, 3]}
-                },
-                {
-                    "id": "fMultAdjustSettlement3:Adjustments",
-                    "text": "In player-owned settlements",
-                    "type": "slider",
-                    "help": "TODO",
-                    "valueOptions": {
-                        "min": -3.0,
-                        "max": 3.0,
-                        "step": 0.1,
-                        "sourceType": "ModSettingFloat"
-                    },
-                    "groupCondition": {"AND": [1, 3]}
-                },
-                {
-                    "id": "fMultAdjustNotSettlement3:Adjustments",
-                    "text": "Everywhere else",
-                    "type": "slider",
-                    "help": "TODO",
-                    "valueOptions": {
-                        "min": -3.0,
-                        "max": 3.0,
-                        "step": 0.1,
-                        "sourceType": "ModSettingFloat"
-                    },
-                    "groupCondition": {"AND": [1, 3]}
-                }
-            ]
-        },
-        {
-            "pageDisplayName": "Experimental",
-            "content": [
-                {
-                    "text": "NOT IMPLEMENTED YET!",
-                    "type": "section"
-                },
-                {
-                    "id": "bDynamicComponentList:Experimental",
-                    "text": "[TODO] Dynamically build component list",
-                    "type": "switcher",
-                    "help": "Allows support of mods that have their own components",
-                    "valueOptions": {
-                        "sourceType": "ModSettingBool"
-                    }
-                }
-            ]
-        }
-    ]
+   "content": [
+      {
+         "html": true,
+         "text": "<p align=\"center\"><font size=\"24\">Portable Junk Recycler Mk 2</font></p>",
+         "type": "text"
+      },
+      {
+         "html": true,
+         "text": "<p align=\"center\">by rux616</p>",
+         "type": "text"
+      },
+      {
+         "html": true,
+         "text": "<p align=\"center\">v0.1.1</p>",
+         "type": "text"
+      },
+      {
+         "lines": 1,
+         "type": "spacer"
+      },
+      {
+         "text": "About",
+         "type": "section"
+      },
+      {
+         "text": "",
+         "type": "text"
+      },
+      {
+         "lines": 1,
+         "type": "spacer"
+      },
+      {
+         "text": "Multipliers",
+         "type": "section"
+      },
+      {
+         "action": {
+            "form": "Portable Junk Recycler Mk 2.esp|800",
+            "function": "MCM_ShowCurrentMultipliers",
+            "type": "CallFunction"
+         },
+         "text": "View Current Multipliers",
+         "type": "button"
+      },
+      {
+         "lines": 1,
+         "type": "spacer"
+      },
+      {
+         "text": "Uses",
+         "type": "section"
+      },
+      {
+         "action": {
+            "form": "Portable Junk Recycler Mk 2.esp|800",
+            "function": "MCM_ShowNumberOfUsesLeft",
+            "type": "CallFunction"
+         },
+         "text": "View Number Of Uses Remaining",
+         "type": "button"
+      }
+   ],
+   "displayName": "Portable Junk Recycler Mk 2",
+   "minMcmVersion": 2,
+   "modName": "Portable Junk Recycler Mk 2",
+   "pages": [
+      {
+         "content": [
+            {
+               "text": "General Options",
+               "type": "section"
+            },
+            {
+               "id": "fMultBase:General",
+               "text": "Base Multiplier",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 2,
+                  "min": 0,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "id": "bReturnAtLeastOneComponent:General",
+               "text": "Always Return At Least One Component",
+               "type": "switcher",
+               "valueOptions": {
+                  "sourceType": "ModSettingBool"
+               }
+            },
+            {
+               "id": "iFractionalComponentHandling:General",
+               "text": "Fractional Component Handling",
+               "type": "dropdown",
+               "valueOptions": {
+                  "options": [
+                     "Round Up",
+                     "Round Normally",
+                     "Round Down"
+                  ],
+                  "sourceType": "ModSettingInt"
+               }
+            },
+            {
+               "id": "bHasLimitedUses:General",
+               "text": "Has Limited Uses",
+               "type": "switcher",
+               "valueOptions": {
+                  "sourceType": "ModSettingBool"
+               }
+            },
+            {
+               "id": "iNumberOfUses:General",
+               "text": "    Number Of Uses",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 200,
+                  "min": 1,
+                  "sourceType": "ModSettingInt",
+                  "step": 1
+               }
+            },
+            {
+               "lines": 1,
+               "type": "spacer"
+            },
+            {
+               "text": "Adjustment Options",
+               "type": "section"
+            },
+            {
+               "id": "iGeneralMultAdjust:General",
+               "text": "General Adjustments",
+               "type": "dropdown",
+               "valueOptions": {
+                  "options": [
+                     "Simple",
+                     "Detailed"
+                  ],
+                  "sourceType": "ModSettingInt"
+               }
+            },
+            {
+               "id": "iIntAffectsMult:General",
+               "text": "Intelligence Affects Multiplier",
+               "type": "dropdown",
+               "valueOptions": {
+                  "options": [
+                     "OFF",
+                     "ON (Simple)",
+                     "ON (Detailed)"
+                  ],
+                  "sourceType": "ModSettingInt"
+               }
+            },
+            {
+               "id": "iLckAffectsMult:General",
+               "text": "Luck Affects Multiplier",
+               "type": "dropdown",
+               "valueOptions": {
+                  "options": [
+                     "OFF",
+                     "ON (Simple)",
+                     "ON (Detailed)"
+                  ],
+                  "sourceType": "ModSettingInt"
+               }
+            },
+            {
+               "id": "iRngAffectsMult:General",
+               "text": "Add Randomness To Multiplier",
+               "type": "dropdown",
+               "valueOptions": {
+                  "options": [
+                     "OFF",
+                     "ON (Simple)",
+                     "ON (Detailed)"
+                  ],
+                  "sourceType": "ModSettingInt"
+               }
+            },
+            {
+               "id": "iScrapperAffectsMult:General",
+               "text": "Scrapper Perk Affects Multiplier",
+               "type": "dropdown",
+               "valueOptions": {
+                  "options": [
+                     "OFF",
+                     "ON (Simple)",
+                     "ON (Detailed)"
+                  ],
+                  "sourceType": "ModSettingInt"
+               }
+            }
+         ],
+         "pageDisplayName": "Settings"
+      },
+      {
+         "content": [
+            {
+               "groupControl": 1,
+               "type": "hiddenSwitcher",
+               "valueOptions": {
+                  "propertyName": "MCM_GeneralMultAdjustSimple",
+                  "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
+                  "sourceType": "PropertyValueBool"
+               }
+            },
+            {
+               "groupControl": 2,
+               "type": "hiddenSwitcher",
+               "valueOptions": {
+                  "propertyName": "MCM_GeneralMultAdjustDetailed",
+                  "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
+                  "sourceType": "PropertyValueBool"
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     1,
+                     2
+                  ]
+               },
+               "text": "General",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     1
+                  ]
+               },
+               "id": "fMultAdjustGeneralSettlement:Adjustments",
+               "text": "In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     1
+                  ]
+               },
+               "id": "fMultAdjustGeneralNotSettlement:Adjustments",
+               "text": "Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     2
+                  ]
+               },
+               "text": "    Components: Common",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     2
+                  ]
+               },
+               "id": "fMultAdjustGeneralSettlementC:Adjustments",
+               "text": "    In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     2
+                  ]
+               },
+               "id": "fMultAdjustGeneralNotSettlementC:Adjustments",
+               "text": "    Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     2
+                  ]
+               },
+               "text": "    Components: Uncommon",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     2
+                  ]
+               },
+               "id": "fMultAdjustGeneralSettlementU:Adjustments",
+               "text": "    In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     2
+                  ]
+               },
+               "id": "fMultAdjustGeneralNotSettlementU:Adjustments",
+               "text": "    Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     2
+                  ]
+               },
+               "text": "    Components: Rare",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     2
+                  ]
+               },
+               "id": "fMultAdjustGeneralSettlementR:Adjustments",
+               "text": "    In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     2
+                  ]
+               },
+               "id": "fMultAdjustGeneralNotSettlementR:Adjustments",
+               "text": "    Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     2
+                  ]
+               },
+               "text": "    Components: Special",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     2
+                  ]
+               },
+               "id": "fMultAdjustGeneralSettlementS:Adjustments",
+               "text": "    In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     2
+                  ]
+               },
+               "id": "fMultAdjustGeneralNotSettlementS:Adjustments",
+               "text": "    Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     1,
+                     2
+                  ]
+               },
+               "lines": 1,
+               "type": "spacer"
+            },
+            {
+               "groupControl": 3,
+               "type": "hiddenSwitcher",
+               "valueOptions": {
+                  "propertyName": "MCM_IntAffectsMultSimple",
+                  "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
+                  "sourceType": "PropertyValueBool"
+               }
+            },
+            {
+               "groupControl": 4,
+               "type": "hiddenSwitcher",
+               "valueOptions": {
+                  "propertyName": "MCM_IntAffectsMultDetailed",
+                  "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
+                  "sourceType": "PropertyValueBool"
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     3,
+                     4
+                  ]
+               },
+               "text": "Intelligence",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     3
+                  ]
+               },
+               "id": "fMultAdjustInt:Adjustments",
+               "text": "Adjustment Per Point Of Intelligence",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": 0,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.0050000000000000001
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     4
+                  ]
+               },
+               "text": "    Components: Common",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     4
+                  ]
+               },
+               "id": "fMultAdjustIntC:Adjustments",
+               "text": "    Adjustment Per Point Of Intelligence",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": 0,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.0050000000000000001
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     4
+                  ]
+               },
+               "text": "    Components: Uncommon",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     4
+                  ]
+               },
+               "id": "fMultAdjustIntU:Adjustments",
+               "text": "    Adjustment Per Point Of Intelligence",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": 0,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.0050000000000000001
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     4
+                  ]
+               },
+               "text": "    Components: Rare",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     4
+                  ]
+               },
+               "id": "fMultAdjustIntR:Adjustments",
+               "text": "    Adjustment Per Point Of Intelligence",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": 0,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.0050000000000000001
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     4
+                  ]
+               },
+               "text": "    Components: Special",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     4
+                  ]
+               },
+               "id": "fMultAdjustIntS:Adjustments",
+               "text": "    Adjustment Per Point Of Intelligence",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": 0,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.0050000000000000001
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     3,
+                     4
+                  ]
+               },
+               "lines": 1,
+               "type": "spacer"
+            },
+            {
+               "groupControl": 5,
+               "type": "hiddenSwitcher",
+               "valueOptions": {
+                  "propertyName": "MCM_LckAffectsMultSimple",
+                  "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
+                  "sourceType": "PropertyValueBool"
+               }
+            },
+            {
+               "groupControl": 6,
+               "type": "hiddenSwitcher",
+               "valueOptions": {
+                  "propertyName": "MCM_LckAffectsMultDetailed",
+                  "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
+                  "sourceType": "PropertyValueBool"
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     5,
+                     6
+                  ]
+               },
+               "text": "Luck",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     5
+                  ]
+               },
+               "id": "fMultAdjustLck:Adjustments",
+               "text": "Adjustment Per Point Of Luck",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": 0,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.0050000000000000001
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     6
+                  ]
+               },
+               "text": "    Components: Common",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     6
+                  ]
+               },
+               "id": "fMultAdjustLckC:Adjustments",
+               "text": "    Adjustment Per Point Of Luck",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": 0,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.0050000000000000001
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     6
+                  ]
+               },
+               "text": "    Components: Uncommon",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     6
+                  ]
+               },
+               "id": "fMultAdjustLckU:Adjustments",
+               "text": "    Adjustment Per Point Of Luck",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": 0,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.0050000000000000001
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     6
+                  ]
+               },
+               "text": "    Components: Rare",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     6
+                  ]
+               },
+               "id": "fMultAdjustLckR:Adjustments",
+               "text": "    Adjustment Per Point Of Luck",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": 0,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.0050000000000000001
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     6
+                  ]
+               },
+               "text": "    Components: Special",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     6
+                  ]
+               },
+               "id": "fMultAdjustLckS:Adjustments",
+               "text": "    Adjustment Per Point Of Luck",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": 0,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.0050000000000000001
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     5,
+                     6
+                  ]
+               },
+               "lines": 1,
+               "type": "spacer"
+            },
+            {
+               "groupControl": 7,
+               "type": "hiddenSwitcher",
+               "valueOptions": {
+                  "propertyName": "MCM_RngAffectsMultSimple",
+                  "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
+                  "sourceType": "PropertyValueBool"
+               }
+            },
+            {
+               "groupControl": 8,
+               "type": "hiddenSwitcher",
+               "valueOptions": {
+                  "propertyName": "MCM_RngAffectsMultDetailed",
+                  "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
+                  "sourceType": "PropertyValueBool"
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     7,
+                     8
+                  ]
+               },
+               "text": "Randomness",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     7
+                  ]
+               },
+               "id": "fMultAdjustRandomMin:Adjustments",
+               "text": "Minimum",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     7
+                  ]
+               },
+               "id": "fMultAdjustRandomMax:Adjustments",
+               "text": "Maximum",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     8
+                  ]
+               },
+               "text": "    Components: Common",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     8
+                  ]
+               },
+               "id": "fMultAdjustRandomMinC:Adjustments",
+               "text": "    Minimum",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     8
+                  ]
+               },
+               "id": "fMultAdjustRandomMaxC:Adjustments",
+               "text": "    Maximum",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     8
+                  ]
+               },
+               "text": "    Components: Uncommon",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     8
+                  ]
+               },
+               "id": "fMultAdjustRandomMinU:Adjustments",
+               "text": "    Minimum",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     8
+                  ]
+               },
+               "id": "fMultAdjustRandomMaxU:Adjustments",
+               "text": "    Maximum",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     8
+                  ]
+               },
+               "text": "    Components: Rare",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     8
+                  ]
+               },
+               "id": "fMultAdjustRandomMinR:Adjustments",
+               "text": "    Minimum",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     8
+                  ]
+               },
+               "id": "fMultAdjustRandomMaxR:Adjustments",
+               "text": "    Maximum",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     8
+                  ]
+               },
+               "text": "    Components: Special",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     8
+                  ]
+               },
+               "id": "fMultAdjustRandomMinS:Adjustments",
+               "text": "    Minimum",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     8
+                  ]
+               },
+               "id": "fMultAdjustRandomMaxS:Adjustments",
+               "text": "    Maximum",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     7,
+                     8
+                  ]
+               },
+               "lines": 1,
+               "type": "spacer"
+            },
+            {
+               "groupControl": 9,
+               "type": "hiddenSwitcher",
+               "valueOptions": {
+                  "propertyName": "MCM_ScrapperAffectsMultSimple",
+                  "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
+                  "sourceType": "PropertyValueBool"
+               }
+            },
+            {
+               "groupControl": 10,
+               "type": "hiddenSwitcher",
+               "valueOptions": {
+                  "propertyName": "MCM_ScrapperAffectsMultDetailed",
+                  "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
+                  "sourceType": "PropertyValueBool"
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     9,
+                     10
+                  ]
+               },
+               "text": "Scrapper: Rank 1",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     9
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlement1:Adjustments",
+               "text": "In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     9
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlement1:Adjustments",
+               "text": "Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     10
+                  ]
+               },
+               "text": "    Components: Common",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     10
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlementC1:Adjustments",
+               "text": "    In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     10
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlementC1:Adjustments",
+               "text": "    Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     10
+                  ]
+               },
+               "text": "    Components: Uncommon",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     10
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlementU1:Adjustments",
+               "text": "    In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     10
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlementU1:Adjustments",
+               "text": "    Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     10
+                  ]
+               },
+               "text": "    Components: Rare",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     10
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlementR1:Adjustments",
+               "text": "    In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     10
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlementR1:Adjustments",
+               "text": "    Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     10
+                  ]
+               },
+               "text": "    Components: Special",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     10
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlementS1:Adjustments",
+               "text": "    In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     10
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlementS1:Adjustments",
+               "text": "    Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     9,
+                     10
+                  ]
+               },
+               "lines": 1,
+               "type": "spacer"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     9,
+                     10
+                  ]
+               },
+               "text": "Scrapper: Rank 2",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     9
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlement2:Adjustments",
+               "text": "In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     9
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlement2:Adjustments",
+               "text": "Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     10
+                  ]
+               },
+               "text": "    Components: Common",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     10
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlementC2:Adjustments",
+               "text": "    In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     10
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlementC2:Adjustments",
+               "text": "    Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     10
+                  ]
+               },
+               "text": "    Components: Uncommon",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     10
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlementU2:Adjustments",
+               "text": "    In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     10
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlementU2:Adjustments",
+               "text": "    Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     10
+                  ]
+               },
+               "text": "    Components: Rare",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     10
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlementR2:Adjustments",
+               "text": "    In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     10
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlementR2:Adjustments",
+               "text": "    Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     10
+                  ]
+               },
+               "text": "    Components: Special",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     10
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlementS2:Adjustments",
+               "text": "    In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     10
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlementS2:Adjustments",
+               "text": "    Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "OR": [
+                     9,
+                     10
+                  ]
+               },
+               "lines": 1,
+               "type": "spacer"
+            },
+            {
+               "groupControl": 11,
+               "type": "hiddenSwitcher",
+               "valueOptions": {
+                  "propertyName": "MCM_Scrapper3Available",
+                  "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
+                  "sourceType": "PropertyValueBool"
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     9,
+                     11
+                  ]
+               },
+               "text": "Scrapper: Rank 3",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     9,
+                     11
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlement3:Adjustments",
+               "text": "In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     9,
+                     11
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlement3:Adjustments",
+               "text": "Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     9,
+                     11
+                  ]
+               },
+               "lines": 1,
+               "type": "spacer"
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     11
+                  ]
+               },
+               "text": "Scrapper: Rank 3",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     11
+                  ]
+               },
+               "text": "    Components: Common",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     11
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlementC3:Adjustments",
+               "text": "    In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     11
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlementC3:Adjustments",
+               "text": "    Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     11
+                  ]
+               },
+               "text": "    Components: Uncommon",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     11
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlementU3:Adjustments",
+               "text": "    In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     11
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlementU3:Adjustments",
+               "text": "    Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     11
+                  ]
+               },
+               "text": "    Components: Rare",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     11
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlementR3:Adjustments",
+               "text": "    In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     11
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlementR3:Adjustments",
+               "text": "    Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     11
+                  ]
+               },
+               "text": "    Components: Special",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     11
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlementS3:Adjustments",
+               "text": "    In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     11
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlementS3:Adjustments",
+               "text": "    Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     11
+                  ]
+               },
+               "lines": 1,
+               "type": "spacer"
+            },
+            {
+               "groupControl": 12,
+               "type": "hiddenSwitcher",
+               "valueOptions": {
+                  "propertyName": "MCM_Scrapper4Available",
+                  "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
+                  "sourceType": "PropertyValueBool"
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     9,
+                     12
+                  ]
+               },
+               "text": "Scrapper: Rank 4",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     9,
+                     12
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlement4:Adjustments",
+               "text": "In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     9,
+                     12
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlement4:Adjustments",
+               "text": "Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     9,
+                     12
+                  ]
+               },
+               "lines": 1,
+               "type": "spacer"
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     12
+                  ]
+               },
+               "text": "Scrapper: Rank 4",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     12
+                  ]
+               },
+               "text": "    Components: Common",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     12
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlementC4:Adjustments",
+               "text": "    In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     12
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlementC4:Adjustments",
+               "text": "    Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     12
+                  ]
+               },
+               "text": "    Components: Uncommon",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     12
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlementU4:Adjustments",
+               "text": "    In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     12
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlementU4:Adjustments",
+               "text": "    Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     12
+                  ]
+               },
+               "text": "    Components: Rare",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     12
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlementR4:Adjustments",
+               "text": "    In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     12
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlementR4:Adjustments",
+               "text": "    Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     12
+                  ]
+               },
+               "text": "    Components: Special",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     12
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlementS4:Adjustments",
+               "text": "    In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     12
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlementS4:Adjustments",
+               "text": "    Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     12
+                  ]
+               },
+               "lines": 1,
+               "type": "spacer"
+            },
+            {
+               "groupControl": 13,
+               "type": "hiddenSwitcher",
+               "valueOptions": {
+                  "propertyName": "MCM_Scrapper5Available",
+                  "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
+                  "sourceType": "PropertyValueBool"
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     9,
+                     13
+                  ]
+               },
+               "text": "Scrapper: Rank 5",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     9,
+                     13
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlement5:Adjustments",
+               "text": "In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     9,
+                     13
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlement5:Adjustments",
+               "text": "Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     9,
+                     13
+                  ]
+               },
+               "lines": 1,
+               "type": "spacer"
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     13
+                  ]
+               },
+               "text": "Scrapper: Rank 5",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     13
+                  ]
+               },
+               "text": "    Components: Common",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     13
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlementC5:Adjustments",
+               "text": "    In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     13
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlementC5:Adjustments",
+               "text": "    Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     13
+                  ]
+               },
+               "text": "    Components: Uncommon",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     13
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlementU5:Adjustments",
+               "text": "    In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     13
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlementU5:Adjustments",
+               "text": "    Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     13
+                  ]
+               },
+               "text": "    Components: Rare",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     13
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlementR5:Adjustments",
+               "text": "    In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     13
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlementR5:Adjustments",
+               "text": "    Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     13
+                  ]
+               },
+               "text": "    Components: Special",
+               "type": "section"
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     13
+                  ]
+               },
+               "id": "fMultAdjustScrapperSettlementS5:Adjustments",
+               "text": "    In Player-Owned Settlements",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     13
+                  ]
+               },
+               "id": "fMultAdjustScrapperNotSettlementS5:Adjustments",
+               "text": "    Everywhere Else",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 1,
+                  "min": -1,
+                  "sourceType": "ModSettingFloat",
+                  "step": 0.01
+               }
+            },
+            {
+               "groupCondition": {
+                  "AND": [
+                     10,
+                     13
+                  ]
+               },
+               "lines": 1,
+               "type": "spacer"
+            }
+         ],
+         "pageDisplayName": "Multiplier Adjustments"
+      },
+      {
+         "content": [
+            {
+               "text": "Settings",
+               "type": "section"
+            },
+            {
+               "action": {
+                  "form": "Portable Junk Recycler Mk 2.esp|800",
+                  "function": "MCM_ResetToDefaults",
+                  "type": "CallFunction"
+               },
+               "text": "Reset Settings to Defaults",
+               "type": "button"
+            },
+            {
+               "lines": 1,
+               "type": "spacer"
+            },
+            {
+               "text": "Locks",
+               "type": "section"
+            },
+            {
+               "action": {
+                  "form": "Portable Junk Recycler Mk 2.esp|800",
+                  "function": "MCM_ResetMutexes",
+                  "type": "CallFunction"
+               },
+               "text": "Reset Locks",
+               "type": "button"
+            }
+         ],
+         "pageDisplayName": "Advanced"
+      }
+   ],
+   "pluginRequirements": [
+      "Portable Junk Recycler Mk 2.esp"
+   ]
 }
