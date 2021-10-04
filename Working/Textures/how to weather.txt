@@ -1,0 +1,16 @@
+paint.net
+
+_d file
+-------
+duplicate decal and drag copies to where they need to go in the texture
+duplicate layer
+"rubber stamp" tool (scale=100, roughness=0.900, minimum opacity=0), use 'reseed' button until a good pattern is achieved
+select the main decals (not the one above the power button)
+"hue/saturation" tool (hue=0, saturation=100, lightness=35)
+
+
+_s file
+-------
+copy weathered decal layer from _d file
+paste into _s file and scale down pasted layer to match existing _s canvas size
+"hue/saturation" tool (hue=-114, saturation=200, lightness=-60)
