@@ -165,6 +165,7 @@ bool Function RecycleComponents(ComponentMap[] akComponentMap, float afScrapMult
     bool abRandomAdjustment, float afRandomMin, float afRandomMax)
     bool toReturn = false
     float componentQuantity = 0.0
+    int existingScrapQuantity = 0
 
     ; set basic multiplier value
     float scrapMultiplier = afScrapMultiplier
@@ -178,7 +179,11 @@ bool Function RecycleComponents(ComponentMap[] akComponentMap, float afScrapMult
         componentQuantity = akContainerRef.GetComponentCount(akComponentMap[index].ComponentPart)
         Self._DebugTrace("Component quantity (Initial) = " + componentQuantity)
 
-        if componentQuantity > 0.0
+        ; get the quantity of any scrap parts put into the container
+        existingScrapQuantity = akContainerRef.GetItemCount(akComponentMap[index].ScrapPart)
+        Self._DebugTrace("Scrap quantity already in container = " + existingScrapQuantity)
+
+        if componentQuantity - existingScrapQuantity > 0.0
             ; since there are components to work on, signal that recycling happened
             toReturn = true
 
@@ -193,8 +198,11 @@ bool Function RecycleComponents(ComponentMap[] akComponentMap, float afScrapMult
             ; remove that quantity of component from the inventory
             akContainerRef.RemoveComponents(akComponentMap[index].ComponentPart, componentQuantity as int, true)
 
+            ; remove existing scrap parts from calculations
+            componentQuantity -= existingScrapQuantity
+
             ; compute basic multiplied quantity
-            componentQuantity = componentQuantity * scrapMultiplier
+            componentQuantity *= scrapMultiplier
             Self._DebugTrace("Component quantity (Multiplied) = " + componentQuantity)
 
             ; give at least one component if the option is turned on and quantity <1
@@ -215,8 +223,8 @@ bool Function RecycleComponents(ComponentMap[] akComponentMap, float afScrapMult
                 Self._DebugTrace("Component quantity (Round Down [floor]) = " + componentQuantity)
             EndIf
 
-            ; add the modified quantity of components back to the inventory
-            akContainerRef.AddItem(akComponentMap[index].ScrapPart, componentQuantity as int, true)
+            ; add the modified quantity of components plus any scrap parts back to the inventory
+            akContainerRef.AddItem(akComponentMap[index].ScrapPart, componentQuantity as int + existingScrapQuantity, true)
             Self._DebugTrace("Component quantity (Final) = " + componentQuantity as int)
         EndIf  
 

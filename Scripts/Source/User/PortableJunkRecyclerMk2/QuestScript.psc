@@ -39,7 +39,7 @@ Group Other
 EndGroup
 
 Group RuntimeState
-    ; not real mutexes, but as close as Papyrus supports outside of states
+    ; not real mutexes, but I don't feel like trying to use states for this purpose
     bool Property MutexBusy Auto Hidden
     bool Property MutexRunning Auto Hidden
     bool Property MutexWaiting Auto Hidden
@@ -158,7 +158,7 @@ int Property iSaveFileMonitor Auto Hidden ; Do not mess with ever - this is used
 ; ---------
 
 string ModName = "Portable Junk Recycler Mk 2" const
-string ModVersion = "0.1.1" const
+string ModVersion = "0.2.1" const
 string FullScriptName = "PortableJunkRecyclerMk2:QuestScript" const
 int ScrapperPerkMaxRanksSupported = 5 const
 SettingChangeType AvailableChangeTypes
@@ -190,7 +190,7 @@ Event OnQuestInit()
     Debug.OpenUserLog(ModName)
 
     MutexBusy = true
-    Self._DebugTrace("Portable Junk Recycler v" + ModVersion)
+    Self._DebugTrace(modName + " v" + ModVersion)
     Self._DebugTrace("Beginning onetime init process")
     Self.CheckForCanary()
     Self.InitVariables()
@@ -233,7 +233,7 @@ Event Actor.OnPlayerLoadGame(Actor akSender)
     ; lock function in case user exits game while recycling process is running or this same function is running
     If ! (MutexRunning || MutexBusy)
         MutexBusy = true
-        Self._DebugTrace("Portable Junk Recycler v" + ModVersion)
+        Self._DebugTrace(modName + " v" + ModVersion)
         Self._DebugTrace("Beginning runtime init process")
         Self.CheckForCanary()
         Self.CheckForF4SE()
@@ -263,6 +263,11 @@ EndEvent
 
 ; FUNCTIONS
 ; ---------
+
+; returns the quest script instance
+PortableJunkRecyclerMk2:QuestScript Function GetScript() global
+    Return Game.GetFormFromFile(0x800, "Portable Junk Recycler Mk 2.esp") as PortableJunkRecyclerMk2:QuestScript
+EndFunction
 
 ; add a bit of text to traces going into the papyrus user log
 Function _DebugTrace(string asMessage, int aiSeverity = 0) DebugOnly
@@ -1396,13 +1401,8 @@ EndFunction
 
 ; changes a setting via the settings holotape and displays the new value as a message
 Function ChangeSettingHolotape(var akSettingToChange, var avNewValue, Message akMessage)
-    Self._DebugTrace("Holotape setting change: " + akSettingToChange + " attmpging to change to " + avNewValue)
+    Self._DebugTrace("Holotape setting change: " + akSettingToChange + " attempting to change to " + avNewValue)
     ChangeSetting(akSettingToChange, CurrentChangeType, avNewValue, ModName, akMessage)
-EndFunction
-
-; returns the quest script instance
-PortableJunkRecyclerMk2:QuestScript Function GetScript() global
-    Return Game.GetFormFromFile(0x800, "Portable Junk Recycler Mk 2.esp") as PortableJunkRecyclerMk2:QuestScript
 EndFunction
 
 ; returns true if the player is an an owned workshop
