@@ -16,12 +16,18 @@
         "cSpell.words": [
             "configurability",
             "craftable",
+            "fomod",
             "Grospolina",
             "holotape",
+            "jsonnet",
             "Kentington",
             "kinggath",
             "modders",
-            "Savren"
+            "mutexes",
+            "Savren",
+            "settingmapbool",
+            "skyrim",
+            "structs"
         ]
     }
 }
