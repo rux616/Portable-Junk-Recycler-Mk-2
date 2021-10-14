@@ -1,7 +1,7 @@
 local mcm = import 'lib/mcm.libsonnet';
 
 local mod_name = 'Portable Junk Recycler Mk 2';
-local mod_version = '0.2.1';
+local mod_version = '0.2.3';
 local plugin_name = mod_name + '.esp';
 local quest_form = plugin_name + '|800';
 local min_mcm_version = 2;

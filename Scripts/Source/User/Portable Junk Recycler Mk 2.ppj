@@ -16,7 +16,7 @@
     <Variables>
         <Variable Name="ModName" Value="Portable Junk Recycler Mk 2"/>
         <Variable Name="ModResourceName" Value="PortableJunkRecyclerMk2"/>
-        <Variable Name="ModVersion" Value="0.2.1"/>
+        <Variable Name="ModVersion" Value="0.2.3"/>
         <Variable Name="ModPath" Value="..\..\.."/>
         <Variable Name="BuildPath" Value="@ModPath\Build"/>
         <Variable Name="CompilePath" Value="@ModPath\Scripts"/>
@@ -27,7 +27,7 @@
     <Imports>
         <Import>.</Import>
         <!-- <Import>@ScriptsPathMCM\User</Import> -->
-        <!-- <Import>@ScriptsPathF4SE\User</Import> -->
+        <Import>@ScriptsPathF4SE\User</Import>
         <!-- <Import>@ScriptsPathVanilla\DLC06</Import> -->
         <!-- <Import>@ScriptsPathVanilla\DLC05</Import> -->
         <!-- <Import>@ScriptsPathVanilla\DLC04</Import> -->
