@@ -158,7 +158,7 @@ int Property iSaveFileMonitor Auto Hidden ; Do not mess with ever - this is used
 ; ---------
 
 string ModName = "Portable Junk Recycler Mk 2" const
-string ModVersion = "0.2.1" const
+string ModVersion = "0.2.3" const
 string FullScriptName = "PortableJunkRecyclerMk2:QuestScript" const
 int ScrapperPerkMaxRanksSupported = 5 const
 SettingChangeType AvailableChangeTypes

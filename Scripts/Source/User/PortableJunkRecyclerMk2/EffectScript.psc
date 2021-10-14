@@ -4,6 +4,17 @@ ScriptName PortableJunkRecyclerMk2:EffectScript Extends ActiveMagicEffect
 ; import the base script to get access to the common structs
 import PortableJunkRecyclerMk2:Base
 
+
+
+; STRUCTS
+; -------
+
+Struct ExistingScrap
+    MiscObject ScrapPart
+    int ScrapQuantity
+EndStruct
+
+
 ; PROPERTIES
 ; ----------
 
@@ -31,6 +42,7 @@ Message Property MessageFinishedNothingUsesLeft Auto Const
 ; ---------
 
 string ModName = "Portable Junk Recycler Mk 2" const
+FormList ScriptFilledFormList
 
 
 
@@ -52,6 +64,7 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
         ; place the container at the player, wait, then activate it and wait a moment again
         ObjectReference containerRef = PlayerRef.PlaceAtMe(PortableRecyclerContainer as Form)
         Utility.Wait(1.0)
+        Self._DebugTrace("Temporary container " + containerRef + " created")
         containerRef.Activate(PlayerRef as ObjectReference, true)
         Utility.Wait(0.1)
 
@@ -66,6 +79,16 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
             randomMin = PortableRecyclerQuest.MultAdjustRandomMin.Value
             randomMax = PortableRecyclerQuest.MultAdjustRandomMax.Value
         EndIf
+
+        ; remove existing scrap parts from the container and record quantities
+        ExistingScrap[] existingScrapQuantitiesC = CleanExistingScrap(PortableRecyclerQuest.ComponentMapC, containerRef)
+        Self._DebugTrace("Cleaned existing scrap from ComponentMapC: " + existingScrapQuantitiesC)
+        ExistingScrap[] existingScrapQuantitiesU = CleanExistingScrap(PortableRecyclerQuest.ComponentMapU, containerRef)
+        Self._DebugTrace("Cleaned existing scrap from ComponentMapU: " + existingScrapQuantitiesU)
+        ExistingScrap[] existingScrapQuantitiesR = CleanExistingScrap(PortableRecyclerQuest.ComponentMapR, containerRef)
+        Self._DebugTrace("Cleaned existing scrap from ComponentMapR: " + existingScrapQuantitiesR)
+        ExistingScrap[] existingScrapQuantitiesS = CleanExistingScrap(PortableRecyclerQuest.ComponentMapS, containerRef)
+        Self._DebugTrace("Cleaned existing scrap from ComponentMapS: " + existingScrapQuantitiesS)
 
         ; do the recycling
         Self._DebugTrace("Recycling components from ComponentMapC")
@@ -97,10 +120,44 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
         itemsRecycled = Self.RecycleComponents(PortableRecyclerQuest.ComponentMapS, multipliers.MultS, \
             containerRef, randomAdjustment, randomMin, randomMax) || itemsRecycled
 
+        ; add previously existing scrap back to the container
+        int index = 0
+        While (index < existingScrapQuantitiesC.Length)
+            containerRef.AddItem(existingScrapQuantitiesC[index].ScrapPart, existingScrapQuantitiesC[index].ScrapQuantity, true)
+            Self._DebugTrace(existingScrapQuantitiesC[index].ScrapQuantity + " existing " + \
+                existingScrapQuantitiesC[index].ScrapPart + " re-added")
+            index += 1
+        EndWhile
+        index = 0
+        While (index < existingScrapQuantitiesU.Length)
+            containerRef.AddItem(existingScrapQuantitiesU[index].ScrapPart, existingScrapQuantitiesU[index].ScrapQuantity, true)
+            Self._DebugTrace(existingScrapQuantitiesU[index].ScrapQuantity + " existing " + \
+                existingScrapQuantitiesU[index].ScrapPart + " re-added")
+            index += 1
+        EndWhile
+        index = 0
+        While (index < existingScrapQuantitiesR.Length)
+            containerRef.AddItem(existingScrapQuantitiesR[index].ScrapPart, existingScrapQuantitiesR[index].ScrapQuantity, true)
+            Self._DebugTrace(existingScrapQuantitiesR[index].ScrapQuantity + " existing " + \
+                existingScrapQuantitiesR[index].ScrapPart + " re-added")
+            index += 1
+        EndWhile
+        index = 0
+        While (index < existingScrapQuantitiesS.Length)
+            containerRef.AddItem(existingScrapQuantitiesS[index].ScrapPart, existingScrapQuantitiesS[index].ScrapQuantity, true)
+            Self._DebugTrace(existingScrapQuantitiesS[index].ScrapQuantity + " existing " + \
+                existingScrapQuantitiesS[index].ScrapPart + " re-added")
+            index += 1
+        EndWhile
+
         ; move items over to the intermediate container player
-        containerRef.RemoveAllItems(PlayerRef as ObjectReference)
+        Self._DebugTrace("Moving components from temp container to player")
+        ScriptFilledFormList = Game.GetFormFromFile(0x0818, ModName + ".esp") as FormList
+        Self.RemoveAllItems(containerRef, PlayerRef)
+        ; containerRef.RemoveAllItems(PlayerRef as ObjectReference)
 
         ; delete the containers
+        Self._DebugTrace("Removing temporary container " + containerRef)
         containerRef.Delete()
 
         ; if 'limited uses' mode is on, run through the scenarios for that, otherwise just show completion message
@@ -108,18 +165,23 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
         If PortableRecyclerQuest.HasLimitedUses.Value
             ; if things were actually recycled, increment the number of times used
             PortableRecyclerQuest.NumberOfTimesUsed += itemsRecycled as int
+            Self._DebugTrace("Number of times used incremented by " + itemsRecycled as int + " to " + \
+                PortableRecyclerQuest.NumberOfTimesUsed)
             If ! itemsRecycled
                 ; if nothing was recycled, re-add the recycler item and show a message saying nothing was recycled
+                Self._DebugTrace("Nothing recycled; adding item back to player's inventory")
                 PlayerRef.AddItem(PortableRecyclerItem as Form, 1, true)
                 MessageFinishedNothingUsesLeft.Show(PortableRecyclerQuest.NumberOfUses.Value - \
                     PortableRecyclerQuest.NumberOfTimesUsed)
             ElseIf PortableRecyclerQuest.NumberOfTimesUsed < PortableRecyclerQuest.NumberOfUses.Value
                 ; re-add the portable recycler item if there are uses left
+                Self._DebugTrace("Items recycled and max usage limit not reached; adding item back to player's inventory")
                 PlayerRef.AddItem(PortableRecyclerItem as Form, 1, true)
                 MessageFinishedUsesLeft.Show(PortableRecyclerQuest.NumberOfUses.Value - \
                     PortableRecyclerQuest.NumberOfTimesUsed)
             Else
                 ; if the recycler item use limit is reached, reset the number of times used, but don't re-add the item
+                Self._DebugTrace("Items recycled but max usage limit reached; NOT adding item back to player's inventory")
                 PortableRecyclerQuest.NumberOfTimesUsed = 0
                 MessageFinishedUsesLeft.Show(0)
             EndIf
@@ -159,13 +221,35 @@ Function _DebugTrace(string asMessage, int aiSeverity = 0) DebugOnly
     Debug.TraceUser(ModName, "EffectScript: " + asMessage, aiSeverity)
 EndFunction
 
+; removes existing scrap components and returns an array of quantities removed
+ExistingScrap[] Function CleanExistingScrap(ComponentMap[] akComponentMap, ObjectReference akContainerRef)
+    ExistingScrap[] toReturn = new ExistingScrap[0]
+    int existingScrapQuantity = 0
+    ExistingScrap toAdd
+
+    int index = 0
+    While index < akComponentMap.Length
+        existingScrapQuantity = akContainerRef.GetItemCount(akComponentMap[index].ScrapPart)
+        If existingScrapQuantity
+            toAdd = new ExistingScrap
+            toAdd.ScrapPart = akComponentMap[index].ScrapPart
+            toAdd.ScrapQuantity = existingScrapQuantity
+            toReturn.Add(toAdd)
+            akContainerRef.RemoveItem(toAdd.ScrapPart, toAdd.ScrapQuantity, true)
+            Self._DebugTrace(toAdd.ScrapQuantity + " existing " + toAdd.ScrapPart + " found and removed")
+        EndIf
+        index += 1
+    EndWhile
+
+    Return toReturn
+EndFunction
+
 ; recycle the components contained in the passed componentmap array
 ; returns true if any components were actually recycled
 bool Function RecycleComponents(ComponentMap[] akComponentMap, float afScrapMultiplier, ObjectReference akContainerRef, \
     bool abRandomAdjustment, float afRandomMin, float afRandomMax)
     bool toReturn = false
     float componentQuantity = 0.0
-    int existingScrapQuantity = 0
 
     ; set basic multiplier value
     float scrapMultiplier = afScrapMultiplier
@@ -179,11 +263,7 @@ bool Function RecycleComponents(ComponentMap[] akComponentMap, float afScrapMult
         componentQuantity = akContainerRef.GetComponentCount(akComponentMap[index].ComponentPart)
         Self._DebugTrace("Component quantity (Initial) = " + componentQuantity)
 
-        ; get the quantity of any scrap parts put into the container
-        existingScrapQuantity = akContainerRef.GetItemCount(akComponentMap[index].ScrapPart)
-        Self._DebugTrace("Scrap quantity already in container = " + existingScrapQuantity)
-
-        if componentQuantity - existingScrapQuantity > 0.0
+        if componentQuantity > 0.0
             ; since there are components to work on, signal that recycling happened
             toReturn = true
 
@@ -195,11 +275,8 @@ bool Function RecycleComponents(ComponentMap[] akComponentMap, float afScrapMult
                 Self._DebugTrace("Multiplier: " + scrapMultiplier)
             EndIf
 
-            ; remove that quantity of component from the inventory
+            ; remove all components of the type from the inventory
             akContainerRef.RemoveComponents(akComponentMap[index].ComponentPart, componentQuantity as int, true)
-
-            ; remove existing scrap parts from calculations
-            componentQuantity -= existingScrapQuantity
 
             ; compute basic multiplied quantity
             componentQuantity *= scrapMultiplier
@@ -223,8 +300,8 @@ bool Function RecycleComponents(ComponentMap[] akComponentMap, float afScrapMult
                 Self._DebugTrace("Component quantity (Round Down [floor]) = " + componentQuantity)
             EndIf
 
-            ; add the modified quantity of components plus any scrap parts back to the inventory
-            akContainerRef.AddItem(akComponentMap[index].ScrapPart, componentQuantity as int + existingScrapQuantity, true)
+            ; add the modified quantity of components back to the inventory
+            akContainerRef.AddItem(akComponentMap[index].ScrapPart, componentQuantity as int, true)
             Self._DebugTrace("Component quantity (Final) = " + componentQuantity as int)
         EndIf  
 
@@ -232,4 +309,20 @@ bool Function RecycleComponents(ComponentMap[] akComponentMap, float afScrapMult
     EndWhile
 
     Return toReturn
+EndFunction
+
+bool Function FillFormList(Form[] akItems)
+	ScriptFilledFormList.Revert()
+	int i = 0
+	While i < akItems.Length
+        ScriptFilledFormList.AddForm(akItems[i])
+		i += 1
+	EndWhile
+	Return ScriptFilledFormList.GetSize()
+EndFunction
+
+Function RemoveAllItems(ObjectReference akOriginContainerRef, ObjectReference akDestContainerRef, bool abSilent = true)
+	If(FillFormList(akOriginContainerRef.GetInventoryItems()))
+		akOriginContainerRef.RemoveItem(ScriptFilledFormList, -1, abSilent, akDestContainerRef)
+	EndIf
 EndFunction
