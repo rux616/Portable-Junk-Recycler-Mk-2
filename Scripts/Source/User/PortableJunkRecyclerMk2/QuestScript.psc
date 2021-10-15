@@ -2,6 +2,8 @@ ScriptName PortableJunkRecyclerMk2:QuestScript extends Quest
 
 import PortableJunkRecyclerMk2:Base
 
+
+
 ; PROPERTIES
 ; ----------
 
@@ -24,6 +26,7 @@ EndGroup
 
 Group Other
     Actor Property PlayerRef Auto Const
+    Message Property MessageF4SENotInstalled Auto Const
     Message Property MessageInitialized Auto Const
     Message Property MessageCurrentMultipliers Auto Const
     Message Property MessageCurrentMultipliersRng Auto Const
@@ -73,6 +76,7 @@ Group Settings
     SettingInt Property FractionalComponentHandling Auto Hidden
     SettingBool Property HasLimitedUses Auto Hidden
     SettingInt Property NumberOfUses Auto Hidden
+    SettingBool Property ReturnItemsSilently Auto Hidden
 
     ; settings - adjustment options
     SettingInt Property GeneralMultAdjust Auto Hidden
@@ -132,54 +136,38 @@ Group Settings
     SettingFloat[] Property MultAdjustScrapperNotSettlementS Auto Hidden
 EndGroup
 
-Group Globals
-    ; settings - general
-    GlobalVariable Property GlobalReturnAtLeastOneComponent Auto
-    GlobalVariable Property GlobalFractionalComponentHandling Auto
-    GlobalVariable Property GlobalHasLimitedUses Auto
-
-    ; settings - adjustment options
-    GlobalVariable Property GlobalGeneralMultAdjust Auto
-    GlobalVariable Property GlobalIntAffectsMult Auto
-    GlobalVariable Property GlobalLckAffectsMult Auto
-    GlobalVariable Property GlobalRngAffectsMult Auto
-    GlobalVariable Property GlobalScrapperAffectsMult Auto
-    GlobalVariable Property GlobalScrapper3Available Auto
-    GlobalVariable Property GlobalScrapper4Available Auto
-    GlobalVariable Property GlobalScrapper5Available Auto
-EndGroup
-
 int Property iSaveFileMonitor Auto Hidden ; Do not mess with ever - this is used by Canary to track data loss
 { Canary support
   https://www.nexusmods.com/fallout4/mods/44949 }
+
 
 
 ; VARIABLES
 ; ---------
 
 string ModName = "Portable Junk Recycler Mk 2" const
-string ModVersion = "0.2.3" const
+string ModVersion = "0.3.0" const
 string FullScriptName = "PortableJunkRecyclerMk2:QuestScript" const
 int ScrapperPerkMaxRanksSupported = 5 const
 SettingChangeType AvailableChangeTypes
 int CurrentChangeType
 
-string F4SEScriptF4SE = "F4SE" const
-string F4SEScriptForm = "Form" const
-string F4SEScriptPerk = "Perk" const
-string F4SEFuncGetVersion = "GetVersion" const
-string F4SEFuncGetVersionMinor = "GetVersionMinor" const
-string F4SEFuncGetVersionBeta = "GetVersionBeta" const
-string F4SEFuncGetVersionRelease = "GetVersionRelease" const
-string F4SEFuncGetScriptVersionRelease = "GetScriptVersionRelease" const
-string F4SEFuncGetNumRanks = "GetNumRanks" const
-string F4SEFuncGetNextPerk = "GetNextPerk" const
-string F4SEFuncRegisterForExternalEvent = "RegisterForExternalEvent" const
+; string F4SEScriptF4SE = "F4SE" const
+; string F4SEScriptForm = "Form" const
+; string F4SEScriptPerk = "Perk" const
+; string F4SEFuncGetVersion = "GetVersion" const
+; string F4SEFuncGetVersionMinor = "GetVersionMinor" const
+; string F4SEFuncGetVersionBeta = "GetVersionBeta" const
+; string F4SEFuncGetVersionRelease = "GetVersionRelease" const
+; string F4SEFuncGetScriptVersionRelease = "GetScriptVersionRelease" const
+; string F4SEFuncGetNumRanks = "GetNumRanks" const
+; string F4SEFuncGetNextPerk = "GetNextPerk" const
+; string F4SEFuncRegisterForExternalEvent = "RegisterForExternalEvent" const
 
-string MCMScript = "MCM" const
-string MCMFuncIsInstalled = "IsInstalled" const
-string MCMFuncGetVersionCode = "GetVersionCode" const
-string MCMFuncRefreshMenu = "RefreshMenu" const
+; string MCMScript = "MCM" const
+; string MCMFuncIsInstalled = "IsInstalled" const
+; string MCMFuncGetVersionCode = "GetVersionCode" const
+; string MCMFuncRefreshMenu = "RefreshMenu" const
 
 
 
@@ -193,10 +181,10 @@ Event OnQuestInit()
     Self._DebugTrace(modName + " v" + ModVersion)
     Self._DebugTrace("Beginning onetime init process")
     Self.CheckForCanary()
-    Self.InitVariables()
+    Self.InitVariables(abForce = true)
     Self.CheckForF4SE()
     Self.CheckForMCM()
-    Self.InitSettings()
+    Self.InitSettings(abForce = true)
     Self.InitSettingsSupplemental()
     Self.InitComponentMaps()
     Self.InitScrapperPerks()
@@ -220,7 +208,7 @@ Event Actor.OnPlayerLoadGame(Actor akSender)
         Self._DebugTrace("OnPlayerLoadGame: Already a thread waiting on mutex release; aborting")
         Return
     EndIf
-    
+
     ; wait up to 5 seconds for mutexes to release
     int waitTimeLeft = 5
     While (MutexRunning || MutexBusy) && waitTimeLeft
@@ -236,8 +224,10 @@ Event Actor.OnPlayerLoadGame(Actor akSender)
         Self._DebugTrace(modName + " v" + ModVersion)
         Self._DebugTrace("Beginning runtime init process")
         Self.CheckForCanary()
+        Self.InitVariables()
         Self.CheckForF4SE()
         Self.CheckForMCM()
+        Self.InitSettings()
         Self.InitSettingsSupplemental()
         Self.InitComponentMaps()
         Self.InitScrapperPerks()
@@ -275,27 +265,27 @@ Function _DebugTrace(string asMessage, int aiSeverity = 0) DebugOnly
 EndFunction
 
 ; initialize script-internal variables
-Function InitVariables()
+Function InitVariables(bool abForce = false)
     Self._DebugTrace("Initializing variables")
-    AvailableChangeTypes = new SettingChangeType
+    If abForce || ! AvailableChangeTypes
+        Self._DebugTrace("Initializing AvailableChangeTypes")
+        AvailableChangeTypes = new SettingChangeType
+    EndIf
 EndFunction
 
 ; check to see if F4SE is installed
 Function CheckForF4SE()
     Debug.Trace("PortableJunkRecyclerMk2:QuestScript: Checking if F4SE is installed...")
     Self._DebugTrace("Checking if F4SE is installed...")
-    ScriptExtenderInstalled = Utility.CallGlobalFunction(F4SEScriptF4SE, F4SEFuncGetVersionRelease, new var[0]) as bool
+    ScriptExtenderInstalled = F4SE.GetVersionRelease() as bool
     If ScriptExtenderInstalled
         Debug.Trace("PortableJunkRecyclerMk2:QuestScript: F4SE installed")
-        Self._DebugTrace("F4SE v" + \
-            Utility.CallGlobalFunction(F4SEScriptF4SE, F4SEFuncGetVersion, new var[0]) + "." + \
-            Utility.CallGlobalFunction(F4SEScriptF4SE, F4SEFuncGetVersionMinor, new var[0]) + "." + \
-            Utility.CallGlobalFunction(F4SEScriptF4SE, F4SEFuncGetVersionBeta, new var[0]) + "." + \
-            Utility.CallGlobalFunction(F4SEScriptF4SE, F4SEFuncGetVersionRelease, new var[0]) + " installed (script version " + \
-            Utility.CallGlobalFunction(F4SEScriptF4SE, F4SEFuncGetScriptVersionRelease, new var[0]) + ")")
+        Self._DebugTrace("F4SE v" + F4SE.GetVersion() + "." + F4SE.GetVersionMinor() + "." + F4SE.GetVersionBeta() + "." + \
+            F4SE.GetVersionRelease() + " installed (script version " + F4SE.GetScriptVersionRelease() + ")")
     Else
-        Debug.Trace("PortableJunkRecyclerMk2:QuestScript: F4SE not installed")
-        Self._DebugTrace("F4SE not installed")
+        Debug.Trace("PortableJunkRecyclerMk2:QuestScript: F4SE not installed", 1)
+        Self._DebugTrace("F4SE not installed", 1)
+        MessageF4SENotInstalled.Show()
     EndIf
 EndFunction
 
@@ -303,11 +293,10 @@ EndFunction
 Function CheckForMCM()
     Debug.Trace("PortableJunkRecyclerMk2:QuestScript: Checking if MCM is installed...")
     Self._DebugTrace("Checking if MCM is installed...")
-    ModConfigMenuInstalled = Utility.CallGlobalFunction(MCMScript, MCMFuncIsInstalled, new var[0]) as bool
+    ModConfigMenuInstalled = MCM.IsInstalled() as bool
     If ModConfigMenuInstalled && ScriptExtenderInstalled
         Debug.Trace("PortableJunkRecyclerMk2:QuestScript: MCM installed")
-        Self._DebugTrace("MCM v" + \
-            Utility.CallGlobalFunction(MCMScript, MCMFuncGetVersionCode, new var[0]) + " installed")
+        Self._DebugTrace("MCM installed (version code " + MCM.GetVersionCode() + ")")
         CurrentChangeType = AvailableChangeTypes.Both
     ElseIf ModConfigMenuInstalled && ! ScriptExtenderInstalled
         Debug.Trace("PortableJunkRecyclerMk2:QuestScript: MCM installed, but F4SE is not; disabling support")
@@ -322,89 +311,273 @@ Function CheckForMCM()
 EndFunction
 
 ; initialize properties that hold settings
-Function InitSettings()
+Function InitSettings(bool abForce = false)
     Self._DebugTrace("Initializing settings")
 
     ; settings - general
-    MultBase = new SettingFloat
-    ReturnAtLeastOneComponent = new SettingBool
-    FractionalComponentHandling = new SettingInt
-    HasLimitedUses = new SettingBool
-    NumberOfUses = new SettingInt
+    If abForce || ! MultBase
+        Self._DebugTrace("Initializing MultBase")
+        MultBase  = new SettingFloat
+    EndIf
+    If abForce || ! ReturnAtLeastOneComponent
+        Self._DebugTrace("Initializing ReturnAtLeastOneComponent")
+        ReturnAtLeastOneComponent  = new SettingBool
+    EndIf
+    If abForce || ! FractionalComponentHandling
+        Self._DebugTrace("Initializing FractionalComponentHandling")
+        FractionalComponentHandling  = new SettingInt
+    EndIf
+    If abForce || ! HasLimitedUses
+        Self._DebugTrace("Initializing HasLimitedUses")
+        HasLimitedUses  = new SettingBool
+    EndIf
+    If abForce || ! NumberOfUses
+        Self._DebugTrace("Initializing NumberOfUses")
+        NumberOfUses  = new SettingInt
+    EndIf
+    If abForce || ! ReturnItemsSilently
+        Self._DebugTrace("Initializing ReturnItemsSilently")
+        ReturnItemsSilently  = new SettingBool
+    EndIf
 
     ; settings - adjustment options
-    GeneralMultAdjust = new SettingInt
-    IntAffectsMult = new SettingInt
-    LckAffectsMult = new SettingInt
-    RngAffectsMult = new SettingInt
-    ScrapperAffectsMult = new SettingInt
+    If abForce || ! GeneralMultAdjust
+        Self._DebugTrace("Initializing GeneralMultAdjust")
+        GeneralMultAdjust  = new SettingInt
+    EndIf
+    If abForce || ! IntAffectsMult
+        Self._DebugTrace("Initializing IntAffectsMult")
+        IntAffectsMult  = new SettingInt
+    EndIf
+    If abForce || ! LckAffectsMult
+        Self._DebugTrace("Initializing LckAffectsMult")
+        LckAffectsMult  = new SettingInt
+    EndIf
+    If abForce || ! RngAffectsMult
+        Self._DebugTrace("Initializing RngAffectsMult")
+        RngAffectsMult  = new SettingInt
+    EndIf
+    If abForce || ! ScrapperAffectsMult
+        Self._DebugTrace("Initializing ScrapperAffectsMult")
+        ScrapperAffectsMult  = new SettingInt
+    EndIf
 
     ; multiplier adjustments - general
-    MultAdjustGeneralSettlement = new SettingFloat
-    MultAdjustGeneralSettlementC = new SettingFloat
-    MultAdjustGeneralSettlementU = new SettingFloat
-    MultAdjustGeneralSettlementR = new SettingFloat
-    MultAdjustGeneralSettlementS = new SettingFloat
+    If abForce || ! MultAdjustGeneralSettlement
+        Self._DebugTrace("Initializing MultAdjustGeneralSettlement")
+        MultAdjustGeneralSettlement  = new SettingFloat
+    EndIf
+    If abForce || ! MultAdjustGeneralSettlementC
+        Self._DebugTrace("Initializing MultAdjustGeneralSettlementC")
+        MultAdjustGeneralSettlementC  = new SettingFloat
+    EndIf
+    If abForce || ! MultAdjustGeneralSettlementU
+        Self._DebugTrace("Initializing MultAdjustGeneralSettlementU")
+        MultAdjustGeneralSettlementU  = new SettingFloat
+    EndIf
+    If abForce || ! MultAdjustGeneralSettlementR
+        Self._DebugTrace("Initializing MultAdjustGeneralSettlementR")
+        MultAdjustGeneralSettlementR  = new SettingFloat
+    EndIf
+    If abForce || ! MultAdjustGeneralSettlementS
+        Self._DebugTrace("Initializing MultAdjustGeneralSettlementS")
+        MultAdjustGeneralSettlementS  = new SettingFloat
+    EndIf
 
-    MultAdjustGeneralNotSettlement = new SettingFloat
-    MultAdjustGeneralNotSettlementC = new SettingFloat
-    MultAdjustGeneralNotSettlementU = new SettingFloat
-    MultAdjustGeneralNotSettlementR = new SettingFloat
-    MultAdjustGeneralNotSettlementS = new SettingFloat
+    If abForce || ! MultAdjustGeneralNotSettlement
+        Self._DebugTrace("Initializing MultAdjustGeneralNotSettlement")
+        MultAdjustGeneralNotSettlement  = new SettingFloat
+    EndIf
+    If abForce || ! MultAdjustGeneralNotSettlementC
+        Self._DebugTrace("Initializing MultAdjustGeneralNotSettlementC")
+        MultAdjustGeneralNotSettlementC  = new SettingFloat
+    EndIf
+    If abForce || ! MultAdjustGeneralNotSettlementU
+        Self._DebugTrace("Initializing MultAdjustGeneralNotSettlementU")
+        MultAdjustGeneralNotSettlementU  = new SettingFloat
+    EndIf
+    If abForce || ! MultAdjustGeneralNotSettlementR
+        Self._DebugTrace("Initializing MultAdjustGeneralNotSettlementR")
+        MultAdjustGeneralNotSettlementR  = new SettingFloat
+    EndIf
+    If abForce || ! MultAdjustGeneralNotSettlementS
+        Self._DebugTrace("Initializing MultAdjustGeneralNotSettlementS")
+        MultAdjustGeneralNotSettlementS  = new SettingFloat
+    EndIf
 
     ; multiplier adjustments - intelligence
-    MultAdjustInt = new SettingFloat
-    MultAdjustIntC = new SettingFloat
-    MultAdjustIntU = new SettingFloat
-    MultAdjustIntR = new SettingFloat
-    MultAdjustIntS = new SettingFloat
+    If abForce || ! MultAdjustInt
+        Self._DebugTrace("Initializing MultAdjustInt")
+        MultAdjustInt  = new SettingFloat
+    EndIf
+    If abForce || ! MultAdjustIntC
+        Self._DebugTrace("Initializing MultAdjustIntC")
+        MultAdjustIntC  = new SettingFloat
+    EndIf
+    If abForce || ! MultAdjustIntU
+        Self._DebugTrace("Initializing MultAdjustIntU")
+        MultAdjustIntU  = new SettingFloat
+    EndIf
+    If abForce || ! MultAdjustIntR
+        Self._DebugTrace("Initializing MultAdjustIntR")
+        MultAdjustIntR  = new SettingFloat
+    EndIf
+    If abForce || ! MultAdjustIntS
+        Self._DebugTrace("Initializing MultAdjustIntS")
+        MultAdjustIntS  = new SettingFloat
+    EndIf
 
     ; multiplier adjustments - luck
-    MultAdjustLck = new SettingFloat
-    MultAdjustLckC = new SettingFloat
-    MultAdjustLckU = new SettingFloat
-    MultAdjustLckR = new SettingFloat
-    MultAdjustLckS = new SettingFloat
+    If abForce || ! MultAdjustLck
+        Self._DebugTrace("Initializing MultAdjustLck")
+        MultAdjustLck  = new SettingFloat
+    EndIf
+    If abForce || ! MultAdjustLckC
+        Self._DebugTrace("Initializing MultAdjustLckC")
+        MultAdjustLckC  = new SettingFloat
+    EndIf
+    If abForce || ! MultAdjustLckU
+        Self._DebugTrace("Initializing MultAdjustLckU")
+        MultAdjustLckU  = new SettingFloat
+    EndIf
+    If abForce || ! MultAdjustLckR
+        Self._DebugTrace("Initializing MultAdjustLckR")
+        MultAdjustLckR  = new SettingFloat
+    EndIf
+    If abForce || ! MultAdjustLckS
+        Self._DebugTrace("Initializing MultAdjustLckS")
+        MultAdjustLckS  = new SettingFloat
+    EndIf
 
     ; multiplier adjustments - randomness
-    MultAdjustRandomMin = new SettingFloat
-    MultAdjustRandomMinC = new SettingFloat
-    MultAdjustRandomMinU = new SettingFloat
-    MultAdjustRandomMinR = new SettingFloat
-    MultAdjustRandomMinS = new SettingFloat
+    If abForce || ! MultAdjustRandomMin
+        Self._DebugTrace("Initializing MultAdjustRandomMin")
+        MultAdjustRandomMin  = new SettingFloat
+    EndIf
+    If abForce || ! MultAdjustRandomMinC
+        Self._DebugTrace("Initializing MultAdjustRandomMinC")
+        MultAdjustRandomMinC  = new SettingFloat
+    EndIf
+    If abForce || ! MultAdjustRandomMinU
+        Self._DebugTrace("Initializing MultAdjustRandomMinU")
+        MultAdjustRandomMinU  = new SettingFloat
+    EndIf
+    If abForce || ! MultAdjustRandomMinR
+        Self._DebugTrace("Initializing MultAdjustRandomMinR")
+        MultAdjustRandomMinR  = new SettingFloat
+    EndIf
+    If abForce || ! MultAdjustRandomMinS
+        Self._DebugTrace("Initializing MultAdjustRandomMinS")
+        MultAdjustRandomMinS  = new SettingFloat
+    EndIf
 
-    MultAdjustRandomMax = new SettingFloat
-    MultAdjustRandomMaxC = new SettingFloat
-    MultAdjustRandomMaxU = new SettingFloat
-    MultAdjustRandomMaxR = new SettingFloat
-    MultAdjustRandomMaxS = new SettingFloat
+    If abForce || ! MultAdjustRandomMax
+        Self._DebugTrace("Initializing MultAdjustRandomMax")
+        MultAdjustRandomMax  = new SettingFloat
+    EndIf
+    If abForce || ! MultAdjustRandomMaxC
+        Self._DebugTrace("Initializing MultAdjustRandomMaxC")
+        MultAdjustRandomMaxC  = new SettingFloat
+    EndIf
+    If abForce || ! MultAdjustRandomMaxU
+        Self._DebugTrace("Initializing MultAdjustRandomMaxU")
+        MultAdjustRandomMaxU  = new SettingFloat
+    EndIf
+    If abForce || ! MultAdjustRandomMaxR
+        Self._DebugTrace("Initializing MultAdjustRandomMaxR")
+        MultAdjustRandomMaxR  = new SettingFloat
+    EndIf
+    If abForce || ! MultAdjustRandomMaxS
+        Self._DebugTrace("Initializing MultAdjustRandomMaxS")
+        MultAdjustRandomMaxS  = new SettingFloat
+    EndIf
 
     ; multiplier adjustments - scrapper 1-5
-    MultAdjustScrapperSettlement = new SettingFloat[ScrapperPerkMaxRanksSupported]
-    MultAdjustScrapperSettlementC = new SettingFloat[ScrapperPerkMaxRanksSupported]
-    MultAdjustScrapperSettlementU = new SettingFloat[ScrapperPerkMaxRanksSupported]
-    MultAdjustScrapperSettlementR = new SettingFloat[ScrapperPerkMaxRanksSupported]
-    MultAdjustScrapperSettlementS = new SettingFloat[ScrapperPerkMaxRanksSupported]
+    If abForce || ! MultAdjustScrapperSettlement
+        Self._DebugTrace("Initializing MultAdjustScrapperSettlement")
+        MultAdjustScrapperSettlement  = new SettingFloat[ScrapperPerkMaxRanksSupported]
+    EndIf
+    If abForce || ! MultAdjustScrapperSettlementC
+        Self._DebugTrace("Initializing MultAdjustScrapperSettlementC")
+        MultAdjustScrapperSettlementC  = new SettingFloat[ScrapperPerkMaxRanksSupported]
+    EndIf
+    If abForce || ! MultAdjustScrapperSettlementU
+        Self._DebugTrace("Initializing MultAdjustScrapperSettlementU")
+        MultAdjustScrapperSettlementU  = new SettingFloat[ScrapperPerkMaxRanksSupported]
+    EndIf
+    If abForce || ! MultAdjustScrapperSettlementR
+        Self._DebugTrace("Initializing MultAdjustScrapperSettlementR")
+        MultAdjustScrapperSettlementR  = new SettingFloat[ScrapperPerkMaxRanksSupported]
+    EndIf
+    If abForce || ! MultAdjustScrapperSettlementS
+        Self._DebugTrace("Initializing MultAdjustScrapperSettlementS")
+        MultAdjustScrapperSettlementS  = new SettingFloat[ScrapperPerkMaxRanksSupported]
+    EndIf
 
-    MultAdjustScrapperNotSettlement = new SettingFloat[ScrapperPerkMaxRanksSupported]
-    MultAdjustScrapperNotSettlementC = new SettingFloat[ScrapperPerkMaxRanksSupported]
-    MultAdjustScrapperNotSettlementU = new SettingFloat[ScrapperPerkMaxRanksSupported]
-    MultAdjustScrapperNotSettlementR = new SettingFloat[ScrapperPerkMaxRanksSupported]
-    MultAdjustScrapperNotSettlementS = new SettingFloat[ScrapperPerkMaxRanksSupported]
+    If abForce || ! MultAdjustScrapperNotSettlement
+        Self._DebugTrace("Initializing MultAdjustScrapperNotSettlement")
+        MultAdjustScrapperNotSettlement  = new SettingFloat[ScrapperPerkMaxRanksSupported]
+    EndIf
+    If abForce || ! MultAdjustScrapperNotSettlementC
+        Self._DebugTrace("Initializing MultAdjustScrapperNotSettlementC")
+        MultAdjustScrapperNotSettlementC  = new SettingFloat[ScrapperPerkMaxRanksSupported]
+    EndIf
+    If abForce || ! MultAdjustScrapperNotSettlementU
+        Self._DebugTrace("Initializing MultAdjustScrapperNotSettlementU")
+        MultAdjustScrapperNotSettlementU  = new SettingFloat[ScrapperPerkMaxRanksSupported]
+    EndIf
+    If abForce || ! MultAdjustScrapperNotSettlementR
+        Self._DebugTrace("Initializing MultAdjustScrapperNotSettlementR")
+        MultAdjustScrapperNotSettlementR  = new SettingFloat[ScrapperPerkMaxRanksSupported]
+    EndIf
+    If abForce || ! MultAdjustScrapperNotSettlementS
+        Self._DebugTrace("Initializing MultAdjustScrapperNotSettlementS")
+        MultAdjustScrapperNotSettlementS  = new SettingFloat[ScrapperPerkMaxRanksSupported]
+    EndIf
 
     int index = 0
     While index < ScrapperPerkMaxRanksSupported
-        MultAdjustScrapperSettlement[index] = new SettingFloat
-        MultAdjustScrapperSettlementC[index] = new SettingFloat
-        MultAdjustScrapperSettlementU[index] = new SettingFloat
-        MultAdjustScrapperSettlementR[index] = new SettingFloat
-        MultAdjustScrapperSettlementS[index] = new SettingFloat
+        If abForce || ! MultAdjustScrapperSettlement[index]
+            Self._DebugTrace("Initializing MultAdjustScrapperSettlement[" + index + "]")
+            MultAdjustScrapperSettlement[index]  = new SettingFloat
+        EndIf
+        If abForce || ! MultAdjustScrapperSettlementC[index]
+            Self._DebugTrace("Initializing MultAdjustScrapperSettlementC[" + index + "]")
+            MultAdjustScrapperSettlementC[index]  = new SettingFloat
+        EndIf
+        If abForce || ! MultAdjustScrapperSettlementU[index]
+            Self._DebugTrace("Initializing MultAdjustScrapperSettlementU[" + index + "]")
+            MultAdjustScrapperSettlementU[index]  = new SettingFloat
+        EndIf
+        If abForce || ! MultAdjustScrapperSettlementR[index]
+            Self._DebugTrace("Initializing MultAdjustScrapperSettlementR[" + index + "]")
+            MultAdjustScrapperSettlementR[index]  = new SettingFloat
+        EndIf
+        If abForce || ! MultAdjustScrapperSettlementS[index]
+            Self._DebugTrace("Initializing MultAdjustScrapperSettlementS[" + index + "]")
+            MultAdjustScrapperSettlementS[index]  = new SettingFloat
+        EndIf
 
-        MultAdjustScrapperNotSettlement[index] = new SettingFloat
-        MultAdjustScrapperNotSettlementC[index] = new SettingFloat
-        MultAdjustScrapperNotSettlementU[index] = new SettingFloat
-        MultAdjustScrapperNotSettlementR[index] = new SettingFloat
-        MultAdjustScrapperNotSettlementS[index] = new SettingFloat
+        If abForce || ! MultAdjustScrapperNotSettlement[index]
+            Self._DebugTrace("Initializing MultAdjustScrapperNotSettlement[" + index + "]")
+            MultAdjustScrapperNotSettlement[index]  = new SettingFloat
+        EndIf
+        If abForce || ! MultAdjustScrapperNotSettlementC[index]
+            Self._DebugTrace("Initializing MultAdjustScrapperNotSettlementC[" + index + "]")
+            MultAdjustScrapperNotSettlementC[index]  = new SettingFloat
+        EndIf
+        If abForce || ! MultAdjustScrapperNotSettlementU[index]
+            Self._DebugTrace("Initializing MultAdjustScrapperNotSettlementU[" + index + "]")
+            MultAdjustScrapperNotSettlementU[index]  = new SettingFloat
+        EndIf
+        If abForce || ! MultAdjustScrapperNotSettlementR[index]
+            Self._DebugTrace("Initializing MultAdjustScrapperNotSettlementR[" + index + "]")
+            MultAdjustScrapperNotSettlementR[index]  = new SettingFloat
+        EndIf
+        If abForce || ! MultAdjustScrapperNotSettlementS[index]
+            Self._DebugTrace("Initializing MultAdjustScrapperNotSettlementS[" + index + "]")
+            MultAdjustScrapperNotSettlementS[index]  = new SettingFloat
+        EndIf
 
         index += 1
     EndWhile
@@ -422,51 +595,46 @@ Function InitSettingsSupplemental()
 
     ReturnAtLeastOneComponent.ValueDefault = true
     ReturnAtLeastOneComponent.McmId = "bReturnAtLeastOneComponent:General"
-    ReturnAtLeastOneComponent.GlobalVar = GlobalReturnAtLeastOneComponent
 
     FractionalComponentHandling.ValueDefault = 2
     FractionalComponentHandling.McmId = "iFractionalComponentHandling:General"
-    FractionalComponentHandling.GlobalVar = GlobalFractionalComponentHandling
     FractionalComponentHandling.ValueMin = 0
     FractionalComponentHandling.ValueMax = 2
 
     HasLimitedUses.ValueDefault = false
     HasLimitedUses.McmId = "bHasLimitedUses:General"
-    HasLimitedUses.GlobalVar = GlobalHasLimitedUses
 
     NumberOfUses.ValueDefault = 50
     NumberOfUses.McmId = "iNumberOfUses:General"
     NumberOfUses.ValueMin = 1
     NumberOfUses.ValueMax = 200
 
+    ReturnItemsSilently.ValueDefault = true
+    ReturnItemsSilently.McmId = "bReturnItemsSilently:General"
+
     ; settings - adjustment options
     GeneralMultAdjust.ValueDefault = 0
     GeneralMultAdjust.McmId = "iGeneralMultAdjust:General"
-    GeneralMultAdjust.GlobalVar = GlobalGeneralMultAdjust
     GeneralMultAdjust.ValueMin = 0
     GeneralMultAdjust.ValueMax = 1
 
     IntAffectsMult.ValueDefault = 1
     IntAffectsMult.McmId = "iIntAffectsMult:General"
-    IntAffectsMult.GlobalVar = GlobalIntAffectsMult
     IntAffectsMult.ValueMin = 0
     IntAffectsMult.ValueMax = 2
 
     LckAffectsMult.ValueDefault = 1
     LckAffectsMult.McmId = "iLckAffectsMult:General"
-    LckAffectsMult.GlobalVar = GlobalLckAffectsMult
     LckAffectsMult.ValueMin = 0
     LckAffectsMult.ValueMax = 2
 
     RngAffectsMult.ValueDefault = 0
     RngAffectsMult.McmId = "iRngAffectsMult:General"
-    RngAffectsMult.GlobalVar = GlobalRngAffectsMult
     RngAffectsMult.ValueMin = 0
     RngAffectsMult.ValueMax = 2
 
     ScrapperAffectsMult.ValueDefault = 1
     ScrapperAffectsMult.McmId = "iScrapperAffectsMult:General"
-    ScrapperAffectsMult.GlobalVar = GlobalScrapperAffectsMult
     ScrapperAffectsMult.ValueMin = 0
     ScrapperAffectsMult.ValueMax = 2
 
@@ -567,7 +735,7 @@ Function InitSettingsSupplemental()
     MultAdjustLckR.McmId = "fMultAdjustLckR:Adjustments"
     MultAdjustLckR.ValueMin = 0.0
     MultAdjustLckR.ValueMax = 1.0
-    
+
     MultAdjustLckS.ValueDefault = 0.0
     MultAdjustLckS.McmId = "fMultAdjustLckS:Adjustments"
     MultAdjustLckS.ValueMin = 0.0
@@ -698,6 +866,7 @@ Function InitSettingsDefaultValues()
     ChangeSetting(FractionalComponentHandling, CurrentChangeType, FractionalComponentHandling.ValueDefault, ModName)
     ChangeSetting(HasLimitedUses, CurrentChangeType, HasLimitedUses.ValueDefault, ModName)
     ChangeSetting(NumberOfUses, CurrentChangeType, NumberOfUses.ValueDefault, ModName)
+    ChangeSetting(ReturnItemsSilently, CurrentChangeType, ReturnItemsSilently.ValueDefault, ModName)
 
     ; settings - adjustment options
     ChangeSetting(GeneralMultAdjust, CurrentChangeType, GeneralMultAdjust.ValueDefault, ModName)
@@ -813,32 +982,15 @@ Function InitScrapperPerks()
     ; seed array with initial scrapper perk
     ScrapperPerks.Add(Game.GetFormFromFile(0x065E65, "Fallout4.esm") as Perk) ; scrapper rank 1
 
-    If ! ScriptExtenderInstalled
-        ; if F4SE isn't installed, limit scrapper perk support to vanilla + DLC ranks
-        Self._DebugTrace("F4SE not installed; loading specific perks")
-        ScrapperPerks.Add(Game.GetFormFromFile(0x1D2483, "Fallout4.esm") as Perk) ; scrapper rank 2
-        If Game.IsPluginInstalled("DLCCoast.esm")
-            ScrapperPerks.Add(Game.GetFormFromFile(0x0423A5, "DLCCoast.esm") as Perk) ; scrapper rank 3
-        EndIf
-    Else
-        Self._DebugTrace("F4SE installed; loading perks dynamically")
-        ; with F4SE installed, can get a bit fancy and load perks dynamically, but we want to ignore any
-        ; perk ranks > the number supported
-        ScriptObject f4sePerk = ScrapperPerks[0].CastAs(F4SEScriptForm)
-        int numScrapperRanks = f4sePerk.CallFunction(F4SEFuncGetNumRanks, new var[0]) as int
-        While ScrapperPerks.Length < numScrapperRanks && ScrapperPerks.Length < ScrapperPerkMaxRanksSupported
-            f4sePerk = ScrapperPerks[ScrapperPerks.Length - 1].CastAs(F4SEScriptPerk)
-            Perk result = f4sePerk.CallFunction(F4SEFuncGetNextPerk, new var[0]) as Perk
-            ScrapperPerks.Add(result as Perk)
-        EndWhile
-    EndIf
+    ; load perks dynamically, but ignore any perk ranks > the number supported
+    int numScrapperRanks = ScrapperPerks[0].GetNumRanks()
+    While ScrapperPerks.Length < numScrapperRanks && ScrapperPerks.Length < ScrapperPerkMaxRanksSupported
+        ScrapperPerks.Add(ScrapperPerks[ScrapperPerks.Length - 1].GetNextPerk())
+    EndWhile
 
     MCM_Scrapper3Available = ScrapperPerks.Length >= 3
-    GlobalScrapper3Available.SetValueInt(MCM_Scrapper3Available as int)
     MCM_Scrapper4Available = ScrapperPerks.Length >= 4
-    GlobalScrapper4Available.SetValueInt(MCM_Scrapper4Available as int)
     MCM_Scrapper5Available = ScrapperPerks.Length >= 5
-    GlobalScrapper5Available.SetValueInt(MCM_Scrapper5Available as int)
 
     Self._DebugTrace(ScrapperPerks.Length + " perks loaded:")
     int index = 0
@@ -859,6 +1011,7 @@ Function LoadAllSettingsFromMCM()
         LoadSettingFromMCM(FractionalComponentHandling, ModName)
         LoadSettingFromMCM(HasLimitedUses, ModName)
         LoadSettingFromMCM(NumberOfUses, ModName)
+        LoadSettingFromMCM(ReturnItemsSilently, ModName)
 
         ; settings - adjustment options
         LoadSettingFromMCM(GeneralMultAdjust, ModName)
@@ -946,18 +1099,16 @@ Function RegisterForMCMEvents()
     Self._DebugTrace("Attempting to register for MCM events")
     If ModConfigMenuInstalled
         Self._DebugTrace("MCM installed; registering for MCM events")
-        ScriptObject f4seSelf = Self.CastAs("PortableJunkRecyclerMk2:QuestScript")
-        var[] params = new var[2]
-        params[0] = "OnMCMSettingChange|" + ModName
-        params[1] = "OnMCMSettingChange"
-        f4seSelf.CallFunction(F4SEFuncRegisterForExternalEvent, params)
-        Self._DebugTrace("Registered for MCM event '" + params[0] + "' with a callback of '" + params[1] + "'")
-        params[0] = "OnMCMMenuClose|" + ModName
-        params[1] = "OnMCMMenuClose"
-        f4seSelf.CallFunction(F4SEFuncRegisterForExternalEvent, params)
-        Self._DebugTrace("Registered for MCM event '" + params[0] + "' with a callback of '" + params[1] + "'")
+        string eventName = "OnMCMSettingChange|" + ModName
+        string callback = "OnMCMSettingChange"
+        RegisterForExternalEvent(eventName, callback)
+        Self._DebugTrace("Registered for MCM event '" + eventName + "' with a callback of '" + callback + "'")
+        eventName = "OnMCMMenuClose|" + ModName
+        callback = "OnMCMMenuClose"
+        RegisterForExternalEvent(eventName, callback)
+        Self._DebugTrace("Registered for MCM event '" + eventName + "' with a callback of '" + callback + "'")
     Else
-        Self._DebugTrace("MCM not installed; skipping ")
+        Self._DebugTrace("MCM not installed; skipping", 1)
     EndIf
 EndFunction
 
@@ -989,6 +1140,10 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             oldValue = NumberOfUses.Value
             LoadSettingFromMCM(NumberOfUses, ModName)
             newValue = NumberOfUses.Value
+        ElseIf asControlId == ReturnItemsSilently.McmId
+            oldValue = ReturnItemsSilently.Value
+            LoadSettingFromMCM(ReturnItemsSilently, ModName)
+            newValue = ReturnItemsSilently.Value
 
         ; settings - adjustment options
         ElseIf asControlId == GeneralMultAdjust.McmId
@@ -997,35 +1152,35 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             newValue = GeneralMultAdjust.Value
             MCM_GeneralMultAdjustSimple = GeneralMultAdjust.Value == 0
             MCM_GeneralMultAdjustDetailed = GeneralMultAdjust.Value > 0
-            Utility.CallGlobalFunction(MCMScript, MCMFuncRefreshMenu, new var[0])
+            MCM.RefreshMenu()
         ElseIf asControlId == IntAffectsMult.McmId
             oldValue = IntAffectsMult.Value
             LoadSettingFromMCM(IntAffectsMult, ModName)
             newValue = IntAffectsMult.Value
             MCM_IntAffectsMultSimple = IntAffectsMult.Value == 1
             MCM_IntAffectsMultDetailed = IntAffectsMult.Value > 1
-            Utility.CallGlobalFunction(MCMScript, MCMFuncRefreshMenu, new var[0])
+            MCM.RefreshMenu()
         ElseIf asControlId == LckAffectsMult.McmId
             oldValue = LckAffectsMult.Value
             LoadSettingFromMCM(LckAffectsMult, ModName)
             newValue = LckAffectsMult.Value
             MCM_LckAffectsMultSimple = LckAffectsMult.Value == 1
             MCM_LckAffectsMultDetailed = LckAffectsMult.Value > 1
-            Utility.CallGlobalFunction(MCMScript, MCMFuncRefreshMenu, new var[0])
+            MCM.RefreshMenu()
         ElseIf asControlId == RngAffectsMult.McmId
             oldValue = RngAffectsMult.Value
             LoadSettingFromMCM(RngAffectsMult, ModName)
             newValue = RngAffectsMult.Value
             MCM_RngAffectsMultSimple = RngAffectsMult.Value == 1
             MCM_RngAffectsMultDetailed = RngAffectsMult.Value > 1
-            Utility.CallGlobalFunction(MCMScript, MCMFuncRefreshMenu, new var[0])
+            MCM.RefreshMenu()
         ElseIf asControlId == ScrapperAffectsMult.McmId
             oldValue = ScrapperAffectsMult.Value
             LoadSettingFromMCM(ScrapperAffectsMult, ModName)
             newValue = ScrapperAffectsMult.Value
             MCM_ScrapperAffectsMultSimple = ScrapperAffectsMult.Value == 1
             MCM_ScrapperAffectsMultDetailed = ScrapperAffectsMult.Value > 1
-            Utility.CallGlobalFunction(MCMScript, MCMFuncRefreshMenu, new var[0])
+            MCM.RefreshMenu()
 
         ; multiplier adjustments - general
         ElseIf asControlId == MultAdjustGeneralSettlement.McmId
@@ -1231,7 +1386,7 @@ EndFunction
 ; callback function for when the user moves to a different MCM menu
 Function OnMCMMenuClose()
     Self.MultAdjustRandomSanityCheck()
-    Utility.CallGlobalFunction(MCMScript, MCMFuncRefreshMenu, new var[0])
+    MCM.RefreshMenu()
 EndFunction
 
 ; MCM function called to get the current multipliers
@@ -1247,7 +1402,7 @@ EndFunction
 ; MCM function called to reset settings
 Function MCM_ResetToDefaults()
     Self.ResetToDefaults()
-    Utility.CallGlobalFunction(MCMScript, MCMFuncRefreshMenu, new var[0])
+    MCM.RefreshMenu()
 EndFunction
 
 ; MCM function called to reset running/busy mutexes
@@ -1258,7 +1413,7 @@ EndFunction
 ; show the current multipliers for where the player is located right now
 Function ShowCurrentMultipliers()
     Self._DebugTrace("Current multipliers:")
-    MultiplierSet currentMults = GetMultipliers()
+    MultiplierSet currentMults = Self.GetMultipliers()
     If RngAffectsMult.Value == 1
         MessageCurrentMultipliersRng.Show( \
             currentMults.MultC + MultAdjustRandomMin.Value, currentMults.MultC + MultAdjustRandomMax.Value, \
@@ -1299,7 +1454,7 @@ Function ResetToDefaults()
     If ! (MutexRunning || MutexBusy)
         MutexBusy = true
         Self._DebugTrace("Resetting settings to defaults")
-        Self.InitSettings()
+        Self.InitSettings(abForce = true)
         Self.InitSettingsSupplemental()
         Self.InitSettingsDefaultValues()
         MessageSettingsReset.Show()
@@ -1392,17 +1547,12 @@ ComponentMap[] Function BuildComponentMap(FormList akComponentList, FormList akM
         toReturn[index] = new ComponentMap
         toReturn[index].ComponentPart = akComponentList.GetAt(index) as Component
         toReturn[index].ScrapPart = akMiscObjectList.GetAt(index) as MiscObject
-        Self._DebugTrace(toReturn[index].ComponentPart + " is mapped to " + toReturn[index].ScrapPart)
+        Self._DebugTrace(toReturn[index].ComponentPart + " (" + toReturn[index].ComponentPart.GetName() + ") is mapped to " + \
+            toReturn[index].ScrapPart + " (" + toReturn[index].ScrapPart.GetName() + ")")
         index += 1
     EndWhile
 
     Return toReturn
-EndFunction
-
-; changes a setting via the settings holotape and displays the new value as a message
-Function ChangeSettingHolotape(var akSettingToChange, var avNewValue, Message akMessage)
-    Self._DebugTrace("Holotape setting change: " + akSettingToChange + " attempting to change to " + avNewValue)
-    ChangeSetting(akSettingToChange, CurrentChangeType, avNewValue, ModName, akMessage)
 EndFunction
 
 ; returns true if the player is an an owned workshop
@@ -1411,7 +1561,7 @@ bool Function IsPlayerAtOwnedWorkshop()
     Return workshopRef && workshopRef.OwnedByPlayer && PlayerRef.IsWithinBuildableArea(workshopRef)
 EndFunction
 
-; get the multipliers for a given set of arguments
+; get the current multipliers
 MultiplierSet Function GetMultipliers()
     Self._DebugTrace("Getting multipliers")
     MultiplierSet toReturn = new MultiplierSet

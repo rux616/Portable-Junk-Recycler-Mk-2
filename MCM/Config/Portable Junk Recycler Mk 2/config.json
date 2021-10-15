@@ -12,7 +12,7 @@
       },
       {
          "html": true,
-         "text": "<p align=\"center\">v0.2.3</p>",
+         "text": "<p align=\"center\">v0.3.0</p>",
          "type": "text"
       },
       {
@@ -41,6 +41,7 @@
             "function": "MCM_ShowCurrentMultipliers",
             "type": "CallFunction"
          },
+         "help": "When the Pause Menu is closed, a message box will open displaying the current multipliers.",
          "text": "View Current Multipliers",
          "type": "button"
       },
@@ -58,6 +59,7 @@
             "function": "MCM_ShowNumberOfUsesLeft",
             "type": "CallFunction"
          },
+         "help": "When the Pause Menu is closed, a message box will open displaying the number of uses left.",
          "text": "View Number Of Uses Remaining",
          "type": "button"
       }
@@ -73,6 +75,7 @@
                "type": "section"
             },
             {
+               "help": "",
                "id": "fMultBase:General",
                "text": "Base Multiplier",
                "type": "slider",
@@ -84,6 +87,7 @@
                }
             },
             {
+               "help": "",
                "id": "bReturnAtLeastOneComponent:General",
                "text": "Always Return At Least One Component",
                "type": "switcher",
@@ -92,6 +96,7 @@
                }
             },
             {
+               "help": "",
                "id": "iFractionalComponentHandling:General",
                "text": "Fractional Component Handling",
                "type": "dropdown",
@@ -105,6 +110,7 @@
                }
             },
             {
+               "help": "",
                "id": "bHasLimitedUses:General",
                "text": "Has Limited Uses",
                "type": "switcher",
@@ -113,6 +119,7 @@
                }
             },
             {
+               "help": "",
                "id": "iNumberOfUses:General",
                "text": "    Number Of Uses",
                "type": "slider",
@@ -121,6 +128,15 @@
                   "min": 1,
                   "sourceType": "ModSettingInt",
                   "step": 1
+               }
+            },
+            {
+               "help": "",
+               "id": "bReturnItemsSilently:General",
+               "text": "Return Items Silently",
+               "type": "switcher",
+               "valueOptions": {
+                  "sourceType": "ModSettingBool"
                }
             },
             {

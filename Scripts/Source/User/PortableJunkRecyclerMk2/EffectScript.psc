@@ -15,19 +15,24 @@ Struct ExistingScrap
 EndStruct
 
 
+
 ; PROPERTIES
 ; ----------
 
-Actor                   Property PlayerRef                  Auto Const
+Actor Property PlayerRef Auto Const
 { player ref }
-Container               Property PortableRecyclerContainer  Auto Const
+Container Property PortableRecyclerContainer Auto Const
 { container to open to put items in for recycling }
-Potion                  Property PortableRecyclerItem       Auto Const
+Potion Property PortableRecyclerItem Auto Const
 { the recycler item itself }
-QuestScript             Property PortableRecyclerQuest      Auto Const
+QuestScript Property PortableRecyclerQuest Auto Const
 { the quest script which holds all the data for this mod }
-Sound                   Property SoundRecycle      Auto Const
+FormList Property PortableRecyclerItemList Auto Const
+{ the FormList used to hold the items that need to get returned to the player }
+Sound Property SoundRecycle Auto Const
 { the sound to play when recycling things }
+Sound Property SoundPickup Auto Const
+{ the sound to play when transferring things back from the temp container }
 
 Message Property MessageAlreadyRunning Auto Const
 Message Property MessageBusy Auto Const
@@ -35,6 +40,7 @@ Message Property MessageFinished Auto Const
 Message Property MessageFinishedNothing Auto Const
 Message Property MessageFinishedUsesLeft Auto Const
 Message Property MessageFinishedNothingUsesLeft Auto Const
+Message Property MessageF4SENotInstalled Auto Const
 
 
 
@@ -42,7 +48,6 @@ Message Property MessageFinishedNothingUsesLeft Auto Const
 ; ---------
 
 string ModName = "Portable Junk Recycler Mk 2" const
-FormList ScriptFilledFormList
 
 
 
@@ -50,7 +55,13 @@ FormList ScriptFilledFormList
 ; ------
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
-    If ! PortableRecyclerQuest.MutexRunning && ! PortableRecyclerQuest.MutexBusy
+    If ! PortableRecyclerQuest.ScriptExtenderInstalled
+        ; F4SE is not found, abort with message
+        Self._DebugTrace("F4SE is not installed; aborting")
+        MessageF4SENotInstalled.Show()
+        PlayerRef.AddItem(PortableRecyclerItem as Form, 1, true)
+    ElseIf ! PortableRecyclerQuest.MutexRunning && ! PortableRecyclerQuest.MutexBusy
+        ; normal mode of operation: a recycler process isn't already running nor is the quest busy
         PortableRecyclerQuest.MutexRunning = true
         Self._DebugTrace("Recycler process started")
 
@@ -60,17 +71,19 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
         MultiplierSet multipliers = PortableRecyclerQuest.GetMultipliers()
         Self._DebugTrace("Multipliers: C=" + multipliers.MultC + "; U=" + multipliers.MultU + "; R=" + multipliers.MultR + \
             "; S=" + multipliers.MultS)
-        
-        ; place the container at the player, wait, then activate it and wait a moment again
-        ObjectReference containerRef = PlayerRef.PlaceAtMe(PortableRecyclerContainer as Form)
+
+        ; place a temporary container at the player, wait, then activate it and wait a moment again
+        ObjectReference containerRef = PlayerRef.PlaceAtMe(PortableRecyclerContainer as Form, abForcePersist = true)
         Utility.Wait(1.0)
         Self._DebugTrace("Temporary container " + containerRef + " created")
         containerRef.Activate(PlayerRef as ObjectReference, true)
         Utility.Wait(0.1)
 
-        ; play the recyling sound
-        SoundRecycle.Play(PlayerRef as ObjectReference)
-        
+        ; play the recycling sound
+        If containerRef.GetInventoryItems().Length
+            SoundRecycle.Play(PlayerRef as ObjectReference)
+        EndIf
+
         ; determine whether the recycling function will add randomized adjustments
         bool randomAdjustment = PortableRecyclerQuest.RngAffectsMult.Value
         float randomMin = 0.0
@@ -81,14 +94,14 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
         EndIf
 
         ; remove existing scrap parts from the container and record quantities
+        Self._DebugTrace("Cleaning existing scrap from ComponentMapC")
         ExistingScrap[] existingScrapQuantitiesC = CleanExistingScrap(PortableRecyclerQuest.ComponentMapC, containerRef)
-        Self._DebugTrace("Cleaned existing scrap from ComponentMapC: " + existingScrapQuantitiesC)
+        Self._DebugTrace("Cleaning existing scrap from ComponentMapU")
         ExistingScrap[] existingScrapQuantitiesU = CleanExistingScrap(PortableRecyclerQuest.ComponentMapU, containerRef)
-        Self._DebugTrace("Cleaned existing scrap from ComponentMapU: " + existingScrapQuantitiesU)
+        Self._DebugTrace("Cleaning existing scrap from ComponentMapR")
         ExistingScrap[] existingScrapQuantitiesR = CleanExistingScrap(PortableRecyclerQuest.ComponentMapR, containerRef)
-        Self._DebugTrace("Cleaned existing scrap from ComponentMapR: " + existingScrapQuantitiesR)
+        Self._DebugTrace("Cleaning existing scrap from ComponentMapS")
         ExistingScrap[] existingScrapQuantitiesS = CleanExistingScrap(PortableRecyclerQuest.ComponentMapS, containerRef)
-        Self._DebugTrace("Cleaned existing scrap from ComponentMapS: " + existingScrapQuantitiesS)
 
         ; do the recycling
         Self._DebugTrace("Recycling components from ComponentMapC")
@@ -125,36 +138,38 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
         While (index < existingScrapQuantitiesC.Length)
             containerRef.AddItem(existingScrapQuantitiesC[index].ScrapPart, existingScrapQuantitiesC[index].ScrapQuantity, true)
             Self._DebugTrace(existingScrapQuantitiesC[index].ScrapQuantity + " existing " + \
-                existingScrapQuantitiesC[index].ScrapPart + " re-added")
+                existingScrapQuantitiesC[index].ScrapPart + " (" + existingScrapQuantitiesC[index].ScrapPart.GetName() + \
+                ") re-added")
             index += 1
         EndWhile
         index = 0
         While (index < existingScrapQuantitiesU.Length)
             containerRef.AddItem(existingScrapQuantitiesU[index].ScrapPart, existingScrapQuantitiesU[index].ScrapQuantity, true)
             Self._DebugTrace(existingScrapQuantitiesU[index].ScrapQuantity + " existing " + \
-                existingScrapQuantitiesU[index].ScrapPart + " re-added")
+                existingScrapQuantitiesU[index].ScrapPart + " (" + existingScrapQuantitiesU[index].ScrapPart.GetName() + \
+                ") re-added")
             index += 1
         EndWhile
         index = 0
         While (index < existingScrapQuantitiesR.Length)
             containerRef.AddItem(existingScrapQuantitiesR[index].ScrapPart, existingScrapQuantitiesR[index].ScrapQuantity, true)
             Self._DebugTrace(existingScrapQuantitiesR[index].ScrapQuantity + " existing " + \
-                existingScrapQuantitiesR[index].ScrapPart + " re-added")
+                existingScrapQuantitiesR[index].ScrapPart + " )" + existingScrapQuantitiesR[index].ScrapPart.GetName() + \
+                ") re-added")
             index += 1
         EndWhile
         index = 0
         While (index < existingScrapQuantitiesS.Length)
             containerRef.AddItem(existingScrapQuantitiesS[index].ScrapPart, existingScrapQuantitiesS[index].ScrapQuantity, true)
             Self._DebugTrace(existingScrapQuantitiesS[index].ScrapQuantity + " existing " + \
-                existingScrapQuantitiesS[index].ScrapPart + " re-added")
+                existingScrapQuantitiesS[index].ScrapPart + " )" + existingScrapQuantitiesS[index].ScrapPart.GetName() + \
+                ") re-added")
             index += 1
         EndWhile
 
-        ; move items over to the intermediate container player
-        Self._DebugTrace("Moving components from temp container to player")
-        ScriptFilledFormList = Game.GetFormFromFile(0x0818, ModName + ".esp") as FormList
-        Self.RemoveAllItems(containerRef, PlayerRef)
-        ; containerRef.RemoveAllItems(PlayerRef as ObjectReference)
+        ; move items over to the player
+        Self._DebugTrace("Moving components from temporary container to player")
+        Self.RemoveAllItems(containerRef, PlayerRef, PortableRecyclerQuest.ReturnItemsSilently.Value)
 
         ; delete the containers
         Self._DebugTrace("Removing temporary container " + containerRef)
@@ -200,13 +215,13 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
         PortableRecyclerQuest.MutexRunning = false
     ElseIf PortableRecyclerQuest.MutexRunning && ! PortableRecyclerQuest.MutexBusy
         ; another recycling process is already running, tell the user
-        MessageAlreadyRunning.Show()
         Self._DebugTrace("Recycler process already running")
+        MessageAlreadyRunning.Show()
         PlayerRef.AddItem(PortableRecyclerItem as Form, 1, true)
     Else
         ; the quest script is processing something in the background, tell the user to give it a few seconds to finish
-        MessageBusy.Show()
         Self._DebugTrace("Quest script is busy")
+        MessageBusy.Show()
         PlayerRef.AddItem(PortableRecyclerItem as Form, 1, true)
     EndIf
 EndEvent
@@ -235,8 +250,9 @@ ExistingScrap[] Function CleanExistingScrap(ComponentMap[] akComponentMap, Objec
             toAdd.ScrapPart = akComponentMap[index].ScrapPart
             toAdd.ScrapQuantity = existingScrapQuantity
             toReturn.Add(toAdd)
-            akContainerRef.RemoveItem(toAdd.ScrapPart, toAdd.ScrapQuantity, true)
-            Self._DebugTrace(toAdd.ScrapQuantity + " existing " + toAdd.ScrapPart + " found and removed")
+            akContainerRef.RemoveItem(toAdd.ScrapPart, -1, true)
+            Self._DebugTrace(toAdd.ScrapQuantity + " existing " + toAdd.ScrapPart + " (" + toAdd.ScrapPart.GetName() + \
+                ") found and temporarily removed")
         EndIf
         index += 1
     EndWhile
@@ -244,7 +260,7 @@ ExistingScrap[] Function CleanExistingScrap(ComponentMap[] akComponentMap, Objec
     Return toReturn
 EndFunction
 
-; recycle the components contained in the passed componentmap array
+; recycle the components contained in the passed ComponentMap array
 ; returns true if any components were actually recycled
 bool Function RecycleComponents(ComponentMap[] akComponentMap, float afScrapMultiplier, ObjectReference akContainerRef, \
     bool abRandomAdjustment, float afRandomMin, float afRandomMax)
@@ -256,8 +272,8 @@ bool Function RecycleComponents(ComponentMap[] akComponentMap, float afScrapMult
 
     int index = 0
     While index < akComponentMap.Length
-        Self._DebugTrace("Component: " + ConvertIDToHex(akComponentMap[index].ComponentPart.GetFormID()) + \
-            ", Scrap: " + ConvertIDToHex(akComponentMap[index].ScrapPart.GetFormID()))
+        Self._DebugTrace(akComponentMap[index].ComponentPart + " (" + akComponentMap[index].ComponentPart.GetName() + "), " + \
+            akComponentMap[index].ScrapPart + " (" + akComponentMap[index].ScrapPart.GetName() + ")")
 
         ; get the quantity of a certain component
         componentQuantity = akContainerRef.GetComponentCount(akComponentMap[index].ComponentPart)
@@ -303,7 +319,7 @@ bool Function RecycleComponents(ComponentMap[] akComponentMap, float afScrapMult
             ; add the modified quantity of components back to the inventory
             akContainerRef.AddItem(akComponentMap[index].ScrapPart, componentQuantity as int, true)
             Self._DebugTrace("Component quantity (Final) = " + componentQuantity as int)
-        EndIf  
+        EndIf
 
         index += 1
     EndWhile
@@ -311,18 +327,32 @@ bool Function RecycleComponents(ComponentMap[] akComponentMap, float afScrapMult
     Return toReturn
 EndFunction
 
-bool Function FillFormList(Form[] akItems)
-	ScriptFilledFormList.Revert()
-	int i = 0
-	While i < akItems.Length
-        ScriptFilledFormList.AddForm(akItems[i])
-		i += 1
-	EndWhile
-	Return ScriptFilledFormList.GetSize()
+; remove all items from the origin container to the destination container
+; adapted from code by DieFeM on the Nexus forums https://forums.nexusmods.com/index.php?/topic/7090211-removing-the-notifications-from-removeallitems-used-on-player/page-4#entry64900091
+Function RemoveAllItems(ObjectReference akOriginRef, ObjectReference akDestinationRef, bool abSilent = true)
+	If(Self.PopulateRecyclerContentsList(akOriginRef.GetInventoryItems()))
+		akOriginRef.RemoveItem(PortableRecyclerItemList, -1, abSilent, akDestinationRef)
+
+        ; play an audio cue for the player to know when stuff has been moved
+        If abSilent
+            SoundPickup.Play(PlayerRef as ObjectReference)
+        EndIf
+
+        ; avoid keeping stuff in the FormList
+        PortableRecyclerItemList.Revert()
+	EndIf
 EndFunction
 
-Function RemoveAllItems(ObjectReference akOriginContainerRef, ObjectReference akDestContainerRef, bool abSilent = true)
-	If(FillFormList(akOriginContainerRef.GetInventoryItems()))
-		akOriginContainerRef.RemoveItem(ScriptFilledFormList, -1, abSilent, akDestContainerRef)
-	EndIf
+; add items to the portable recycler FormList
+; adapted from code by DieFeM on the Nexus forums https://forums.nexusmods.com/index.php?/topic/7090211-removing-the-notifications-from-removeallitems-used-on-player/page-4#entry64900091
+bool Function PopulateRecyclerContentsList(Form[] akItems)
+	int index = 0
+	While index < akItems.Length
+        PortableRecyclerItemList.AddForm(akItems[index])
+		index += 1
+	EndWhile
+
+    Self._DebugTrace(index + " forms added to item list")
+
+	Return index
 EndFunction
