@@ -1,7 +1,7 @@
 local mcm = import 'lib/mcm.libsonnet';
 
 local mod_name = 'Portable Junk Recycler Mk 2';
-local mod_version = '0.2.3';
+local mod_version = '0.3.0';
 local plugin_name = mod_name + '.esp';
 local quest_form = plugin_name + '|800';
 local min_mcm_version = 2;
@@ -59,11 +59,19 @@ local stat_adjust_step = 0.005;
     mcm.control.spacer(lines=1),
 
     mcm.control.section('Multipliers'),
-    mcm.control.button('View Current Multipliers', mcm.helper.action.call_function(quest_form, 'MCM_ShowCurrentMultipliers')),
+    mcm.control.button(
+      text='View Current Multipliers',
+      action=mcm.helper.action.call_function(quest_form, 'MCM_ShowCurrentMultipliers'),
+      help='When the Pause Menu is closed, a message box will open displaying the current multipliers.'
+    ),
     mcm.control.spacer(lines=1),
 
     mcm.control.section('Uses'),
-    mcm.control.button('View Number Of Uses Remaining', mcm.helper.action.call_function(quest_form, 'MCM_ShowNumberOfUsesLeft')),
+    mcm.control.button(
+      text='View Number Of Uses Remaining',
+      action=mcm.helper.action.call_function(quest_form, 'MCM_ShowNumberOfUsesLeft'),
+      help='When the Pause Menu is closed, a message box will open displaying the number of uses left.'
+    ),
   ],
   [mcm.field.pages]: [
     {
@@ -71,11 +79,43 @@ local stat_adjust_step = 0.005;
       [mcm.field.content]: [
         // settings - general options
         mcm.control.section('General Options'),
-        mcm.control.slider('Base Multiplier', 0.0, 2.0, 0.01, mcm.helper.source.mod_setting.float('fMultBase:General')),
-        mcm.control.switcher('Always Return At Least One Component', mcm.helper.source.mod_setting.bool('bReturnAtLeastOneComponent:General')),
-        mcm.control.dropdown('Fractional Component Handling', ['Round Up', 'Round Normally', 'Round Down'], mcm.helper.source.mod_setting.int('iFractionalComponentHandling:General')),
-        mcm.control.switcher('Has Limited Uses', mcm.helper.source.mod_setting.bool('bHasLimitedUses:General')),
-        mcm.control.slider(str_indent + 'Number Of Uses', 1, 200, 1, mcm.helper.source.mod_setting.int('iNumberOfUses:General')),
+        mcm.control.slider(
+          text='Base Multiplier',
+          min=0.0,
+          max=2.0,
+          step=0.01,
+          source=mcm.helper.source.mod_setting.float('fMultBase:General'),
+          help=''
+        ),
+        mcm.control.switcher(
+          text='Always Return At Least One Component',
+          source=mcm.helper.source.mod_setting.bool('bReturnAtLeastOneComponent:General'),
+          help=''
+        ),
+        mcm.control.dropdown(
+          text='Fractional Component Handling',
+          options=['Round Up', 'Round Normally', 'Round Down'],
+          source=mcm.helper.source.mod_setting.int('iFractionalComponentHandling:General'),
+          help=''
+        ),
+        mcm.control.switcher(
+          text='Has Limited Uses',
+          source=mcm.helper.source.mod_setting.bool('bHasLimitedUses:General'),
+          help=''
+        ),
+        mcm.control.slider(
+          text=str_indent + 'Number Of Uses',
+          min=1,
+          max=200,
+          step=1,
+          source=mcm.helper.source.mod_setting.int('iNumberOfUses:General'),
+          help=''
+        ),
+        mcm.control.switcher(
+          text='Return Items Silently',
+          source=mcm.helper.source.mod_setting.bool('bReturnItemsSilently:General'),
+          help=''
+        ),
         mcm.control.spacer(lines=1),
 
         // settings - adjustment options

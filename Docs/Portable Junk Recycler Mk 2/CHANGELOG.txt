@@ -1,0 +1,24 @@
+v0.3.0
+------
+- Made MCM required
+- Removed settings holotape and associated forms
+- Cleaned up newly-dead code related to having F4SE and MCM be optional
+- Cleaned up newly-dead code related to settings holotape
+- Added new setting: Return Items Silently (determines if the player gets notification messages about items being returned from the recycler)
+
+v0.2.3
+------
+- Added more logging to scripts
+- Fixed freeze when aiming at things that could be activated when recycling process was ready to return items to player (F4SE is now required)
+
+v0.2.2
+------
+- fixed multipliers not applying to all components in a multi-component item
+
+v0.2.1
+------
+- fixed unintentional resource loop
+
+v0.2.0
+------
+- initial beta release
