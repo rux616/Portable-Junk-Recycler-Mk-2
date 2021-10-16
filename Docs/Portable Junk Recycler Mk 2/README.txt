@@ -270,34 +270,32 @@ Note: The "Special" category is intended for modders to add components that migh
 
 Crafting Materials Required
 ---------------------------
-Aluminum x3
+Aluminum x15
 Circuitry x3
 Adhesive x3
 Gears x6
 Nuclear Material x3
-Plastic x3
 Springs x1
-Steel x12
 Screws x12
 Fusion Core x1
 
 
 Technical Details
 -----------------
-Recycler Form ID: FExxx840
+Recycler Item Form ID:
+- FExxx840
 
-FormIDs:
-- FExxx80- Quest
-- FExxx81- FormID List
-- FExxx82- Magic Effect
-- FExxx83- Container
-- FExxx84- Ingestible
-- FExxx85- Transform
-- FExxx86- Constructable Object
-- ~FExxx87- Note~ (Removed)
-- FExxxA-- Message
-- ~FExxxB-- Terminal~ (Removed)
-- ~FExxxC-- Global~ (Removed)
+General FormIDs:
+- FExxx80* Quest
+- FExxx81* FormID List
+- FExxx82* Magic Effect
+- FExxx83* Container
+- FExxx84* Ingestible
+- FExxx85* Transform
+- FExxx86* Constructable Object
+- FExxxA** Message
+
+Note: 'xxx' is the load order position of the mod.
 
 
 Credits

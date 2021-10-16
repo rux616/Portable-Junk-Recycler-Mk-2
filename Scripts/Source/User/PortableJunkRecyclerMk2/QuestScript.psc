@@ -27,6 +27,7 @@ EndGroup
 Group Other
     Actor Property PlayerRef Auto Const
     Message Property MessageF4SENotInstalled Auto Const
+    Message Property MessageMCMNotInstalled Auto Const
     Message Property MessageInitialized Auto Const
     Message Property MessageCurrentMultipliers Auto Const
     Message Property MessageCurrentMultipliersRng Auto Const
@@ -42,7 +43,7 @@ Group Other
 EndGroup
 
 Group RuntimeState
-    ; not real mutexes, but I don't feel like trying to use states for this purpose
+    ; not 'real' mutexes, but I don't feel like trying to use states for this purpose
     bool Property MutexBusy Auto Hidden
     bool Property MutexRunning Auto Hidden
     bool Property MutexWaiting Auto Hidden
@@ -146,28 +147,11 @@ int Property iSaveFileMonitor Auto Hidden ; Do not mess with ever - this is used
 ; ---------
 
 string ModName = "Portable Junk Recycler Mk 2" const
-string ModVersion = "0.3.0" const
+string ModVersion = "0.3.1 beta" const
 string FullScriptName = "PortableJunkRecyclerMk2:QuestScript" const
 int ScrapperPerkMaxRanksSupported = 5 const
 SettingChangeType AvailableChangeTypes
 int CurrentChangeType
-
-; string F4SEScriptF4SE = "F4SE" const
-; string F4SEScriptForm = "Form" const
-; string F4SEScriptPerk = "Perk" const
-; string F4SEFuncGetVersion = "GetVersion" const
-; string F4SEFuncGetVersionMinor = "GetVersionMinor" const
-; string F4SEFuncGetVersionBeta = "GetVersionBeta" const
-; string F4SEFuncGetVersionRelease = "GetVersionRelease" const
-; string F4SEFuncGetScriptVersionRelease = "GetScriptVersionRelease" const
-; string F4SEFuncGetNumRanks = "GetNumRanks" const
-; string F4SEFuncGetNextPerk = "GetNextPerk" const
-; string F4SEFuncRegisterForExternalEvent = "RegisterForExternalEvent" const
-
-; string MCMScript = "MCM" const
-; string MCMFuncIsInstalled = "IsInstalled" const
-; string MCMFuncGetVersionCode = "GetVersionCode" const
-; string MCMFuncRefreshMenu = "RefreshMenu" const
 
 
 
@@ -307,6 +291,7 @@ Function CheckForMCM()
         Debug.Trace("PortableJunkRecyclerMk2:QuestScript: MCM not installed")
         Self._DebugTrace("MCM not installed")
         CurrentChangeType = AvailableChangeTypes.ValueOnly
+        MessageMCMNotInstalled.Show()
     EndIf
 EndFunction
 
