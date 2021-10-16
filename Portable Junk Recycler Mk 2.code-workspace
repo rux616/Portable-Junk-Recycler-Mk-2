@@ -23,6 +23,8 @@
             "jsonnet",
             "Kentington",
             "kinggath",
+            "libsonnet",
+            "lowres",
             "modders",
             "Mult",
             "Mults",
@@ -35,7 +37,9 @@
             "structs"
         ],
         "cSpell.enableFiletypes": [
-            "papyrus"
+            "jsonnet",
+            "papyrus",
+            "papyrus-project"
         ]
     }
 }
