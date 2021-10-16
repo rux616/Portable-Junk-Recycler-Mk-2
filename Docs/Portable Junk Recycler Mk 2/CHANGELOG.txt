@@ -1,3 +1,9 @@
+v0.3.1
+------
+- Added warning message if MCM not detected
+- Fixed things breaking if the player loaded an auto-save that was created after activating the recycler device in the inventory. It seems that when the papyrus VM would unfreeze after loading the save, it had forgotten about the properties of the script. To work around it, the forms are loaded into local variables manually.
+- Altered crafting recipe a bit
+
 v0.3.0
 ------
 - Made MCM required
@@ -5,6 +11,7 @@ v0.3.0
 - Cleaned up newly-dead code related to having F4SE and MCM be optional
 - Cleaned up newly-dead code related to settings holotape
 - Added new setting: Return Items Silently (determines if the player gets notification messages about items being returned from the recycler)
+- Added warning message if F4SE not detected
 
 v0.2.3
 ------

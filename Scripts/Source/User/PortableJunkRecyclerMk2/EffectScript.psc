@@ -16,54 +16,46 @@ EndStruct
 
 
 
-; PROPERTIES
-; ----------
-
-Actor Property PlayerRef Auto Const
-{ player ref }
-Container Property PortableRecyclerContainer Auto Const
-{ container to open to put items in for recycling }
-Potion Property PortableRecyclerItem Auto Const
-{ the recycler item itself }
-QuestScript Property PortableRecyclerQuest Auto Const
-{ the quest script which holds all the data for this mod }
-FormList Property PortableRecyclerItemList Auto Const
-{ the FormList used to hold the items that need to get returned to the player }
-Sound Property SoundRecycle Auto Const
-{ the sound to play when recycling things }
-Sound Property SoundPickup Auto Const
-{ the sound to play when transferring things back from the temp container }
-
-Message Property MessageAlreadyRunning Auto Const
-Message Property MessageBusy Auto Const
-Message Property MessageFinished Auto Const
-Message Property MessageFinishedNothing Auto Const
-Message Property MessageFinishedUsesLeft Auto Const
-Message Property MessageFinishedNothingUsesLeft Auto Const
-Message Property MessageF4SENotInstalled Auto Const
-
-
-
 ; VARIABLES
 ; ---------
 
 string ModName = "Portable Junk Recycler Mk 2" const
 
+; using internal variables instead of properties to avoid issues when loading auto-saves that is
+; created after a player uses the recycler device and leaves the pip-boy
+Actor PlayerRef
+QuestScript PortableRecyclerQuest
+Container PortableRecyclerContainer
+Potion PortableRecyclerItem
+FormList PortableRecyclerItemList
+Sound SoundRecycle
+Sound SoundPickup
 
+Message MessageAlreadyRunning
+Message MessageBusy
+Message MessageFinished
+Message MessageFinishedNothing
+Message MessageFinishedUsesLeft
+Message MessageFinishedNothingUsesLeft
+Message MessageF4SENotInstalled
 
 ; EVENTS
 ; ------
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
+    PortableRecyclerQuest = Game.GetFormFromFile(0x800, ModName + ".esp") as QuestScript
+
     If ! PortableRecyclerQuest.ScriptExtenderInstalled
         ; F4SE is not found, abort with message
         Self._DebugTrace("F4SE is not installed; aborting")
+        Self.InitVariables()
         MessageF4SENotInstalled.Show()
         PlayerRef.AddItem(PortableRecyclerItem as Form, 1, true)
     ElseIf ! PortableRecyclerQuest.MutexRunning && ! PortableRecyclerQuest.MutexBusy
         ; normal mode of operation: a recycler process isn't already running nor is the quest busy
         PortableRecyclerQuest.MutexRunning = true
         Self._DebugTrace("Recycler process started")
+        Self.InitVariables()
 
         bool itemsRecycled = false
 
@@ -234,6 +226,26 @@ EndEvent
 ; add a bit of text to traces going into the papyrus user log
 Function _DebugTrace(string asMessage, int aiSeverity = 0) DebugOnly
     Debug.TraceUser(ModName, "EffectScript: " + asMessage, aiSeverity)
+EndFunction
+
+; function to load forms
+Function InitVariables()
+    Self._DebugTrace("Initializing EffectScript variables")
+
+    PlayerRef = Game.GetPlayer()
+    PortableRecyclerContainer = Game.GetFormFromFile(0x830, ModName + ".esp") as Container
+    PortableRecyclerItem = Game.GetFormFromFile(0x840, ModName + ".esp") as Potion
+    PortableRecyclerItemList = Game.GetFormFromFile(0x818, ModName + ".esp") as FormList
+    SoundRecycle = Game.GetFormFromFile(0x179F5B, "Fallout4.esm") as Sound
+    SoundPickup = Game.GetFormFromFile(0x0802A6, "Fallout4.esm") as Sound
+
+    MessageF4SENotInstalled = Game.GetFormFromFile(0x900, ModName + ".esp") as Message
+    MessageAlreadyRunning = Game.GetFormFromFile(0x903, ModName + ".esp") as Message
+    MessageBusy = Game.GetFormFromFile(0x904, ModName + ".esp") as Message
+    MessageFinished = Game.GetFormFromFile(0x905, ModName + ".esp") as Message
+    MessageFinishedNothing = Game.GetFormFromFile(0x906, ModName + ".esp") as Message
+    MessageFinishedUsesLeft = Game.GetFormFromFile(0x907, ModName + ".esp") as Message
+    MessageFinishedNothingUsesLeft = Game.GetFormFromFile(0x908, ModName + ".esp") as Message
 EndFunction
 
 ; removes existing scrap components and returns an array of quantities removed
