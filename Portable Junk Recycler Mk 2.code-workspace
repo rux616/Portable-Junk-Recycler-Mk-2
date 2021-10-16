@@ -14,6 +14,7 @@
             "${workspaceFolder}\\MCM\\Config\\Portable Junk Recycler Mk 2\\lib"
         ],
         "cSpell.words": [
+            "Buildable",
             "configurability",
             "craftable",
             "fomod",
@@ -23,11 +24,18 @@
             "Kentington",
             "kinggath",
             "modders",
+            "Mult",
+            "Mults",
+            "Mutex",
             "mutexes",
             "Savren",
             "settingmapbool",
             "skyrim",
+            "Struct",
             "structs"
+        ],
+        "cSpell.enableFiletypes": [
+            "papyrus"
         ]
     }
 }
