@@ -240,15 +240,16 @@
         string(id): source_type_mod_setting_base(base.type.source.mod_setting_string, id),
       },
       property_value: {
-        local source_type_property_value_base(source_type, source_form, property_name) = source_type_form_base(source_type, source_form) + {
+        local source_type_property_value_base(source_type, source_form, property_name, script_name) = source_type_form_base(source_type, source_form) + {
           [base.field.value_options]+: {
             [base.field.property_name]: property_name,
+            [if script_name != null then base.field.script_name else null]: script_name,
           },
         },
-        bool(source_form, property_name): source_type_property_value_base(base.type.source.property_value_bool, source_form, property_name),
-        float(source_form, property_name): source_type_property_value_base(base.type.source.property_value_float, source_form, property_name),
-        int(source_form, property_name): source_type_property_value_base(base.type.source.property_value_int, source_form, property_name),
-        string(source_form, property_name): source_type_property_value_base(base.type.source.property_value_string, source_form, property_name),
+        bool(source_form, property_name, script_name = null): source_type_property_value_base(base.type.source.property_value_bool, source_form, property_name, script_name),
+        float(source_form, property_name, script_name = null): source_type_property_value_base(base.type.source.property_value_float, source_form, property_name, script_name),
+        int(source_form, property_name, script_name = null): source_type_property_value_base(base.type.source.property_value_int, source_form, property_name, script_name),
+        string(source_form, property_name, script_name = null): source_type_property_value_base(base.type.source.property_value_string, source_form, property_name, script_name),
       },
     },
   },
