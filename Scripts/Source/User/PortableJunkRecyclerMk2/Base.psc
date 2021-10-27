@@ -8,14 +8,27 @@ ScriptName PortableJunkRecyclerMk2:Base
 
 Struct ComponentMap
     Component ComponentPart
+    string ComponentPartName
     MiscObject ScrapPart
+    string ScrapPartName
+    int Rarity
 EndStruct
- 
+
 Struct MultiplierSet
     float MultC
     float MultU
     float MultR
     float MultS
+    float RandomMin
+    float RandomMax
+    float RandomMinC
+    float RandomMaxC
+    float RandomMinU
+    float RandomMaxU
+    float RandomMinR
+    float RandomMaxR
+    float RandomMinS
+    float RandomMaxS
 EndStruct
 
 Struct SettingChangeType
@@ -46,6 +59,11 @@ Struct SettingInt
     int ValueMax
 EndStruct
 
+Struct FormListWrapper
+    FormList List
+    int Size
+EndStruct
+
 
 
 ; FUNCTIONS
@@ -69,7 +87,7 @@ Function ChangeSettingBool(SettingBool akSettingToChange, int aiChangeType, bool
     If aiChangeType == availableChangeTypes.ValueOnly || aiChangeType == availableChangeTypes.Both
         akSettingToChange.Value = abNewValue
     EndIf
-    
+
     If aiChangeType == availableChangeTypes.McmOnly || aiChangeType == availableChangeTypes.Both
         MCM.SetModSettingBool(asMcmModName, akSettingToChange.McmId, abNewValue)
     EndIf
@@ -109,7 +127,7 @@ Function ChangeSettingInt(SettingInt akSettingToChange, int aiChangeType, int ai
     If aiChangeType == availableChangeTypes.ValueOnly || aiChangeType == availableChangeTypes.Both
         akSettingToChange.Value = aiNewValue
     EndIf
-    
+
     If aiChangeType == availableChangeTypes.McmOnly || aiChangeType == availableChangeTypes.Both
         MCM.SetModSettingInt(asMcmModName, akSettingToChange.McmId, aiNewValue)
     EndIf
