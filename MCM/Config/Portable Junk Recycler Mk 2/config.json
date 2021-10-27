@@ -2,7 +2,7 @@
    "content": [
       {
          "html": true,
-         "text": "<p align=\"center\"><font size=\"24\">Portable Junk Recycler Mk 2</font></p>",
+         "text": "<p align=\"center\"><font size=\"24\">$ModNameLocalized</font></p>",
          "type": "text"
       },
       {
@@ -12,7 +12,7 @@
       },
       {
          "html": true,
-         "text": "<p align=\"center\">v0.3.1 beta</p>",
+         "text": "<p align=\"center\">v0.4.0 beta</p>",
          "type": "text"
       },
       {
@@ -20,11 +20,11 @@
          "type": "spacer"
       },
       {
-         "text": "About",
+         "text": "$About",
          "type": "section"
       },
       {
-         "text": "",
+         "text": "$AboutText",
          "type": "text"
       },
       {
@@ -32,17 +32,18 @@
          "type": "spacer"
       },
       {
-         "text": "Multipliers",
+         "text": "$Multipliers",
          "type": "section"
       },
       {
          "action": {
             "form": "Portable Junk Recycler Mk 2.esp|800",
-            "function": "MCM_ShowCurrentMultipliers",
+            "function": "ShowCurrentMultipliers",
+            "scriptName": "PortableJunkRecyclerMk2:ControlScript",
             "type": "CallFunction"
          },
-         "help": "When the Pause Menu is closed, a message box will open displaying the current multipliers.",
-         "text": "View Current Multipliers",
+         "help": "$ViewCurrentMultipliersHelp",
+         "text": "$ViewCurrentMultipliersText",
          "type": "button"
       },
       {
@@ -50,17 +51,18 @@
          "type": "spacer"
       },
       {
-         "text": "Uses",
+         "text": "$Uses",
          "type": "section"
       },
       {
          "action": {
             "form": "Portable Junk Recycler Mk 2.esp|800",
-            "function": "MCM_ShowNumberOfUsesLeft",
+            "function": "ShowNumberOfUsesLeft",
+            "scriptName": "PortableJunkRecyclerMk2:ControlScript",
             "type": "CallFunction"
          },
-         "help": "When the Pause Menu is closed, a message box will open displaying the number of uses left.",
-         "text": "View Number Of Uses Remaining",
+         "help": "$ViewNumberOfUsesRemainingHelp",
+         "text": "$ViewNumberOfUsesRemainingText",
          "type": "button"
       }
    ],
@@ -71,13 +73,13 @@
       {
          "content": [
             {
-               "text": "General Options",
+               "text": "$GeneralOptions",
                "type": "section"
             },
             {
-               "help": "",
+               "help": "$MultBaseHelp",
                "id": "fMultBase:General",
-               "text": "Base Multiplier",
+               "text": "$MultBaseText",
                "type": "slider",
                "valueOptions": {
                   "max": 2,
@@ -87,41 +89,41 @@
                }
             },
             {
-               "help": "",
+               "help": "$ReturnAtLeastOneComponentHelp",
                "id": "bReturnAtLeastOneComponent:General",
-               "text": "Always Return At Least One Component",
+               "text": "$ReturnAtLeastOneComponentText",
                "type": "switcher",
                "valueOptions": {
                   "sourceType": "ModSettingBool"
                }
             },
             {
-               "help": "",
+               "help": "$FractionalComponentHandlingHelp",
                "id": "iFractionalComponentHandling:General",
-               "text": "Fractional Component Handling",
+               "text": "$FractionalComponentHandlingText",
                "type": "dropdown",
                "valueOptions": {
                   "options": [
-                     "Round Up",
-                     "Round Normally",
-                     "Round Down"
+                     "$RoundUp",
+                     "$RoundNormally",
+                     "$RoundDown"
                   ],
                   "sourceType": "ModSettingInt"
                }
             },
             {
-               "help": "",
+               "help": "$HasLimitedUsesHelp",
                "id": "bHasLimitedUses:General",
-               "text": "Has Limited Uses",
+               "text": "$HasLimitedUsesText",
                "type": "switcher",
                "valueOptions": {
                   "sourceType": "ModSettingBool"
                }
             },
             {
-               "help": "",
+               "help": "$NumberOfUsesHelp",
                "id": "iNumberOfUses:General",
-               "text": "    Number Of Uses",
+               "text": "$IndentNumberOfUsesText",
                "type": "slider",
                "valueOptions": {
                   "max": 200,
@@ -131,12 +133,80 @@
                }
             },
             {
-               "help": "",
-               "id": "bReturnItemsSilently:General",
-               "text": "Return Items Silently",
-               "type": "switcher",
+               "lines": 1,
+               "type": "spacer"
+            },
+            {
+               "text": "$AdjustmentOptions",
+               "type": "section"
+            },
+            {
+               "help": "$GeneralAdjustmentsHelp",
+               "id": "iGeneralMultAdjust:General",
+               "text": "$GeneralAdjustmentsText",
+               "type": "dropdown",
                "valueOptions": {
-                  "sourceType": "ModSettingBool"
+                  "options": [
+                     "$Simple",
+                     "$Detailed"
+                  ],
+                  "sourceType": "ModSettingInt"
+               }
+            },
+            {
+               "help": "$IntelligenceAffectsMultiplierHelp",
+               "id": "iIntAffectsMult:General",
+               "text": "$IntelligenceAffectsMultiplierText",
+               "type": "dropdown",
+               "valueOptions": {
+                  "options": [
+                     "$OFF",
+                     "$ONSimple",
+                     "$ONDetailed"
+                  ],
+                  "sourceType": "ModSettingInt"
+               }
+            },
+            {
+               "help": "$LuckAffectsMultiplierHelp",
+               "id": "iLckAffectsMult:General",
+               "text": "$LuckAffectsMultiplierText",
+               "type": "dropdown",
+               "valueOptions": {
+                  "options": [
+                     "$OFF",
+                     "$ONSimple",
+                     "$ONDetailed"
+                  ],
+                  "sourceType": "ModSettingInt"
+               }
+            },
+            {
+               "help": "$AddRandomnessToMultiplierHelp",
+               "id": "iRngAffectsMult:General",
+               "text": "$AddRandomnessToMultiplierText",
+               "type": "dropdown",
+               "valueOptions": {
+                  "options": [
+                     "$OFF",
+                     "$ONSimple",
+                     "$ONDetailed"
+                  ],
+                  "sourceType": "ModSettingInt"
+               }
+            },
+            {
+               "help": "$ScrapperPerkAffectsMultiplierHelp",
+               "id": "iScrapperAffectsMult:General",
+               "text": "$ScrapperPerkAffectsMultiplierText",
+               "type": "dropdown",
+               "valueOptions": {
+                  "options": [
+                     "$OFF",
+                     "$ONSimple",
+                     "$ONDetailed"
+                  ],
+                  "sourceType": "ModSettingInt"
                }
             },
             {
@@ -144,75 +214,56 @@
                "type": "spacer"
             },
             {
-               "text": "Adjustment Options",
+               "text": "$RecyclerBehavior",
                "type": "section"
             },
             {
-               "id": "iGeneralMultAdjust:General",
-               "text": "General Adjustments",
-               "type": "dropdown",
+               "help": "$AutoRecyclingModeHelp",
+               "id": "bAutoRecyclingMode:General",
+               "text": "$AutoRecyclingModeText",
+               "type": "switcher",
                "valueOptions": {
-                  "options": [
-                     "Simple",
-                     "Detailed"
-                  ],
-                  "sourceType": "ModSettingInt"
+                  "sourceType": "ModSettingBool"
                }
             },
             {
-               "id": "iIntAffectsMult:General",
-               "text": "Intelligence Affects Multiplier",
-               "type": "dropdown",
+               "help": "$AllowJunkOnlyHelp",
+               "id": "bAllowJunkOnly:General",
+               "text": "$AllowJunkOnlyText",
+               "type": "switcher",
                "valueOptions": {
-                  "options": [
-                     "OFF",
-                     "ON (Simple)",
-                     "ON (Detailed)"
-                  ],
-                  "sourceType": "ModSettingInt"
+                  "sourceType": "ModSettingBool"
                }
             },
             {
-               "id": "iLckAffectsMult:General",
-               "text": "Luck Affects Multiplier",
-               "type": "dropdown",
+               "help": "$AutoMoveJunkHelp",
+               "id": "bAutoMoveJunk:General",
+               "text": "$AutoMoveJunkText",
+               "type": "switcher",
                "valueOptions": {
-                  "options": [
-                     "OFF",
-                     "ON (Simple)",
-                     "ON (Detailed)"
-                  ],
-                  "sourceType": "ModSettingInt"
+                  "sourceType": "ModSettingBool"
                }
             },
             {
-               "id": "iRngAffectsMult:General",
-               "text": "Add Randomness To Multiplier",
-               "type": "dropdown",
+               "help": "$AllowBehaviorOverridesHelp",
+               "id": "bAllowBehaviorOverrides:General",
+               "text": "$AllowBehaviorOverridesText",
+               "type": "switcher",
                "valueOptions": {
-                  "options": [
-                     "OFF",
-                     "ON (Simple)",
-                     "ON (Detailed)"
-                  ],
-                  "sourceType": "ModSettingInt"
+                  "sourceType": "ModSettingBool"
                }
             },
             {
-               "id": "iScrapperAffectsMult:General",
-               "text": "Scrapper Perk Affects Multiplier",
-               "type": "dropdown",
+               "help": "$ReturnItemsSilentlyHelp",
+               "id": "bReturnItemsSilently:General",
+               "text": "$ReturnItemsSilentlyText",
+               "type": "switcher",
                "valueOptions": {
-                  "options": [
-                     "OFF",
-                     "ON (Simple)",
-                     "ON (Detailed)"
-                  ],
-                  "sourceType": "ModSettingInt"
+                  "sourceType": "ModSettingBool"
                }
             }
          ],
-         "pageDisplayName": "Settings"
+         "pageDisplayName": "$Settings"
       },
       {
          "content": [
@@ -221,6 +272,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_GeneralMultAdjustSimple",
+                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -230,6 +282,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_GeneralMultAdjustDetailed",
+                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -241,7 +294,7 @@
                      2
                   ]
                },
-               "text": "General",
+               "text": "$General",
                "type": "section"
             },
             {
@@ -250,8 +303,9 @@
                      1
                   ]
                },
+               "help": "",
                "id": "fMultAdjustGeneralSettlement:Adjustments",
-               "text": "In Player-Owned Settlements",
+               "text": "$InSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -266,8 +320,9 @@
                      1
                   ]
                },
+               "help": "",
                "id": "fMultAdjustGeneralNotSettlement:Adjustments",
-               "text": "Everywhere Else",
+               "text": "$EverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -282,7 +337,7 @@
                      2
                   ]
                },
-               "text": "    Components: Common",
+               "text": "$IndentComponentsCommon",
                "type": "section"
             },
             {
@@ -291,8 +346,9 @@
                      2
                   ]
                },
+               "help": "",
                "id": "fMultAdjustGeneralSettlementC:Adjustments",
-               "text": "    In Player-Owned Settlements",
+               "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -307,8 +363,9 @@
                      2
                   ]
                },
+               "help": "",
                "id": "fMultAdjustGeneralNotSettlementC:Adjustments",
-               "text": "    Everywhere Else",
+               "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -323,7 +380,7 @@
                      2
                   ]
                },
-               "text": "    Components: Uncommon",
+               "text": "$IndentComponentsUncommon",
                "type": "section"
             },
             {
@@ -332,8 +389,9 @@
                      2
                   ]
                },
+               "help": "",
                "id": "fMultAdjustGeneralSettlementU:Adjustments",
-               "text": "    In Player-Owned Settlements",
+               "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -348,8 +406,9 @@
                      2
                   ]
                },
+               "help": "",
                "id": "fMultAdjustGeneralNotSettlementU:Adjustments",
-               "text": "    Everywhere Else",
+               "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -364,7 +423,7 @@
                      2
                   ]
                },
-               "text": "    Components: Rare",
+               "text": "$IndentComponentsRare",
                "type": "section"
             },
             {
@@ -373,8 +432,9 @@
                      2
                   ]
                },
+               "help": "",
                "id": "fMultAdjustGeneralSettlementR:Adjustments",
-               "text": "    In Player-Owned Settlements",
+               "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -389,8 +449,9 @@
                      2
                   ]
                },
+               "help": "",
                "id": "fMultAdjustGeneralNotSettlementR:Adjustments",
-               "text": "    Everywhere Else",
+               "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -405,7 +466,7 @@
                      2
                   ]
                },
-               "text": "    Components: Special",
+               "text": "$IndentComponentsSpecial",
                "type": "section"
             },
             {
@@ -414,8 +475,9 @@
                      2
                   ]
                },
+               "help": "",
                "id": "fMultAdjustGeneralSettlementS:Adjustments",
-               "text": "    In Player-Owned Settlements",
+               "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -430,8 +492,9 @@
                      2
                   ]
                },
+               "help": "",
                "id": "fMultAdjustGeneralNotSettlementS:Adjustments",
-               "text": "    Everywhere Else",
+               "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -455,6 +518,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_IntAffectsMultSimple",
+                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -464,6 +528,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_IntAffectsMultDetailed",
+                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -475,7 +540,7 @@
                      4
                   ]
                },
-               "text": "Intelligence",
+               "text": "$Intelligence",
                "type": "section"
             },
             {
@@ -485,7 +550,7 @@
                   ]
                },
                "id": "fMultAdjustInt:Adjustments",
-               "text": "Adjustment Per Point Of Intelligence",
+               "text": "$AdjustmentInt",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -500,7 +565,7 @@
                      4
                   ]
                },
-               "text": "    Components: Common",
+               "text": "$IndentComponentsCommon",
                "type": "section"
             },
             {
@@ -510,7 +575,7 @@
                   ]
                },
                "id": "fMultAdjustIntC:Adjustments",
-               "text": "    Adjustment Per Point Of Intelligence",
+               "text": "$IndentAdjustmentInt",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -525,7 +590,7 @@
                      4
                   ]
                },
-               "text": "    Components: Uncommon",
+               "text": "$IndentComponentsUncommon",
                "type": "section"
             },
             {
@@ -535,7 +600,7 @@
                   ]
                },
                "id": "fMultAdjustIntU:Adjustments",
-               "text": "    Adjustment Per Point Of Intelligence",
+               "text": "$IndentAdjustmentInt",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -550,7 +615,7 @@
                      4
                   ]
                },
-               "text": "    Components: Rare",
+               "text": "$IndentComponentsRare",
                "type": "section"
             },
             {
@@ -560,7 +625,7 @@
                   ]
                },
                "id": "fMultAdjustIntR:Adjustments",
-               "text": "    Adjustment Per Point Of Intelligence",
+               "text": "$IndentAdjustmentInt",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -575,7 +640,7 @@
                      4
                   ]
                },
-               "text": "    Components: Special",
+               "text": "$IndentComponentsSpecial",
                "type": "section"
             },
             {
@@ -585,7 +650,7 @@
                   ]
                },
                "id": "fMultAdjustIntS:Adjustments",
-               "text": "    Adjustment Per Point Of Intelligence",
+               "text": "$IndentAdjustmentInt",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -609,6 +674,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_LckAffectsMultSimple",
+                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -618,6 +684,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_LckAffectsMultDetailed",
+                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -629,7 +696,7 @@
                      6
                   ]
                },
-               "text": "Luck",
+               "text": "$Luck",
                "type": "section"
             },
             {
@@ -639,7 +706,7 @@
                   ]
                },
                "id": "fMultAdjustLck:Adjustments",
-               "text": "Adjustment Per Point Of Luck",
+               "text": "$AdjustmentLck",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -654,7 +721,7 @@
                      6
                   ]
                },
-               "text": "    Components: Common",
+               "text": "$IndentComponentsCommon",
                "type": "section"
             },
             {
@@ -664,7 +731,7 @@
                   ]
                },
                "id": "fMultAdjustLckC:Adjustments",
-               "text": "    Adjustment Per Point Of Luck",
+               "text": "$IndentAdjustmentLck",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -679,7 +746,7 @@
                      6
                   ]
                },
-               "text": "    Components: Uncommon",
+               "text": "$IndentComponentsUncommon",
                "type": "section"
             },
             {
@@ -689,7 +756,7 @@
                   ]
                },
                "id": "fMultAdjustLckU:Adjustments",
-               "text": "    Adjustment Per Point Of Luck",
+               "text": "$IndentAdjustmentLck",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -704,7 +771,7 @@
                      6
                   ]
                },
-               "text": "    Components: Rare",
+               "text": "$IndentComponentsRare",
                "type": "section"
             },
             {
@@ -714,7 +781,7 @@
                   ]
                },
                "id": "fMultAdjustLckR:Adjustments",
-               "text": "    Adjustment Per Point Of Luck",
+               "text": "$IndentAdjustmentLck",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -729,7 +796,7 @@
                      6
                   ]
                },
-               "text": "    Components: Special",
+               "text": "$IndentComponentsSpecial",
                "type": "section"
             },
             {
@@ -739,7 +806,7 @@
                   ]
                },
                "id": "fMultAdjustLckS:Adjustments",
-               "text": "    Adjustment Per Point Of Luck",
+               "text": "$IndentAdjustmentLck",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -763,6 +830,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_RngAffectsMultSimple",
+                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -772,6 +840,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_RngAffectsMultDetailed",
+                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -793,7 +862,7 @@
                   ]
                },
                "id": "fMultAdjustRandomMin:Adjustments",
-               "text": "Minimum",
+               "text": "$Minimum",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -809,7 +878,7 @@
                   ]
                },
                "id": "fMultAdjustRandomMax:Adjustments",
-               "text": "Maximum",
+               "text": "$Maximum",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -824,7 +893,7 @@
                      8
                   ]
                },
-               "text": "    Components: Common",
+               "text": "$IndentComponentsCommon",
                "type": "section"
             },
             {
@@ -834,7 +903,7 @@
                   ]
                },
                "id": "fMultAdjustRandomMinC:Adjustments",
-               "text": "    Minimum",
+               "text": "$IndentMinimum",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -850,7 +919,7 @@
                   ]
                },
                "id": "fMultAdjustRandomMaxC:Adjustments",
-               "text": "    Maximum",
+               "text": "$IndentMaximum",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -865,7 +934,7 @@
                      8
                   ]
                },
-               "text": "    Components: Uncommon",
+               "text": "$IndentComponentsUncommon",
                "type": "section"
             },
             {
@@ -875,7 +944,7 @@
                   ]
                },
                "id": "fMultAdjustRandomMinU:Adjustments",
-               "text": "    Minimum",
+               "text": "$IndentMinimum",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -891,7 +960,7 @@
                   ]
                },
                "id": "fMultAdjustRandomMaxU:Adjustments",
-               "text": "    Maximum",
+               "text": "$IndentMaximum",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -906,7 +975,7 @@
                      8
                   ]
                },
-               "text": "    Components: Rare",
+               "text": "$IndentComponentsRare",
                "type": "section"
             },
             {
@@ -916,7 +985,7 @@
                   ]
                },
                "id": "fMultAdjustRandomMinR:Adjustments",
-               "text": "    Minimum",
+               "text": "$IndentMinimum",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -932,7 +1001,7 @@
                   ]
                },
                "id": "fMultAdjustRandomMaxR:Adjustments",
-               "text": "    Maximum",
+               "text": "$IndentMaximum",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -947,7 +1016,7 @@
                      8
                   ]
                },
-               "text": "    Components: Special",
+               "text": "$IndentComponentsSpecial",
                "type": "section"
             },
             {
@@ -957,7 +1026,7 @@
                   ]
                },
                "id": "fMultAdjustRandomMinS:Adjustments",
-               "text": "    Minimum",
+               "text": "$IndentMinimum",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -973,7 +1042,7 @@
                   ]
                },
                "id": "fMultAdjustRandomMaxS:Adjustments",
-               "text": "    Maximum",
+               "text": "$IndentMaximum",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -997,6 +1066,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_ScrapperAffectsMultSimple",
+                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -1006,6 +1076,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_ScrapperAffectsMultDetailed",
+                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -1027,7 +1098,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlement1:Adjustments",
-               "text": "In Player-Owned Settlements",
+               "text": "$InSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1043,7 +1114,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlement1:Adjustments",
-               "text": "Everywhere Else",
+               "text": "$EverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1058,7 +1129,7 @@
                      10
                   ]
                },
-               "text": "    Components: Common",
+               "text": "$IndentComponentsCommon",
                "type": "section"
             },
             {
@@ -1068,7 +1139,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlementC1:Adjustments",
-               "text": "    In Player-Owned Settlements",
+               "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1084,7 +1155,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlementC1:Adjustments",
-               "text": "    Everywhere Else",
+               "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1099,7 +1170,7 @@
                      10
                   ]
                },
-               "text": "    Components: Uncommon",
+               "text": "$IndentComponentsUncommon",
                "type": "section"
             },
             {
@@ -1109,7 +1180,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlementU1:Adjustments",
-               "text": "    In Player-Owned Settlements",
+               "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1125,7 +1196,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlementU1:Adjustments",
-               "text": "    Everywhere Else",
+               "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1140,7 +1211,7 @@
                      10
                   ]
                },
-               "text": "    Components: Rare",
+               "text": "$IndentComponentsRare",
                "type": "section"
             },
             {
@@ -1150,7 +1221,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlementR1:Adjustments",
-               "text": "    In Player-Owned Settlements",
+               "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1166,7 +1237,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlementR1:Adjustments",
-               "text": "    Everywhere Else",
+               "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1181,7 +1252,7 @@
                      10
                   ]
                },
-               "text": "    Components: Special",
+               "text": "$IndentComponentsSpecial",
                "type": "section"
             },
             {
@@ -1191,7 +1262,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlementS1:Adjustments",
-               "text": "    In Player-Owned Settlements",
+               "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1207,7 +1278,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlementS1:Adjustments",
-               "text": "    Everywhere Else",
+               "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1243,7 +1314,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlement2:Adjustments",
-               "text": "In Player-Owned Settlements",
+               "text": "$InSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1259,7 +1330,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlement2:Adjustments",
-               "text": "Everywhere Else",
+               "text": "$EverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1274,7 +1345,7 @@
                      10
                   ]
                },
-               "text": "    Components: Common",
+               "text": "$IndentComponentsCommon",
                "type": "section"
             },
             {
@@ -1284,7 +1355,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlementC2:Adjustments",
-               "text": "    In Player-Owned Settlements",
+               "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1300,7 +1371,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlementC2:Adjustments",
-               "text": "    Everywhere Else",
+               "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1315,7 +1386,7 @@
                      10
                   ]
                },
-               "text": "    Components: Uncommon",
+               "text": "$IndentComponentsUncommon",
                "type": "section"
             },
             {
@@ -1325,7 +1396,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlementU2:Adjustments",
-               "text": "    In Player-Owned Settlements",
+               "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1341,7 +1412,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlementU2:Adjustments",
-               "text": "    Everywhere Else",
+               "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1356,7 +1427,7 @@
                      10
                   ]
                },
-               "text": "    Components: Rare",
+               "text": "$IndentComponentsRare",
                "type": "section"
             },
             {
@@ -1366,7 +1437,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlementR2:Adjustments",
-               "text": "    In Player-Owned Settlements",
+               "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1382,7 +1453,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlementR2:Adjustments",
-               "text": "    Everywhere Else",
+               "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1397,7 +1468,7 @@
                      10
                   ]
                },
-               "text": "    Components: Special",
+               "text": "$IndentComponentsSpecial",
                "type": "section"
             },
             {
@@ -1407,7 +1478,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlementS2:Adjustments",
-               "text": "    In Player-Owned Settlements",
+               "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1423,7 +1494,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlementS2:Adjustments",
-               "text": "    Everywhere Else",
+               "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1447,6 +1518,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_Scrapper3Available",
+                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -1469,7 +1541,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlement3:Adjustments",
-               "text": "In Player-Owned Settlements",
+               "text": "$InSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1486,7 +1558,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlement3:Adjustments",
-               "text": "Everywhere Else",
+               "text": "$EverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1499,7 +1571,8 @@
                "groupCondition": {
                   "AND": [
                      9,
-                     11
+                     11,
+                     12
                   ]
                },
                "lines": 1,
@@ -1522,7 +1595,7 @@
                      11
                   ]
                },
-               "text": "    Components: Common",
+               "text": "$IndentComponentsCommon",
                "type": "section"
             },
             {
@@ -1533,7 +1606,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlementC3:Adjustments",
-               "text": "    In Player-Owned Settlements",
+               "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1550,7 +1623,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlementC3:Adjustments",
-               "text": "    Everywhere Else",
+               "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1566,7 +1639,7 @@
                      11
                   ]
                },
-               "text": "    Components: Uncommon",
+               "text": "$IndentComponentsUncommon",
                "type": "section"
             },
             {
@@ -1577,7 +1650,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlementU3:Adjustments",
-               "text": "    In Player-Owned Settlements",
+               "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1594,7 +1667,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlementU3:Adjustments",
-               "text": "    Everywhere Else",
+               "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1610,7 +1683,7 @@
                      11
                   ]
                },
-               "text": "    Components: Rare",
+               "text": "$IndentComponentsRare",
                "type": "section"
             },
             {
@@ -1621,7 +1694,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlementR3:Adjustments",
-               "text": "    In Player-Owned Settlements",
+               "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1638,7 +1711,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlementR3:Adjustments",
-               "text": "    Everywhere Else",
+               "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1654,7 +1727,7 @@
                      11
                   ]
                },
-               "text": "    Components: Special",
+               "text": "$IndentComponentsSpecial",
                "type": "section"
             },
             {
@@ -1665,7 +1738,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlementS3:Adjustments",
-               "text": "    In Player-Owned Settlements",
+               "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1682,7 +1755,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlementS3:Adjustments",
-               "text": "    Everywhere Else",
+               "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1695,7 +1768,8 @@
                "groupCondition": {
                   "AND": [
                      10,
-                     11
+                     11,
+                     12
                   ]
                },
                "lines": 1,
@@ -1706,6 +1780,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_Scrapper4Available",
+                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -1728,7 +1803,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlement4:Adjustments",
-               "text": "In Player-Owned Settlements",
+               "text": "$InSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1745,7 +1820,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlement4:Adjustments",
-               "text": "Everywhere Else",
+               "text": "$EverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1758,7 +1833,8 @@
                "groupCondition": {
                   "AND": [
                      9,
-                     12
+                     12,
+                     13
                   ]
                },
                "lines": 1,
@@ -1781,7 +1857,7 @@
                      12
                   ]
                },
-               "text": "    Components: Common",
+               "text": "$IndentComponentsCommon",
                "type": "section"
             },
             {
@@ -1792,7 +1868,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlementC4:Adjustments",
-               "text": "    In Player-Owned Settlements",
+               "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1809,7 +1885,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlementC4:Adjustments",
-               "text": "    Everywhere Else",
+               "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1825,7 +1901,7 @@
                      12
                   ]
                },
-               "text": "    Components: Uncommon",
+               "text": "$IndentComponentsUncommon",
                "type": "section"
             },
             {
@@ -1836,7 +1912,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlementU4:Adjustments",
-               "text": "    In Player-Owned Settlements",
+               "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1853,7 +1929,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlementU4:Adjustments",
-               "text": "    Everywhere Else",
+               "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1869,7 +1945,7 @@
                      12
                   ]
                },
-               "text": "    Components: Rare",
+               "text": "$IndentComponentsRare",
                "type": "section"
             },
             {
@@ -1880,7 +1956,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlementR4:Adjustments",
-               "text": "    In Player-Owned Settlements",
+               "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1897,7 +1973,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlementR4:Adjustments",
-               "text": "    Everywhere Else",
+               "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1913,7 +1989,7 @@
                      12
                   ]
                },
-               "text": "    Components: Special",
+               "text": "$IndentComponentsSpecial",
                "type": "section"
             },
             {
@@ -1924,7 +2000,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlementS4:Adjustments",
-               "text": "    In Player-Owned Settlements",
+               "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1941,7 +2017,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlementS4:Adjustments",
-               "text": "    Everywhere Else",
+               "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -1954,7 +2030,8 @@
                "groupCondition": {
                   "AND": [
                      10,
-                     12
+                     12,
+                     13
                   ]
                },
                "lines": 1,
@@ -1965,6 +2042,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_Scrapper5Available",
+                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -1987,7 +2065,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlement5:Adjustments",
-               "text": "In Player-Owned Settlements",
+               "text": "$InSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -2004,7 +2082,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlement5:Adjustments",
-               "text": "Everywhere Else",
+               "text": "$EverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -2012,16 +2090,6 @@
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
-            },
-            {
-               "groupCondition": {
-                  "AND": [
-                     9,
-                     13
-                  ]
-               },
-               "lines": 1,
-               "type": "spacer"
             },
             {
                "groupCondition": {
@@ -2040,7 +2108,7 @@
                      13
                   ]
                },
-               "text": "    Components: Common",
+               "text": "$IndentComponentsCommon",
                "type": "section"
             },
             {
@@ -2051,7 +2119,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlementC5:Adjustments",
-               "text": "    In Player-Owned Settlements",
+               "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -2068,7 +2136,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlementC5:Adjustments",
-               "text": "    Everywhere Else",
+               "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -2084,7 +2152,7 @@
                      13
                   ]
                },
-               "text": "    Components: Uncommon",
+               "text": "$IndentComponentsUncommon",
                "type": "section"
             },
             {
@@ -2095,7 +2163,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlementU5:Adjustments",
-               "text": "    In Player-Owned Settlements",
+               "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -2112,7 +2180,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlementU5:Adjustments",
-               "text": "    Everywhere Else",
+               "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -2128,7 +2196,7 @@
                      13
                   ]
                },
-               "text": "    Components: Rare",
+               "text": "$IndentComponentsRare",
                "type": "section"
             },
             {
@@ -2139,7 +2207,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlementR5:Adjustments",
-               "text": "    In Player-Owned Settlements",
+               "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -2156,7 +2224,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlementR5:Adjustments",
-               "text": "    Everywhere Else",
+               "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -2172,7 +2240,7 @@
                      13
                   ]
                },
-               "text": "    Components: Special",
+               "text": "$IndentComponentsSpecial",
                "type": "section"
             },
             {
@@ -2183,7 +2251,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperSettlementS5:Adjustments",
-               "text": "    In Player-Owned Settlements",
+               "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -2200,7 +2268,7 @@
                   ]
                },
                "id": "fMultAdjustScrapperNotSettlementS5:Adjustments",
-               "text": "    Everywhere Else",
+               "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
                   "max": 1,
@@ -2208,33 +2276,25 @@
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
-            },
-            {
-               "groupCondition": {
-                  "AND": [
-                     10,
-                     13
-                  ]
-               },
-               "lines": 1,
-               "type": "spacer"
             }
          ],
-         "pageDisplayName": "Multiplier Adjustments"
+         "pageDisplayName": "$MultiplierAdjustments"
       },
       {
          "content": [
             {
-               "text": "Settings",
+               "text": "$Settings",
                "type": "section"
             },
             {
                "action": {
                   "form": "Portable Junk Recycler Mk 2.esp|800",
-                  "function": "MCM_ResetToDefaults",
+                  "function": "ResetToDefaults",
+                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
                   "type": "CallFunction"
                },
-               "text": "Reset Settings to Defaults",
+               "help": "$ResetSettingsToDefaultsHelp",
+               "text": "$ResetSettingsToDefaultsText",
                "type": "button"
             },
             {
@@ -2242,20 +2302,79 @@
                "type": "spacer"
             },
             {
-               "text": "Locks",
+               "text": "$Locks",
                "type": "section"
             },
             {
                "action": {
                   "form": "Portable Junk Recycler Mk 2.esp|800",
-                  "function": "MCM_ResetMutexes",
+                  "function": "ResetMutexes",
+                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
                   "type": "CallFunction"
                },
-               "text": "Reset Locks",
+               "help": "$ResetLocksHelp",
+               "text": "$ResetLocksText",
+               "type": "button"
+            },
+            {
+               "lines": 1,
+               "type": "spacer"
+            },
+            {
+               "text": "$RecyclableItemList",
+               "type": "section"
+            },
+            {
+               "action": {
+                  "form": "Portable Junk Recycler Mk 2.esp|800",
+                  "function": "ResetRecyclableItemList",
+                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+                  "type": "CallFunction"
+               },
+               "help": "$ResetRecyclableItemListHelp",
+               "text": "$ResetRecyclableItemListText",
+               "type": "button"
+            },
+            {
+               "lines": 1,
+               "type": "spacer"
+            },
+            {
+               "text": "$BehaviorOverrides",
+               "type": "section"
+            },
+            {
+               "action": {
+                  "form": "Portable Junk Recycler Mk 2.esp|800",
+                  "function": "ResetBehaviorOverrides",
+                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+                  "type": "CallFunction"
+               },
+               "help": "$ResetBehaviorOverridesHelp",
+               "text": "$ResetBehaviorOverridesText",
+               "type": "button"
+            },
+            {
+               "lines": 1,
+               "type": "spacer"
+            },
+            {
+               "text": "$Uninstall",
+               "type": "section"
+            },
+            {
+               "action": {
+                  "form": "Portable Junk Recycler Mk 2.esp|800",
+                  "function": "Uninstall",
+                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+                  "type": "CallFunction"
+               },
+               "help": "$PrepForUninstallHelp",
+               "text": "$PrepForUninstallText",
                "type": "button"
             }
          ],
-         "pageDisplayName": "Advanced"
+         "pageDisplayName": "$Advanced"
       }
    ],
    "pluginRequirements": [
