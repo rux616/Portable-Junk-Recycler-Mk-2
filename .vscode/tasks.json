@@ -20,7 +20,7 @@
             "label": "Render JSON",
             "type": "shell",
             "command": "jsonnet",
-            "args": ["config.jsonnet", "-o", "config.json"],
+            "args": ["-m", ".", "Portable Junk Recycler Mk 2.jsonnet"],
             "options": {
                 "cwd": "${workspaceFolder}/MCM/Config/Portable Junk Recycler Mk 2",
             },
@@ -30,7 +30,7 @@
             "label": "Format Jsonnet",
             "type": "shell",
             "command": "jsonnetfmt",
-            "args": ["-i", "config.jsonnet"],
+            "args": ["-i", "Portable Junk Recycler Mk 2.jsonnet"],
             "options": {
                 "cwd": "${workspaceFolder}/MCM/Config/Portable Junk Recycler Mk 2",
             },

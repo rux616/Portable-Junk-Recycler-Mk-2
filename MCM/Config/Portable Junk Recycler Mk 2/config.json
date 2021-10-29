@@ -2,7 +2,7 @@
    "content": [
       {
          "html": true,
-         "text": "<p align=\"center\"><font size=\"24\">$ModNameLocalized</font></p>",
+         "text": "<p align=\"center\"><font size=\"24\">$PortableJunkRecyclerMk2</font></p>",
          "type": "text"
       },
       {
@@ -66,7 +66,7 @@
          "type": "button"
       }
    ],
-   "displayName": "Portable Junk Recycler Mk 2",
+   "displayName": "$PortableJunkRecyclerMk2",
    "minMcmVersion": 2,
    "modName": "Portable Junk Recycler Mk 2",
    "pages": [
@@ -212,9 +212,14 @@
             {
                "lines": 1,
                "type": "spacer"
-            },
+            }
+         ],
+         "pageDisplayName": "$Settings"
+      },
+      {
+         "content": [
             {
-               "text": "$RecyclerBehavior",
+               "text": "$Behavior",
                "type": "section"
             },
             {
@@ -261,9 +266,35 @@
                "valueOptions": {
                   "sourceType": "ModSettingBool"
                }
+            },
+            {
+               "lines": 1,
+               "type": "spacer"
+            },
+            {
+               "text": "$Hotkeys",
+               "type": "section"
+            },
+            {
+               "help": "$BehaviorOverrideForceMoveJunkHelp",
+               "id": "forceMoveJunkHotkey",
+               "text": "$BehaviorOverrideForceMoveJunkText",
+               "type": "hotkey",
+               "valueOptions": {
+                  "allowModifierKeys": false
+               }
+            },
+            {
+               "help": "$BehaviorOverrideForceNotMoveJunkHelp",
+               "id": "forceNotMoveJunkHotkey",
+               "text": "$BehaviorOverrideForceNotMoveJunkText",
+               "type": "hotkey",
+               "valueOptions": {
+                  "allowModifierKeys": false
+               }
             }
          ],
-         "pageDisplayName": "$Settings"
+         "pageDisplayName": "$RecyclerInterface"
       },
       {
          "content": [
