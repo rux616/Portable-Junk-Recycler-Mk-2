@@ -1,11 +1,33 @@
-v0.3.1
-------
+v0.4.0 beta
+-----------
+- Major refactor to allow the use of multithreading to alleviate several performance bottlenecks
+- Added new setting: Allow Junk Only (applies a filter to the recycler so that it only accepts junk items)
+- Added new setting: Automatically Move Junk (automatically moves junk items in the player inventory to the recycler inventory)
+- Added new setting: Behavior Overrides (if LShift is held when activating the recycler item, junk items are moved into the recycler inventory, just like how the 'Automatically Move Junk' option works; if LCtrl is held when activating the recycler item, junk items will be forced to NOT move)
+- Added new setting: Automatic Recycling Mode (doesn't pop open the recycler inventory, just recycles all the junk in your inventory)
+- Added new button ('Advanced' page in the MCM): Reset Recyclable Item List (resets the FormList associated with the 'Automatically Move Junk' functionality, in case it ever starts putting weird stuff into the recycler inventory)
+- Added new button ('Advanced' page in the MCM): Reset Behavior Overrides (resets the behavior overrides if they get stuck)
+- Added new button ('Advanced' page in the MCM): Uninstall Mod (prepares the mod for uninstallation by deleting variables and unregistering from events)
+- Refined fix for loading auto-saves in v0.3.1 by returning to using properties, but no 'const' ones: The problem is that 'const' properties aren't saved into the papyrus VM, so if a save is made while a script is running and then said save is reloaded, if the already-running script tries to access a const property the game doesn't know what the script is attempting to access, so it just returns NONE, and things can get into a bad state or potentially even outright break.
+- Increase timeout for runtime init mutex release
+- Started localizing MCM config and adding help strings
+- Changed crafting materials required:
+  - Enhanced Targeting Card x1
+  - Fusion Core x1
+  - High-powered Magnet x1
+  - Power Relay Coil x2
+  - Screws x12
+  - Sensor Module x1
+  - Steel x20
+
+v0.3.1 beta
+-----------
 - Added warning message if MCM not detected
 - Fixed things breaking if the player loaded an auto-save that was created after activating the recycler device in the inventory. It seems that when the papyrus VM would unfreeze after loading the save, it had forgotten about the properties of the script. To work around it, the forms are loaded into local variables manually.
 - Altered crafting recipe a bit
 
-v0.3.0
-------
+v0.3.0 beta
+-----------
 - Made MCM required
 - Removed settings holotape and associated forms
 - Cleaned up newly-dead code related to having F4SE and MCM be optional
@@ -13,19 +35,19 @@ v0.3.0
 - Added new setting: Return Items Silently (determines if the player gets notification messages about items being returned from the recycler)
 - Added warning message if F4SE not detected
 
-v0.2.3
-------
+v0.2.3 beta
+-----------
 - Added more logging to scripts
 - Fixed freeze when aiming at things that could be activated when recycling process was ready to return items to player (F4SE is now required)
 
-v0.2.2
-------
+v0.2.2 beta
+-----------
 - fixed multipliers not applying to all components in a multi-component item
 
-v0.2.1
-------
+v0.2.1 beta
+-----------
 - fixed unintentional resource loop
 
-v0.2.0
-------
+v0.2.0 beta
+-----------
 - initial beta release
