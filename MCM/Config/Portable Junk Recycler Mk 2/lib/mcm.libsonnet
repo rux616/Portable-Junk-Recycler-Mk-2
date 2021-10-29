@@ -49,23 +49,33 @@
 
     field: {
       action: 'action',
+      allow_modifier_keys: 'allowModifierKeys',
       class_name: 'class_name',
       command: 'command',
+      content: 'content',
       desc: 'desc',
+      display_name: 'displayName',
       form: 'form',
       func: 'function',
       group_condition: 'groupCondition',
       group_control: 'groupControl',
       height: 'height',
       help: 'help',
+      hide_if_missing_reqs: 'hideIfMissingReqs',
       html: 'html',
       id: 'id',
+      keybinds: 'keybinds',
       lib_name: 'libName',
       lines: 'lines',
       max: 'max',
       min: 'min',
+      min_mcm_version: 'minMcmVersion',
+      mod_name: 'modName',
       options: 'options',
+      page_display_name: 'pageDisplayName',
+      pages: 'pages',
       params: 'params',
+      plugin_requirements: 'pluginRequirements',
       property_name: 'propertyName',
       script_name: 'scriptName',
       source_form: 'sourceForm',
@@ -100,12 +110,14 @@
       type=base.type.control.hidden_switcher, group=group
     ) + source,
 
-    hotkey(id, desc, action, group=null, help=null): control_base(
-      type=base.type.control.hotkey, group=group, help=help
+    hotkey(text, id, allow_modifier_keys=null, group=null, help=null): control_base(
+      type=base.type.control.hotkey, group=group, text=text, help=help
     ) + {
       [base.field.id]: id,
-      [base.field.desc]: desc,
-    } + action,
+      [if allow_modifier_keys != null && (allow_modifier_keys == true || allow_modifier_keys == false) then base.field.value_options]: {
+        [base.field.allow_modifier_keys]: allow_modifier_keys,
+      },
+    },
 
     image(lib_name, class_name, width=null, height=null, group=null, help=null): control_base(
       type=base.type.control.image, group=group, help=help
@@ -157,13 +169,16 @@
   },
 
   field: {
-    content: 'content',
-    display_name: 'displayName',
-    min_mcm_version: 'minMcmVersion',
-    mod_name: 'modName',
-    page_display_name: 'pageDisplayName',
-    pages: 'pages',
-    plugin_requirements: 'pluginRequirements',
+    content: base.field.content,
+    display_name: base.field.display_name,
+    hide_if_missing_reqs: base.field.hide_if_missing_reqs,
+    id: base.field.id,
+    keybinds: base.field.keybinds,
+    min_mcm_version: base.field.min_mcm_version,
+    mod_name: base.field.mod_name,
+    page_display_name: base.field.page_display_name,
+    pages: base.field.pages,
+    plugin_requirements: base.field.plugin_requirements,
   },
 
   helper: {
@@ -253,4 +268,9 @@
       },
     },
   },
+
+  keybind(id, desc, action): {
+    [base.field.id]: id,
+    [base.field.desc]: desc,
+  } + action,
 }
