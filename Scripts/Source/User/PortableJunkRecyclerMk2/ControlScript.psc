@@ -47,8 +47,8 @@ Group Other
       enables this script to determine whether its in a player-owned settlement or not }
 
     FormListWrapper Property RecyclableItemList Auto Mandatory
-    int Property LShift = 160 AutoReadOnly Hidden
     int Property LCtrl = 162 AutoReadOnly Hidden
+    int Property LShift = 160 AutoReadOnly Hidden
 EndGroup
 
 Group RuntimeState
@@ -97,7 +97,7 @@ Group Settings
     SettingInt Property RngAffectsMult Auto Hidden
     SettingInt Property ScrapperAffectsMult Auto Hidden
 
-    ; settings - recycler behavior
+    ; recycler interface - behavior
     SettingBool Property AutoRecyclingMode Auto Hidden
     SettingBool Property AllowJunkOnly Auto Hidden
     SettingBool Property AutoMoveJunk Auto Hidden
@@ -172,6 +172,9 @@ SettingChangeType AvailableChangeTypes
 int CurrentChangeType
 int MaxThreads = 16 const
 var[] Threads = None
+
+string ForceMoveJunkHotkey = "forceMoveJunkHotkey" const
+string ForceNotMoveJunkHotkey = "forceNotMoveJunkHotkey" const
 
 
 
@@ -263,23 +266,49 @@ EndEvent
 
 Event OnKeyDown(int aiKeyCode)
     If AllowBehaviorOverrides.Value
-        If aiKeyCode == LShift
-            Self._DebugTrace("OnKeyDown: LShift (" + LShift + ")")
-            BehaviorOverrideForceMoveJunk = true
-        ElseIf aiKeyCode == LCtrl
+        If aiKeyCode == LCtrl
             Self._DebugTrace("OnKeyDown: LCtrl (" + LCtrl + ")")
             BehaviorOverrideForceNotMoveJunk = true
+        ElseIf aiKeyCode == LShift
+            Self._DebugTrace("OnKeyDown: LShift (" + LShift + ")")
+            BehaviorOverrideForceMoveJunk = true
         EndIf
     EndIf
 EndEvent
 
 Event OnKeyUp(int aiKeyCode, float afTime)
     If AllowBehaviorOverrides.Value
-        If aiKeyCode == LShift
+        If aiKeyCode == LCtrl
+            Self._DebugTrace("OnKeyUp: LCtrl (" + LCtrl + ")")
+            BehaviorOverrideForceNotMoveJunk = false
+        ElseIf aiKeyCode == LShift
             Self._DebugTrace("OnKeyUp: LShift (" + LShift + ")")
             BehaviorOverrideForceMoveJunk = false
-        ElseIf aiKeyCode == LCtrl
-            Self._DebugTrace("OnKeyUp: LCtrl (" + LCtrl + ")")
+        EndIf
+    EndIf
+EndEvent
+
+Event OnControlDown(string asControlId)
+    Self._DebugTrace("OnControlDown: " + asControlId)
+    If AllowBehaviorOverrides.Value
+        If asControlId == ForceMoveJunkHotkey
+            Self._DebugTrace("OnKeyDown: LCtrl (" + LCtrl + ")")
+            BehaviorOverrideForceMoveJunk = true
+        ElseIf asControlId == ForceNotMoveJunkHotkey
+            Self._DebugTrace("OnKeyDown: LShift (" + LShift + ")")
+            BehaviorOverrideForceNotMoveJunk = true
+        EndIf
+    EndIf
+EndEvent
+
+Event OnControlUp(string asControlId, float afTime)
+    Self._DebugTrace("OnControlUp: " + asControlId)
+    If AllowBehaviorOverrides.Value
+        If asControlId == ForceMoveJunkHotkey
+            Self._DebugTrace("OnControlUp: ForceMoveJunkHotkey (" + ForceMoveJunkHotkey + ")")
+            BehaviorOverrideForceMoveJunk = false
+        ElseIf asControlId == ForceNotMoveJunkHotkey
+            Self._DebugTrace("OnKeyUp: ForceNotMoveJunkHotkey (" + ForceNotMoveJunkHotkey + ")")
             BehaviorOverrideForceNotMoveJunk = false
         EndIf
     EndIf
@@ -411,7 +440,7 @@ Function InitSettings(bool abForce = false)
         ScrapperAffectsMult = new SettingInt
     EndIf
 
-    ; settings - recycler behavior
+    ; recycler interface - behavior
     If abForce || ! AutoRecyclingMode
         Self._DebugTrace("Initializing AutoRecyclingMode")
         AutoRecyclingMode = new SettingBool
@@ -706,7 +735,7 @@ Function InitSettingsSupplemental()
     ScrapperAffectsMult.ValueMin = 0
     ScrapperAffectsMult.ValueMax = 2
 
-    ; settings - recycler behavior
+    ; recycler interface - behavior
     AutoRecyclingMode.ValueDefault = false
     AutoRecyclingMode.McmId = "bAutoRecyclingMode:General"
 
@@ -1067,14 +1096,20 @@ Function InitSettingsDefaultValues()
     MCM_RngAffectsMultDetailed = RngAffectsMult.Value > 1
     MCM_ScrapperAffectsMultSimple = ScrapperAffectsMult.Value == 1
     MCM_ScrapperAffectsMultDetailed = ScrapperAffectsMult.Value > 1
-    If AllowBehaviorOverrides.Value
-        RegisterForKey(LShift)
-        RegisterForKey(LCtrl)
-    Else
-        UnregisterForKey(LShift)
-        UnregisterForKey(LCtrl)
-        BehaviorOverrideForceMoveJunk = false
-        BehaviorOverrideForceNotMoveJunk = false
+    If ScriptExtenderInstalled
+        If AllowBehaviorOverrides.Value
+            RegisterForKey(LCtrl)
+            RegisterForKey(LShift)
+            RegisterForControl(ForceMoveJunkHotkey)
+            RegisterForControl(ForceNotMoveJunkHotkey)
+        Else
+            UnregisterForKey(LCtrl)
+            UnregisterForKey(LShift)
+            UnregisterForControl(ForceMoveJunkHotkey)
+            UnregisterForControl(ForceNotMoveJunkHotkey)
+            BehaviorOverrideForceMoveJunk = false
+            BehaviorOverrideForceNotMoveJunk = false
+        EndIf
     EndIf
 EndFunction
 
@@ -1274,7 +1309,7 @@ Function LoadAllSettingsFromMCM()
         settingsToLoad.Add(RngAffectsMult)
         settingsToLoad.Add(ScrapperAffectsMult)
 
-        ; settings - recycler behavior
+        ; recycler interface - behavior
         settingsToLoad.Add(AutoRecyclingMode)
         settingsToLoad.Add(AllowJunkOnly)
         settingsToLoad.Add(AutoMoveJunk)
@@ -1383,9 +1418,13 @@ Function LoadAllSettingsFromMCM()
         If AllowBehaviorOverrides.Value
             RegisterForKey(LShift)
             RegisterForKey(LCtrl)
+            RegisterForControl(ForceMoveJunkHotkey)
+            RegisterForControl(ForceNotMoveJunkHotkey)
         Else
             UnregisterForKey(LShift)
             UnregisterForKey(LCtrl)
+            UnregisterForControl(ForceMoveJunkHotkey)
+            UnregisterForControl(ForceNotMoveJunkHotkey)
             BehaviorOverrideForceMoveJunk = false
             BehaviorOverrideForceNotMoveJunk = false
         EndIf
@@ -1479,7 +1518,7 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             MCM_ScrapperAffectsMultDetailed = ScrapperAffectsMult.Value > 1
             MCM.RefreshMenu()
 
-        ; settings - recycler behavior
+        ; recycler interface - behavior
         ElseIf asControlId == AutoRecyclingMode.McmId
             oldValue = AutoRecyclingMode.Value
             LoadSettingFromMCM(AutoRecyclingMode, ModName)
@@ -1497,11 +1536,15 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             LoadSettingFromMCM(AllowBehaviorOverrides, ModName)
             newValue = AllowBehaviorOverrides.Value
             If AllowBehaviorOverrides.Value
-                RegisterForKey(LShift)
                 RegisterForKey(LCtrl)
+                RegisterForKey(LShift)
+                RegisterForControl(ForceMoveJunkHotkey)
+                RegisterForControl(ForceNotMoveJunkHotkey)
             Else
-                UnregisterForKey(LShift)
                 UnregisterForKey(LCtrl)
+                UnregisterForKey(LShift)
+                UnregisterForControl(ForceMoveJunkHotkey)
+                UnregisterForControl(ForceNotMoveJunkHotkey)
                 BehaviorOverrideForceMoveJunk = false
                 BehaviorOverrideForceNotMoveJunk = false
             EndIf
@@ -1509,6 +1552,12 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             oldValue = ReturnItemsSilently.Value
             LoadSettingFromMCM(ReturnItemsSilently, ModName)
             newValue = ReturnItemsSilently.Value
+        ElseIf asControlId == ForceMoveJunkHotkey
+            oldValue = "(hotkey change)"
+            newValue = oldValue
+        ElseIf asControlId == ForceNotMoveJunkHotkey
+            oldValue = "(hotkey change)"
+            newValue = oldValue
 
         ; multiplier adjustments - general
         ElseIf asControlId == MultAdjustGeneralSettlement.McmId
@@ -1706,7 +1755,7 @@ Function OnMCMSettingChange(string asModName, string asControlId)
                 Return
             EndIf
         EndIf
-        Self._DebugTrace("MCM control ID '" + asControlId + "' was changed. old value = " + oldValue + \
+        Self._DebugTrace("MCM control ID '" + asControlId + "' was changed. Old value = " + oldValue + \
             ", new value = " + newValue)
     EndIf
 EndFunction
@@ -2099,9 +2148,11 @@ Function Uninstall()
     UnregisterForExternalEvent("OnMCMSettingChange|" + ModName)
     UnregisterForExternalEvent("OnMCMMenuClose|" + ModName)
     If AllowBehaviorOverrides.Value
-        Self.UnregisterForKey(LShift)
-        Self.UnregisterForKey(LCtrl)
-    EndIf
+        UnregisterForKey(LCtrl)
+        UnregisterForKey(LShift)
+        UnregisterForControl(ForceMoveJunkHotkey)
+        UnregisterForControl(ForceNotMoveJunkHotkey)
+EndIf
 
     ; properties
     ; group Components
@@ -2154,7 +2205,7 @@ Function Uninstall()
     LckAffectsMult = None
     RngAffectsMult = None
     ScrapperAffectsMult = None
-    ; settings - recycler behavior
+    ; recycler interface - behavior
     AutoRecyclingMode = None
     AllowJunkOnly = None
     AutoMoveJunk = None
