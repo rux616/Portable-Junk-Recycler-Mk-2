@@ -16,7 +16,7 @@
     <Variables>
         <Variable Name="ModName" Value="Portable Junk Recycler Mk 2"/>
         <Variable Name="ModResourceName" Value="PortableJunkRecyclerMk2"/>
-        <Variable Name="ModVersion" Value="0.3.1 beta"/>
+        <Variable Name="ModVersion" Value="0.4.0 beta"/>
         <Variable Name="ModPath" Value="..\..\.."/>
         <Variable Name="BuildPath" Value="@ModPath\Build"/>
         <Variable Name="CompilePath" Value="@ModPath\Scripts"/>
@@ -44,6 +44,7 @@
         <Package Name="@ModName - Main" RootDir="@ModPath">
             <Include>Meshes\**\*.nif</Include>
             <Include>Scripts\**\*.pex</Include>
+            <Include>Strings\**\*.*STRINGS</Include>
         </Package>
         <Package Name="High Res Textures\@ModName - Textures" RootDir="@ModPath">
             <Include>Textures\@ModResourceName\*.dds</Include>
@@ -57,6 +58,7 @@
             <Include>**\@ModName.esp</Include>
             <Include>Docs\**\*.txt</Include>
             <Include>fomod\*.*</Include>
+            <Include>Interface\**\*.txt</Include>
             <Include>MCM\**\*.ini</Include>
             <Include>MCM\**\*.json</Include>
             <Include Path=".">**\@ModName - Main.ba2</Include>
@@ -66,6 +68,7 @@
             <Include Path="Options\Loose Files\Low Res Textures\@ModResourceName">Textures\@ModResourceName\lowres\*.dds</Include>
             <Include Path="Options\Loose Files\Meshes\@ModResourceName">Meshes\**\*.nif</Include>
             <Include Path="Options\Loose Files\Scripts\@ModResourceName">Scripts\**\*.pex</Include>
+            <Include Path="Options\Loose Files\Strings">Strings\**\*.*STRINGS</Include>
             <Include Path="Options\Source\Scripts\Source\User\@ModResourceName">Scripts\**\*.psc</Include>
         </ZipFile>
     </ZipFiles>
