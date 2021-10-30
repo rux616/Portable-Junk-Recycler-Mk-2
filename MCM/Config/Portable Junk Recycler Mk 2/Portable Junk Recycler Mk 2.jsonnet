@@ -30,15 +30,15 @@ local stat_adjust_step = 0.005;
   local mod = {
     name: 'Portable Junk Recycler Mk 2',
     localized_name: '$PortableJunkRecyclerMk2',
-    version: '0.4.0 beta',
+    version: '0.5.0 beta',
     plugin_name: mod.name + '.esp',
     quest_form: mod.plugin_name + '|800',
     control_script: 'PortableJunkRecyclerMk2:ControlScript',
     min_mcm_version: 2,
 
     keybind_id: {
-      force_move_junk: 'forceMoveJunkHotkey',
-      force_not_move_junk: 'forceNotMoveJunkHotkey',
+      force_retain_junk: 'ForceRetainJunkHotkey',
+      force_transfer_junk: 'ForceTransferJunkHotkey',
     },
 
     group_id: {
@@ -55,6 +55,7 @@ local stat_adjust_step = 0.005;
       scrapper_3_available: 11,
       scrapper_4_available: 12,
       scrapper_5_available: 13,
+      uninstall_safeguard: 14,
     },
   },
 
@@ -117,8 +118,8 @@ local stat_adjust_step = 0.005;
 
           // recycler interface - hotkeys
           mcm.control.section(text='$Hotkeys'),
-          mcm.control.hotkey(text='$BehaviorOverrideForceMoveJunkText', id=mod.keybind_id.force_move_junk, allow_modifier_keys=false, help='$BehaviorOverrideForceMoveJunkHelp'),
-          mcm.control.hotkey(text='$BehaviorOverrideForceNotMoveJunkText', id=mod.keybind_id.force_not_move_junk, allow_modifier_keys=false, help='$BehaviorOverrideForceNotMoveJunkHelp'),
+          mcm.control.hotkey(text='$BehaviorOverrideForceRetainJunkText', id=mod.keybind_id.force_retain_junk, allow_modifier_keys=false, help='$BehaviorOverrideForceRetainJunkHelp'),
+          mcm.control.hotkey(text='$BehaviorOverrideForceTransferJunkText', id=mod.keybind_id.force_transfer_junk, allow_modifier_keys=false, help='$BehaviorOverrideForceTransferJunkHelp'),
         ],
       },
       {
@@ -350,7 +351,8 @@ local stat_adjust_step = 0.005;
 
           // advanced - uninstall
           mcm.control.section(text='$Uninstall'),
-          mcm.control.button(text='$PrepForUninstallText', action=mcm.helper.action.call_function(mod.quest_form, 'Uninstall', script_name=mod.control_script), help='$PrepForUninstallHelp'),
+          mcm.control.switcher(text='$ShowUninstallModButtonText', group=mcm.helper.group.control(mod.group_id.uninstall_safeguard), help='$ShowUninstallModButtonHelp'),
+          mcm.control.button(text='$UninstallModText', action=mcm.helper.action.call_function(mod.quest_form, 'Uninstall', script_name=mod.control_script), help='$UninstallModHelp', group=mcm.helper.group.condition.or(mod.group_id.uninstall_safeguard)),
         ],
       },
     ],
@@ -359,8 +361,8 @@ local stat_adjust_step = 0.005;
   'keybinds.json': {
     [mcm.field.mod_name]: mod.name,
     [mcm.field.keybinds]: [
-      mcm.keybind(id=mod.keybind_id.force_move_junk, desc='$BehaviorOverrideForceMoveJunkHelp', action=mcm.helper.action.send_event(form=mod.quest_form)),
-      mcm.keybind(id=mod.keybind_id.force_not_move_junk, desc='$BehaviorOverrideForceNotMoveJunkHelp', action=mcm.helper.action.send_event(form=mod.quest_form)),
+      mcm.keybind(id=mod.keybind_id.force_retain_junk, desc='$BehaviorOverrideForceRetainJunkHelp', action=mcm.helper.action.send_event(form=mod.quest_form)),
+      mcm.keybind(id=mod.keybind_id.force_transfer_junk, desc='$BehaviorOverrideForceTransferJunkHelp', action=mcm.helper.action.send_event(form=mod.quest_form)),
     ],
   },
 }

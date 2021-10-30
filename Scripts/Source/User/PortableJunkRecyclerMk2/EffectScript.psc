@@ -11,6 +11,7 @@ import PortableJunkRecyclerMk2:Base
 
 Group Miscellaneous
     Actor Property PlayerRef Auto Mandatory
+    Quest Property ThreadContainer Auto Mandatory
 EndGroup
 
 Group PortableJunkRecycler
@@ -62,33 +63,33 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
         Debug.StartStackProfiling()
 
         ; record the status of the behavior overrides immediately
-        bool forceMoveJunk = false
-        bool forceNotMoveJunk = false
+        bool forceRetainJunk = false
+        bool forceTransferJunk = false
         If PortableRecyclerControl.AllowBehaviorOverrides.Value
-            forceMoveJunk = PortableRecyclerControl.BehaviorOverrideForceMoveJunk
-            forceNotMoveJunk = PortableRecyclerControl.BehaviorOverrideForceNotMoveJunk
+            forceRetainJunk = PortableRecyclerControl.BehaviorOverrideForceRetainJunk
+            forceTransferJunk = PortableRecyclerControl.BehaviorOverrideForceTransferJunk
         EndIf
 
         Self._DebugTrace("Recycler process started")
 
         ; set up multithreading pool
         Threads = new var[MaxThreads]
-        Threads[0x0] = (PortableRecyclerControl as Quest) as WorkerThread0x0
-        Threads[0x1] = (PortableRecyclerControl as Quest) as WorkerThread0x1
-        Threads[0x2] = (PortableRecyclerControl as Quest) as WorkerThread0x2
-        Threads[0x3] = (PortableRecyclerControl as Quest) as WorkerThread0x3
-        Threads[0x4] = (PortableRecyclerControl as Quest) as WorkerThread0x4
-        Threads[0x5] = (PortableRecyclerControl as Quest) as WorkerThread0x5
-        Threads[0x6] = (PortableRecyclerControl as Quest) as WorkerThread0x6
-        Threads[0x7] = (PortableRecyclerControl as Quest) as WorkerThread0x7
-        Threads[0x8] = (PortableRecyclerControl as Quest) as WorkerThread0x8
-        Threads[0x9] = (PortableRecyclerControl as Quest) as WorkerThread0x9
-        Threads[0xA] = (PortableRecyclerControl as Quest) as WorkerThread0xA
-        Threads[0xB] = (PortableRecyclerControl as Quest) as WorkerThread0xB
-        Threads[0xC] = (PortableRecyclerControl as Quest) as WorkerThread0xC
-        Threads[0xD] = (PortableRecyclerControl as Quest) as WorkerThread0xD
-        Threads[0xE] = (PortableRecyclerControl as Quest) as WorkerThread0xE
-        Threads[0xF] = (PortableRecyclerControl as Quest) as WorkerThread0xF
+        Threads[0x0] = ThreadContainer as WorkerThread0x0
+        Threads[0x1] = ThreadContainer as WorkerThread0x1
+        Threads[0x2] = ThreadContainer as WorkerThread0x2
+        Threads[0x3] = ThreadContainer as WorkerThread0x3
+        Threads[0x4] = ThreadContainer as WorkerThread0x4
+        Threads[0x5] = ThreadContainer as WorkerThread0x5
+        Threads[0x6] = ThreadContainer as WorkerThread0x6
+        Threads[0x7] = ThreadContainer as WorkerThread0x7
+        Threads[0x8] = ThreadContainer as WorkerThread0x8
+        Threads[0x9] = ThreadContainer as WorkerThread0x9
+        Threads[0xA] = ThreadContainer as WorkerThread0xA
+        Threads[0xB] = ThreadContainer as WorkerThread0xB
+        Threads[0xC] = ThreadContainer as WorkerThread0xC
+        Threads[0xD] = ThreadContainer as WorkerThread0xD
+        Threads[0xE] = ThreadContainer as WorkerThread0xE
+        Threads[0xF] = ThreadContainer as WorkerThread0xF
 
         ; get the set of multipliers that will be applied to this recycling run
         MultiplierSet multipliers = PortableRecyclerControl.GetMultipliers()
@@ -110,7 +111,7 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 
         ; once the containers have been created, evaluate some options and take action based on the results: if either
         ; AllowJunkOnly or AutoMoveJunk is true, the FormList holding the recyclable items needs to be updated
-        If PortableRecyclerControl.AllowJunkOnly.Value || PortableRecyclerControl.AutoMoveJunk.Value || forceMoveJunk || \
+        If PortableRecyclerControl.AllowJunkOnly.Value || PortableRecyclerControl.AutoMoveJunk.Value || forceTransferJunk || \
                 PortableRecyclerControl.AutoRecyclingMode.Value
             ; if the recyclable items FormList already has items in it, move any of those items in the player's
             ; inventory to the primary temp container in order to reduce the number of items that
@@ -134,8 +135,8 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
             ; if the AutoMoveJunk option is false, the AutoRecyclingMode option is false, and the 'forceNotMoveJunk'
             ; behavior override isn't being triggered, then any items moved to the primary temp container to aid in
             ; increasing the processing speed of PopulateRecyclablesList() need to be restored to the player inventory
-            If ! (PortableRecyclerControl.AutoMoveJunk.Value || PortableRecyclerControl.AutoRecyclingMode.Value || forceMoveJunk) || \
-                    forceNotMoveJunk
+            If ! (PortableRecyclerControl.AutoMoveJunk.Value || PortableRecyclerControl.AutoRecyclingMode.Value || forceTransferJunk) || \
+                    forceRetainJunk
                 Self._DebugTrace("Moving recyclable items from primary temp container back to player as per settings")
                 If PortableRecyclerControl.RecyclableItemList.Size
                     primaryTempContainerRef.RemoveItem(PortableRecyclerControl.RecyclableItemList.List, -1, true, PlayerRef)
@@ -157,7 +158,7 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 
         ; if the AutoRecyclingMode option is false or one of the 'force(Not)MoveJunk' overrides is being triggered,
         ; open the container
-        If ! PortableRecyclerControl.AutoRecyclingMode.Value || forceMoveJunk || forceNotMoveJunk
+        If ! PortableRecyclerControl.AutoRecyclingMode.Value || forceTransferJunk || forceRetainJunk
             ; activate the container (with 1.0s wait prior to, as specified on
             ; https://www.creationkit.com/fallout4/index.php?title=Activate_-_ObjectReference)
             Utility.Wait(1.0)
@@ -253,7 +254,7 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
         MessageAlreadyRunning.Show()
         PlayerRef.AddItem(PortableRecyclerItem as Form, 1, true)
     Else
-        ; the quest script is processing something in the background, tell the user to give it a few seconds to finish
+        ; the control script is processing something in the background, tell the user to give it a few seconds to finish
         Self._DebugTrace("Quest script is busy")
         MessageBusy.Show()
         PlayerRef.AddItem(PortableRecyclerItem as Form, 1, true)

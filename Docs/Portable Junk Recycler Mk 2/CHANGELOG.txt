@@ -1,3 +1,11 @@
+v0.5.0 beta
+-----------
+- Buttons for triggering behavior overrides are now hotkeys and can be bound to whatever the player wants
+- Uninstall now cannot be triggered when there is a recycling process running or the control script is busy
+- Added a safeguard in MCM so you don't accidentally click the uninstall button
+- Improved some of the descriptions of MCM options
+- Fixed mcm jsonnet library to allow source=null for switcher controls
+
 v0.4.0 beta
 -----------
 - Major refactor to allow the use of multithreading to alleviate several performance bottlenecks
