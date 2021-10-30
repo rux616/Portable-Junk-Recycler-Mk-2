@@ -157,9 +157,9 @@
       },
     },
 
-    switcher(text, source, group=null, help=null): control_base(
+    switcher(text, source=null, group=null, help=null): control_base(
       type=base.type.control.switcher, text=text, group=group, help=help
-    ) + source,
+    ) + if source != null then source else {},
 
     text(text, html=false, group=null, help=null): control_base(
       type=base.type.control.text, text=text, group=group, help=help

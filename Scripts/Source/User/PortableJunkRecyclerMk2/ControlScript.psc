@@ -42,13 +42,16 @@ Group Other
     Message Property MessageRecyclableItemListResetFailRunning Auto Mandatory
     Message Property MessageBehaviorOverridesReset Auto Mandatory
     Message Property MessageUninstalled Auto Mandatory
+    Message Property MessageUninstallFailBusy Auto Mandatory
+    Message Property MessageUninstallFailRunning Auto Mandatory
     WorkshopParentScript Property WorkshopParent Auto Mandatory
     { the workshop parent script
       enables this script to determine whether its in a player-owned settlement or not }
 
     FormListWrapper Property RecyclableItemList Auto Mandatory
-    int Property LCtrl = 162 AutoReadOnly Hidden
-    int Property LShift = 160 AutoReadOnly Hidden
+
+    ; WorkerThread scripts are attached to a different quest to prevent issues using MCM
+    Quest Property ThreadContainer Auto Mandatory
 EndGroup
 
 Group RuntimeState
@@ -78,8 +81,8 @@ Group RuntimeState
     bool Property ScriptExtenderInstalled Auto Hidden
     bool Property ModConfigMenuInstalled Auto Hidden
 
-    bool Property BehaviorOverrideForceMoveJunk Auto Hidden
-    bool Property BehaviorOverrideForceNotMoveJunk Auto Hidden
+    bool Property BehaviorOverrideForceTransferJunk Auto Hidden
+    bool Property BehaviorOverrideForceRetainJunk Auto Hidden
 EndGroup
 
 Group Settings
@@ -165,7 +168,7 @@ int Property iSaveFileMonitor Auto Hidden ; Do not mess with ever - this is used
 ; ---------
 
 string ModName = "Portable Junk Recycler Mk 2" const
-string ModVersion = "0.4.0 beta" const
+string ModVersion = "0.5.0 beta" const
 string FullScriptName = "PortableJunkRecyclerMk2:ControlScript" const
 int ScrapperPerkMaxRanksSupported = 5 const
 SettingChangeType AvailableChangeTypes
@@ -173,8 +176,8 @@ int CurrentChangeType
 int MaxThreads = 16 const
 var[] Threads = None
 
-string ForceMoveJunkHotkey = "forceMoveJunkHotkey" const
-string ForceNotMoveJunkHotkey = "forceNotMoveJunkHotkey" const
+string ForceRetainJunkHotkeyControlId = "ForceRetainJunkHotkey" const
+string ForceTransferJunkHotkeyControlId = "ForceTransferJunkHotkey" const
 
 
 
@@ -264,39 +267,15 @@ Event OnMenuOpenCloseEvent(string asMenuName, bool abOpening)
     EndIf
 EndEvent
 
-Event OnKeyDown(int aiKeyCode)
-    If AllowBehaviorOverrides.Value
-        If aiKeyCode == LCtrl
-            Self._DebugTrace("OnKeyDown: LCtrl (" + LCtrl + ")")
-            BehaviorOverrideForceNotMoveJunk = true
-        ElseIf aiKeyCode == LShift
-            Self._DebugTrace("OnKeyDown: LShift (" + LShift + ")")
-            BehaviorOverrideForceMoveJunk = true
-        EndIf
-    EndIf
-EndEvent
-
-Event OnKeyUp(int aiKeyCode, float afTime)
-    If AllowBehaviorOverrides.Value
-        If aiKeyCode == LCtrl
-            Self._DebugTrace("OnKeyUp: LCtrl (" + LCtrl + ")")
-            BehaviorOverrideForceNotMoveJunk = false
-        ElseIf aiKeyCode == LShift
-            Self._DebugTrace("OnKeyUp: LShift (" + LShift + ")")
-            BehaviorOverrideForceMoveJunk = false
-        EndIf
-    EndIf
-EndEvent
-
 Event OnControlDown(string asControlId)
     Self._DebugTrace("OnControlDown: " + asControlId)
     If AllowBehaviorOverrides.Value
-        If asControlId == ForceMoveJunkHotkey
-            Self._DebugTrace("OnKeyDown: LCtrl (" + LCtrl + ")")
-            BehaviorOverrideForceMoveJunk = true
-        ElseIf asControlId == ForceNotMoveJunkHotkey
-            Self._DebugTrace("OnKeyDown: LShift (" + LShift + ")")
-            BehaviorOverrideForceNotMoveJunk = true
+        If asControlId == ForceRetainJunkHotkeyControlId
+            Self._DebugTrace("OnControlDown: ForceRetainJunkHotkeyControlId (" + ForceRetainJunkHotkeyControlId + ")")
+            BehaviorOverrideForceRetainJunk = true
+        ElseIf asControlId == ForceTransferJunkHotkeyControlId
+            Self._DebugTrace("OnControlDown: ForceTransferJunkHotkeyControlId (" + ForceTransferJunkHotkeyControlId + ")")
+            BehaviorOverrideForceTransferJunk = true
         EndIf
     EndIf
 EndEvent
@@ -304,12 +283,12 @@ EndEvent
 Event OnControlUp(string asControlId, float afTime)
     Self._DebugTrace("OnControlUp: " + asControlId)
     If AllowBehaviorOverrides.Value
-        If asControlId == ForceMoveJunkHotkey
-            Self._DebugTrace("OnControlUp: ForceMoveJunkHotkey (" + ForceMoveJunkHotkey + ")")
-            BehaviorOverrideForceMoveJunk = false
-        ElseIf asControlId == ForceNotMoveJunkHotkey
-            Self._DebugTrace("OnKeyUp: ForceNotMoveJunkHotkey (" + ForceNotMoveJunkHotkey + ")")
-            BehaviorOverrideForceNotMoveJunk = false
+        If asControlId == ForceRetainJunkHotkeyControlId
+            Self._DebugTrace("OnControlUp: ForceRetainJunkHotkeyControlId (" + ForceRetainJunkHotkeyControlId + ")")
+            BehaviorOverrideForceRetainJunk = false
+        ElseIf asControlId == ForceTransferJunkHotkeyControlId
+            Self._DebugTrace("OnControlUp: ForceTransferJunkHotkeyControlId (" + ForceTransferJunkHotkeyControlId + ")")
+            BehaviorOverrideForceTransferJunk = false
         EndIf
     EndIf
 EndEvent
@@ -335,22 +314,22 @@ Function InitVariables(bool abForce = false)
     If abForce || Threads == None || Threads.Length != MaxThreads
         Self._DebugTrace("Initializing Threads")
         Threads = new var[MaxThreads]
-        Threads[0x0] = (Self as Quest) as WorkerThread0x0
-        Threads[0x1] = (Self as Quest) as WorkerThread0x1
-        Threads[0x2] = (Self as Quest) as WorkerThread0x2
-        Threads[0x3] = (Self as Quest) as WorkerThread0x3
-        Threads[0x4] = (Self as Quest) as WorkerThread0x4
-        Threads[0x5] = (Self as Quest) as WorkerThread0x5
-        Threads[0x6] = (Self as Quest) as WorkerThread0x6
-        Threads[0x7] = (Self as Quest) as WorkerThread0x7
-        Threads[0x8] = (Self as Quest) as WorkerThread0x8
-        Threads[0x9] = (Self as Quest) as WorkerThread0x9
-        Threads[0xA] = (Self as Quest) as WorkerThread0xA
-        Threads[0xB] = (Self as Quest) as WorkerThread0xB
-        Threads[0xC] = (Self as Quest) as WorkerThread0xC
-        Threads[0xD] = (Self as Quest) as WorkerThread0xD
-        Threads[0xE] = (Self as Quest) as WorkerThread0xE
-        Threads[0xF] = (Self as Quest) as WorkerThread0xF
+        Threads[0x0] = ThreadContainer as WorkerThread0x0
+        Threads[0x1] = ThreadContainer as WorkerThread0x1
+        Threads[0x2] = ThreadContainer as WorkerThread0x2
+        Threads[0x3] = ThreadContainer as WorkerThread0x3
+        Threads[0x4] = ThreadContainer as WorkerThread0x4
+        Threads[0x5] = ThreadContainer as WorkerThread0x5
+        Threads[0x6] = ThreadContainer as WorkerThread0x6
+        Threads[0x7] = ThreadContainer as WorkerThread0x7
+        Threads[0x8] = ThreadContainer as WorkerThread0x8
+        Threads[0x9] = ThreadContainer as WorkerThread0x9
+        Threads[0xA] = ThreadContainer as WorkerThread0xA
+        Threads[0xB] = ThreadContainer as WorkerThread0xB
+        Threads[0xC] = ThreadContainer as WorkerThread0xC
+        Threads[0xD] = ThreadContainer as WorkerThread0xD
+        Threads[0xE] = ThreadContainer as WorkerThread0xE
+        Threads[0xF] = ThreadContainer as WorkerThread0xF
     EndIf
 EndFunction
 
@@ -1098,17 +1077,13 @@ Function InitSettingsDefaultValues()
     MCM_ScrapperAffectsMultDetailed = ScrapperAffectsMult.Value > 1
     If ScriptExtenderInstalled
         If AllowBehaviorOverrides.Value
-            RegisterForKey(LCtrl)
-            RegisterForKey(LShift)
-            RegisterForControl(ForceMoveJunkHotkey)
-            RegisterForControl(ForceNotMoveJunkHotkey)
+            RegisterForControl(ForceRetainJunkHotkeyControlId)
+            RegisterForControl(ForceTransferJunkHotkeyControlId)
         Else
-            UnregisterForKey(LCtrl)
-            UnregisterForKey(LShift)
-            UnregisterForControl(ForceMoveJunkHotkey)
-            UnregisterForControl(ForceNotMoveJunkHotkey)
-            BehaviorOverrideForceMoveJunk = false
-            BehaviorOverrideForceNotMoveJunk = false
+            UnregisterForControl(ForceRetainJunkHotkeyControlId)
+            UnregisterForControl(ForceTransferJunkHotkeyControlId)
+            BehaviorOverrideForceRetainJunk = false
+            BehaviorOverrideForceTransferJunk = false
         EndIf
     EndIf
 EndFunction
@@ -1416,17 +1391,13 @@ Function LoadAllSettingsFromMCM()
         MCM_ScrapperAffectsMultSimple = ScrapperAffectsMult.Value == 1
         MCM_ScrapperAffectsMultDetailed = ScrapperAffectsMult.Value > 1
         If AllowBehaviorOverrides.Value
-            RegisterForKey(LShift)
-            RegisterForKey(LCtrl)
-            RegisterForControl(ForceMoveJunkHotkey)
-            RegisterForControl(ForceNotMoveJunkHotkey)
+            RegisterForControl(ForceRetainJunkHotkeyControlId)
+            RegisterForControl(ForceTransferJunkHotkeyControlId)
         Else
-            UnregisterForKey(LShift)
-            UnregisterForKey(LCtrl)
-            UnregisterForControl(ForceMoveJunkHotkey)
-            UnregisterForControl(ForceNotMoveJunkHotkey)
-            BehaviorOverrideForceMoveJunk = false
-            BehaviorOverrideForceNotMoveJunk = false
+            UnregisterForControl(ForceRetainJunkHotkeyControlId)
+            UnregisterForControl(ForceTransferJunkHotkeyControlId)
+            BehaviorOverrideForceRetainJunk = false
+            BehaviorOverrideForceTransferJunk = false
         EndIf
         MultAdjustRandomSanityCheck()
     Else
@@ -1536,26 +1507,24 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             LoadSettingFromMCM(AllowBehaviorOverrides, ModName)
             newValue = AllowBehaviorOverrides.Value
             If AllowBehaviorOverrides.Value
-                RegisterForKey(LCtrl)
-                RegisterForKey(LShift)
-                RegisterForControl(ForceMoveJunkHotkey)
-                RegisterForControl(ForceNotMoveJunkHotkey)
+                RegisterForControl(ForceRetainJunkHotkeyControlId)
+                RegisterForControl(ForceTransferJunkHotkeyControlId)
             Else
-                UnregisterForKey(LCtrl)
-                UnregisterForKey(LShift)
-                UnregisterForControl(ForceMoveJunkHotkey)
-                UnregisterForControl(ForceNotMoveJunkHotkey)
-                BehaviorOverrideForceMoveJunk = false
-                BehaviorOverrideForceNotMoveJunk = false
+                UnregisterForControl(ForceRetainJunkHotkeyControlId)
+                UnregisterForControl(ForceTransferJunkHotkeyControlId)
+                BehaviorOverrideForceRetainJunk = false
+                BehaviorOverrideForceTransferJunk = false
             EndIf
         ElseIf asControlId == ReturnItemsSilently.McmId
             oldValue = ReturnItemsSilently.Value
             LoadSettingFromMCM(ReturnItemsSilently, ModName)
             newValue = ReturnItemsSilently.Value
-        ElseIf asControlId == ForceMoveJunkHotkey
+
+        ; recycler interface - hotkeys
+        ElseIf asControlId == ForceRetainJunkHotkeyControlId
             oldValue = "(hotkey change)"
             newValue = oldValue
-        ElseIf asControlId == ForceNotMoveJunkHotkey
+        ElseIf asControlId == ForceTransferJunkHotkeyControlId
             oldValue = "(hotkey change)"
             newValue = oldValue
 
@@ -1856,8 +1825,8 @@ EndFunction
 ; reset the behavior override flags
 Function ResetBehaviorOverrides()
     Self._DebugTrace("Resetting behavior override flags")
-    BehaviorOverrideForceMoveJunk = false
-    BehaviorOverrideForceNotMoveJunk = false
+    BehaviorOverrideForceRetainJunk = false
+    BehaviorOverrideForceTransferJunk = false
     MessageBehaviorOverridesReset.Show()
 EndFunction
 
@@ -2140,146 +2109,156 @@ EndFunction
 
 ; prep for uninstall of mod
 Function Uninstall()
-    Self._DebugTrace("Uninstallation sequence initialized!", 1)
+    If ! MutexRunning && ! MutexBusy
+        Self._DebugTrace("Uninstallation sequence initialized!", 1)
 
-    ; unregister from all events
-    UnregisterForRemoteEvent(PlayerRef, "OnPlayerLoadGame")
-    UnregisterForMenuOpenCloseEvent("PauseMenu")
-    UnregisterForExternalEvent("OnMCMSettingChange|" + ModName)
-    UnregisterForExternalEvent("OnMCMMenuClose|" + ModName)
-    If AllowBehaviorOverrides.Value
-        UnregisterForKey(LCtrl)
-        UnregisterForKey(LShift)
-        UnregisterForControl(ForceMoveJunkHotkey)
-        UnregisterForControl(ForceNotMoveJunkHotkey)
-EndIf
+        ; unregister from all events
+        UnregisterForRemoteEvent(PlayerRef, "OnPlayerLoadGame")
+        UnregisterForMenuOpenCloseEvent("PauseMenu")
+        UnregisterForExternalEvent("OnMCMSettingChange|" + ModName)
+        UnregisterForExternalEvent("OnMCMMenuClose|" + ModName)
+        If AllowBehaviorOverrides.Value
+            UnregisterForControl(ForceRetainJunkHotkeyControlId)
+            UnregisterForControl(ForceTransferJunkHotkeyControlId)
+        EndIf
 
-    ; properties
-    ; group Components
-    ComponentListC = None
-    ComponentListU = None
-    ComponentListR = None
-    ComponentListS = None
-    ScrapListC = None
-    ScrapListU = None
-    ScrapListR = None
-    ScrapListS = None
-    ScrapListAll = None
-    Self.DestroyObjectArray(ComponentMappings as var[])
-    ComponentMappings = None
+        ; remove recycler devices in inventory, if any
+        PlayerRef.RemoveItem(Game.GetFormFromFile(0x840, ModName + ".esp"), -1, true)
 
-    ; group Other
-    PlayerRef = None
-    MessageF4SENotInstalled = None
-    MessageMCMNotInstalled = None
-    MessageInitialized = None
-    MessageCurrentMultipliers = None
-    MessageCurrentMultipliersRng = None
-    MessageUsesLeftLimited = None
-    MessageUsesLeftUnlimited = None
-    MessageSettingsReset = None
-    MessageSettingsResetFailBusy = None
-    MessageSettingsResetFailRunning = None
-    MessageLocksReset = None
-    MessageRecyclableItemListReset = None
-    MessageRecyclableItemListResetFailBusy = None
-    MessageRecyclableItemListResetFailRunning = None
-    MessageBehaviorOverridesReset = None
-    WorkshopParent = None
-    RecyclableItemList = None
+        ; properties
+        ; group Components
+        ComponentListC = None
+        ComponentListU = None
+        ComponentListR = None
+        ComponentListS = None
+        ScrapListC = None
+        ScrapListU = None
+        ScrapListR = None
+        ScrapListS = None
+        ScrapListAll = None
+        Self.DestroyObjectArray(ComponentMappings as var[])
+        ComponentMappings = None
 
-    ; group RuntimeState
-    Self.DestroyObjectArray(ScrapperPerks as var[])
-    ScrapperPerks = None
+        ; group Other
+        PlayerRef = None
+        MessageF4SENotInstalled = None
+        MessageMCMNotInstalled = None
+        MessageInitialized = None
+        MessageCurrentMultipliers = None
+        MessageCurrentMultipliersRng = None
+        MessageUsesLeftLimited = None
+        MessageUsesLeftUnlimited = None
+        MessageSettingsReset = None
+        MessageSettingsResetFailBusy = None
+        MessageSettingsResetFailRunning = None
+        MessageLocksReset = None
+        MessageRecyclableItemListReset = None
+        MessageRecyclableItemListResetFailBusy = None
+        MessageRecyclableItemListResetFailRunning = None
+        MessageBehaviorOverridesReset = None
+        WorkshopParent = None
+        RecyclableItemList = None
+        ThreadContainer = None
 
-    ; group Settings
-    ; settings - general
-    MultBase = None
-    ReturnAtLeastOneComponent = None
-    FractionalComponentHandling = None
-    HasLimitedUses = None
-    NumberOfUses = None
-    ; settings - adjustment options
-    GeneralMultAdjust = None
-    IntAffectsMult = None
-    LckAffectsMult = None
-    RngAffectsMult = None
-    ScrapperAffectsMult = None
-    ; recycler interface - behavior
-    AutoRecyclingMode = None
-    AllowJunkOnly = None
-    AutoMoveJunk = None
-    AllowBehaviorOverrides = None
-    ReturnItemsSilently = None
-    ; multiplier adjustments - general
-    MultAdjustGeneralSettlement = None
-    MultAdjustGeneralSettlementC = None
-    MultAdjustGeneralSettlementU = None
-    MultAdjustGeneralSettlementR = None
-    MultAdjustGeneralSettlementS = None
-    MultAdjustGeneralNotSettlement = None
-    MultAdjustGeneralNotSettlementC = None
-    MultAdjustGeneralNotSettlementU = None
-    MultAdjustGeneralNotSettlementR = None
-    MultAdjustGeneralNotSettlementS = None
-    ; multiplier adjustments - intelligence
-    MultAdjustInt = None
-    MultAdjustIntC = None
-    MultAdjustIntU = None
-    MultAdjustIntR = None
-    MultAdjustIntS = None
-    ; multiplier adjustments - luck
-    MultAdjustLck = None
-    MultAdjustLckC = None
-    MultAdjustLckU = None
-    MultAdjustLckR = None
-    MultAdjustLckS = None
-    ; multiplier adjustments - randomness
-    MultAdjustRandomMin = None
-    MultAdjustRandomMinC = None
-    MultAdjustRandomMinU = None
-    MultAdjustRandomMinR = None
-    MultAdjustRandomMinS = None
-    MultAdjustRandomMax = None
-    MultAdjustRandomMaxC = None
-    MultAdjustRandomMaxU = None
-    MultAdjustRandomMaxR = None
-    MultAdjustRandomMaxS = None
-    ; multiplier adjustments - scrapper
-    Self.DestroyObjectArray(MultAdjustScrapperSettlement as var[])
-    MultAdjustScrapperSettlement = None
-    Self.DestroyObjectArray(MultAdjustScrapperSettlementC as var[])
-    MultAdjustScrapperSettlementC = None
-    Self.DestroyObjectArray(MultAdjustScrapperSettlementU as var[])
-    MultAdjustScrapperSettlementU = None
-    Self.DestroyObjectArray(MultAdjustScrapperSettlementR as var[])
-    MultAdjustScrapperSettlementR = None
-    Self.DestroyObjectArray(MultAdjustScrapperSettlementS as var[])
-    MultAdjustScrapperSettlementS = None
-    Self.DestroyObjectArray(MultAdjustScrapperNotSettlement as var[])
-    MultAdjustScrapperNotSettlement = None
-    Self.DestroyObjectArray(MultAdjustScrapperNotSettlementC as var[])
-    MultAdjustScrapperNotSettlementC = None
-    Self.DestroyObjectArray(MultAdjustScrapperNotSettlementU as var[])
-    MultAdjustScrapperNotSettlementU = None
-    Self.DestroyObjectArray(MultAdjustScrapperNotSettlementR as var[])
-    MultAdjustScrapperNotSettlementR = None
-    Self.DestroyObjectArray(MultAdjustScrapperNotSettlementS as var[])
-    MultAdjustScrapperNotSettlementS = None
+        ; group RuntimeState
+        Self.DestroyObjectArray(ScrapperPerks as var[])
+        ScrapperPerks = None
 
-    ; local variables
-    AvailableChangeTypes = None
-    Self.DestroyObjectArray(Threads)
-    Threads = None
+        ; group Settings
+        ; settings - general
+        MultBase = None
+        ReturnAtLeastOneComponent = None
+        FractionalComponentHandling = None
+        HasLimitedUses = None
+        NumberOfUses = None
+        ; settings - adjustment options
+        GeneralMultAdjust = None
+        IntAffectsMult = None
+        LckAffectsMult = None
+        RngAffectsMult = None
+        ScrapperAffectsMult = None
+        ; recycler interface - behavior
+        AutoRecyclingMode = None
+        AllowJunkOnly = None
+        AutoMoveJunk = None
+        AllowBehaviorOverrides = None
+        ReturnItemsSilently = None
+        ; multiplier adjustments - general
+        MultAdjustGeneralSettlement = None
+        MultAdjustGeneralSettlementC = None
+        MultAdjustGeneralSettlementU = None
+        MultAdjustGeneralSettlementR = None
+        MultAdjustGeneralSettlementS = None
+        MultAdjustGeneralNotSettlement = None
+        MultAdjustGeneralNotSettlementC = None
+        MultAdjustGeneralNotSettlementU = None
+        MultAdjustGeneralNotSettlementR = None
+        MultAdjustGeneralNotSettlementS = None
+        ; multiplier adjustments - intelligence
+        MultAdjustInt = None
+        MultAdjustIntC = None
+        MultAdjustIntU = None
+        MultAdjustIntR = None
+        MultAdjustIntS = None
+        ; multiplier adjustments - luck
+        MultAdjustLck = None
+        MultAdjustLckC = None
+        MultAdjustLckU = None
+        MultAdjustLckR = None
+        MultAdjustLckS = None
+        ; multiplier adjustments - randomness
+        MultAdjustRandomMin = None
+        MultAdjustRandomMinC = None
+        MultAdjustRandomMinU = None
+        MultAdjustRandomMinR = None
+        MultAdjustRandomMinS = None
+        MultAdjustRandomMax = None
+        MultAdjustRandomMaxC = None
+        MultAdjustRandomMaxU = None
+        MultAdjustRandomMaxR = None
+        MultAdjustRandomMaxS = None
+        ; multiplier adjustments - scrapper
+        Self.DestroyObjectArray(MultAdjustScrapperSettlement as var[])
+        MultAdjustScrapperSettlement = None
+        Self.DestroyObjectArray(MultAdjustScrapperSettlementC as var[])
+        MultAdjustScrapperSettlementC = None
+        Self.DestroyObjectArray(MultAdjustScrapperSettlementU as var[])
+        MultAdjustScrapperSettlementU = None
+        Self.DestroyObjectArray(MultAdjustScrapperSettlementR as var[])
+        MultAdjustScrapperSettlementR = None
+        Self.DestroyObjectArray(MultAdjustScrapperSettlementS as var[])
+        MultAdjustScrapperSettlementS = None
+        Self.DestroyObjectArray(MultAdjustScrapperNotSettlement as var[])
+        MultAdjustScrapperNotSettlement = None
+        Self.DestroyObjectArray(MultAdjustScrapperNotSettlementC as var[])
+        MultAdjustScrapperNotSettlementC = None
+        Self.DestroyObjectArray(MultAdjustScrapperNotSettlementU as var[])
+        MultAdjustScrapperNotSettlementU = None
+        Self.DestroyObjectArray(MultAdjustScrapperNotSettlementR as var[])
+        MultAdjustScrapperNotSettlementR = None
+        Self.DestroyObjectArray(MultAdjustScrapperNotSettlementS as var[])
+        MultAdjustScrapperNotSettlementS = None
 
-    ; show uninstalled message
-    MessageUninstalled.Show()
-    MessageUninstalled = None
+        ; local variables
+        AvailableChangeTypes = None
+        Self.DestroyObjectArray(Threads)
+        Threads = None
 
-    ; stop the quest
-    Stop()
+        ; show uninstalled message
+        MessageUninstalled.Show()
+        MessageUninstalled = None
 
-    Self._DebugTrace("Uninstallation sequence complete!")
+        ; stop the quests
+        Stop()
+
+        Self._DebugTrace("Uninstallation sequence complete!", 1)
+    ElseIf MutexRunning && ! MutexBusy
+        ; fail (running)
+        MessageUninstallFailRunning.Show()
+    Else 
+        ; fail (busy)
+        MessageUninstallFailBusy.Show()
+    EndIf
 EndFunction
 
 ; fully destroy the contents of an array of objects and the array itself

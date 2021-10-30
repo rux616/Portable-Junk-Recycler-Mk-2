@@ -12,7 +12,7 @@
       },
       {
          "html": true,
-         "text": "<p align=\"center\">v0.4.0 beta</p>",
+         "text": "<p align=\"center\">v0.5.0 beta</p>",
          "type": "text"
       },
       {
@@ -276,18 +276,18 @@
                "type": "section"
             },
             {
-               "help": "$BehaviorOverrideForceMoveJunkHelp",
-               "id": "forceMoveJunkHotkey",
-               "text": "$BehaviorOverrideForceMoveJunkText",
+               "help": "$BehaviorOverrideForceRetainJunkHelp",
+               "id": "ForceRetainJunkHotkey",
+               "text": "$BehaviorOverrideForceRetainJunkText",
                "type": "hotkey",
                "valueOptions": {
                   "allowModifierKeys": false
                }
             },
             {
-               "help": "$BehaviorOverrideForceNotMoveJunkHelp",
-               "id": "forceNotMoveJunkHotkey",
-               "text": "$BehaviorOverrideForceNotMoveJunkText",
+               "help": "$BehaviorOverrideForceTransferJunkHelp",
+               "id": "ForceTransferJunkHotkey",
+               "text": "$BehaviorOverrideForceTransferJunkText",
                "type": "hotkey",
                "valueOptions": {
                   "allowModifierKeys": false
@@ -2394,14 +2394,25 @@
                "type": "section"
             },
             {
+               "groupControl": 14,
+               "help": "$ShowUninstallModButtonHelp",
+               "text": "$ShowUninstallModButtonText",
+               "type": "switcher"
+            },
+            {
                "action": {
                   "form": "Portable Junk Recycler Mk 2.esp|800",
                   "function": "Uninstall",
                   "scriptName": "PortableJunkRecyclerMk2:ControlScript",
                   "type": "CallFunction"
                },
-               "help": "$PrepForUninstallHelp",
-               "text": "$PrepForUninstallText",
+               "groupCondition": {
+                  "OR": [
+                     14
+                  ]
+               },
+               "help": "$UninstallModHelp",
+               "text": "$UninstallModText",
                "type": "button"
             }
          ],
