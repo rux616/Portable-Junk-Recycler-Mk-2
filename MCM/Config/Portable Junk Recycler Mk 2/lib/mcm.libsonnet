@@ -149,9 +149,9 @@
       [if height != null then base.field.height else null]: height,
     },
 
-    stepper(text, options, source, group=null, help=null): control_base(
+    stepper(text, options, source=null, group=null, help=null): control_base(
       type=base.type.control.stepper, text=text, group=group, help=help
-    ) + source + {
+    ) + if source != null then source else {} + {
       [base.field.value_options]+: {
         [base.field.options]: options,
       },
