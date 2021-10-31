@@ -49,6 +49,7 @@ Group Other
       enables this script to determine whether its in a player-owned settlement or not }
 
     FormListWrapper Property RecyclableItemList Auto Mandatory
+    FormListWrapper Property AutoTransferExemptionsList Auto Mandatory
 
     ; WorkerThread scripts are attached to a different quest to prevent issues using MCM
     Quest Property ThreadContainer Auto Mandatory
@@ -83,6 +84,7 @@ Group RuntimeState
 
     bool Property BehaviorOverrideForceTransferJunk Auto Hidden
     bool Property BehaviorOverrideForceRetainJunk Auto Hidden
+    bool Property EditAutoTransferExemptions Auto Hidden
 EndGroup
 
 Group Settings
@@ -103,7 +105,7 @@ Group Settings
     ; recycler interface - behavior
     SettingBool Property AutoRecyclingMode Auto Hidden
     SettingBool Property AllowJunkOnly Auto Hidden
-    SettingBool Property AutoMoveJunk Auto Hidden
+    SettingBool Property AutoTransferJunk Auto Hidden
     SettingBool Property AllowBehaviorOverrides Auto Hidden
     SettingBool Property ReturnItemsSilently Auto Hidden
 
@@ -176,8 +178,10 @@ int CurrentChangeType
 int MaxThreads = 16 const
 var[] Threads = None
 
-string ForceRetainJunkHotkeyControlId = "ForceRetainJunkHotkey" const
-string ForceTransferJunkHotkeyControlId = "ForceTransferJunkHotkey" const
+; DirectX scan codes: https://www.creationkit.com/fallout4/index.php?title=DirectX_Scan_Codes
+int LAlt = 164 const
+int LCtrl = 162 const
+int LShift = 160 const
 
 
 
@@ -203,6 +207,9 @@ Event OnQuestInit()
     Self.LoadAllSettingsFromMCM()
     RegisterForRemoteEvent(PlayerRef, "OnPlayerLoadGame")
     Self.RegisterForMCMEvents()
+    If ScriptExtenderInstalled
+        RegisterForKey(LAlt)
+    EndIf
     If ! ModConfigMenuInstalled
         Self.InitSettingsDefaultValues()
     EndIf
@@ -227,10 +234,10 @@ Event Actor.OnPlayerLoadGame(Actor akSender)
     int waitTimeLeft = 30
     float waitTime = 3.0
     While (MutexRunning || MutexBusy) && waitTimeLeft > 0
-    MutexWaiting = true
-    Self._DebugTrace("OnPlayerLoadGame: Waiting on mutex release. Time left = " + waitTimeLeft)
-    Utility.Wait(waitTime)
-    waitTimeLeft -= waitTime as int
+        MutexWaiting = true
+        Self._DebugTrace("OnPlayerLoadGame: Waiting on mutex release. Time left = " + waitTimeLeft)
+        Utility.Wait(waitTime)
+        waitTimeLeft -= waitTime as int
     EndWhile
 
     ; lock function in case user exits game while recycling process is running or this same function is running
@@ -250,7 +257,10 @@ Event Actor.OnPlayerLoadGame(Actor akSender)
         Self.InitScrapperPerks()
         Self.LoadAllSettingsFromMCM()
         Self.RegisterForMCMEvents()
-        Self._DebugTrace("Finished runtime init process")
+        If ScriptExtenderInstalled
+            RegisterForKey(LAlt)
+        EndIf
+            Self._DebugTrace("Finished runtime init process")
         MutexBusy = false
     Else
         Self._DebugTrace("OnPlayerLoadGame: Mutexes didn't release within time limit", 1)
@@ -267,27 +277,31 @@ Event OnMenuOpenCloseEvent(string asMenuName, bool abOpening)
     EndIf
 EndEvent
 
-Event OnControlDown(string asControlId)
-    Self._DebugTrace("OnControlDown: " + asControlId)
+Event OnKeyDown(int aiKeyCode)
     If AllowBehaviorOverrides.Value
-        If asControlId == ForceRetainJunkHotkeyControlId
-            Self._DebugTrace("OnControlDown: ForceRetainJunkHotkeyControlId (" + ForceRetainJunkHotkeyControlId + ")")
+        If aiKeyCode == LAlt
+            Self._DebugTrace("OnKeyDown: L Alt (" + LAlt + ")")
+            EditAutoTransferExemptions = true
+        ElseIf aiKeyCode == LCtrl
+            Self._DebugTrace("OnKeyDown: L Ctrl (" + LCtrl + ")")
             BehaviorOverrideForceRetainJunk = true
-        ElseIf asControlId == ForceTransferJunkHotkeyControlId
-            Self._DebugTrace("OnControlDown: ForceTransferJunkHotkeyControlId (" + ForceTransferJunkHotkeyControlId + ")")
+        ElseIf aiKeyCode == LShift
+            Self._DebugTrace("OnKeyDown: L Shift (" + LShift + ")")
             BehaviorOverrideForceTransferJunk = true
         EndIf
     EndIf
 EndEvent
 
-Event OnControlUp(string asControlId, float afTime)
-    Self._DebugTrace("OnControlUp: " + asControlId)
+Event OnKeyUp(int aiKeyCode, float afTime)
     If AllowBehaviorOverrides.Value
-        If asControlId == ForceRetainJunkHotkeyControlId
-            Self._DebugTrace("OnControlUp: ForceRetainJunkHotkeyControlId (" + ForceRetainJunkHotkeyControlId + ")")
+        If aiKeyCode == LAlt
+            Self._DebugTrace("OnKeyDown: L Alt (" + LAlt + ")")
+            EditAutoTransferExemptions = false
+        ElseIf aiKeyCode == LCtrl
+            Self._DebugTrace("OnKeyUp: L Ctrl (" + LCtrl + ")")
             BehaviorOverrideForceRetainJunk = false
-        ElseIf asControlId == ForceTransferJunkHotkeyControlId
-            Self._DebugTrace("OnControlUp: ForceTransferJunkHotkeyControlId (" + ForceTransferJunkHotkeyControlId + ")")
+        ElseIf aiKeyCode == LShift
+            Self._DebugTrace("OnKeyUp: L Shift (" + LShift + ")")
             BehaviorOverrideForceTransferJunk = false
         EndIf
     EndIf
@@ -428,9 +442,9 @@ Function InitSettings(bool abForce = false)
         Self._DebugTrace("Initializing AllowJunkOnly")
         AllowJunkOnly = new SettingBool
     EndIf
-    If abForce || ! AutoMoveJunk
-        Self._DebugTrace("Initializing AutoMoveJunk")
-        AutoMoveJunk = new SettingBool
+    If abForce || ! AutoTransferJunk
+        Self._DebugTrace("Initializing AutoTransferJunk")
+        AutoTransferJunk = new SettingBool
     EndIf
     If abForce || ! AllowBehaviorOverrides
         Self._DebugTrace("Initializing AllowBehaviorOverrides")
@@ -721,8 +735,8 @@ Function InitSettingsSupplemental()
     AllowJunkOnly.ValueDefault = true
     AllowJunkOnly.McmId = "bAllowJunkOnly:General"
 
-    AutoMoveJunk.ValueDefault = true
-    AutoMoveJunk.McmId = "bAutoMoveJunk:General"
+    AutoTransferJunk.ValueDefault = true
+    AutoTransferJunk.McmId = "bAutoTransferJunk:General"
 
     AllowBehaviorOverrides.ValueDefault = true
     AllowBehaviorOverrides.McmId = "bAllowBehaviorOverrides:General"
@@ -971,7 +985,7 @@ Function InitSettingsDefaultValues()
     ; settings - recycler behavior
     settingsToChange.Add(AutoRecyclingMode)
     settingsToChange.Add(AllowJunkOnly)
-    settingsToChange.Add(AutoMoveJunk)
+    settingsToChange.Add(AutoTransferJunk)
     settingsToChange.Add(AllowBehaviorOverrides)
     settingsToChange.Add(ReturnItemsSilently)
 
@@ -1062,7 +1076,7 @@ Function InitSettingsDefaultValues()
     EndWhile
 
     ; wait for multithreading to finish
-    Self.WaitForThreads(Threads, numThreads)
+    WaitForThreads(Threads, numThreads)
 
     ; perform general post-processing
     MCM_GeneralMultAdjustSimple = GeneralMultAdjust.Value == 0
@@ -1077,11 +1091,11 @@ Function InitSettingsDefaultValues()
     MCM_ScrapperAffectsMultDetailed = ScrapperAffectsMult.Value > 1
     If ScriptExtenderInstalled
         If AllowBehaviorOverrides.Value
-            RegisterForControl(ForceRetainJunkHotkeyControlId)
-            RegisterForControl(ForceTransferJunkHotkeyControlId)
+            RegisterForKey(LCtrl)
+            RegisterForKey(LShift)
         Else
-            UnregisterForControl(ForceRetainJunkHotkeyControlId)
-            UnregisterForControl(ForceTransferJunkHotkeyControlId)
+            UnregisterForKey(LCtrl)
+            UnregisterForKey(LShift)
             BehaviorOverrideForceRetainJunk = false
             BehaviorOverrideForceTransferJunk = false
         EndIf
@@ -1135,7 +1149,7 @@ Function InitComponentMappings()
     Self._DebugTrace("Initializing componentMapS")
     (Threads[0x3] as ScriptObject).CallFunctionNoWait(functionToCall, params)
 
-    Self.WaitForThreads(Threads, 4)
+    WaitForThreads(Threads, 4)
 
     ComponentMap[] componentMapC = (Threads[0x0] as WorkerThreadBase).GetResults() as ComponentMap[]
     ComponentMap[] componentMapU = (Threads[0x1] as WorkerThreadBase).GetResults() as ComponentMap[]
@@ -1230,7 +1244,7 @@ Function InitScrapListAll()
         index += 1
     EndWhile
 
-    Self.WaitForThreads(Threads, numThreads)
+    WaitForThreads(Threads, numThreads)
 
     ScrapListAll.Size = ScrapListAll.List.GetSize()
 EndFunction
@@ -1287,7 +1301,7 @@ Function LoadAllSettingsFromMCM()
         ; recycler interface - behavior
         settingsToLoad.Add(AutoRecyclingMode)
         settingsToLoad.Add(AllowJunkOnly)
-        settingsToLoad.Add(AutoMoveJunk)
+        settingsToLoad.Add(AutoTransferJunk)
         settingsToLoad.Add(AllowBehaviorOverrides)
         settingsToLoad.Add(ReturnItemsSilently)
 
@@ -1377,7 +1391,7 @@ Function LoadAllSettingsFromMCM()
         EndWhile
 
         ; wait for multithreading to finish
-        Self.WaitForThreads(Threads, numThreads)
+        WaitForThreads(Threads, numThreads)
 
         ; perform general post-processing
         MCM_GeneralMultAdjustSimple = GeneralMultAdjust.Value == 0
@@ -1391,11 +1405,11 @@ Function LoadAllSettingsFromMCM()
         MCM_ScrapperAffectsMultSimple = ScrapperAffectsMult.Value == 1
         MCM_ScrapperAffectsMultDetailed = ScrapperAffectsMult.Value > 1
         If AllowBehaviorOverrides.Value
-            RegisterForControl(ForceRetainJunkHotkeyControlId)
-            RegisterForControl(ForceTransferJunkHotkeyControlId)
+            RegisterForKey(LCtrl)
+            RegisterForKey(LShift)
         Else
-            UnregisterForControl(ForceRetainJunkHotkeyControlId)
-            UnregisterForControl(ForceTransferJunkHotkeyControlId)
+            UnregisterForKey(LCtrl)
+            UnregisterForKey(LShift)
             BehaviorOverrideForceRetainJunk = false
             BehaviorOverrideForceTransferJunk = false
         EndIf
@@ -1498,20 +1512,20 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             oldValue = AllowJunkOnly.Value
             LoadSettingFromMCM(AllowJunkOnly, ModName)
             newValue = AllowJunkOnly.Value
-        ElseIf asControlId == AutoMoveJunk.McmId
-            oldValue = AutoMoveJunk.Value
-            LoadSettingFromMCM(AutoMoveJunk, ModName)
-            newValue = AutoMoveJunk.Value
+        ElseIf asControlId == AutoTransferJunk.McmId
+            oldValue = AutoTransferJunk.Value
+            LoadSettingFromMCM(AutoTransferJunk, ModName)
+            newValue = AutoTransferJunk.Value
         ElseIf asControlId == AllowBehaviorOverrides.McmId
             oldValue = AllowBehaviorOverrides.Value
             LoadSettingFromMCM(AllowBehaviorOverrides, ModName)
             newValue = AllowBehaviorOverrides.Value
             If AllowBehaviorOverrides.Value
-                RegisterForControl(ForceRetainJunkHotkeyControlId)
-                RegisterForControl(ForceTransferJunkHotkeyControlId)
+                RegisterForKey(LCtrl)
+                RegisterForKey(LShift)
             Else
-                UnregisterForControl(ForceRetainJunkHotkeyControlId)
-                UnregisterForControl(ForceTransferJunkHotkeyControlId)
+                UnregisterForKey(LCtrl)
+                UnregisterForKey(LShift)
                 BehaviorOverrideForceRetainJunk = false
                 BehaviorOverrideForceTransferJunk = false
             EndIf
@@ -1519,14 +1533,6 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             oldValue = ReturnItemsSilently.Value
             LoadSettingFromMCM(ReturnItemsSilently, ModName)
             newValue = ReturnItemsSilently.Value
-
-        ; recycler interface - hotkeys
-        ElseIf asControlId == ForceRetainJunkHotkeyControlId
-            oldValue = "(hotkey change)"
-            newValue = oldValue
-        ElseIf asControlId == ForceTransferJunkHotkeyControlId
-            oldValue = "(hotkey change)"
-            newValue = oldValue
 
         ; multiplier adjustments - general
         ElseIf asControlId == MultAdjustGeneralSettlement.McmId
@@ -2087,26 +2093,6 @@ MultiplierSet Function GetMultipliers()
     Return toReturn
 EndFunction
 
-; this function waits for a specified number of threads to finish before returning
-Function WaitForThreads(var[] akThreads, int aiNumThreads)
-    Utility.WaitMenuMode(0.1)
-
-    bool waitingOnThreads = true
-    int index
-    While waitingOnThreads
-        index = 0
-        waitingOnThreads = false
-        While ! waitingOnThreads && index < aiNumThreads
-            waitingOnThreads = waitingOnThreads || (akThreads[index] as WorkerThreadBase).IsRunning()
-            index += 1
-        EndWhile
-        If waitingOnThreads
-            Self._DebugTrace("waiting for threads to finish")
-            Utility.WaitMenuMode(0.1)
-        EndIf
-    EndWhile
-EndFunction
-
 ; prep for uninstall of mod
 Function Uninstall()
     If ! MutexRunning && ! MutexBusy
@@ -2118,8 +2104,9 @@ Function Uninstall()
         UnregisterForExternalEvent("OnMCMSettingChange|" + ModName)
         UnregisterForExternalEvent("OnMCMMenuClose|" + ModName)
         If AllowBehaviorOverrides.Value
-            UnregisterForControl(ForceRetainJunkHotkeyControlId)
-            UnregisterForControl(ForceTransferJunkHotkeyControlId)
+            UnregisterForKey(LAlt)
+            UnregisterForKey(LCtrl)
+            UnregisterForKey(LShift)
         EndIf
 
         ; remove recycler devices in inventory, if any
@@ -2158,6 +2145,7 @@ Function Uninstall()
         MessageBehaviorOverridesReset = None
         WorkshopParent = None
         RecyclableItemList = None
+        AutoTransferExemptionsList = None
         ThreadContainer = None
 
         ; group RuntimeState
@@ -2180,7 +2168,7 @@ Function Uninstall()
         ; recycler interface - behavior
         AutoRecyclingMode = None
         AllowJunkOnly = None
-        AutoMoveJunk = None
+        AutoTransferJunk = None
         AllowBehaviorOverrides = None
         ReturnItemsSilently = None
         ; multiplier adjustments - general
@@ -2255,7 +2243,7 @@ Function Uninstall()
     ElseIf MutexRunning && ! MutexBusy
         ; fail (running)
         MessageUninstallFailRunning.Show()
-    Else 
+    Else
         ; fail (busy)
         MessageUninstallFailBusy.Show()
     EndIf
