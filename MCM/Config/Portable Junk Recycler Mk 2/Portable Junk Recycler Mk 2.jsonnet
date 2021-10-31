@@ -36,11 +36,6 @@ local stat_adjust_step = 0.005;
     control_script: 'PortableJunkRecyclerMk2:ControlScript',
     min_mcm_version: 2,
 
-    keybind_id: {
-      force_retain_junk: 'ForceRetainJunkHotkey',
-      force_transfer_junk: 'ForceTransferJunkHotkey',
-    },
-
     group_id: {
       general_mult_adjust_simple: 1,
       general_mult_adjust_detailed: 2,
@@ -111,15 +106,16 @@ local stat_adjust_step = 0.005;
           mcm.control.section(text='$Behavior'),
           mcm.control.switcher(text='$AutoRecyclingModeText', source=mcm.helper.source.mod_setting.bool(id='bAutoRecyclingMode:General'), help='$AutoRecyclingModeHelp'),
           mcm.control.switcher(text='$AllowJunkOnlyText', source=mcm.helper.source.mod_setting.bool(id='bAllowJunkOnly:General'), help='$AllowJunkOnlyHelp'),
-          mcm.control.switcher(text='$AutoMoveJunkText', source=mcm.helper.source.mod_setting.bool(id='bAutoMoveJunk:General'), help='$AutoMoveJunkHelp'),
+          mcm.control.switcher(text='$AutoTransferJunkText', source=mcm.helper.source.mod_setting.bool(id='bAutoTransferJunk:General'), help='$AutoTransferJunkHelp'),
           mcm.control.switcher(text='$AllowBehaviorOverridesText', source=mcm.helper.source.mod_setting.bool(id='bAllowBehaviorOverrides:General'), help='$AllowBehaviorOverridesHelp'),
           mcm.control.switcher(text='$ReturnItemsSilentlyText', source=mcm.helper.source.mod_setting.bool(id='bReturnItemsSilently:General'), help='$ReturnItemsSilentlyHelp'),
           mcm.control.spacer(lines=1),
 
           // recycler interface - hotkeys
           mcm.control.section(text='$Hotkeys'),
-          mcm.control.hotkey(text='$BehaviorOverrideForceRetainJunkText', id=mod.keybind_id.force_retain_junk, allow_modifier_keys=false, help='$BehaviorOverrideForceRetainJunkHelp'),
-          mcm.control.hotkey(text='$BehaviorOverrideForceTransferJunkText', id=mod.keybind_id.force_transfer_junk, allow_modifier_keys=false, help='$BehaviorOverrideForceTransferJunkHelp'),
+          mcm.control.stepper(text='$BehaviorOverrideForceTransferJunkText', options=['$LShift'], help='$BehaviorOverrideForceTransferJunkHelp'),
+          mcm.control.stepper(text='$BehaviorOverrideForceRetainJunkText', options=['$LCtrl'], help='$BehaviorOverrideForceRetainJunkHelp'),
+          mcm.control.stepper(text='$EditAutoTransferExemptionsText', options=['$LAlt'], help='$EditAutoTransferExemptionsHelp'),
         ],
       },
       {
@@ -355,14 +351,6 @@ local stat_adjust_step = 0.005;
           mcm.control.button(text='$UninstallModText', action=mcm.helper.action.call_function(mod.quest_form, 'Uninstall', script_name=mod.control_script), help='$UninstallModHelp', group=mcm.helper.group.condition.or(mod.group_id.uninstall_safeguard)),
         ],
       },
-    ],
-  },
-
-  'keybinds.json': {
-    [mcm.field.mod_name]: mod.name,
-    [mcm.field.keybinds]: [
-      mcm.keybind(id=mod.keybind_id.force_retain_junk, desc='$BehaviorOverrideForceRetainJunkHelp', action=mcm.helper.action.send_event(form=mod.quest_form)),
-      mcm.keybind(id=mod.keybind_id.force_transfer_junk, desc='$BehaviorOverrideForceTransferJunkHelp', action=mcm.helper.action.send_event(form=mod.quest_form)),
     ],
   },
 }

@@ -241,9 +241,9 @@
                }
             },
             {
-               "help": "$AutoMoveJunkHelp",
-               "id": "bAutoMoveJunk:General",
-               "text": "$AutoMoveJunkText",
+               "help": "$AutoTransferJunkHelp",
+               "id": "bAutoTransferJunk:General",
+               "text": "$AutoTransferJunkText",
                "type": "switcher",
                "valueOptions": {
                   "sourceType": "ModSettingBool"
@@ -276,21 +276,33 @@
                "type": "section"
             },
             {
-               "help": "$BehaviorOverrideForceRetainJunkHelp",
-               "id": "ForceRetainJunkHotkey",
-               "text": "$BehaviorOverrideForceRetainJunkText",
-               "type": "hotkey",
+               "help": "$BehaviorOverrideForceTransferJunkHelp",
+               "text": "$BehaviorOverrideForceTransferJunkText",
+               "type": "stepper",
                "valueOptions": {
-                  "allowModifierKeys": false
+                  "options": [
+                     "$LShift"
+                  ]
                }
             },
             {
-               "help": "$BehaviorOverrideForceTransferJunkHelp",
-               "id": "ForceTransferJunkHotkey",
-               "text": "$BehaviorOverrideForceTransferJunkText",
-               "type": "hotkey",
+               "help": "$BehaviorOverrideForceRetainJunkHelp",
+               "text": "$BehaviorOverrideForceRetainJunkText",
+               "type": "stepper",
                "valueOptions": {
-                  "allowModifierKeys": false
+                  "options": [
+                     "$LCtrl"
+                  ]
+               }
+            },
+            {
+               "help": "$EditAutoTransferExemptionsHelp",
+               "text": "$EditAutoTransferExemptionsText",
+               "type": "stepper",
+               "valueOptions": {
+                  "options": [
+                     "$LAlt"
+                  ]
                }
             }
          ],
