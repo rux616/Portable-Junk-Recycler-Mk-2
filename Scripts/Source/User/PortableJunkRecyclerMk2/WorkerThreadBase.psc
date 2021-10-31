@@ -74,9 +74,9 @@ EndFunction
 Function AddRecyclableItemsToList(var[] akItems, int aiIndex, int aiIndexEnd, FormList akFormList)
     Self.WorkerStart()
 
-    Form[] items = akItems as Form[]
-    Self._DebugTrace("Started: Items = " + items.Length + ", Index (Start) = " + aiIndex + ", Index (End) = " + \
+    Self._DebugTrace("Started: Items = " + akItems.Length + ", Index (Start) = " + aiIndex + ", Index (End) = " + \
         aiIndexEnd + ", FormList = " + akFormList)
+    Form[] items = akItems as Form[]
 	While aiIndex <= aiIndexEnd
         If (items[aiIndex] as MiscObject).GetMiscComponents()
             akFormList.AddForm(items[aiIndex])
@@ -92,14 +92,51 @@ EndFunction
 Function AddItemsToList(var[] akItems, int aiIndex, int aiIndexEnd, FormList akFormList)
     Self.WorkerStart()
 
-    Form[] items = akItems as Form[]
-    Self._DebugTrace("Started: Items = " + items.Length + ", Index (Start) = " + aiIndex + ", Index (End) = " + \
+    Self._DebugTrace("Started: Items = " + akItems.Length + ", Index (Start) = " + aiIndex + ", Index (End) = " + \
         aiIndexEnd + ", FormList = " + akFormList)
+    Form[] items = akItems as Form[]
 	While aiIndex <= aiIndexEnd
         akFormList.AddForm(items[aiIndex])
 		aiIndex += 1
 	EndWhile
     Self._DebugTrace("Finished")
+
+    Self.WorkerStop()
+EndFunction
+
+; adds forms from a FormList to an object reference in a given quantity
+Function AddItems(FormListWrapper akFormList, int aiIndex, int aiIndexEnd, ObjectReference akDestinationRef, int aiQuantity)
+    Self.WorkerStart()
+
+    Self._DebugTrace("AddItems started: Items = " + akFormList.Size + ", Index (Start) = " + aiIndex + ", Index (End) = " + \
+        aiIndexEnd + ", FormList = " + akFormList + ", Destination = " + akDestinationRef + ", Quantity = " + aiQuantity)
+	While aiIndex <= aiIndexEnd
+        akDestinationRef.AddItem(akFormList.List.GetAt(aiIndex), aiQuantity, true)
+		aiIndex += 1
+	EndWhile
+    Self._DebugTrace("AddItems finished")
+
+    Self.WorkerStop()
+EndFunction
+
+Function LeaveOnlyXItems(var[] akItems, int aiIndex, int aiIndexEnd, ObjectReference akOriginRef, \
+        ObjectReference akDestinationRef, int aiQuantityToLeave, bool abSilent)
+    Self.WorkerStart()
+    
+    Self._DebugTrace("LeaveOnlyXItems started: Items = " + akItems.Length + ", Index (Start) = " + aiIndex + ", Index (End) = " + \
+    aiIndexEnd + ", Origin = " + akOriginRef + ", Destination = " + akDestinationRef + ", Quantity to leave = " + aiQuantityToLeave)
+    Form[] items = akItems as Form[]
+    int currentQuantity
+    int quantityToMove
+    While aiIndex <= aiIndexEnd
+        currentQuantity = akOriginRef.GetItemCount(items[aiIndex])
+        quantityToMove = currentQuantity - aiQuantityToLeave
+        If quantityToMove > 0
+            akOriginRef.RemoveItem(items[aiIndex], quantityToMove, abSilent, akDestinationRef)
+        EndIf
+        aiIndex += 1
+    EndWhile
+    Self._DebugTrace("LeaveOnlyXItems finished")
 
     Self.WorkerStop()
 EndFunction
@@ -245,13 +282,13 @@ EndFunction
 Function LoadMCMSettings(var[] akSettings, int aiIndex, int aiIndexEnd, string asModName)
     Self.WorkerStart()
 
-    Self._DebugTrace("Started: Settings = " + akSettings.Length + ", Index (Start) = " + aiIndex + ", Index (End) = " + \
+    Self._DebugTrace("LoadMCMSettings started: Settings = " + akSettings.Length + ", Index (Start) = " + aiIndex + ", Index (End) = " + \
         aiIndexEnd)
 	While aiIndex <= aiIndexEnd
         LoadSettingFromMCM(akSettings[aiIndex], asModName)
 		aiIndex += 1
 	EndWhile
-    Self._DebugTrace("Finished")
+    Self._DebugTrace("LoadMCMSettings finished")
 
     Self.WorkerStop()
 EndFunction
@@ -260,7 +297,7 @@ EndFunction
 Function ChangeSettingsToDefaults(var[] akSettings, int aiIndex, int aiIndexEnd, int aiChangeType, string asModName)
     Self.WorkerStart()
 
-    Self._DebugTrace("Started: Settings = " + akSettings.Length + ", Index (Start) = " + aiIndex + ", Index (End) = " + \
+    Self._DebugTrace("ChangeSettingsToDefaults started: Settings = " + akSettings.Length + ", Index (Start) = " + aiIndex + ", Index (End) = " + \
         aiIndexEnd)
 	While aiIndex <= aiIndexEnd
         If akSettings[aiIndex] is SettingFloat
@@ -272,7 +309,7 @@ Function ChangeSettingsToDefaults(var[] akSettings, int aiIndex, int aiIndexEnd,
         EndIf
 		aiIndex += 1
 	EndWhile
-    Self._DebugTrace("Finished")
+    Self._DebugTrace("ChangeSettingsToDefaults finished")
 
     Self.WorkerStop()
 EndFunction

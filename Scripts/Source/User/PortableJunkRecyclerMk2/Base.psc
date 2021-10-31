@@ -161,3 +161,26 @@ Function LoadSettingIntFromMCM(SettingInt akSetting, string asMcmModName) global
     SettingChangeType availableChangeTypes = new SettingChangeType
     ChangeSetting(akSetting, availableChangeTypes.ValueOnly, MCM.GetModSettingInt(asMcmModName, akSetting.McmId), asMcmModName)
 EndFunction
+
+; waits for a specified number of threads to finish before returning
+Function WaitForThreads(var[] akThreads, int aiNumThreads) global
+    ; wait for 0.1s for threads to start up
+    Utility.WaitMenuMode(0.1)
+
+    bool waitingOnThreads = true
+    int index
+    ; loop until threads are finished running
+    While waitingOnThreads
+        index = 0
+        waitingOnThreads = false
+        ; check every thread to see if it's still running; short-circuits if one is found running
+        While ! waitingOnThreads && index < aiNumThreads
+            waitingOnThreads = waitingOnThreads || (akThreads[index] as WorkerThreadBase).IsRunning()
+            index += 1
+        EndWhile
+        ; if any threads are still running, wait for 0.1s
+        If waitingOnThreads
+            Utility.WaitMenuMode(0.1)
+        EndIf
+    EndWhile
+EndFunction
