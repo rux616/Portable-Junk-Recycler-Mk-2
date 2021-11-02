@@ -2392,7 +2392,7 @@
                "type": "spacer"
             },
             {
-               "text": "$RecyclableItemList",
+               "text": "$ItemLists",
                "type": "section"
             },
             {
@@ -2407,22 +2407,25 @@
                "type": "button"
             },
             {
-               "lines": 1,
-               "type": "spacer"
-            },
-            {
-               "text": "$BehaviorOverrides",
-               "type": "section"
+               "action": {
+                  "form": "Portable Junk Recycler Mk 2.esp|800",
+                  "function": "ResetAlwaysAutoTransferList",
+                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+                  "type": "CallFunction"
+               },
+               "help": "$ResetAlwaysAutoTransferListHelp",
+               "text": "$ResetAlwaysAutoTransferListText",
+               "type": "button"
             },
             {
                "action": {
                   "form": "Portable Junk Recycler Mk 2.esp|800",
-                  "function": "ResetBehaviorOverrides",
+                  "function": "ResetNeverAutoTransferList",
                   "scriptName": "PortableJunkRecyclerMk2:ControlScript",
                   "type": "CallFunction"
                },
-               "help": "$ResetBehaviorOverridesHelp",
-               "text": "$ResetBehaviorOverridesText",
+               "help": "$ResetNeverAutoTransferListHelp",
+               "text": "$ResetNeverAutoTransferListText",
                "type": "button"
             },
             {

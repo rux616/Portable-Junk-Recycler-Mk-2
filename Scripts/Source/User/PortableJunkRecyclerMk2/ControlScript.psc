@@ -40,7 +40,12 @@ Group Other
     Message Property MessageRecyclableItemListReset Auto Mandatory
     Message Property MessageRecyclableItemListResetFailBusy Auto Mandatory
     Message Property MessageRecyclableItemListResetFailRunning Auto Mandatory
-    Message Property MessageBehaviorOverridesReset Auto Mandatory
+    Message Property MessageAlwaysAutoTransferListReset Auto Mandatory
+    Message Property MessageAlwaysAutoTransferListResetFailBusy Auto Mandatory
+    Message Property MessageAlwaysAutoTransferListResetFailRunning Auto Mandatory
+    Message Property MessageNeverAutoTransferListReset Auto Mandatory
+    Message Property MessageNeverAutoTransferListResetFailBusy Auto Mandatory
+    Message Property MessageNeverAutoTransferListResetFailRunning Auto Mandatory
     Message Property MessageUninstalled Auto Mandatory
     Message Property MessageUninstallFailBusy Auto Mandatory
     Message Property MessageUninstallFailRunning Auto Mandatory
@@ -1838,12 +1843,38 @@ Function ResetRecyclableItemList()
     EndIf
 EndFunction
 
-; reset the behavior override flags
-Function ResetBehaviorOverrides()
-    Self._DebugTrace("Resetting behavior override flags")
-    HotkeyForceRetainJunk = false
-    HotkeyForceTransferJunk = false
-    MessageBehaviorOverridesReset.Show()
+; reset the recyclable item list
+Function ResetAlwaysAutoTransferList()
+    If ! MutexBusy && ! MutexRunning
+        MutexBusy = true
+        Self._DebugTrace("Resetting always auto transfer list")
+        AlwaysAutoTransferList.List.Revert()
+        MessageAlwaysAutoTransferListReset.Show()
+        MutexBusy = false
+    ElseIf MutexBusy && ! MutexRunning
+        Self._DebugTrace("Failed to reset always auto transfer list: Control script busy")
+        MessageAlwaysAutoTransferListResetFailBusy.Show()
+    ElseIf MutexRunning
+        Self._DebugTrace("Failed to reset always auto transfer list: Recycling process running")
+        MessageAlwaysAutoTransferListResetFailRunning.Show()
+    EndIf
+EndFunction
+
+; reset the recyclable item list
+Function ResetNeverAutoTransferList()
+    If ! MutexBusy && ! MutexRunning
+        MutexBusy = true
+        Self._DebugTrace("Resetting never auto transfer list")
+        NeverAutoTransferList.List.Revert()
+        MessageNeverAutoTransferListReset.Show()
+        MutexBusy = false
+    ElseIf MutexBusy && ! MutexRunning
+        Self._DebugTrace("Failed to reset never auto transfer list: Control script busy")
+        MessageNeverAutoTransferListResetFailBusy.Show()
+    ElseIf MutexRunning
+        Self._DebugTrace("Failed to reset never auto transfer list: Recycling process running")
+        MessageNeverAutoTransferListResetFailRunning.Show()
+    EndIf
 EndFunction
 
 ; make sure that MultAdjustRandomMin* properties are less than their MultAdjustRandomMax* counterparts
@@ -2155,7 +2186,12 @@ Function Uninstall()
         MessageRecyclableItemListReset = None
         MessageRecyclableItemListResetFailBusy = None
         MessageRecyclableItemListResetFailRunning = None
-        MessageBehaviorOverridesReset = None
+        MessageAlwaysAutoTransferListReset = None
+        MessageAlwaysAutoTransferListResetFailBusy = None
+        MessageAlwaysAutoTransferListResetFailRunning = None
+        MessageNeverAutoTransferListReset = None
+        MessageNeverAutoTransferListResetFailBusy = None
+        MessageNeverAutoTransferListResetFailRunning = None
         WorkshopParent = None
         RecyclableItemList = None
         NeverAutoTransferList = None

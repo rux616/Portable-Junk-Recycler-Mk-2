@@ -330,28 +330,25 @@ local stat_adjust_step = 0.005;
         [mcm.field.content]: [
           // advanced - reset settings to default
           mcm.control.section(text='$Settings'),
-          mcm.control.button(text='$ResetSettingsToDefaultsText', action=mcm.helper.action.call_function(mod.quest_form, 'ResetToDefaults', script_name=mod.control_script), help='$ResetSettingsToDefaultsHelp'),
+          mcm.control.button(text='$ResetSettingsToDefaultsText', action=mcm.helper.action.call_function(form=mod.quest_form, function_name='ResetToDefaults', script_name=mod.control_script), help='$ResetSettingsToDefaultsHelp'),
           mcm.control.spacer(lines=1),
 
           // advanced - reset mutexes
           mcm.control.section(text='$Locks'),
-          mcm.control.button(text='$ResetLocksText', action=mcm.helper.action.call_function(mod.quest_form, 'ResetMutexes', script_name=mod.control_script), help='$ResetLocksHelp'),
+          mcm.control.button(text='$ResetLocksText', action=mcm.helper.action.call_function(form=mod.quest_form, function_name='ResetMutexes', script_name=mod.control_script), help='$ResetLocksHelp'),
           mcm.control.spacer(lines=1),
 
-          // advanced - clear junk items list
-          mcm.control.section(text='$RecyclableItemList'),
-          mcm.control.button(text='$ResetRecyclableItemListText', action=mcm.helper.action.call_function(mod.quest_form, 'ResetRecyclableItemList', script_name=mod.control_script), help='$ResetRecyclableItemListHelp'),
-          mcm.control.spacer(lines=1),
-
-          // advanced - reset behavior override flags
-          mcm.control.section(text='$BehaviorOverrides'),
-          mcm.control.button(text='$ResetBehaviorOverridesText', action=mcm.helper.action.call_function(mod.quest_form, 'ResetBehaviorOverrides', script_name=mod.control_script), help='$ResetBehaviorOverridesHelp'),
+          // advanced - reset item lists
+          mcm.control.section(text='$ItemLists'),
+          mcm.control.button(text='$ResetRecyclableItemListText', action=mcm.helper.action.call_function(form=mod.quest_form, function_name='ResetRecyclableItemList', script_name=mod.control_script), help='$ResetRecyclableItemListHelp'),
+          mcm.control.button(text='$ResetAlwaysAutoTransferListText', action=mcm.helper.action.call_function(form=mod.quest_form, function_name='ResetAlwaysAutoTransferList', script_name=mod.control_script), help='$ResetAlwaysAutoTransferListHelp'),
+          mcm.control.button(text='$ResetNeverAutoTransferListText', action=mcm.helper.action.call_function(form=mod.quest_form, function_name='ResetNeverAutoTransferList', script_name=mod.control_script), help='$ResetNeverAutoTransferListHelp'),
           mcm.control.spacer(lines=1),
 
           // advanced - uninstall
           mcm.control.section(text='$Uninstall'),
           mcm.control.switcher(text='$ShowUninstallModButtonText', group=mcm.helper.group.control(mod.group_id.uninstall_safeguard), help='$ShowUninstallModButtonHelp'),
-          mcm.control.button(text='$UninstallModText', action=mcm.helper.action.call_function(mod.quest_form, 'Uninstall', script_name=mod.control_script), help='$UninstallModHelp', group=mcm.helper.group.condition.or(mod.group_id.uninstall_safeguard)),
+          mcm.control.button(text='$UninstallModText', action=mcm.helper.action.call_function(form=mod.quest_form, function_name='Uninstall', script_name=mod.control_script), help='$UninstallModHelp', group=mcm.helper.group.condition.or(mod.group_id.uninstall_safeguard)),
         ],
       },
     ],
