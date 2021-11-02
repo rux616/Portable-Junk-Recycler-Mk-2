@@ -1804,10 +1804,10 @@ Function ResetToDefaults()
         Self.InitSettings(abForce = true)
         Self.InitSettingsSupplemental()
         Self.InitSettingsDefaultValues()
-        MessageSettingsReset.Show()
+        MCM.RefreshMenu()
         Debug.StopStackProfiling()
         MutexBusy = false
-        MCM.RefreshMenu()
+        MessageSettingsReset.Show()
     ElseIf MutexRunning && ! MutexBusy
         Self._DebugTrace("Resetting settings to defaults failed due to a recycling process currently running")
         MessageSettingsResetFailRunning.Show()
@@ -1832,8 +1832,9 @@ Function ResetRecyclableItemList()
         MutexBusy = true
         Self._DebugTrace("Resetting recyclable item list")
         RecyclableItemList.List.Revert()
-        MessageRecyclableItemListReset.Show()
+        RecyclableItemList.Size = RecyclableItemList.List.GetSize()
         MutexBusy = false
+        MessageRecyclableItemListReset.Show()
     ElseIf MutexBusy && ! MutexRunning
         Self._DebugTrace("Failed to reset recyclable item list: Control script busy")
         MessageRecyclableItemListResetFailBusy.Show()
@@ -1849,8 +1850,9 @@ Function ResetAlwaysAutoTransferList()
         MutexBusy = true
         Self._DebugTrace("Resetting always auto transfer list")
         AlwaysAutoTransferList.List.Revert()
-        MessageAlwaysAutoTransferListReset.Show()
+        AlwaysAutoTransferList.Size = AlwaysAutoTransferList.List.GetSize()
         MutexBusy = false
+        MessageAlwaysAutoTransferListReset.Show()
     ElseIf MutexBusy && ! MutexRunning
         Self._DebugTrace("Failed to reset always auto transfer list: Control script busy")
         MessageAlwaysAutoTransferListResetFailBusy.Show()
@@ -1866,8 +1868,9 @@ Function ResetNeverAutoTransferList()
         MutexBusy = true
         Self._DebugTrace("Resetting never auto transfer list")
         NeverAutoTransferList.List.Revert()
-        MessageNeverAutoTransferListReset.Show()
+        NeverAutoTransferList.Size = NeverAutoTransferList.List.GetSize()
         MutexBusy = false
+        MessageNeverAutoTransferListReset.Show()
     ElseIf MutexBusy && ! MutexRunning
         Self._DebugTrace("Failed to reset never auto transfer list: Control script busy")
         MessageNeverAutoTransferListResetFailBusy.Show()
