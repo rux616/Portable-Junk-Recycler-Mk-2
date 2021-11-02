@@ -286,11 +286,11 @@ Function Recycle(bool abForceRetainJunk, bool abForceTransferJunk)
         If PortableRecyclerControl.RecyclableItemList.Size
             PlayerRef.RemoveItem(PortableRecyclerControl.RecyclableItemList.List, -1, true, TempContainerPrimary)
         EndIf
-        If PortableRecyclerControl.NeverAutoTransferList.Size
+        If PortableRecyclerControl.UseNeverAutoTransferList.Value && PortableRecyclerControl.NeverAutoTransferList.Size
             TempContainerPrimary.RemoveItem(PortableRecyclerControl.NeverAutoTransferList.List, -1, true, PlayerRef)
         EndIf
     Else
-        If PortableRecyclerControl.AlwaysAutoTransferList.Size
+        If PortableRecyclerControl.UseAlwaysAutoTransferList.Value && PortableRecyclerControl.AlwaysAutoTransferList.Size
             PlayerRef.RemoveItem(PortableRecyclerControl.AlwaysAutoTransferList.List, -1, true, TempContainerPrimary)
         EndIf
     EndIf

@@ -108,6 +108,8 @@ Group Settings
     SettingBool Property AutoRecyclingMode Auto Hidden
     SettingBool Property AllowJunkOnly Auto Hidden
     SettingBool Property AutoTransferJunk Auto Hidden
+    SettingBool Property UseAlwaysAutoTransferList Auto Hidden
+    SettingBool Property UseNeverAutoTransferList Auto Hidden
     SettingBool Property AllowBehaviorOverrides Auto Hidden
     SettingBool Property ReturnItemsSilently Auto Hidden
 
@@ -453,6 +455,14 @@ Function InitSettings(bool abForce = false)
         Self._DebugTrace("Initializing AutoTransferJunk")
         AutoTransferJunk = new SettingBool
     EndIf
+    If abForce || ! UseAlwaysAutoTransferList
+        Self._DebugTrace("Initializing UseAlwaysAutoTransferList")
+        UseAlwaysAutoTransferList = new SettingBool
+    EndIf
+    If abForce || ! UseNeverAutoTransferList
+        Self._DebugTrace("Initializing UseNeverAutoTransferList")
+        UseNeverAutoTransferList = new SettingBool
+    EndIf
     If abForce || ! AllowBehaviorOverrides
         Self._DebugTrace("Initializing AllowBehaviorOverrides")
         AllowBehaviorOverrides = new SettingBool
@@ -689,219 +699,225 @@ Function InitSettingsSupplemental()
 
     ; settings - general
     MultBase.ValueDefault = 1.0
-    MultBase.McmId = "fMultBase:General"
+    MultBase.McmId = "fMultBase:GeneralOptions"
     MultBase.ValueMin = 0.0
     MultBase.ValueMax = 2.0
 
     ReturnAtLeastOneComponent.ValueDefault = true
-    ReturnAtLeastOneComponent.McmId = "bReturnAtLeastOneComponent:General"
+    ReturnAtLeastOneComponent.McmId = "bReturnAtLeastOneComponent:GeneralOptions"
 
     FractionalComponentHandling.ValueDefault = 2
-    FractionalComponentHandling.McmId = "iFractionalComponentHandling:General"
+    FractionalComponentHandling.McmId = "iFractionalComponentHandling:GeneralOptions"
     FractionalComponentHandling.ValueMin = 0
     FractionalComponentHandling.ValueMax = 2
 
     HasLimitedUses.ValueDefault = false
-    HasLimitedUses.McmId = "bHasLimitedUses:General"
+    HasLimitedUses.McmId = "bHasLimitedUses:GeneralOptions"
 
     NumberOfUses.ValueDefault = 50
-    NumberOfUses.McmId = "iNumberOfUses:General"
+    NumberOfUses.McmId = "iNumberOfUses:GeneralOptions"
     NumberOfUses.ValueMin = 1
     NumberOfUses.ValueMax = 200
 
     ; settings - adjustment options
     GeneralMultAdjust.ValueDefault = 0
-    GeneralMultAdjust.McmId = "iGeneralMultAdjust:General"
+    GeneralMultAdjust.McmId = "iGeneralMultAdjust:AdjustmentOptions"
     GeneralMultAdjust.ValueMin = 0
     GeneralMultAdjust.ValueMax = 1
 
     IntAffectsMult.ValueDefault = 1
-    IntAffectsMult.McmId = "iIntAffectsMult:General"
+    IntAffectsMult.McmId = "iIntAffectsMult:AdjustmentOptions"
     IntAffectsMult.ValueMin = 0
     IntAffectsMult.ValueMax = 2
 
     LckAffectsMult.ValueDefault = 1
-    LckAffectsMult.McmId = "iLckAffectsMult:General"
+    LckAffectsMult.McmId = "iLckAffectsMult:AdjustmentOptions"
     LckAffectsMult.ValueMin = 0
     LckAffectsMult.ValueMax = 2
 
     RngAffectsMult.ValueDefault = 0
-    RngAffectsMult.McmId = "iRngAffectsMult:General"
+    RngAffectsMult.McmId = "iRngAffectsMult:AdjustmentOptions"
     RngAffectsMult.ValueMin = 0
     RngAffectsMult.ValueMax = 2
 
     ScrapperAffectsMult.ValueDefault = 1
-    ScrapperAffectsMult.McmId = "iScrapperAffectsMult:General"
+    ScrapperAffectsMult.McmId = "iScrapperAffectsMult:AdjustmentOptions"
     ScrapperAffectsMult.ValueMin = 0
     ScrapperAffectsMult.ValueMax = 2
 
     ; recycler interface - behavior
     AutoRecyclingMode.ValueDefault = false
-    AutoRecyclingMode.McmId = "bAutoRecyclingMode:General"
+    AutoRecyclingMode.McmId = "bAutoRecyclingMode:Behavior"
 
     AllowJunkOnly.ValueDefault = true
-    AllowJunkOnly.McmId = "bAllowJunkOnly:General"
+    AllowJunkOnly.McmId = "bAllowJunkOnly:Behavior"
 
     AutoTransferJunk.ValueDefault = true
-    AutoTransferJunk.McmId = "bAutoTransferJunk:General"
+    AutoTransferJunk.McmId = "bAutoTransferJunk:Behavior"
+
+    UseAlwaysAutoTransferList.ValueDefault = true
+    UseAlwaysAutoTransferList.McmId = "bUseAlwaysAutoTransferList:Behavior"
+
+    UseNeverAutoTransferList.ValueDefault = true
+    UseNeverAutoTransferList.McmId = "bUseNeverAutoTransferList:Behavior"
 
     AllowBehaviorOverrides.ValueDefault = true
-    AllowBehaviorOverrides.McmId = "bAllowBehaviorOverrides:General"
+    AllowBehaviorOverrides.McmId = "bAllowBehaviorOverrides:Behavior"
 
     ReturnItemsSilently.ValueDefault = true
-    ReturnItemsSilently.McmId = "bReturnItemsSilently:General"
+    ReturnItemsSilently.McmId = "bReturnItemsSilently:Behavior"
 
     ; multiplier adjustments - general
     MultAdjustGeneralSettlement.ValueDefault = 0.0
-    MultAdjustGeneralSettlement.McmId = "fMultAdjustGeneralSettlement:Adjustments"
+    MultAdjustGeneralSettlement.McmId = "fMultAdjustGeneralSettlement:MultiplierAdjustments"
     MultAdjustGeneralSettlement.ValueMin = -1.0
     MultAdjustGeneralSettlement.ValueMax = 1.0
 
     MultAdjustGeneralSettlementC.ValueDefault = 0.0
-    MultAdjustGeneralSettlementC.McmId = "fMultAdjustGeneralSettlementC:Adjustments"
+    MultAdjustGeneralSettlementC.McmId = "fMultAdjustGeneralSettlementC:MultiplierAdjustments"
     MultAdjustGeneralSettlementC.ValueMin = -1.0
     MultAdjustGeneralSettlementC.ValueMax = 1.0
 
     MultAdjustGeneralSettlementU.ValueDefault = 0.0
-    MultAdjustGeneralSettlementU.McmId = "fMultAdjustGeneralSettlementU:Adjustments"
+    MultAdjustGeneralSettlementU.McmId = "fMultAdjustGeneralSettlementU:MultiplierAdjustments"
     MultAdjustGeneralSettlementU.ValueMin = -1.0
     MultAdjustGeneralSettlementU.ValueMax = 1.0
 
     MultAdjustGeneralSettlementR.ValueDefault = 0.0
-    MultAdjustGeneralSettlementR.McmId = "fMultAdjustGeneralSettlementR:Adjustments"
+    MultAdjustGeneralSettlementR.McmId = "fMultAdjustGeneralSettlementR:MultiplierAdjustments"
     MultAdjustGeneralSettlementR.ValueMin = -1.0
     MultAdjustGeneralSettlementR.ValueMax = 1.0
 
     MultAdjustGeneralSettlementS.ValueDefault = 0.0
-    MultAdjustGeneralSettlementS.McmId = "fMultAdjustGeneralSettlementS:Adjustments"
+    MultAdjustGeneralSettlementS.McmId = "fMultAdjustGeneralSettlementS:MultiplierAdjustments"
     MultAdjustGeneralSettlementS.ValueMin = -1.0
     MultAdjustGeneralSettlementS.ValueMax = 1.0
 
     MultAdjustGeneralNotSettlement.ValueDefault = 0.0
-    MultAdjustGeneralNotSettlement.McmId = "fMultAdjustGeneralNotSettlement:Adjustments"
+    MultAdjustGeneralNotSettlement.McmId = "fMultAdjustGeneralNotSettlement:MultiplierAdjustments"
     MultAdjustGeneralNotSettlement.ValueMin = -1.0
     MultAdjustGeneralNotSettlement.ValueMax = 1.0
 
     MultAdjustGeneralNotSettlementC.ValueDefault = 0.0
-    MultAdjustGeneralNotSettlementC.McmId = "fMultAdjustGeneralNotSettlementC:Adjustments"
+    MultAdjustGeneralNotSettlementC.McmId = "fMultAdjustGeneralNotSettlementC:MultiplierAdjustments"
     MultAdjustGeneralNotSettlementC.ValueMin = -1.0
     MultAdjustGeneralNotSettlementC.ValueMax = 1.0
 
     MultAdjustGeneralNotSettlementU.ValueDefault = 0.0
-    MultAdjustGeneralNotSettlementU.McmId = "fMultAdjustGeneralNotSettlementU:Adjustments"
+    MultAdjustGeneralNotSettlementU.McmId = "fMultAdjustGeneralNotSettlementU:MultiplierAdjustments"
     MultAdjustGeneralNotSettlementU.ValueMin = -1.0
     MultAdjustGeneralNotSettlementU.ValueMax = 1.0
 
     MultAdjustGeneralNotSettlementR.ValueDefault = 0.0
-    MultAdjustGeneralNotSettlementR.McmId = "fMultAdjustGeneralNotSettlementR:Adjustments"
+    MultAdjustGeneralNotSettlementR.McmId = "fMultAdjustGeneralNotSettlementR:MultiplierAdjustments"
     MultAdjustGeneralNotSettlementR.ValueMin = -1.0
     MultAdjustGeneralNotSettlementR.ValueMax = 1.0
 
     MultAdjustGeneralNotSettlementS.ValueDefault = 0.0
-    MultAdjustGeneralNotSettlementS.McmId = "fMultAdjustGeneralNotSettlementS:Adjustments"
+    MultAdjustGeneralNotSettlementS.McmId = "fMultAdjustGeneralNotSettlementS:MultiplierAdjustments"
     MultAdjustGeneralNotSettlementS.ValueMin = -1.0
     MultAdjustGeneralNotSettlementS.ValueMax = 1.0
 
     ; multiplier adjustments - intelligence
     MultAdjustInt.ValueDefault = 0.01
-    MultAdjustInt.McmId = "fMultAdjustInt:Adjustments"
+    MultAdjustInt.McmId = "fMultAdjustInt:MultiplierAdjustments"
     MultAdjustInt.ValueMin = 0.0
     MultAdjustInt.ValueMax = 1.0
 
     MultAdjustIntC.ValueDefault = 0.01
-    MultAdjustIntC.McmId = "fMultAdjustIntC:Adjustments"
+    MultAdjustIntC.McmId = "fMultAdjustIntC:MultiplierAdjustments"
     MultAdjustIntC.ValueMin = 0.0
     MultAdjustIntC.ValueMax = 1.0
 
     MultAdjustIntU.ValueDefault = 0.01
-    MultAdjustIntU.McmId = "fMultAdjustIntU:Adjustments"
+    MultAdjustIntU.McmId = "fMultAdjustIntU:MultiplierAdjustments"
     MultAdjustIntU.ValueMin = 0.0
     MultAdjustIntU.ValueMax = 1.0
 
     MultAdjustIntR.ValueDefault = 0.01
-    MultAdjustIntR.McmId = "fMultAdjustIntR:Adjustments"
+    MultAdjustIntR.McmId = "fMultAdjustIntR:MultiplierAdjustments"
     MultAdjustIntR.ValueMin = 0.0
     MultAdjustIntR.ValueMax = 1.0
 
     MultAdjustIntS.ValueDefault = 0.0
-    MultAdjustIntS.McmId = "fMultAdjustIntS:Adjustments"
+    MultAdjustIntS.McmId = "fMultAdjustIntS:MultiplierAdjustments"
     MultAdjustIntS.ValueMin = 0.0
     MultAdjustIntS.ValueMax = 1.0
 
     ; multiplier adjustments - luck
     MultAdjustLck.ValueDefault = 0.01
-    MultAdjustLck.McmId = "fMultAdjustLck:Adjustments"
+    MultAdjustLck.McmId = "fMultAdjustLck:MultiplierAdjustments"
     MultAdjustLck.ValueMin = 0.0
     MultAdjustLck.ValueMax = 1.0
 
     MultAdjustLckC.ValueDefault = 0.01
-    MultAdjustLckC.McmId = "fMultAdjustLckC:Adjustments"
+    MultAdjustLckC.McmId = "fMultAdjustLckC:MultiplierAdjustments"
     MultAdjustLckC.ValueMin = 0.0
     MultAdjustLckC.ValueMax = 1.0
 
     MultAdjustLckU.ValueDefault = 0.01
-    MultAdjustLckU.McmId = "fMultAdjustLckU:Adjustments"
+    MultAdjustLckU.McmId = "fMultAdjustLckU:MultiplierAdjustments"
     MultAdjustLckU.ValueMin = 0.0
     MultAdjustLckU.ValueMax = 1.0
 
     MultAdjustLckR.ValueDefault = 0.01
-    MultAdjustLckR.McmId = "fMultAdjustLckR:Adjustments"
+    MultAdjustLckR.McmId = "fMultAdjustLckR:MultiplierAdjustments"
     MultAdjustLckR.ValueMin = 0.0
     MultAdjustLckR.ValueMax = 1.0
 
     MultAdjustLckS.ValueDefault = 0.0
-    MultAdjustLckS.McmId = "fMultAdjustLckS:Adjustments"
+    MultAdjustLckS.McmId = "fMultAdjustLckS:MultiplierAdjustments"
     MultAdjustLckS.ValueMin = 0.0
     MultAdjustLckS.ValueMax = 1.0
 
     ; multiplier adjustments - randomness
     MultAdjustRandomMin.ValueDefault = -0.1
-    MultAdjustRandomMin.McmId = "fMultAdjustRandomMin:Adjustments"
+    MultAdjustRandomMin.McmId = "fMultAdjustRandomMin:MultiplierAdjustments"
     MultAdjustRandomMin.ValueMin = -1.0
     MultAdjustRandomMin.ValueMax = 1.0
 
     MultAdjustRandomMinC.ValueDefault = -0.1
-    MultAdjustRandomMinC.McmId = "fMultAdjustRandomMinC:Adjustments"
+    MultAdjustRandomMinC.McmId = "fMultAdjustRandomMinC:MultiplierAdjustments"
     MultAdjustRandomMinC.ValueMin = -1.0
     MultAdjustRandomMinC.ValueMax = 1.0
 
     MultAdjustRandomMinU.ValueDefault = -0.1
-    MultAdjustRandomMinU.McmId = "fMultAdjustRandomMinU:Adjustments"
+    MultAdjustRandomMinU.McmId = "fMultAdjustRandomMinU:MultiplierAdjustments"
     MultAdjustRandomMinU.ValueMin = -1.0
     MultAdjustRandomMinU.ValueMax = 1.0
 
     MultAdjustRandomMinR.ValueDefault = -0.1
-    MultAdjustRandomMinR.McmId = "fMultAdjustRandomMinR:Adjustments"
+    MultAdjustRandomMinR.McmId = "fMultAdjustRandomMinR:MultiplierAdjustments"
     MultAdjustRandomMinR.ValueMin = -1.0
     MultAdjustRandomMinR.ValueMax = 1.0
 
     MultAdjustRandomMinS.ValueDefault = 0.0
-    MultAdjustRandomMinS.McmId = "fMultAdjustRandomMinS:Adjustments"
+    MultAdjustRandomMinS.McmId = "fMultAdjustRandomMinS:MultiplierAdjustments"
     MultAdjustRandomMinS.ValueMin = -1.0
     MultAdjustRandomMinS.ValueMax = 1.0
 
     MultAdjustRandomMax.ValueDefault = 0.1
-    MultAdjustRandomMax.McmId = "fMultAdjustRandomMax:Adjustments"
+    MultAdjustRandomMax.McmId = "fMultAdjustRandomMax:MultiplierAdjustments"
     MultAdjustRandomMax.ValueMin = -1.0
     MultAdjustRandomMax.ValueMax = 1.0
 
     MultAdjustRandomMaxC.ValueDefault = 0.1
-    MultAdjustRandomMaxC.McmId = "fMultAdjustRandomMaxC:Adjustments"
+    MultAdjustRandomMaxC.McmId = "fMultAdjustRandomMaxC:MultiplierAdjustments"
     MultAdjustRandomMaxC.ValueMin = -1.0
     MultAdjustRandomMaxC.ValueMax = 1.0
 
     MultAdjustRandomMaxU.ValueDefault = 0.1
-    MultAdjustRandomMaxU.McmId = "fMultAdjustRandomMaxU:Adjustments"
+    MultAdjustRandomMaxU.McmId = "fMultAdjustRandomMaxU:MultiplierAdjustments"
     MultAdjustRandomMaxU.ValueMin = -1.0
     MultAdjustRandomMaxU.ValueMax = 1.0
 
     MultAdjustRandomMaxR.ValueDefault = 0.1
-    MultAdjustRandomMaxR.McmId = "fMultAdjustRandomMaxR:Adjustments"
+    MultAdjustRandomMaxR.McmId = "fMultAdjustRandomMaxR:MultiplierAdjustments"
     MultAdjustRandomMaxR.ValueMin = -1.0
     MultAdjustRandomMaxR.ValueMax = 1.0
 
     MultAdjustRandomMaxS.ValueDefault = 0.0
-    MultAdjustRandomMaxS.McmId = "fMultAdjustRandomMaxS:Adjustments"
+    MultAdjustRandomMaxS.McmId = "fMultAdjustRandomMaxS:MultiplierAdjustments"
     MultAdjustRandomMaxS.ValueMin = -1.0
     MultAdjustRandomMaxS.ValueMax = 1.0
 
@@ -916,52 +932,52 @@ Function InitSettingsSupplemental()
     int index = 0
     While index < ScrapperPerkMaxRanksSupported
         MultAdjustScrapperSettlement[index].ValueDefault = scrapperSettlementDefaults[index]
-        MultAdjustScrapperSettlement[index].McmId = "fMultAdjustScrapperSettlement" + (index+1) + ":Adjustments"
+        MultAdjustScrapperSettlement[index].McmId = "fMultAdjustScrapperSettlement" + (index+1) + ":MultiplierAdjustments"
         MultAdjustScrapperSettlement[index].ValueMin = -1.0
         MultAdjustScrapperSettlement[index].ValueMax = 1.0
 
         MultAdjustScrapperSettlementC[index].ValueDefault = scrapperSettlementDefaults[index]
-        MultAdjustScrapperSettlementC[index].McmId = "fMultAdjustScrapperSettlementC" + (index+1) + ":Adjustments"
+        MultAdjustScrapperSettlementC[index].McmId = "fMultAdjustScrapperSettlementC" + (index+1) + ":MultiplierAdjustments"
         MultAdjustScrapperSettlementC[index].ValueMin = -1.0
         MultAdjustScrapperSettlementC[index].ValueMax = 1.0
 
         MultAdjustScrapperSettlementU[index].ValueDefault = scrapperSettlementDefaults[index]
-        MultAdjustScrapperSettlementU[index].McmId = "fMultAdjustScrapperSettlementU" + (index+1) + ":Adjustments"
+        MultAdjustScrapperSettlementU[index].McmId = "fMultAdjustScrapperSettlementU" + (index+1) + ":MultiplierAdjustments"
         MultAdjustScrapperSettlementU[index].ValueMin = -1.0
         MultAdjustScrapperSettlementU[index].ValueMax = 1.0
 
         MultAdjustScrapperSettlementR[index].ValueDefault = scrapperSettlementDefaults[index]
-        MultAdjustScrapperSettlementR[index].McmId = "fMultAdjustScrapperSettlementR" + (index+1) + ":Adjustments"
+        MultAdjustScrapperSettlementR[index].McmId = "fMultAdjustScrapperSettlementR" + (index+1) + ":MultiplierAdjustments"
         MultAdjustScrapperSettlementR[index].ValueMin = -1.0
         MultAdjustScrapperSettlementR[index].ValueMax = 1.0
 
         MultAdjustScrapperSettlementS[index].ValueDefault = 0.0
-        MultAdjustScrapperSettlementS[index].McmId = "fMultAdjustScrapperSettlementS" + (index+1) + ":Adjustments"
+        MultAdjustScrapperSettlementS[index].McmId = "fMultAdjustScrapperSettlementS" + (index+1) + ":MultiplierAdjustments"
         MultAdjustScrapperSettlementS[index].ValueMin = -1.0
         MultAdjustScrapperSettlementS[index].ValueMax = 1.0
 
         MultAdjustScrapperNotSettlement[index].ValueDefault = 0.0
-        MultAdjustScrapperNotSettlement[index].McmId = "fMultAdjustScrapperNotSettlement" + (index+1) + ":Adjustments"
+        MultAdjustScrapperNotSettlement[index].McmId = "fMultAdjustScrapperNotSettlement" + (index+1) + ":MultiplierAdjustments"
         MultAdjustScrapperNotSettlement[index].ValueMin = -1.0
         MultAdjustScrapperNotSettlement[index].ValueMax = 1.0
 
         MultAdjustScrapperNotSettlementC[index].ValueDefault = 0.0
-        MultAdjustScrapperNotSettlementC[index].McmId = "fMultAdjustScrapperNotSettlementC" + (index+1) + ":Adjustments"
+        MultAdjustScrapperNotSettlementC[index].McmId = "fMultAdjustScrapperNotSettlementC" + (index+1) + ":MultiplierAdjustments"
         MultAdjustScrapperNotSettlementC[index].ValueMin = -1.0
         MultAdjustScrapperNotSettlementC[index].ValueMax = 1.0
 
         MultAdjustScrapperNotSettlementU[index].ValueDefault = 0.0
-        MultAdjustScrapperNotSettlementU[index].McmId = "fMultAdjustScrapperNotSettlementU" + (index+1) + ":Adjustments"
+        MultAdjustScrapperNotSettlementU[index].McmId = "fMultAdjustScrapperNotSettlementU" + (index+1) + ":MultiplierAdjustments"
         MultAdjustScrapperNotSettlementU[index].ValueMin = -1.0
         MultAdjustScrapperNotSettlementU[index].ValueMax = 1.0
 
         MultAdjustScrapperNotSettlementR[index].ValueDefault = 0.0
-        MultAdjustScrapperNotSettlementR[index].McmId = "fMultAdjustScrapperNotSettlementR" + (index+1) + ":Adjustments"
+        MultAdjustScrapperNotSettlementR[index].McmId = "fMultAdjustScrapperNotSettlementR" + (index+1) + ":MultiplierAdjustments"
         MultAdjustScrapperNotSettlementR[index].ValueMin = -1.0
         MultAdjustScrapperNotSettlementR[index].ValueMax = 1.0
 
         MultAdjustScrapperNotSettlementS[index].ValueDefault = 0.0
-        MultAdjustScrapperNotSettlementS[index].McmId = "fMultAdjustScrapperNotSettlementS" + (index+1) + ":Adjustments"
+        MultAdjustScrapperNotSettlementS[index].McmId = "fMultAdjustScrapperNotSettlementS" + (index+1) + ":MultiplierAdjustments"
         MultAdjustScrapperNotSettlementS[index].ValueMin = -1.0
         MultAdjustScrapperNotSettlementS[index].ValueMax = 1.0
 
@@ -993,6 +1009,8 @@ Function InitSettingsDefaultValues()
     settingsToChange.Add(AutoRecyclingMode)
     settingsToChange.Add(AllowJunkOnly)
     settingsToChange.Add(AutoTransferJunk)
+    settingsToChange.Add(UseAlwaysAutoTransferList)
+    settingsToChange.Add(UseNeverAutoTransferList)
     settingsToChange.Add(AllowBehaviorOverrides)
     settingsToChange.Add(ReturnItemsSilently)
 
@@ -1313,6 +1331,8 @@ Function LoadAllSettingsFromMCM()
         settingsToLoad.Add(AutoRecyclingMode)
         settingsToLoad.Add(AllowJunkOnly)
         settingsToLoad.Add(AutoTransferJunk)
+        settingsToLoad.Add(UseAlwaysAutoTransferList)
+        settingsToLoad.Add(UseNeverAutoTransferList)
         settingsToLoad.Add(AllowBehaviorOverrides)
         settingsToLoad.Add(ReturnItemsSilently)
 
@@ -1531,6 +1551,14 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             oldValue = AutoTransferJunk.Value
             LoadSettingFromMCM(AutoTransferJunk, ModName)
             newValue = AutoTransferJunk.Value
+        ElseIf asControlId == UseAlwaysAutoTransferList.McmId
+            oldValue = UseAlwaysAutoTransferList.Value
+            LoadSettingFromMCM(UseAlwaysAutoTransferList, ModName)
+            newValue = UseAlwaysAutoTransferList.Value
+        ElseIf asControlId == UseNeverAutoTransferList.McmId
+            oldValue = UseNeverAutoTransferList.Value
+            LoadSettingFromMCM(UseNeverAutoTransferList, ModName)
+            newValue = UseNeverAutoTransferList.Value
         ElseIf asControlId == AllowBehaviorOverrides.McmId
             oldValue = AllowBehaviorOverrides.Value
             LoadSettingFromMCM(AllowBehaviorOverrides, ModName)
@@ -2192,6 +2220,8 @@ Function Uninstall()
         AutoRecyclingMode = None
         AllowJunkOnly = None
         AutoTransferJunk = None
+        UseAlwaysAutoTransferList = None
+        UseNeverAutoTransferList = None
         AllowBehaviorOverrides = None
         ReturnItemsSilently = None
         ; multiplier adjustments - general
