@@ -113,9 +113,10 @@ local stat_adjust_step = 0.005;
 
           // recycler interface - hotkeys
           mcm.control.section(text='$Hotkeys'),
-          mcm.control.stepper(text='$BehaviorOverrideForceTransferJunkText', options=['$LShift'], help='$BehaviorOverrideForceTransferJunkHelp'),
-          mcm.control.stepper(text='$BehaviorOverrideForceRetainJunkText', options=['$LCtrl'], help='$BehaviorOverrideForceRetainJunkHelp'),
-          mcm.control.stepper(text='$EditAutoTransferExemptionsText', options=['$LAlt'], help='$EditAutoTransferExemptionsHelp'),
+          mcm.control.stepper(text='$BehaviorOverrideForceTransferJunkText', options=['$HotkeyShift'], help='$BehaviorOverrideForceTransferJunkHelp'),
+          mcm.control.stepper(text='$BehaviorOverrideForceRetainJunkText', options=['$HotkeyCtrl'], help='$BehaviorOverrideForceRetainJunkHelp'),
+          mcm.control.stepper(text='$EditAlwaysAutoTransferText', options=['$HotkeyAltShift'], help='$EditAlwaysAutoTransferHelp'),
+          mcm.control.stepper(text='$EditNeverAutoTransferText', options=['$HotkeyAltCtrl'], help='$EditNeverAutoTransferHelp'),
         ],
       },
       {

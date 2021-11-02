@@ -49,7 +49,9 @@ Group Other
       enables this script to determine whether its in a player-owned settlement or not }
 
     FormListWrapper Property RecyclableItemList Auto Mandatory
-    FormListWrapper Property AutoTransferExemptionsList Auto Mandatory
+
+    FormListWrapper Property NeverAutoTransferList Auto Mandatory
+    FormListWrapper Property AlwaysAutoTransferList Auto Mandatory
 
     ; WorkerThread scripts are attached to a different quest to prevent issues using MCM
     Quest Property ThreadContainer Auto Mandatory
@@ -82,9 +84,9 @@ Group RuntimeState
     bool Property ScriptExtenderInstalled Auto Hidden
     bool Property ModConfigMenuInstalled Auto Hidden
 
-    bool Property BehaviorOverrideForceTransferJunk Auto Hidden
-    bool Property BehaviorOverrideForceRetainJunk Auto Hidden
-    bool Property EditAutoTransferExemptions Auto Hidden
+    bool Property HotkeyForceTransferJunk Auto Hidden
+    bool Property HotkeyForceRetainJunk Auto Hidden
+    bool Property HotkeyEditAutoTransferLists Auto Hidden
 EndGroup
 
 Group Settings
@@ -179,9 +181,12 @@ int MaxThreads = 16 const
 var[] Threads = None
 
 ; DirectX scan codes: https://www.creationkit.com/fallout4/index.php?title=DirectX_Scan_Codes
-int LAlt = 164 const
-int LCtrl = 162 const
 int LShift = 160 const
+int RShift = 161 const
+int LCtrl = 162 const
+int RCtrl = 163 const
+int LAlt = 164 const
+int RAlt = 165 const
 
 
 
@@ -209,6 +214,7 @@ Event OnQuestInit()
     Self.RegisterForMCMEvents()
     If ScriptExtenderInstalled
         RegisterForKey(LAlt)
+        RegisterForKey(RAlt)
     EndIf
     If ! ModConfigMenuInstalled
         Self.InitSettingsDefaultValues()
@@ -259,6 +265,7 @@ Event Actor.OnPlayerLoadGame(Actor akSender)
         Self.RegisterForMCMEvents()
         If ScriptExtenderInstalled
             RegisterForKey(LAlt)
+            RegisterForKey(RAlt)
         EndIf
             Self._DebugTrace("Finished runtime init process")
         MutexBusy = false
@@ -279,30 +286,30 @@ EndEvent
 
 Event OnKeyDown(int aiKeyCode)
     If AllowBehaviorOverrides.Value
-        If aiKeyCode == LAlt
-            Self._DebugTrace("OnKeyDown: L Alt (" + LAlt + ")")
-            EditAutoTransferExemptions = true
-        ElseIf aiKeyCode == LCtrl
-            Self._DebugTrace("OnKeyDown: L Ctrl (" + LCtrl + ")")
-            BehaviorOverrideForceRetainJunk = true
-        ElseIf aiKeyCode == LShift
-            Self._DebugTrace("OnKeyDown: L Shift (" + LShift + ")")
-            BehaviorOverrideForceTransferJunk = true
+        If aiKeyCode == LAlt || aiKeyCode == RAlt
+            Self._DebugTrace("OnKeyDown: Alt (" + aiKeyCode + ")")
+            HotkeyEditAutoTransferLists = true
+        ElseIf aiKeyCode == LCtrl || aiKeyCode == RCtrl
+            Self._DebugTrace("OnKeyDown: Ctrl (" + aiKeyCode + ")")
+            HotkeyForceRetainJunk = true
+        ElseIf aiKeyCode == LShift || aiKeyCode == RShift
+            Self._DebugTrace("OnKeyDown: Shift (" + aiKeyCode + ")")
+            HotkeyForceTransferJunk = true
         EndIf
     EndIf
 EndEvent
 
 Event OnKeyUp(int aiKeyCode, float afTime)
     If AllowBehaviorOverrides.Value
-        If aiKeyCode == LAlt
-            Self._DebugTrace("OnKeyDown: L Alt (" + LAlt + ")")
-            EditAutoTransferExemptions = false
-        ElseIf aiKeyCode == LCtrl
-            Self._DebugTrace("OnKeyUp: L Ctrl (" + LCtrl + ")")
-            BehaviorOverrideForceRetainJunk = false
-        ElseIf aiKeyCode == LShift
-            Self._DebugTrace("OnKeyUp: L Shift (" + LShift + ")")
-            BehaviorOverrideForceTransferJunk = false
+        If aiKeyCode == LAlt || aiKeyCode == RAlt
+            Self._DebugTrace("OnKeyDown: Alt (" + aiKeyCode + ")")
+            HotkeyEditAutoTransferLists = false
+        ElseIf aiKeyCode == LCtrl || aiKeyCode == RCtrl
+            Self._DebugTrace("OnKeyUp: Ctrl (" + aiKeyCode + ")")
+            HotkeyForceRetainJunk = false
+        ElseIf aiKeyCode == LShift || aiKeyCode == RShift
+            Self._DebugTrace("OnKeyUp: Shift (" + aiKeyCode + ")")
+            HotkeyForceTransferJunk = false
         EndIf
     EndIf
 EndEvent
@@ -1092,12 +1099,16 @@ Function InitSettingsDefaultValues()
     If ScriptExtenderInstalled
         If AllowBehaviorOverrides.Value
             RegisterForKey(LCtrl)
+            RegisterForKey(RCtrl)
             RegisterForKey(LShift)
+            RegisterForKey(RShift)
         Else
             UnregisterForKey(LCtrl)
+            UnregisterForKey(RCtrl)
             UnregisterForKey(LShift)
-            BehaviorOverrideForceRetainJunk = false
-            BehaviorOverrideForceTransferJunk = false
+            UnregisterForKey(RShift)
+            HotkeyForceRetainJunk = false
+            HotkeyForceTransferJunk = false
         EndIf
     EndIf
 EndFunction
@@ -1406,12 +1417,16 @@ Function LoadAllSettingsFromMCM()
         MCM_ScrapperAffectsMultDetailed = ScrapperAffectsMult.Value > 1
         If AllowBehaviorOverrides.Value
             RegisterForKey(LCtrl)
+            RegisterForKey(RCtrl)
             RegisterForKey(LShift)
+            RegisterForKey(RShift)
         Else
             UnregisterForKey(LCtrl)
+            UnregisterForKey(RCtrl)
             UnregisterForKey(LShift)
-            BehaviorOverrideForceRetainJunk = false
-            BehaviorOverrideForceTransferJunk = false
+            UnregisterForKey(RShift)
+            HotkeyForceRetainJunk = false
+            HotkeyForceTransferJunk = false
         EndIf
         MultAdjustRandomSanityCheck()
     Else
@@ -1522,12 +1537,16 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             newValue = AllowBehaviorOverrides.Value
             If AllowBehaviorOverrides.Value
                 RegisterForKey(LCtrl)
+                RegisterForKey(RCtrl)
                 RegisterForKey(LShift)
+                RegisterForKey(RShift)
             Else
                 UnregisterForKey(LCtrl)
+                UnregisterForKey(RCtrl)
                 UnregisterForKey(LShift)
-                BehaviorOverrideForceRetainJunk = false
-                BehaviorOverrideForceTransferJunk = false
+                UnregisterForKey(RShift)
+                HotkeyForceRetainJunk = false
+                HotkeyForceTransferJunk = false
             EndIf
         ElseIf asControlId == ReturnItemsSilently.McmId
             oldValue = ReturnItemsSilently.Value
@@ -1831,8 +1850,8 @@ EndFunction
 ; reset the behavior override flags
 Function ResetBehaviorOverrides()
     Self._DebugTrace("Resetting behavior override flags")
-    BehaviorOverrideForceRetainJunk = false
-    BehaviorOverrideForceTransferJunk = false
+    HotkeyForceRetainJunk = false
+    HotkeyForceTransferJunk = false
     MessageBehaviorOverridesReset.Show()
 EndFunction
 
@@ -2105,8 +2124,11 @@ Function Uninstall()
         UnregisterForExternalEvent("OnMCMMenuClose|" + ModName)
         If AllowBehaviorOverrides.Value
             UnregisterForKey(LAlt)
+            UnregisterForKey(RAlt)
             UnregisterForKey(LCtrl)
+            UnregisterForKey(RCtrl)
             UnregisterForKey(LShift)
+            UnregisterForKey(RShift)
         EndIf
 
         ; remove recycler devices in inventory, if any
@@ -2145,7 +2167,8 @@ Function Uninstall()
         MessageBehaviorOverridesReset = None
         WorkshopParent = None
         RecyclableItemList = None
-        AutoTransferExemptionsList = None
+        NeverAutoTransferList = None
+        AlwaysAutoTransferList = None
         ThreadContainer = None
 
         ; group RuntimeState
