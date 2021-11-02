@@ -217,7 +217,11 @@ Event OnQuestInit()
     If ScriptExtenderInstalled
         RegisterForKey(LAlt)
         RegisterForKey(RAlt)
-    EndIf
+        RegisterForKey(LCtrl)
+        RegisterForKey(RCtrl)
+        RegisterForKey(LShift)
+        RegisterForKey(RShift)
+EndIf
     If ! ModConfigMenuInstalled
         Self.InitSettingsDefaultValues()
     EndIf
@@ -268,6 +272,10 @@ Event Actor.OnPlayerLoadGame(Actor akSender)
         If ScriptExtenderInstalled
             RegisterForKey(LAlt)
             RegisterForKey(RAlt)
+            RegisterForKey(LCtrl)
+            RegisterForKey(RCtrl)
+            RegisterForKey(LShift)
+            RegisterForKey(RShift)
         EndIf
             Self._DebugTrace("Finished runtime init process")
         MutexBusy = false
@@ -287,32 +295,28 @@ Event OnMenuOpenCloseEvent(string asMenuName, bool abOpening)
 EndEvent
 
 Event OnKeyDown(int aiKeyCode)
-    If AllowBehaviorOverrides.Value
-        If aiKeyCode == LAlt || aiKeyCode == RAlt
-            Self._DebugTrace("OnKeyDown: Alt (" + aiKeyCode + ")")
-            HotkeyEditAutoTransferLists = true
-        ElseIf aiKeyCode == LCtrl || aiKeyCode == RCtrl
-            Self._DebugTrace("OnKeyDown: Ctrl (" + aiKeyCode + ")")
-            HotkeyForceRetainJunk = true
-        ElseIf aiKeyCode == LShift || aiKeyCode == RShift
-            Self._DebugTrace("OnKeyDown: Shift (" + aiKeyCode + ")")
-            HotkeyForceTransferJunk = true
-        EndIf
+    If aiKeyCode == LAlt || aiKeyCode == RAlt
+        Self._DebugTrace("OnKeyDown: Alt (" + aiKeyCode + ")")
+        HotkeyEditAutoTransferLists = true
+    ElseIf aiKeyCode == LCtrl || aiKeyCode == RCtrl
+        Self._DebugTrace("OnKeyDown: Ctrl (" + aiKeyCode + ")")
+        HotkeyForceRetainJunk = true
+    ElseIf aiKeyCode == LShift || aiKeyCode == RShift
+        Self._DebugTrace("OnKeyDown: Shift (" + aiKeyCode + ")")
+        HotkeyForceTransferJunk = true
     EndIf
 EndEvent
 
 Event OnKeyUp(int aiKeyCode, float afTime)
-    If AllowBehaviorOverrides.Value
-        If aiKeyCode == LAlt || aiKeyCode == RAlt
-            Self._DebugTrace("OnKeyDown: Alt (" + aiKeyCode + ")")
-            HotkeyEditAutoTransferLists = false
-        ElseIf aiKeyCode == LCtrl || aiKeyCode == RCtrl
-            Self._DebugTrace("OnKeyUp: Ctrl (" + aiKeyCode + ")")
-            HotkeyForceRetainJunk = false
-        ElseIf aiKeyCode == LShift || aiKeyCode == RShift
-            Self._DebugTrace("OnKeyUp: Shift (" + aiKeyCode + ")")
-            HotkeyForceTransferJunk = false
-        EndIf
+    If aiKeyCode == LAlt || aiKeyCode == RAlt
+        Self._DebugTrace("OnKeyDown: Alt (" + aiKeyCode + ")")
+        HotkeyEditAutoTransferLists = false
+    ElseIf aiKeyCode == LCtrl || aiKeyCode == RCtrl
+        Self._DebugTrace("OnKeyUp: Ctrl (" + aiKeyCode + ")")
+        HotkeyForceRetainJunk = false
+    ElseIf aiKeyCode == LShift || aiKeyCode == RShift
+        Self._DebugTrace("OnKeyUp: Shift (" + aiKeyCode + ")")
+        HotkeyForceTransferJunk = false
     EndIf
 EndEvent
 
@@ -1114,21 +1118,6 @@ Function InitSettingsDefaultValues()
     MCM_RngAffectsMultDetailed = RngAffectsMult.Value > 1
     MCM_ScrapperAffectsMultSimple = ScrapperAffectsMult.Value == 1
     MCM_ScrapperAffectsMultDetailed = ScrapperAffectsMult.Value > 1
-    If ScriptExtenderInstalled
-        If AllowBehaviorOverrides.Value
-            RegisterForKey(LCtrl)
-            RegisterForKey(RCtrl)
-            RegisterForKey(LShift)
-            RegisterForKey(RShift)
-        Else
-            UnregisterForKey(LCtrl)
-            UnregisterForKey(RCtrl)
-            UnregisterForKey(LShift)
-            UnregisterForKey(RShift)
-            HotkeyForceRetainJunk = false
-            HotkeyForceTransferJunk = false
-        EndIf
-    EndIf
 EndFunction
 
 ; initialize FormList wrappers
@@ -1435,19 +1424,6 @@ Function LoadAllSettingsFromMCM()
         MCM_RngAffectsMultDetailed = RngAffectsMult.Value > 1
         MCM_ScrapperAffectsMultSimple = ScrapperAffectsMult.Value == 1
         MCM_ScrapperAffectsMultDetailed = ScrapperAffectsMult.Value > 1
-        If AllowBehaviorOverrides.Value
-            RegisterForKey(LCtrl)
-            RegisterForKey(RCtrl)
-            RegisterForKey(LShift)
-            RegisterForKey(RShift)
-        Else
-            UnregisterForKey(LCtrl)
-            UnregisterForKey(RCtrl)
-            UnregisterForKey(LShift)
-            UnregisterForKey(RShift)
-            HotkeyForceRetainJunk = false
-            HotkeyForceTransferJunk = false
-        EndIf
         MultAdjustRandomSanityCheck()
     Else
         Self._DebugTrace("Loading settings from MCM; skipping (MCM not enabled)")
@@ -1563,19 +1539,6 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             oldValue = AllowBehaviorOverrides.Value
             LoadSettingFromMCM(AllowBehaviorOverrides, ModName)
             newValue = AllowBehaviorOverrides.Value
-            If AllowBehaviorOverrides.Value
-                RegisterForKey(LCtrl)
-                RegisterForKey(RCtrl)
-                RegisterForKey(LShift)
-                RegisterForKey(RShift)
-            Else
-                UnregisterForKey(LCtrl)
-                UnregisterForKey(RCtrl)
-                UnregisterForKey(LShift)
-                UnregisterForKey(RShift)
-                HotkeyForceRetainJunk = false
-                HotkeyForceTransferJunk = false
-            EndIf
         ElseIf asControlId == ReturnItemsSilently.McmId
             oldValue = ReturnItemsSilently.Value
             LoadSettingFromMCM(ReturnItemsSilently, ModName)

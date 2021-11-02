@@ -108,7 +108,11 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
         ElseIf editAutoTransferLists && forceTransferJunk
             Self.EditAutoTransferList(PortableRecyclerControl.AlwaysAutoTransferList, MessageEditAlwaysAutoTransferListMode)
         Else
-            Self.Recycle(forceRetainJunk, forceTransferJunk)
+            If PortableRecyclerControl.AllowBehaviorOverrides.Value
+                Self.Recycle(forceRetainJunk, forceTransferJunk)
+            Else
+                Self.Recycle(false, false)
+            EndIf
         EndIf
 
         ; delete the temp containers
