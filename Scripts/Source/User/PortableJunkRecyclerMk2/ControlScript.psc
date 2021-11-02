@@ -327,7 +327,7 @@ EndEvent
 
 ; add a bit of text to traces going into the papyrus user log
 Function _DebugTrace(string asMessage, int aiSeverity = 0) DebugOnly
-    Debug.TraceUser(ModName, "QuestScript: " + asMessage, aiSeverity)
+    Debug.TraceUser(ModName, "ControlScript: " + asMessage, aiSeverity)
 EndFunction
 
 ; initialize script-internal variables
@@ -362,15 +362,15 @@ EndFunction
 
 ; check to see if F4SE is installed
 Function CheckForF4SE()
-    Debug.Trace("PortableJunkRecyclerMk2:QuestScript: Checking if F4SE is installed...")
+    Debug.Trace(FullScriptName + ": Checking if F4SE is installed...")
     Self._DebugTrace("Checking if F4SE is installed...")
     ScriptExtenderInstalled = F4SE.GetVersionRelease() as bool
     If ScriptExtenderInstalled
-        Debug.Trace("PortableJunkRecyclerMk2:QuestScript: F4SE installed")
+        Debug.Trace(FullScriptName + ": F4SE installed")
         Self._DebugTrace("F4SE v" + F4SE.GetVersion() + "." + F4SE.GetVersionMinor() + "." + F4SE.GetVersionBeta() + "." + \
             F4SE.GetVersionRelease() + " installed (script version " + F4SE.GetScriptVersionRelease() + ")")
     Else
-        Debug.Trace("PortableJunkRecyclerMk2:QuestScript: F4SE not installed", 1)
+        Debug.Trace(FullScriptName + ": F4SE not installed", 1)
         Self._DebugTrace("F4SE not installed", 1)
         MessageF4SENotInstalled.Show()
     EndIf
@@ -378,20 +378,20 @@ EndFunction
 
 ; check to see if MCM is installed; depends on F4SE
 Function CheckForMCM()
-    Debug.Trace("PortableJunkRecyclerMk2:QuestScript: Checking if MCM is installed...")
+    Debug.Trace(FullScriptName + ": Checking if MCM is installed...")
     Self._DebugTrace("Checking if MCM is installed...")
     ModConfigMenuInstalled = MCM.IsInstalled() as bool
     If ModConfigMenuInstalled && ScriptExtenderInstalled
-        Debug.Trace("PortableJunkRecyclerMk2:QuestScript: MCM installed")
+        Debug.Trace(FullScriptName + ": MCM installed")
         Self._DebugTrace("MCM installed (version code " + MCM.GetVersionCode() + ")")
         CurrentChangeType = AvailableChangeTypes.Both
     ElseIf ModConfigMenuInstalled && ! ScriptExtenderInstalled
-        Debug.Trace("PortableJunkRecyclerMk2:QuestScript: MCM installed, but F4SE is not; disabling support")
+        Debug.Trace(FullScriptName + ": MCM installed, but F4SE is not; disabling support")
         Self._DebugTrace("MCM installed, but F4SE is not; disabling support")
         ModConfigMenuInstalled = false
         CurrentChangeType = AvailableChangeTypes.ValueOnly
     Else
-        Debug.Trace("PortableJunkRecyclerMk2:QuestScript: MCM not installed")
+        Debug.Trace(FullScriptName + ": MCM not installed")
         Self._DebugTrace("MCM not installed")
         CurrentChangeType = AvailableChangeTypes.ValueOnly
         MessageMCMNotInstalled.Show()
