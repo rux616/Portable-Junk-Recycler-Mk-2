@@ -105,13 +105,29 @@ Function AddItemsToList(var[] akItems, int aiIndex, int aiIndexEnd, FormList akF
 EndFunction
 
 ; adds forms from a FormList to an object reference in a given quantity
-Function AddItems(FormListWrapper akFormList, int aiIndex, int aiIndexEnd, ObjectReference akDestinationRef, int aiQuantity)
+Function AddListItems(FormListWrapper akFormList, int aiIndex, int aiIndexEnd, ObjectReference akDestinationRef, int aiQuantity)
     Self.WorkerStart()
 
     Self._DebugTrace("AddItems started: Items = " + akFormList.Size + ", Index (Start) = " + aiIndex + ", Index (End) = " + \
         aiIndexEnd + ", FormList = " + akFormList + ", Destination = " + akDestinationRef + ", Quantity = " + aiQuantity)
 	While aiIndex <= aiIndexEnd
         akDestinationRef.AddItem(akFormList.List.GetAt(aiIndex), aiQuantity, true)
+		aiIndex += 1
+	EndWhile
+    Self._DebugTrace("AddItems finished")
+
+    Self.WorkerStop()
+EndFunction
+
+; adds forms from an array to an object reference in a given quantity
+Function AddArrayItems(var[] akItems, int aiIndex, int aiIndexEnd, ObjectReference akDestinationRef, int aiQuantity)
+    Self.WorkerStart()
+
+    Form[] items = akItems as Form[]
+    Self._DebugTrace("AddItems started: Items = " + items.Length + ", Index (Start) = " + aiIndex + ", Index (End) = " + \
+        aiIndexEnd + ", Destination = " + akDestinationRef + ", Quantity = " + aiQuantity)
+	While aiIndex <= aiIndexEnd
+        akDestinationRef.AddItem(items[aiIndex], aiQuantity, true)
 		aiIndex += 1
 	EndWhile
     Self._DebugTrace("AddItems finished")

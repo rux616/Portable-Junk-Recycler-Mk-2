@@ -1,6 +1,7 @@
 v0.5.0 beta
 -----------
-- Added an "Auto Transfer Exemptions" list so that certain items won't get transferred to the recycler inventory automatically
+- Added a "Never Auto Transfer" list so that certain items never get transferred to the recycler inventory automatically
+- Added an "Always Auto Transfer" list so that certain items always get transferred to the recycler inventory automatically
 - Uninstall now cannot be triggered when there is a recycling process running or the control script is busy
 - Added a safeguard in MCM so you don't accidentally click the uninstall button
 - Improved some of the descriptions of MCM options
