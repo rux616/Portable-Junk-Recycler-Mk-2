@@ -426,7 +426,7 @@ Function UpdateRecyclableItemList()
     ; move scrap items back to player
     If PortableRecyclerControl.ScrapListAll.Size
         Self._DebugTrace("Moving scrap items back from primary temp container to player")
-        TempContainerSecondary.RemoveItem(PortableRecyclerControl.ScrapListAll.List, -1, true, PlayerRef)
+        TempContainerPrimary.RemoveItem(PortableRecyclerControl.ScrapListAll.List, -1, true, PlayerRef)
     EndIf
 EndFunction
 
