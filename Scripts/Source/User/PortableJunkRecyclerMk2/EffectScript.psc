@@ -286,6 +286,8 @@ Function Recycle(bool abForceRetainJunk, bool abForceTransferJunk)
     ; TODO? - add second FormList ('PrunedRecyclableItemList'?)that has contents of RecyclableItemList minus the
     ; contents of NeverAutoTransferList?
 
+    ; transfer (or not) junk to the container. if the 'always auto transfer' and the 'never auto transfer' lists have
+    ; a conflict (i.e. there's the same item on both), the 'never' list always wins
     If transferJunk
         If PortableRecyclerControl.RecyclableItemList.Size
             PlayerRef.RemoveItem(PortableRecyclerControl.RecyclableItemList.List, -1, true, TempContainerPrimary)
@@ -296,6 +298,9 @@ Function Recycle(bool abForceRetainJunk, bool abForceTransferJunk)
     Else
         If PortableRecyclerControl.UseAlwaysAutoTransferList.Value && PortableRecyclerControl.AlwaysAutoTransferList.Size
             PlayerRef.RemoveItem(PortableRecyclerControl.AlwaysAutoTransferList.List, -1, true, TempContainerPrimary)
+        EndIf
+        If PortableRecyclerControl.UseNeverAutoTransferList.Value && PortableRecyclerControl.NeverAutoTransferList.Size
+            TempContainerPrimary.RemoveItem(PortableRecyclerControl.NeverAutoTransferList.List, -1, true, PlayerRef)
         EndIf
     EndIf
 
