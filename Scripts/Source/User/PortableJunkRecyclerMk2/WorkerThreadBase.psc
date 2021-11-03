@@ -66,16 +66,59 @@ EndFunction
 
 
 
-; FUNCTIONS: WORK
-; ---------------
+; FUNCTIONS
+; ---------
+
+; adds forms from an array to an object reference in a given quantity
+Function AddArrayItemsToInventory(var[] akItems, int aiIndex, int aiIndexEnd, ObjectReference akDestinationRef, int aiQuantity)
+    Self.WorkerStart()
+
+    Form[] items = akItems as Form[]
+    Self._DebugTrace("AddArrayItemsToInventory started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
+	While aiIndex <= aiIndexEnd
+        akDestinationRef.AddItem(items[aiIndex], aiQuantity, true)
+		aiIndex += 1
+	EndWhile
+    Self._DebugTrace("AddArrayItemsToInventory finished")
+
+    Self.WorkerStop()
+EndFunction
+
+; adds forms to a FormList
+Function AddItemsToList(int aiIndex, int aiIndexEnd, var[] akItems, FormList akFormList)
+    Self.WorkerStart()
+
+    Self._DebugTrace("AddItemsToList started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
+    Form[] items = akItems as Form[]
+	While aiIndex <= aiIndexEnd
+        akFormList.AddForm(items[aiIndex])
+		aiIndex += 1
+	EndWhile
+    Self._DebugTrace("AddItemsToList Finished")
+
+    Self.WorkerStop()
+EndFunction
+
+; adds forms from a FormList to an object reference in a given quantity
+Function AddListItemsToInventory(int aiIndex, int aiIndexEnd, FormList akFormList, ObjectReference akDestinationRef, int aiQuantity)
+    Self.WorkerStart()
+
+    Self._DebugTrace("AddListItemsToInventory started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
+	While aiIndex <= aiIndexEnd
+        akDestinationRef.AddItem(akFormList.GetAt(aiIndex), aiQuantity, true)
+		aiIndex += 1
+	EndWhile
+    Self._DebugTrace("AddListItemsToInventory finished")
+
+    Self.WorkerStop()
+EndFunction
 
 ; adds forms that have components (meaning they can be broken down) to a FormList
 ; expects only MiscObjects in akItems
-Function AddRecyclableItemsToList(var[] akItems, int aiIndex, int aiIndexEnd, FormList akFormList)
+Function AddRecyclableItemsToList(int aiIndex, int aiIndexEnd, var[] akItems, FormList akFormList)
     Self.WorkerStart()
 
-    Self._DebugTrace("Started: Items = " + akItems.Length + ", Index (Start) = " + aiIndex + ", Index (End) = " + \
-        aiIndexEnd + ", FormList = " + akFormList)
+    Self._DebugTrace("AddRecyclableItemsToList started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
     Form[] items = akItems as Form[]
 	While aiIndex <= aiIndexEnd
         If (items[aiIndex] as MiscObject).GetMiscComponents()
@@ -83,64 +126,61 @@ Function AddRecyclableItemsToList(var[] akItems, int aiIndex, int aiIndexEnd, Fo
         EndIf
 		aiIndex += 1
 	EndWhile
-    Self._DebugTrace("Finished")
+    Self._DebugTrace("AddRecyclableItemsToList finished")
 
     Self.WorkerStop()
 EndFunction
 
-; adds forms to a FormList
-Function AddItemsToList(var[] akItems, int aiIndex, int aiIndexEnd, FormList akFormList)
+; builds a ComponentMap array for the given component and MiscObject FormLists
+Function BuildComponentMap(int aiIndex, int aiIndexEnd, FormList akComponentList, FormList akMiscObjectList)
     Self.WorkerStart()
 
-    Self._DebugTrace("Started: Items = " + akItems.Length + ", Index (Start) = " + aiIndex + ", Index (End) = " + \
-        aiIndexEnd + ", FormList = " + akFormList)
-    Form[] items = akItems as Form[]
-	While aiIndex <= aiIndexEnd
-        akFormList.AddForm(items[aiIndex])
-		aiIndex += 1
-	EndWhile
-    Self._DebugTrace("Finished")
+    Self._DebugTrace("BuildComponentMap started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
+    ComponentMap[] toReturn = new ComponentMap[aiIndexEnd - aiIndex + 1]
+    int returnIndex = 0
+    While aiIndex <= aiIndexEnd
+        toReturn[returnIndex] = new ComponentMap
+        toReturn[returnIndex].ComponentPart = akComponentList.GetAt(aiIndex) as Component
+        toReturn[returnIndex].ComponentPartName = toReturn[returnIndex].ComponentPart.GetName()
+        toReturn[returnIndex].ScrapPart = akMiscObjectList.GetAt(aiIndex) as MiscObject
+        toReturn[returnIndex].ScrapPartName = toReturn[returnIndex].ScrapPart.GetName()
+        Self._DebugTrace(toReturn[returnIndex].ComponentPart + " (" + toReturn[returnIndex].ComponentPartName + \
+            ") is mapped to " + toReturn[returnIndex].ScrapPart + " (" + toReturn[returnIndex].ScrapPartName + ")")
+        aiIndex += 1
+        returnIndex += 1
+    EndWhile
+    Results = toReturn as var[]
+    Self._DebugTrace("BuildComponentMap finished")
 
     Self.WorkerStop()
 EndFunction
 
-; adds forms from a FormList to an object reference in a given quantity
-Function AddListItems(FormListWrapper akFormList, int aiIndex, int aiIndexEnd, ObjectReference akDestinationRef, int aiQuantity)
+; changes settings to defaults
+Function ChangeSettingsToDefaults(int aiIndex, int aiIndexEnd, var[] akSettings, int aiChangeType, string asModName)
     Self.WorkerStart()
 
-    Self._DebugTrace("AddItems started: Items = " + akFormList.Size + ", Index (Start) = " + aiIndex + ", Index (End) = " + \
-        aiIndexEnd + ", FormList = " + akFormList + ", Destination = " + akDestinationRef + ", Quantity = " + aiQuantity)
+    Self._DebugTrace("ChangeSettingsToDefaults started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
 	While aiIndex <= aiIndexEnd
-        akDestinationRef.AddItem(akFormList.List.GetAt(aiIndex), aiQuantity, true)
+        If akSettings[aiIndex] is SettingFloat
+            ChangeSetting(akSettings[aiIndex], aiChangeType, (akSettings[aiIndex] as SettingFloat).ValueDefault, asModName)
+        ElseIf akSettings[aiIndex] is SettingBool
+            ChangeSetting(akSettings[aiIndex], aiChangeType, (akSettings[aiIndex] as SettingBool).ValueDefault, asModName)
+        ElseIf akSettings[aiIndex] is SettingInt
+            ChangeSetting(akSettings[aiIndex], aiChangeType, (akSettings[aiIndex] as SettingInt).ValueDefault, asModName)
+        EndIf
 		aiIndex += 1
 	EndWhile
-    Self._DebugTrace("AddItems finished")
+    Self._DebugTrace("ChangeSettingsToDefaults finished")
 
     Self.WorkerStop()
 EndFunction
 
-; adds forms from an array to an object reference in a given quantity
-Function AddArrayItems(var[] akItems, int aiIndex, int aiIndexEnd, ObjectReference akDestinationRef, int aiQuantity)
-    Self.WorkerStart()
-
-    Form[] items = akItems as Form[]
-    Self._DebugTrace("AddItems started: Items = " + items.Length + ", Index (Start) = " + aiIndex + ", Index (End) = " + \
-        aiIndexEnd + ", Destination = " + akDestinationRef + ", Quantity = " + aiQuantity)
-	While aiIndex <= aiIndexEnd
-        akDestinationRef.AddItem(items[aiIndex], aiQuantity, true)
-		aiIndex += 1
-	EndWhile
-    Self._DebugTrace("AddItems finished")
-
-    Self.WorkerStop()
-EndFunction
-
-Function LeaveOnlyXItems(var[] akItems, int aiIndex, int aiIndexEnd, ObjectReference akOriginRef, \
+; removes all but X items from a container, optionally moving them into a specified one
+Function LeaveOnlyXItems(int aiIndex, int aiIndexEnd, var[] akItems, ObjectReference akOriginRef, \
         ObjectReference akDestinationRef, int aiQuantityToLeave, bool abSilent)
     Self.WorkerStart()
-    
-    Self._DebugTrace("LeaveOnlyXItems started: Items = " + akItems.Length + ", Index (Start) = " + aiIndex + ", Index (End) = " + \
-    aiIndexEnd + ", Origin = " + akOriginRef + ", Destination = " + akDestinationRef + ", Quantity to leave = " + aiQuantityToLeave)
+
+    Self._DebugTrace("LeaveOnlyXItems started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
     Form[] items = akItems as Form[]
     int currentQuantity
     int quantityToMove
@@ -157,13 +197,29 @@ Function LeaveOnlyXItems(var[] akItems, int aiIndex, int aiIndexEnd, ObjectRefer
     Self.WorkerStop()
 EndFunction
 
+; loads settings from MCM
+Function LoadMCMSettings(int aiIndex, int aiIndexEnd, var[] akSettings, string asModName)
+    Self.WorkerStart()
+
+    Self._DebugTrace("LoadMCMSettings started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
+	While aiIndex <= aiIndexEnd
+        LoadSettingFromMCM(akSettings[aiIndex], asModName)
+		aiIndex += 1
+	EndWhile
+    Self._DebugTrace("LoadMCMSettings finished")
+
+    Self.WorkerStop()
+EndFunction
+
 ; recycles components; sets Results[0] to a boolean representing whether any components were recycled
 ; true = components were recycled
 ; false = components were NOT recycled
-Function RecycleComponents(var[] akComponentMap, int aiIndex, int aiIndexEnd, MultiplierSet akMultiplierSet, \
+Function RecycleComponents(int aiIndex, int aiIndexEnd, var[] akComponentMap, MultiplierSet akMultiplierSet, \
         ObjectReference akContainerRef, int aiRandomAdjustment, bool abReturnAtLeastOneComponent, \
         int aiFractionalComponentHandling)
     Self.WorkerStart()
+
+    Self._DebugTrace("RecycleComponents started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
 
     Results = new var[1]
     Results[0] = false
@@ -261,71 +317,7 @@ Function RecycleComponents(var[] akComponentMap, int aiIndex, int aiIndexEnd, Mu
         aiIndex += 1
     EndWhile
 
-    Self.WorkerStop()
-EndFunction
-
-; builds a ComponentMap array for the given component and MiscObject FormLists
-Function BuildComponentMap(FormListWrapper akComponentList, FormListWrapper akMiscObjectList)
-    Self.WorkerStart()
-
-    Self._DebugTrace("Building ComponentMap array from " + akComponentList.List + " (Components) and " + \
-        akMiscObjectList.List + " (MiscObjects)")
-
-    ComponentMap[] toReturn = new ComponentMap[akComponentList.Size]
-
-    If toReturn.Length != akMiscObjectList.Size
-        Self._DebugTrace("Component/MiscObject list size mismatch!", 2)
-    EndIf
-
-    int index = 0
-    While index < toReturn.Length
-        toReturn[index] = new ComponentMap
-        toReturn[index].ComponentPart = akComponentList.List.GetAt(index) as Component
-        toReturn[index].ComponentPartName = toReturn[index].ComponentPart.GetName()
-        toReturn[index].ScrapPart = akMiscObjectList.List.GetAt(index) as MiscObject
-        toReturn[index].ScrapPartName = toReturn[index].ScrapPart.GetName()
-        Self._DebugTrace(toReturn[index].ComponentPart + " (" + toReturn[index].ComponentPartName + ") is mapped to " + \
-            toReturn[index].ScrapPart + " (" + toReturn[index].ScrapPartName + ")")
-        index += 1
-    EndWhile
-
-    Results = toReturn as var[]
-
-    Self.WorkerStop()
-EndFunction
-
-; loads settings from MCM
-Function LoadMCMSettings(var[] akSettings, int aiIndex, int aiIndexEnd, string asModName)
-    Self.WorkerStart()
-
-    Self._DebugTrace("LoadMCMSettings started: Settings = " + akSettings.Length + ", Index (Start) = " + aiIndex + ", Index (End) = " + \
-        aiIndexEnd)
-	While aiIndex <= aiIndexEnd
-        LoadSettingFromMCM(akSettings[aiIndex], asModName)
-		aiIndex += 1
-	EndWhile
-    Self._DebugTrace("LoadMCMSettings finished")
-
-    Self.WorkerStop()
-EndFunction
-
-; changes settings to defaults
-Function ChangeSettingsToDefaults(var[] akSettings, int aiIndex, int aiIndexEnd, int aiChangeType, string asModName)
-    Self.WorkerStart()
-
-    Self._DebugTrace("ChangeSettingsToDefaults started: Settings = " + akSettings.Length + ", Index (Start) = " + aiIndex + ", Index (End) = " + \
-        aiIndexEnd)
-	While aiIndex <= aiIndexEnd
-        If akSettings[aiIndex] is SettingFloat
-            ChangeSetting(akSettings[aiIndex], aiChangeType, (akSettings[aiIndex] as SettingFloat).ValueDefault, asModName)
-        ElseIf akSettings[aiIndex] is SettingBool
-            ChangeSetting(akSettings[aiIndex], aiChangeType, (akSettings[aiIndex] as SettingBool).ValueDefault, asModName)
-        ElseIf akSettings[aiIndex] is SettingInt
-            ChangeSetting(akSettings[aiIndex], aiChangeType, (akSettings[aiIndex] as SettingInt).ValueDefault, asModName)
-        EndIf
-		aiIndex += 1
-	EndWhile
-    Self._DebugTrace("ChangeSettingsToDefaults finished")
+    Self._DebugTrace("RecycleComponents finished")
 
     Self.WorkerStop()
 EndFunction
