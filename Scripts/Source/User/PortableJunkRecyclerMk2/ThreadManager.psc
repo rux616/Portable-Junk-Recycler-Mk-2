@@ -284,3 +284,14 @@ bool Function RecycleComponents(ComponentMap[] akComponentMap, MultiplierSet akM
     EndWhile
     Return toReturn
 EndFunction
+
+; prepares the mod for uninstallation
+Function Uninstall()
+    ; destroy arrays
+    DestroyArrayContents(Threads)
+    Threads = None
+    HexNumbers = None
+
+    ; stop the quest
+    Stop()
+EndFunction
