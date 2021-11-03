@@ -437,12 +437,13 @@ Function UpdateRecyclableItemList2()
 EndFunction
 
 ; remove all items from the origin container to the destination container
-; adapted from code by DieFeM on the Nexus forums:
+; inspired by code written by DieFeM on the Nexus forums:
 ; https://forums.nexusmods.com/index.php?/topic/7090211-removing-the-notifications-from-removeallitems-used-on-player/page-4#entry64900091
 Function RemoveAllItems(ObjectReference akOriginRef, ObjectReference akDestinationRef, bool abSilent = true)
     ; add any items in the container to the list so they can be moved
     ThreadManager.AddItemsToList(akOriginRef.GetInventoryItems(), PortableRecyclerContents)
 
+    ; if the list size is non-zero, there's something to transfer
 	If(PortableRecyclerContents.Size)
 		akOriginRef.RemoveItem(PortableRecyclerContents.List, -1, abSilent, akDestinationRef)
 
