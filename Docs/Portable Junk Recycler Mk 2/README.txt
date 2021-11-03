@@ -268,16 +268,20 @@ Special:
 Note: The "Special" category is intended for modders to add components that might not fit into other categories.
 
 
+Known Issues
+------------
+- If the 'Return Items Silently' option is set to OFF and you add scrap items (acid, bone, adhesive, ceramic, etc.) to the recycler, when the recycling process is complete, you may receive more than one notification for those scrap items that you added. I can't do anything about that without compromising the speed of the recycler (it would add almost an entire extra second to the processing time), so if it is undesired behavior, you can set the 'Return Items Silently' option to ON, or you can set the 'Allow Junk Only' option to ON to disallow adding scrap items to the container in the first place, or both. Alternatively, you can simply choose not to add scrap items.
+
+
 Crafting Materials Required
 ---------------------------
-Aluminum x15
-Circuitry x3
-Adhesive x3
-Gears x6
-Nuclear Material x3
-Springs x1
-Screws x12
+Enhanced Targeting Card x1
 Fusion Core x1
+High-powered Magnet x1
+Power Relay Coil x2
+Screws x12
+Sensor Module x1
+Steel x20
 
 
 Technical Details
