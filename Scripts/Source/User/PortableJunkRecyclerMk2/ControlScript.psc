@@ -59,7 +59,7 @@ Group Other
     FormListWrapper Property AlwaysAutoTransferList Auto Mandatory
 
     ; WorkerThread scripts are attached to a different quest to prevent issues using MCM
-    Quest Property ThreadContainer Auto Mandatory
+    ThreadManager Property ThreadManager Auto Mandatory
 EndGroup
 
 Group RuntimeState
@@ -184,8 +184,6 @@ string FullScriptName = "PortableJunkRecyclerMk2:ControlScript" const
 int ScrapperPerkMaxRanksSupported = 5 const
 SettingChangeType AvailableChangeTypes
 int CurrentChangeType
-int MaxThreads = 16 const
-var[] Threads = None
 
 ; DirectX scan codes: https://www.creationkit.com/fallout4/index.php?title=DirectX_Scan_Codes
 int LShift = 160 const
@@ -204,35 +202,9 @@ Event OnQuestInit()
     MutexBusy = true
     Debug.StartStackProfiling()
     Debug.OpenUserLog(ModName)
-    Self._DebugTrace(modName + " v" + ModVersion)
-    Self._DebugTrace("Beginning onetime init process")
-    Self.CheckForCanary()
-    Self.InitVariables(abForce = true)
-    Self.CheckForF4SE()
-    Self.CheckForMCM()
-    Self.InitSettings(abForce = true)
-    Self.InitSettingsSupplemental()
-    Self.InitFormListWrappers()
-    Self.InitComponentMappings()
-    Self.InitScrapListAll()
-    Self.InitScrapperPerks()
-    Self.LoadAllSettingsFromMCM()
-    RegisterForRemoteEvent(PlayerRef, "OnPlayerLoadGame")
-    Self.RegisterForMCMEvents()
-    If ScriptExtenderInstalled
-        RegisterForKey(LAlt)
-        RegisterForKey(RAlt)
-        RegisterForKey(LCtrl)
-        RegisterForKey(RCtrl)
-        RegisterForKey(LShift)
-        RegisterForKey(RShift)
-EndIf
-    If ! ModConfigMenuInstalled
-        Self.InitSettingsDefaultValues()
-    EndIf
-    Self.RegisterForMenuOpenCloseEvent("PauseMenu")
-    MessageInitialized.Show()
-    Self._DebugTrace("Finished onetime init process")
+
+    Self.Initialize(abQuestInit = true)
+
     Debug.StopStackProfiling()
     MutexBusy = false
 EndEvent
@@ -249,7 +221,7 @@ Event Actor.OnPlayerLoadGame(Actor akSender)
 
     ; wait for mutexes to release
     int waitTimeLeft = 30
-    float waitTime = 3.0
+    float waitTime = 3.0 const
     While (MutexRunning || MutexBusy) && waitTimeLeft > 0
         MutexWaiting = true
         Self._DebugTrace("OnPlayerLoadGame: Waiting on mutex release. Time left = " + waitTimeLeft)
@@ -260,29 +232,9 @@ Event Actor.OnPlayerLoadGame(Actor akSender)
     ; lock function in case user exits game while recycling process is running or this same function is running
     If ! (MutexRunning || MutexBusy)
         MutexBusy = true
-        Self._DebugTrace(modName + " v" + ModVersion)
-        Self._DebugTrace("Beginning runtime init process")
-        Self.CheckForCanary()
-        Self.InitVariables()
-        Self.CheckForF4SE()
-        Self.CheckForMCM()
-        Self.InitSettings()
-        Self.InitSettingsSupplemental()
-        Self.InitFormListWrappers()
-        Self.InitComponentMappings()
-        Self.InitScrapListAll()
-        Self.InitScrapperPerks()
-        Self.LoadAllSettingsFromMCM()
-        Self.RegisterForMCMEvents()
-        If ScriptExtenderInstalled
-            RegisterForKey(LAlt)
-            RegisterForKey(RAlt)
-            RegisterForKey(LCtrl)
-            RegisterForKey(RCtrl)
-            RegisterForKey(LShift)
-            RegisterForKey(RShift)
-        EndIf
-            Self._DebugTrace("Finished runtime init process")
+
+        Self.Initialize()
+
         MutexBusy = false
     Else
         Self._DebugTrace("OnPlayerLoadGame: Mutexes didn't release within time limit", 1)
@@ -335,33 +287,51 @@ Function _DebugTrace(string asMessage, int aiSeverity = 0) DebugOnly
     Debug.TraceUser(ModName, "ControlScript: " + asMessage, aiSeverity)
 EndFunction
 
+; consolidated init
+Function Initialize(bool abQuestInit = false)
+    Self._DebugTrace(modName + " v" + ModVersion)
+    Self._DebugTrace("ThreadManager initialized: " + ThreadManager.Initialized)
+    If abQuestInit
+        Self._DebugTrace("Beginning onetime init process")
+    Else
+        Self._DebugTrace("Beginning runtime init process")
+    EndIf
+    Self.CheckForCanary()
+    Self.InitVariables(abForce = abQuestInit)
+    Self.CheckForF4SE()
+    Self.CheckForMCM()
+    Self.InitSettings(abForce = abQuestInit)
+    Self.InitSettingsSupplemental()
+    Self.InitFormListWrappers()
+    Self.InitComponentMappings()
+    Self.InitScrapListAll()
+    Self.InitScrapperPerks()
+    Self.LoadAllSettingsFromMCM()
+    Self.RegisterForMCMEvents()
+    If ScriptExtenderInstalled
+        RegisterForKey(LAlt)
+        RegisterForKey(RAlt)
+        RegisterForKey(LCtrl)
+        RegisterForKey(RCtrl)
+        RegisterForKey(LShift)
+        RegisterForKey(RShift)
+    EndIf
+    If abQuestInit
+        RegisterForRemoteEvent(PlayerRef, "OnPlayerLoadGame")
+        RegisterForMenuOpenCloseEvent("PauseMenu")
+        MessageInitialized.Show()
+        Self._DebugTrace("Finished onetime init process")
+    Else
+        Self._DebugTrace("Finished runtime init process")
+    EndIf
+EndFunction
+
 ; initialize script-internal variables
 Function InitVariables(bool abForce = false)
     Self._DebugTrace("Initializing variables")
     If abForce || ! AvailableChangeTypes
         Self._DebugTrace("Initializing AvailableChangeTypes")
         AvailableChangeTypes = new SettingChangeType
-    EndIf
-
-    If abForce || Threads == None || Threads.Length != MaxThreads
-        Self._DebugTrace("Initializing Threads")
-        Threads = new var[MaxThreads]
-        Threads[0x0] = ThreadContainer as WorkerThread0x0
-        Threads[0x1] = ThreadContainer as WorkerThread0x1
-        Threads[0x2] = ThreadContainer as WorkerThread0x2
-        Threads[0x3] = ThreadContainer as WorkerThread0x3
-        Threads[0x4] = ThreadContainer as WorkerThread0x4
-        Threads[0x5] = ThreadContainer as WorkerThread0x5
-        Threads[0x6] = ThreadContainer as WorkerThread0x6
-        Threads[0x7] = ThreadContainer as WorkerThread0x7
-        Threads[0x8] = ThreadContainer as WorkerThread0x8
-        Threads[0x9] = ThreadContainer as WorkerThread0x9
-        Threads[0xA] = ThreadContainer as WorkerThread0xA
-        Threads[0xB] = ThreadContainer as WorkerThread0xB
-        Threads[0xC] = ThreadContainer as WorkerThread0xC
-        Threads[0xD] = ThreadContainer as WorkerThread0xD
-        Threads[0xE] = ThreadContainer as WorkerThread0xE
-        Threads[0xF] = ThreadContainer as WorkerThread0xF
     EndIf
 EndFunction
 
@@ -998,6 +968,7 @@ EndFunction
 Function InitSettingsDefaultValues()
     Self._DebugTrace("Initializing settings (default values)")
 
+    ; add all the settings to an array to pass to the ThreadManager
     var[] settingsToChange = new var[0]
 
     ; settings - general
@@ -1081,36 +1052,8 @@ Function InitSettingsDefaultValues()
         index += 1
     EndWhile
 
-    ; create array to hold function arguments
-    var[] params = new var[5]
-    params[0] = Utility.VarArrayToVar(settingsToChange as var[]) as var
-    params[3] = CurrentChangeType as int
-    params[4] = ModName as string
-
-    ; set up multithreading parameters
-    string functionToCall = "ChangeSettingsToDefaults"
-    int numItems = settingsToChange.Length
-    int numThreads = Math.Min(numItems, MaxThreads) as int
-    float numItemsPerThread
-    If numThreads
-        numItemsPerThread = numItems as float / numThreads
-    EndIf
-    Self._DebugTrace("Changing " + numItems + " settings to defaults; Using " + numThreads + " threads for processing (" + \
-        numItemsPerThread + " settings per thread)")
-
-    ; start multithreading
-    index = 0
-    While index < numThreads
-        params[1] = (index * numItemsPerThread) as int
-        params[2] = ((index + 1) * numItemsPerThread) as int - 1
-        (Threads[index] as ScriptObject).CallFunctionNoWait(functionToCall, params)
-        Self._DebugTrace("Called thread " + index + " (" + functionToCall + "): Index (Start) = " + params[1] + \
-            ", Index (End) = " + params[2])
-        index += 1
-    EndWhile
-
-    ; wait for multithreading to finish
-    WaitForThreads(Threads, numThreads)
+    ; set things to defaults
+    ThreadManager.ChangeSettingsToDefaults(settingsToChange, CurrentChangeType, ModName)
 
     ; perform general post-processing
     MCM_GeneralMultAdjustSimple = GeneralMultAdjust.Value == 0
@@ -1153,77 +1096,40 @@ Function InitComponentMappings()
     Self._DebugTrace("Initializing component map")
 
     ; build the component maps with multithreading
-    string functionToCall = "BuildComponentMap"
-    var[] params = new var[2]
-    params[0] = ComponentListC
-    params[1] = ScrapListC
-    Self._DebugTrace("Initializing componentMapC")
-    (Threads[0x0] as ScriptObject).CallFunctionNoWait(functionToCall, params)
-    params[0] = ComponentListU
-    params[1] = ScrapListU
-    Self._DebugTrace("Initializing componentMapU")
-    (Threads[0x1] as ScriptObject).CallFunctionNoWait(functionToCall, params)
-    params[0] = ComponentListR
-    params[1] = ScrapListR
-    Self._DebugTrace("Initializing componentMapR")
-    (Threads[0x2] as ScriptObject).CallFunctionNoWait(functionToCall, params)
-    params[0] = ComponentListS
-    params[1] = ScrapListS
-    Self._DebugTrace("Initializing componentMapS")
-    (Threads[0x3] as ScriptObject).CallFunctionNoWait(functionToCall, params)
-
-    WaitForThreads(Threads, 4)
-
-    ComponentMap[] componentMapC = (Threads[0x0] as WorkerThreadBase).GetResults() as ComponentMap[]
-    ComponentMap[] componentMapU = (Threads[0x1] as WorkerThreadBase).GetResults() as ComponentMap[]
-    ComponentMap[] componentMapR = (Threads[0x2] as WorkerThreadBase).GetResults() as ComponentMap[]
-    ComponentMap[] componentMapS = (Threads[0x3] as WorkerThreadBase).GetResults() as ComponentMap[]
+    ComponentMap[] componentMapC = ThreadManager.BuildComponentMap(ComponentListC, ScrapListC)
+    ComponentMap[] componentMapU = ThreadManager.BuildComponentMap(ComponentListU, ScrapListU)
+    ComponentMap[] componentMapR = ThreadManager.BuildComponentMap(ComponentListR, ScrapListR)
+    ComponentMap[] componentMapS = ThreadManager.BuildComponentMap(ComponentListS, ScrapListS)
 
     ; combine the component maps
-    ComponentMappings = new ComponentMap[0]
+    ComponentMappings = new ComponentMap[componentMapC.Length + componentMapU.Length + componentMapR.Length + componentMapS.Length]
     ComponentMap tempCMap
+    int mapIndex = 0
     int index = 0
     While index < componentMapC.Length
-        tempCMap = new ComponentMap
-        tempCMap.ComponentPart = componentMapC[index].ComponentPart
-        tempCMap.ComponentPartName = componentMapC[index].ComponentPartName
-        tempCMap.ScrapPart = componentMapC[index].ScrapPart
-        tempCMap.ScrapPartName = componentMapC[index].ScrapPartName
-        tempCMap.Rarity = 0
-        ComponentMappings.Add(tempCMap)
+        ComponentMappings[mapIndex] = componentMapC[index]
+        mapIndex += 1
         index += 1
     EndWhile
     index = 0
     While index < componentMapU.Length
-        tempCMap = new ComponentMap
-        tempCMap.ComponentPart = componentMapU[index].ComponentPart
-        tempCMap.ComponentPartName = componentMapU[index].ComponentPartName
-        tempCMap.ScrapPart = componentMapU[index].ScrapPart
-        tempCMap.ScrapPartName = componentMapU[index].ScrapPartName
-        tempCMap.Rarity = 1
-        ComponentMappings.Add(tempCMap)
+        ComponentMappings[mapIndex] = componentMapU[index]
+        ComponentMappings[mapIndex].Rarity = 1
+        mapIndex += 1
         index += 1
     EndWhile
     index = 0
     While index < componentMapR.Length
-        tempCMap = new ComponentMap
-        tempCMap.ComponentPart = componentMapR[index].ComponentPart
-        tempCMap.ComponentPartName = componentMapR[index].ComponentPartName
-        tempCMap.ScrapPart = componentMapR[index].ScrapPart
-        tempCMap.ScrapPartName = componentMapR[index].ScrapPartName
-        tempCMap.Rarity = 2
-        ComponentMappings.Add(tempCMap)
+        ComponentMappings[mapIndex] = componentMapR[index]
+        ComponentMappings[mapIndex].Rarity = 2
+        mapIndex += 1
         index += 1
     EndWhile
     index = 0
     While index < componentMapS.Length
-        tempCMap = new ComponentMap
-        tempCMap.ComponentPart = componentMapS[index].ComponentPart
-        tempCMap.ComponentPartName = componentMapS[index].ComponentPartName
-        tempCMap.ScrapPart = componentMapS[index].ScrapPart
-        tempCMap.ScrapPartName = componentMapS[index].ScrapPartName
-        tempCMap.Rarity = 3
-        ComponentMappings.Add(tempCMap)
+        ComponentMappings[mapIndex] = componentMapS[index]
+        ComponentMappings[mapIndex].Rarity = 3
+        mapIndex += 1
         index += 1
     EndWhile
 
@@ -1242,34 +1148,9 @@ Function InitScrapListAll()
         index += 1
     EndWhile
 
-    ; create array to hold function arguments
-    var[] params = new var[4]
-    params[0] = Utility.VarArrayToVar(scrapParts as var[])
-    params[3] = ScrapListAll.List as FormList
-
-    ; add all the scrap items to the FormList
-    string functionToCall = "AddItemsToList"
-    int numItems = ComponentMappings.Length
-    int numThreads = Math.Min(numItems, MaxThreads) as int
-    float numItemsPerThread
-    If numThreads
-        numItemsPerThread = numItems as float / numThreads
-    EndIf
-    Self._DebugTrace("There are " + numItems + " components; Using " + numThreads + \
-        " threads for processing (" + numItemsPerThread + " items per thread)")
-    index = 0
-    While index < numThreads
-        params[1] = (index * numItemsPerThread) as int
-        params[2] = ((index + 1) * numItemsPerThread) as int - 1
-        (Threads[index] as ScriptObject).CallFunctionNoWait(functionToCall, params)
-        Self._DebugTrace("Called thread " + index + " (" + functionToCall + "): Index (Start) = " + params[1] + \
-            ", Index (End) = " + params[2])
-        index += 1
-    EndWhile
-
-    WaitForThreads(Threads, numThreads)
-
-    ScrapListAll.Size = ScrapListAll.List.GetSize()
+    ; revert FormList and repopulate it
+    ScrapListAll.List.Revert()
+    ThreadManager.AddItemsToList(scrapParts as Form[], ScrapListAll)
 EndFunction
 
 ; initialize the array containing the scrapper perks
@@ -1305,6 +1186,7 @@ Function LoadAllSettingsFromMCM()
     If ModConfigMenuInstalled
         Self._DebugTrace("Loading settings from MCM")
 
+        ; add all the settings to an array to pass to the ThreadManager
         var[] settingsToLoad = new var[0]
 
         ; settings - general
@@ -1388,35 +1270,8 @@ Function LoadAllSettingsFromMCM()
             index += 1
         EndWhile
 
-        ; create array to hold function arguments
-        var[] params = new var[4]
-        params[0] = Utility.VarArrayToVar(settingsToLoad as var[]) as var
-        params[3] = ModName as string
-
-        ; set up multithreading parameters
-        string functionToCall = "LoadMCMSettings"
-        int numItems = settingsToLoad.Length
-        int numThreads = Math.Min(numItems, MaxThreads) as int
-        float numItemsPerThread
-        If numThreads
-            numItemsPerThread = numItems as float / numThreads
-        EndIf
-        Self._DebugTrace("Loading " + numItems + " settings from MCM; Using " + numThreads + " threads for processing (" + \
-            numItemsPerThread + " settings per thread)")
-
-        ; start multithreading
-        index = 0
-        While index < numThreads
-            params[1] = (index * numItemsPerThread) as int
-            params[2] = ((index + 1) * numItemsPerThread) as int - 1
-            (Threads[index] as ScriptObject).CallFunctionNoWait(functionToCall, params)
-            Self._DebugTrace("Called thread " + index + " (" + functionToCall + "): Index (Start) = " + params[1] + \
-                ", Index (End) = " + params[2])
-            index += 1
-        EndWhile
-
-        ; wait for multithreading to finish
-        WaitForThreads(Threads, numThreads)
+        ; load all the settings, multithread to cut down on time
+        ThreadManager.LoadMCMSettings(settingsToLoad, ModName)
 
         ; perform general post-processing
         MCM_GeneralMultAdjustSimple = GeneralMultAdjust.Value == 0
@@ -2156,6 +2011,9 @@ Function Uninstall()
             UnregisterForKey(RShift)
         EndIf
 
+        ; stop the ThreadManager
+        ThreadManager.Uninstall()
+
         ; remove recycler devices in inventory, if any
         PlayerRef.RemoveItem(Game.GetFormFromFile(0x840, ModName + ".esp"), -1, true)
 
@@ -2170,7 +2028,7 @@ Function Uninstall()
         ScrapListR = None
         ScrapListS = None
         ScrapListAll = None
-        Self.DestroyObjectArray(ComponentMappings as var[])
+        DestroyArrayContents(ComponentMappings as var[])
         ComponentMappings = None
 
         ; group Other
@@ -2199,10 +2057,10 @@ Function Uninstall()
         RecyclableItemList = None
         NeverAutoTransferList = None
         AlwaysAutoTransferList = None
-        ThreadContainer = None
+        ThreadManager = None
 
         ; group RuntimeState
-        Self.DestroyObjectArray(ScrapperPerks as var[])
+        DestroyArrayContents(ScrapperPerks as var[])
         ScrapperPerks = None
 
         ; group Settings
@@ -2261,37 +2119,35 @@ Function Uninstall()
         MultAdjustRandomMaxR = None
         MultAdjustRandomMaxS = None
         ; multiplier adjustments - scrapper
-        Self.DestroyObjectArray(MultAdjustScrapperSettlement as var[])
+        DestroyArrayContents(MultAdjustScrapperSettlement as var[])
         MultAdjustScrapperSettlement = None
-        Self.DestroyObjectArray(MultAdjustScrapperSettlementC as var[])
+        DestroyArrayContents(MultAdjustScrapperSettlementC as var[])
         MultAdjustScrapperSettlementC = None
-        Self.DestroyObjectArray(MultAdjustScrapperSettlementU as var[])
+        DestroyArrayContents(MultAdjustScrapperSettlementU as var[])
         MultAdjustScrapperSettlementU = None
-        Self.DestroyObjectArray(MultAdjustScrapperSettlementR as var[])
+        DestroyArrayContents(MultAdjustScrapperSettlementR as var[])
         MultAdjustScrapperSettlementR = None
-        Self.DestroyObjectArray(MultAdjustScrapperSettlementS as var[])
+        DestroyArrayContents(MultAdjustScrapperSettlementS as var[])
         MultAdjustScrapperSettlementS = None
-        Self.DestroyObjectArray(MultAdjustScrapperNotSettlement as var[])
+        DestroyArrayContents(MultAdjustScrapperNotSettlement as var[])
         MultAdjustScrapperNotSettlement = None
-        Self.DestroyObjectArray(MultAdjustScrapperNotSettlementC as var[])
+        DestroyArrayContents(MultAdjustScrapperNotSettlementC as var[])
         MultAdjustScrapperNotSettlementC = None
-        Self.DestroyObjectArray(MultAdjustScrapperNotSettlementU as var[])
+        DestroyArrayContents(MultAdjustScrapperNotSettlementU as var[])
         MultAdjustScrapperNotSettlementU = None
-        Self.DestroyObjectArray(MultAdjustScrapperNotSettlementR as var[])
+        DestroyArrayContents(MultAdjustScrapperNotSettlementR as var[])
         MultAdjustScrapperNotSettlementR = None
-        Self.DestroyObjectArray(MultAdjustScrapperNotSettlementS as var[])
+        DestroyArrayContents(MultAdjustScrapperNotSettlementS as var[])
         MultAdjustScrapperNotSettlementS = None
 
         ; local variables
         AvailableChangeTypes = None
-        Self.DestroyObjectArray(Threads)
-        Threads = None
 
         ; show uninstalled message
         MessageUninstalled.Show()
         MessageUninstalled = None
 
-        ; stop the quests
+        ; stop the quest
         Stop()
 
         Self._DebugTrace("Uninstallation sequence complete!", 1)
@@ -2302,15 +2158,4 @@ Function Uninstall()
         ; fail (busy)
         MessageUninstallFailBusy.Show()
     EndIf
-EndFunction
-
-; fully destroy the contents of an array of objects and the array itself
-Function DestroyObjectArray(var[] akArray)
-    int index = akArray.Length - 1
-    While index >= 0
-        akArray[index] = None
-        akArray.Remove(index)
-        index -= 1
-    EndWhile
-    akArray = None
 EndFunction
