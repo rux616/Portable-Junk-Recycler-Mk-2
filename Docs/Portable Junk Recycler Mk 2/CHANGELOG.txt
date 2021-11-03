@@ -12,6 +12,7 @@ v0.5.0 beta
 - Uninstall now cannot be triggered when there is a recycling process running or the control script is busy
 - Added a safeguard in MCM so you don't accidentally click the uninstall button
 - Improved some of the descriptions of MCM options
+- Adopted the GPL 3.0 or later license
 
 v0.4.0 beta
 -----------
