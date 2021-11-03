@@ -11,7 +11,7 @@ import PortableJunkRecyclerMk2:Base
 
 Group Miscellaneous
     Actor Property PlayerRef Auto Mandatory
-    Quest Property ThreadContainer Auto Mandatory
+    ThreadManager Property ThreadManager Auto Mandatory
 EndGroup
 
 Group PortableJunkRecycler
@@ -19,7 +19,7 @@ Group PortableJunkRecycler
     Container Property PortableRecyclerContainer Auto Mandatory
     Container Property PortableRecyclerContainerFiltered Auto Mandatory
     Potion Property PortableRecyclerItem Auto Mandatory
-    FormList Property PortableRecyclerItemList Auto Mandatory
+    FormListWrapper Property PortableRecyclerContents Auto Mandatory
 EndGroup
 
 Group Sounds
@@ -71,25 +71,6 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
         bool forceRetainJunk = PortableRecyclerControl.HotkeyForceRetainJunk
         bool forceTransferJunk = PortableRecyclerControl.HotkeyForceTransferJunk
         bool editAutoTransferLists = PortableRecyclerControl.HotkeyEditAutoTransferLists
-
-        ; set up multithreading pool
-        Threads = new var[MaxThreads]
-        Threads[0x0] = ThreadContainer as WorkerThread0x0
-        Threads[0x1] = ThreadContainer as WorkerThread0x1
-        Threads[0x2] = ThreadContainer as WorkerThread0x2
-        Threads[0x3] = ThreadContainer as WorkerThread0x3
-        Threads[0x4] = ThreadContainer as WorkerThread0x4
-        Threads[0x5] = ThreadContainer as WorkerThread0x5
-        Threads[0x6] = ThreadContainer as WorkerThread0x6
-        Threads[0x7] = ThreadContainer as WorkerThread0x7
-        Threads[0x8] = ThreadContainer as WorkerThread0x8
-        Threads[0x9] = ThreadContainer as WorkerThread0x9
-        Threads[0xA] = ThreadContainer as WorkerThread0xA
-        Threads[0xB] = ThreadContainer as WorkerThread0xB
-        Threads[0xC] = ThreadContainer as WorkerThread0xC
-        Threads[0xD] = ThreadContainer as WorkerThread0xD
-        Threads[0xE] = ThreadContainer as WorkerThread0xE
-        Threads[0xF] = ThreadContainer as WorkerThread0xF
 
         ; place temp containers at the player; if the 'Allow Junk Only' option is turned on, or the player wants to edit the
         ; auto transfer exemptions list, a filtered container is placed
@@ -147,113 +128,6 @@ EndEvent
 ; add a bit of text to traces going into the papyrus user log
 Function _DebugTrace(string asMessage, int aiSeverity = 0) DebugOnly
     Debug.TraceUser(ModName, "EffectScript: " + asMessage, aiSeverity)
-EndFunction
-
-; handles multithread coordination for the "RecycleComponents" function
-; recycle the components contained in the passed ComponentMap array
-; returns true if any components were actually recycled
-bool Function RecycleComponentsCoordinator(ComponentMap[] akComponentMap, MultiplierSet akMultiplierSet, \
-       ObjectReference akContainerRef, int aiRandomAdjustment, bool abReturnAtLeastOneComponent, \
-       int aiFractionalComponentHandling)
-
-    bool toReturn = false
-
-    ; create array to hold function arguments
-    var[] params = new var[8]
-    params[0] = Utility.VarArrayToVar(akComponentMap as var[])
-    params[3] = akMultiplierSet as MultiplierSet
-    params[4] = akContainerRef as ObjectReference
-    params[5] = aiRandomAdjustment as int
-    params[6] = abReturnAtLeastOneComponent as bool
-    params[7] = aiFractionalComponentHandling as int
-
-    ; set up multithreading parameters
-    string functionToCall = "RecycleComponents"
-    int numItems = akComponentMap.Length
-    int numThreads = Math.Min(numItems, MaxThreads) as int
-    float numItemsPerThread
-    If numThreads
-        numItemsPerThread = numItems as float / numThreads
-    EndIf
-    Self._DebugTrace("There are " + numItems + " types of components to recycle; Using " + numThreads + \
-        " threads for processing (" + numItemsPerThread + " components per thread)")
-
-    ; start multithreading
-    int index = 0
-    While index < numThreads
-        params[1] = (index * numItemsPerThread) as int
-        params[2] = ((index + 1) * numItemsPerThread) as int - 1
-        (Threads[index] as ScriptObject).CallFunctionNoWait(functionToCall, params)
-        Self._DebugTrace("Called thread " + index + " (" + functionToCall + "): Index (Start) = " + params[1] + \
-            ", Index (End) = " + params[2])
-        index += 1
-    EndWhile
-
-    ; wait for multithreading to finish
-    WaitForThreads(Threads, numThreads)
-
-    ; go through and get the results (whether there was anything recycled or not), clearing said results from threads
-    ; as a side effect
-    index = 0
-    While index < numThreads
-        toReturn = (Threads[index] as WorkerThreadBase).GetResults()[0] as bool || toReturn
-        index += 1
-    EndWhile
-
-    Return toReturn
-EndFunction
-
-; remove all items from the origin container to the destination container
-; adapted from code by DieFeM on the Nexus forums:
-; https://forums.nexusmods.com/index.php?/topic/7090211-removing-the-notifications-from-removeallitems-used-on-player/page-4#entry64900091
-Function RemoveAllItems(ObjectReference akOriginRef, ObjectReference akDestinationRef, bool abSilent = true)
-	If(Self.AddItemsToListCoordinator(akOriginRef.GetInventoryItems(), PortableRecyclerItemList))
-		akOriginRef.RemoveItem(PortableRecyclerItemList, -1, abSilent, akDestinationRef)
-
-        ; play an audio cue for the player to know when stuff has been moved
-        If abSilent
-            SoundPickup.Play(PlayerRef as ObjectReference)
-        EndIf
-
-        ; avoid keeping stuff in the FormList
-        PortableRecyclerItemList.Revert()
-	EndIf
-EndFunction
-
-; add items to a FormList
-bool Function AddItemsToListCoordinator(Form[] akItems, FormList akFormList)
-    ; create array to hold function arguments
-    var[] params = new var[4]
-    params[0] = Utility.VarArrayToVar(akItems as var[]) as var
-    params[3] = akFormList as FormList
-
-    ; set up multithreading parameters
-    string functionToCall = "AddItemsToList"
-    int numItems = akItems.Length
-    int numThreads = Math.Min(numItems, MaxThreads) as int
-    float numItemsPerThread
-    If numThreads
-        numItemsPerThread = numItems as float / numThreads
-    EndIf
-    Self._DebugTrace("Passed array has " + numItems + " items; Using " + numThreads + " threads for processing (" + \
-        numItemsPerThread + " items per thread)")
-
-    ; start multithreading
-    int index = 0
-    While index < numThreads
-        params[1] = (index * numItemsPerThread) as int
-        params[2] = ((index + 1) * numItemsPerThread) as int - 1
-        (Threads[index] as ScriptObject).CallFunctionNoWait(functionToCall, params)
-        Self._DebugTrace("Called thread " + index + " (" + functionToCall + "): Index (Start) = " + params[1] + \
-            ", Index (End) = " + params[2])
-        index += 1
-    EndWhile
-
-    ; wait for multithreading to finish
-    WaitForThreads(Threads, numThreads)
-
-    Self._DebugTrace(numItems + " items added to FormList")
-    Return numItems
 EndFunction
 
 ; handle the recycling functionality of the device
@@ -325,7 +199,7 @@ Function Recycle(bool abForceRetainJunk, bool abForceTransferJunk)
     EndIf
 
     ; play the recycling sound if there are items inside the container
-    If TempContainerPrimary.GetInventoryItems().Length
+    If TempContainerPrimary.GetItemCount()
         SoundRecycle.Play(PlayerRef as ObjectReference)
     EndIf
 
@@ -336,24 +210,38 @@ Function Recycle(bool abForceRetainJunk, bool abForceTransferJunk)
     EndIf
 
     ; do the recycling
-    ;bool itemsRecycled = Self.RecycleComponentsCoordinator(TempContainerPrimary, multipliers)
-    bool itemsRecycled = Self.RecycleComponentsCoordinator(PortableRecyclerControl.ComponentMappings, multipliers, \
-        TempContainerPrimary, PortableRecyclerControl.RngAffectsMult.Value, \
-        PortableRecyclerControl.ReturnAtLeastOneComponent.Value, PortableRecyclerControl.FractionalComponentHandling.Value)
+    bool itemsRecycled = ThreadManager.RecycleComponents(\
+        PortableRecyclerControl.ComponentMappings, \
+        multipliers, \
+        TempContainerPrimary, \
+        PortableRecyclerControl.RngAffectsMult.Value, \
+        PortableRecyclerControl.ReturnAtLeastOneComponent.Value, \
+        PortableRecyclerControl.FractionalComponentHandling.Value \
+    )
 
     ; move any previously existing scrap items that were moved into the secondary temp container back to the primary
     ; temp container
-    If ! PortableRecyclerControl.AllowJunkOnly.Value && TempContainerSecondary.GetInventoryItems().Length
+    If ! PortableRecyclerControl.AllowJunkOnly.Value && TempContainerSecondary.GetItemCount()
         Self._DebugTrace("Moving previously-existing scrap from secondary temp container to primary temp container")
         TempContainerSecondary.RemoveItem(PortableRecyclerControl.ScrapListAll.List, -1, true, TempContainerPrimary)
         Utility.WaitMenuMode(0.05)
     EndIf
 
     ; move items over to the player
+    bool itemsToMove = false
+    If TempContainerPrimary.GetItemCount()
+        itemsToMove = true
+    EndIf
     Self._DebugTrace("Moving components from primary temp container to player")
     TempContainerPrimary.RemoveItem(PortableRecyclerControl.ScrapListAll.List, -1, \
         PortableRecyclerControl.ReturnItemsSilently.Value, PlayerRef)
+    Self._DebugTrace("Moving all non-components from primary temp container to player")
     Self.RemoveAllItems(TempContainerPrimary, PlayerRef, PortableRecyclerControl.ReturnItemsSilently.Value)
+
+    ; play an audio cue for the player to know when stuff has been moved
+    If itemsToMove
+        SoundPickup.Play(PlayerRef)
+    EndIf
 
     ; if 'limited uses' mode is on, run through the scenarios for that, otherwise just show completion message
     ; and re-add the recycler item back to the player's inventory
@@ -392,10 +280,53 @@ Function Recycle(bool abForceRetainJunk, bool abForceTransferJunk)
     Self._DebugTrace("Recycler process finished")
 EndFunction
 
+; handles editing an auto transfer list
+Function EditAutoTransferList(FormListWrapper akAutoTransferList, Message akModeMessage)
+    Self._DebugTrace("Started editing Auto Transfer List")
+
+    ; update the FormList holding the recyclable items
+    Self.UpdateRecyclableItemList()
+
+    ; populate the container with 1 of every item in the list
+    If akAutoTransferList.Size
+        ThreadManager.AddListItemsToInventory(akAutoTransferList, TempContainerPrimary, 1)
+    EndIf
+
+    ; activate the container (with 1.0s wait prior to, as specified on
+    ; https://www.creationkit.com/fallout4/index.php?title=Activate_-_ObjectReference)
+    Utility.Wait(1.0)
+    TempContainerPrimary.Activate(PlayerRef as ObjectReference, true)
+
+    ; show message stating the player is in list editing mode
+    akModeMessage.Show()
+
+    ; trigger a small wait once the container is open because sometimes, if a player has a boatload of items in the
+    ; inventory, it can cause the interface to lag just enough for the script to keep processing
+    Utility.WaitMenuMode(0.5)
+
+    ; (triggered once container closes) wait a moment for the container inventory to update
+    Utility.Wait(0.1)
+
+    ; clear and re-populate the FormList
+    Form[] tempContainerPrimaryInventory = TempContainerPrimary.GetInventoryItems()
+    akAutoTransferList.List.Revert()
+    ThreadManager.AddItemsToList(tempContainerPrimaryInventory, akAutoTransferList)
+
+    ; move excess (>1) items back to the player
+    If tempContainerPrimaryInventory.Length
+        ThreadManager.LeaveOnlyXItems(tempContainerPrimaryInventory, TempContainerPrimary, PlayerRef, 1, \
+            PortableRecyclerControl.ReturnItemsSilently.Value)
+    EndIf
+
+    PlayerRef.AddItem(PortableRecyclerItem as Form, 1, true)
+
+    Self._DebugTrace("Finished editing Auto Transfer List")
+EndFunction
+
 ; updates the FormList containing recyclable items
 Function UpdateRecyclableItemList()
-    ; if the recyclable items FormList already has items in it, move any of those items in the player's inventory to the primary
-    ; temp container in order to reduce the number of items that this function will need to iterate over
+    ; if the recyclable items FormList already has items in it, move any of those items in the player's inventory
+    ; to the primary temp container in order to reduce the number of items that this function will need to iterate over
     If PortableRecyclerControl.RecyclableItemList.Size
         Self._DebugTrace("Moving current recyclable items from player to primary temp container")
         PlayerRef.RemoveItem(PortableRecyclerControl.RecyclableItemList.List, -1, true, TempContainerPrimary)
@@ -404,31 +335,45 @@ Function UpdateRecyclableItemList()
     ; move all scrap items from the player to the primary temp container to avoid them being added to the
     ; recyclable items list
     If PortableRecyclerControl.ScrapListAll.Size
-        Self._DebugTrace("Moving scrap items from player to secondary temp container")
+        Self._DebugTrace("Moving scrap items from player to primary temp container")
         PlayerRef.RemoveItem(PortableRecyclerControl.ScrapListAll.List, -1, true, TempContainerPrimary)
     EndIf
 
     ; give the game a moment to update the player's inventory data structure, otherwise the returned array
-    ; from the PlayerRef.GetInventoryItems() call that comes next may still have items in it that were
-    ; removed by the previous PlayerRef.RemoveItem() calls
+    ; from the GetInventoryItems() call that comes next may still have items in it that were removed by the
+    ; previous RemoveItem() calls
     Utility.WaitMenuMode(0.05)
 
-    ; actually add any recyclables to the FormList
-    AddRecyclableItemsToListCoordinator(PlayerRef.GetInventoryItems(), PortableRecyclerControl.RecyclableItemList.List)
+    ; get the list of forms in the player's inventory
+    Form[] playerInventory = PlayerRef.GetInventoryItems()
 
-    ; log any size change and update RecyclableItemList.Size
-    int oldSize = PortableRecyclerControl.RecyclableItemList.Size
-    PortableRecyclerControl.RecyclableItemList.Size = PortableRecyclerControl.RecyclableItemList.List.GetSize()
+    ; throw out all forms that are not MiscObjects
+    int oldSize = playerInventory.Length
+    int index = playerInventory.Length - 1
+    While index >= 0
+        If ! playerInventory[index] is MiscObject
+            playerInventory.Remove(index)
+        EndIf
+        index -= 1
+    EndWhile
+    Self._DebugTrace("Pruned " + (oldSize - playerInventory.Length) + " non-MiscObjects from inventory array")
+
+    ; actually add any recyclables to the FormList
+    oldSize = PortableRecyclerControl.RecyclableItemList.Size
+    ThreadManager.AddRecyclableItemsToList(playerInventory, PortableRecyclerControl.RecyclableItemList)
+    playerInventory = None
+
+    ; log any size change
     Self._DebugTrace("Old size of list = " + oldSize + ", new size of list = " + \
         PortableRecyclerControl.RecyclableItemList.Size)
 
-    ; move any junk items moved to the primary temp container to aid in increasing the processing speed of this
-    ; function need to be restored to the player inventory
+    ; move junk items that were moved to the primary temp container back to the player inventory
     If PortableRecyclerControl.RecyclableItemList.Size
+        Self._DebugTrace("Moving recyclable items back from primary temp container to player")
         TempContainerPrimary.RemoveItem(PortableRecyclerControl.RecyclableItemList.List, -1, true, PlayerRef)
     EndIf
 
-    ; move scrap items back to player
+    ; move scrap items that were moved to the primary temp container back to player
     If PortableRecyclerControl.ScrapListAll.Size
         Self._DebugTrace("Moving scrap items back from primary temp container to player")
         TempContainerPrimary.RemoveItem(PortableRecyclerControl.ScrapListAll.List, -1, true, PlayerRef)
@@ -446,6 +391,7 @@ Function UpdateRecyclableItemList2()
     Form[] playerInventory = PlayerRef.GetInventoryItems()
 
     ; throw out all forms that are not MiscObjects
+    int oldSize = playerInventory.Length
     int index = playerInventory.Length - 1
     While index >= 0
         If ! playerInventory[index] is MiscObject
@@ -453,9 +399,10 @@ Function UpdateRecyclableItemList2()
         EndIf
         index -= 1
     EndWhile
+    Self._DebugTrace("Pruned " + (oldSize - playerInventory.Length) + " non-MiscObjects from inventory array")
 
     ; add 1 of every MiscObject currently left in the array to the secondary temp container
-    Self.AddArrayItemsCoordinator(playerInventory, tempContainer, 1)
+    ThreadManager.AddArrayItemsToInventory(playerInventory, tempContainer, 1)
     playerInventory = None
 
     ; if the recyclable items FormList already has items in it, remove any of those items in the container's
@@ -477,216 +424,30 @@ Function UpdateRecyclableItemList2()
     Utility.WaitMenuMode(0.05)
 
     ; actually add any recyclables to the FormList
-    AddRecyclableItemsToListCoordinator(tempContainer.GetInventoryItems(), PortableRecyclerControl.RecyclableItemList.List)
+    oldSize = PortableRecyclerControl.RecyclableItemList.Size
+    ThreadManager.AddRecyclableItemsToList(tempContainer.GetInventoryItems(), PortableRecyclerControl.RecyclableItemList)
 
     ; nuke the temp container
     tempContainer.Delete()
     tempContainer = None
 
-    ; log any size change and update RecyclableItemList.Size
-    int oldSize = PortableRecyclerControl.RecyclableItemList.Size
-    PortableRecyclerControl.RecyclableItemList.Size = PortableRecyclerControl.RecyclableItemList.List.GetSize()
+    ; log any size change
     Self._DebugTrace("Old size of list = " + oldSize + ", new size of list = " + \
         PortableRecyclerControl.RecyclableItemList.Size)
 EndFunction
 
-; handles multithread coordination for the "AddRecyclableItemsToList" function
-; checks items that are passed in to see if they are recyclable and if so, add them to the specified FormList
-Function AddRecyclableItemsToListCoordinator(Form[] akItems, FormList akFormList)
-    ; run through the array of items and remove any that aren't MiscObjects
-    int originalLength = akItems.Length
-    int index = akItems.Length - 1
-    While index >= 0
-        If ! akItems[index] is MiscObject
-            akItems.Remove(index)
-        EndIf
-        index -= 1
-    EndWhile
-    Self._DebugTrace("Pruned " + (originalLength - akItems.Length) + " non-MiscObjects from item array")
+; remove all items from the origin container to the destination container
+; adapted from code by DieFeM on the Nexus forums:
+; https://forums.nexusmods.com/index.php?/topic/7090211-removing-the-notifications-from-removeallitems-used-on-player/page-4#entry64900091
+Function RemoveAllItems(ObjectReference akOriginRef, ObjectReference akDestinationRef, bool abSilent = true)
+    ; add any items in the container to the list so they can be moved
+    ThreadManager.AddItemsToList(akOriginRef.GetInventoryItems(), PortableRecyclerContents)
 
-    ; create array to hold function arguments
-    var[] params = new var[4]
-    params[0] = Utility.VarArrayToVar(akItems as var[]) as var
-    params[3] = akFormList as FormList
+	If(PortableRecyclerContents.Size)
+		akOriginRef.RemoveItem(PortableRecyclerContents.List, -1, abSilent, akDestinationRef)
 
-    ; set up multithreading parameters
-    string functionToCall = "AddRecyclableItemsToList"
-    int numItems = akItems.Length
-    int numThreads = Math.Min(numItems, MaxThreads) as int
-    float numItemsPerThread
-    If numThreads
-        numItemsPerThread = numItems as float / numThreads
-    EndIf
-    Self._DebugTrace("Player inventory has " + numItems + " potential junk items; Using " + numThreads + \
-        " threads for processing (" + numItemsPerThread + " items per thread)")
-
-    ; start multithreading
-    index = 0
-    While index < numThreads
-        params[1] = (index * numItemsPerThread) as int
-        params[2] = ((index + 1) * numItemsPerThread) as int - 1
-        (Threads[index] as ScriptObject).CallFunctionNoWait(functionToCall, params)
-        Self._DebugTrace("Called thread " + index + " (" + functionToCall + "): Index (Start) = " + params[1] + \
-            ", Index (End) = " + params[2])
-        index += 1
-    EndWhile
-
-    ; wait for multithreading to finish
-    WaitForThreads(Threads, numThreads)
-    Self._DebugTrace("Threads finished")
-EndFunction
-
-; handles editing an auto transfer list
-Function EditAutoTransferList(FormListWrapper akAutoTransferList, Message akModeMessage)
-    Self._DebugTrace("Started editing Auto Transfer List")
-
-    ; update the FormList holding the recyclable items
-    Self.UpdateRecyclableItemList()
-
-    ; populate the container with 1 of every item in the list
-    If akAutoTransferList.Size
-        Self.AddListItemsCoordinator(akAutoTransferList, TempContainerPrimary, 1)
-    EndIf
-
-    ; activate the container (with 1.0s wait prior to, as specified on
-    ; https://www.creationkit.com/fallout4/index.php?title=Activate_-_ObjectReference)
-    Utility.Wait(1.0)
-    TempContainerPrimary.Activate(PlayerRef as ObjectReference, true)
-
-    ; show message stating the player is in list editing mode
-    akModeMessage.Show()
-
-    ; trigger a small wait once the container is open because sometimes, if a player has a boatload of items in the
-    ; inventory, it can cause the interface to lag just enough for the script to keep processing
-    Utility.WaitMenuMode(0.5)
-
-    ; (triggered once container closes) wait a moment for the container inventory to update
-    Utility.Wait(0.1)
-
-    ; clear and re-populate the FormList
-    Form[] tempContainerPrimaryInventory = TempContainerPrimary.GetInventoryItems()
-    akAutoTransferList.List.Revert()
-    Self.AddItemsToListCoordinator(tempContainerPrimaryInventory, akAutoTransferList.List)
-    akAutoTransferList.Size = tempContainerPrimaryInventory.Length
-
-    ; move excess (>1) items back to the player
-    If tempContainerPrimaryInventory.Length
-        Self.LeaveOnlyXItemsCoordinator(tempContainerPrimaryInventory, TempContainerPrimary, PlayerRef, 1, \
-            PortableRecyclerControl.ReturnItemsSilently.Value)
-    EndIf
-
-    PlayerRef.AddItem(PortableRecyclerItem as Form, 1, true)
-
-    Self._DebugTrace("Finished editing Auto Transfer List")
-EndFunction
-
-; handles multithread coordination for the "AddListItems" function
-; adds a quantity of items in the passed in FormList to the inventory of the specified object reference
-Function AddListItemsCoordinator(FormListWrapper akFormList, ObjectReference akDestinationRef, int aiQuantity)
-    ; create array to hold function arguments
-    var[] params = new var[5]
-    params[0] = akFormList as FormListWrapper
-    params[3] = akDestinationRef as ObjectReference
-    params[4] = aiQuantity as int
-
-    ; set up multithreading parameters
-    string functionToCall = "AddListItems"
-    int numItems = akFormList.Size
-    int numThreads = Math.Min(numItems, MaxThreads) as int
-    float numItemsPerThread
-    If numThreads
-        numItemsPerThread = numItems as float / numThreads
-    EndIf
-    Self._DebugTrace("Adding " + aiQuantity + " each of " + numItems + " items; Using " + numThreads + \
-        " threads for processing (" + numItemsPerThread + " items per thread)")
-
-    ; start multithreading
-    int index = 0
-    While index < numThreads
-        params[1] = (index * numItemsPerThread) as int
-        params[2] = ((index + 1) * numItemsPerThread) as int - 1
-        (Threads[index] as ScriptObject).CallFunctionNoWait(functionToCall, params)
-        Self._DebugTrace("Called thread " + index + " (" + functionToCall + "): Index (Start) = " + params[1] + \
-            ", Index (End) = " + params[2])
-        index += 1
-    EndWhile
-
-    ; wait for multithreading to finish
-    WaitForThreads(Threads, numThreads)
-    Self._DebugTrace("Threads finished")
-EndFunction
-
-; handles multithread coordination for the "AddArrayItems" function
-; adds a quantity of items in the passed in FormList to the inventory of the specified object reference
-Function AddArrayItemsCoordinator(Form[] akItems, ObjectReference akDestinationRef, int aiQuantity)
-    ; create array to hold function arguments
-    var[] params = new var[5]
-    params[0] = Utility.VarArrayToVar(akItems as var[]) as var
-    params[3] = akDestinationRef as ObjectReference
-    params[4] = aiQuantity as int
-
-    ; set up multithreading parameters
-    string functionToCall = "AddArrayItems"
-    int numItems = akItems.Length
-    int numThreads = Math.Min(numItems, MaxThreads) as int
-    float numItemsPerThread
-    If numThreads
-        numItemsPerThread = numItems as float / numThreads
-    EndIf
-    Self._DebugTrace("Adding " + aiQuantity + " each of " + numItems + " items; Using " + numThreads + \
-        " threads for processing (" + numItemsPerThread + " items per thread)")
-
-    ; start multithreading
-    int index = 0
-    While index < numThreads
-        params[1] = (index * numItemsPerThread) as int
-        params[2] = ((index + 1) * numItemsPerThread) as int - 1
-        (Threads[index] as ScriptObject).CallFunctionNoWait(functionToCall, params)
-        Self._DebugTrace("Called thread " + index + " (" + functionToCall + "): Index (Start) = " + params[1] + \
-            ", Index (End) = " + params[2])
-        index += 1
-    EndWhile
-
-    ; wait for multithreading to finish
-    WaitForThreads(Threads, numThreads)
-    Self._DebugTrace("Threads finished")
-EndFunction
-
-; handles multithread coordination for the "LeaveOnlyXItems" function
-; removes all but X number of items from the origin, optionally moving them to the destination
-Function LeaveOnlyXItemsCoordinator(Form[] akItems, ObjectReference akOriginRef, ObjectReference akDestinationRef, \
-        int aiQuantityToLeave, bool abSilent)
-    ; create array to hold function arguments
-    var[] params = new var[7]
-    params[0] = Utility.VarArrayToVar(akItems as var[]) as var
-    params[3] = akOriginRef as ObjectReference
-    params[4] = akDestinationRef as ObjectReference
-    params[5] = aiQuantityToLeave as int
-    params[6] = abSilent as bool
-
-    ; set up multithreading parameters
-    string functionToCall = "LeaveOnlyXItems"
-    int numItems = akItems.Length
-    int numThreads = Math.Min(numItems, MaxThreads) as int
-    float numItemsPerThread
-    If numThreads
-        numItemsPerThread = numItems as float / numThreads
-    EndIf
-    Self._DebugTrace("Leaving only " + aiQuantityToLeave + " each of " + numItems + " items; Using " + numThreads + \
-        " threads for processing (" + numItemsPerThread + " items per thread)")
-
-    ; start multithreading
-    int index = 0
-    While index < numThreads
-        params[1] = (index * numItemsPerThread) as int
-        params[2] = ((index + 1) * numItemsPerThread) as int - 1
-        (Threads[index] as ScriptObject).CallFunctionNoWait(functionToCall, params)
-        Self._DebugTrace("Called thread " + index + " (" + functionToCall + "): Index (Start) = " + params[1] + \
-            ", Index (End) = " + params[2])
-        index += 1
-    EndWhile
-
-    ; wait for multithreading to finish
-    WaitForThreads(Threads, numThreads)
-    Self._DebugTrace("Threads finished")
+        ; avoid keeping stuff in the FormList
+        PortableRecyclerContents.List.Revert()
+        PortableRecyclerContents.Size = 0
+	EndIf
 EndFunction
