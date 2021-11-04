@@ -154,15 +154,38 @@ Function Recycle(bool abForceRetainJunk, bool abForceTransferJunk)
     Self._DebugTrace("Recycler process started")
 
     ; set some convenience variables
-    ; determines whether junk is going to be transferred to the container or not
-    bool transferJunk = ! abForceRetainJunk && (abForceTransferJunk || PortableRecyclerControl.AutoTransferJunk.Value || \
-        PortableRecyclerControl.AutoRecyclingMode.Value)
+
+    ; junk will be automatically transferred under the following conditions:
+    ;   - the ForceRetainJunk hotkey IS pressed && the ForceTransferJunk hotkey IS pressed
+    ;   - the ForceRetainJunk hotkey IS NOT pressed && the ForceTransferJunk hotkey IS pressed
+    ;   - the ForceRetainJunk hotkey IS NOT pressed && the AutoTransferJunk option is ON
+    ;   - the ForceRetainJunk hotkey IS NOT pressed && the AutoRecycleMode option is ON
+    ; simplified:
+    ;   - the ForceTransferJunk hotkey IS pressed
+    ;   - the ForceRetainJunk hotkey IS NOT pressed && the AutoTransferJunk option is ON
+    ;   - the ForceRetainJunk hotkey IS NOT pressed && the AutoRecycleMode option is ON
+    bool transferJunk = abForceTransferJunk || (! abForceRetainJunk && PortableRecyclerControl.AutoTransferJunk.Value) || \
+        (! abForceRetainJunk && PortableRecyclerControl.AutoRecyclingMode.Value)
     Self._DebugTrace("Transfer junk: " + transferJunk)
-    ; determines whether the recyclable item FormList needs to be updated or not
+
+    ; the recyclable item FormList will be updated under the following conditions:
+    ;   - junk will be automatically transferred
+    ;   - the AllowJunkOnly option is ON
     bool updateRecyclableList = transferJunk || PortableRecyclerControl.AllowJunkOnly.Value
     Self._DebugTrace("Update recyclables list: " + updateRecyclableList)
-    ; determines whether the container will be opened
-    bool openContainer = ! PortableRecyclerControl.AutoRecyclingMode.Value || abForceTransferJunk || abForceRetainJunk
+
+    ; the container will be opened under the following conditions:
+    ;   - the AutoRecyclingMode option is ON && the ForceRetainJunk hotkey IS pressed && the ForceTransferJunk hotkey IS NOT pressed
+    ;   - the AutoRecyclingMode option is ON && the ForceRetainJunk hotkey IS NOT pressed && the ForceTransferJunk hotkey IS pressed
+    ;   - the AutoRecyclingMode option is OFF && the ForceRetainJunk hotkey IS pressed && the ForceTransferJunk hotkey IS NOT pressed
+    ;   - the AutoRecyclingMode option is OFF && the ForceRetainJunk hotkey IS NOT pressed && the ForceTransferJunk hotkey IS pressed
+    ;   - the AutoRecyclingMode option is OFF && the ForceRetainJunk hotkey IS NOT pressed && the ForceTransferJunk hotkey IS NOT pressed
+    ; simplified:
+    ;   - the AutoRecyclingMode option is OFF && the ForceRetainJunk hotkey IS NOT pressed
+    ;   - the ForceRetainJunk hotkey IS pressed && the ForceTransferJunk hotkey IS NOT pressed
+    ;   - the ForceRetainJunk hotkey IS NOT pressed && the ForceTransferJunk hotkey IS pressed
+    bool openContainer = (! PortableRecyclerControl.AutoRecyclingMode.Value && ! abForceRetainJunk) || \
+        (abForceRetainJunk && ! abForceTransferJunk) || (! abForceRetainJunk && abForceTransferJunk)
     Self._DebugTrace("Open container: " + openContainer)
 
     ; get the set of multipliers that will be applied to this recycling run
@@ -176,29 +199,24 @@ Function Recycle(bool abForceRetainJunk, bool abForceTransferJunk)
         Self.UpdateRecyclableItemList()
     EndIf
 
-    ; TODO? - add second FormList ('PrunedRecyclableItemList'?)that has contents of RecyclableItemList minus the
-    ; contents of NeverAutoTransferList?
-
-    ; transfer (or not) junk to the container. if the 'always auto transfer' and the 'never auto transfer' lists have
-    ; a conflict (i.e. there's the same item on both), the 'never' list always wins
+    ; transfer (or not) junk to the container.
     If transferJunk
         If PortableRecyclerControl.RecyclableItemList.Size
             PlayerRef.RemoveItem(PortableRecyclerControl.RecyclableItemList.List, -1, true, TempContainerPrimary)
-        EndIf
-        If PortableRecyclerControl.UseNeverAutoTransferList.Value && PortableRecyclerControl.NeverAutoTransferList.Size
-            TempContainerPrimary.RemoveItem(PortableRecyclerControl.NeverAutoTransferList.List, -1, true, PlayerRef)
         EndIf
     Else
         If PortableRecyclerControl.UseAlwaysAutoTransferList.Value && PortableRecyclerControl.AlwaysAutoTransferList.Size
             PlayerRef.RemoveItem(PortableRecyclerControl.AlwaysAutoTransferList.List, -1, true, TempContainerPrimary)
         EndIf
-        If PortableRecyclerControl.UseNeverAutoTransferList.Value && PortableRecyclerControl.NeverAutoTransferList.Size
-            TempContainerPrimary.RemoveItem(PortableRecyclerControl.NeverAutoTransferList.List, -1, true, PlayerRef)
-        EndIf
     EndIf
 
-    ; if the AutoRecyclingMode option is false or one of the 'force{Retain,Transfer}Junk' overrides is being triggered,
-    ; open the container
+    ; if the 'always auto transfer' and the 'never auto transfer' lists have a conflict (i.e. there's the same item
+    ; on both), the 'never' list always wins if it's active
+    If PortableRecyclerControl.UseNeverAutoTransferList.Value && PortableRecyclerControl.NeverAutoTransferList.Size
+        TempContainerPrimary.RemoveItem(PortableRecyclerControl.NeverAutoTransferList.List, -1, true, PlayerRef)
+    EndIf
+
+    ; open (or not) the container
     If openContainer
         ; activate the container (with 1.0s wait prior to, as specified on
         ; https://www.creationkit.com/fallout4/index.php?title=Activate_-_ObjectReference)
@@ -337,6 +355,7 @@ Function EditAutoTransferList(FormListWrapper akAutoTransferList, Message akMode
             PortableRecyclerControl.ReturnItemsSilently.Value)
     EndIf
 
+    ; add the recycler item back to the player
     PlayerRef.AddItem(PortableRecyclerItem as Form, 1, true)
 
     Self._DebugTrace("Finished editing Auto Transfer List")
