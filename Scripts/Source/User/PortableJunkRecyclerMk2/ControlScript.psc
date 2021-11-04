@@ -79,6 +79,9 @@ Group Other
 
     ; WorkerThread scripts are attached to a different quest to prevent issues using MCM
     ThreadManager Property ThreadManager Auto Mandatory
+
+    ; this is the COBJ record for the recycler item, so it can be dynamically manipulated
+    ConstructibleObject Property PortableJunkRecyclerConstructibleObject Auto Mandatory
 EndGroup
 
 Group RuntimeState
@@ -325,6 +328,7 @@ Function Initialize(bool abQuestInit = false)
     Self.InitComponentMappings()
     Self.InitScrapListAll()
     Self.InitScrapperPerks()
+    Self.InitCompatibility()
     Self.LoadAllSettingsFromMCM()
     Self.RegisterForMCMEvents()
     If ScriptExtenderInstalled
@@ -1200,6 +1204,20 @@ Function InitScrapperPerks()
     EndWhile
 EndFunction
 
+Function InitCompatibility()
+    Self._DebugTrace("Initializing compatibility")
+
+    If Game.IsPluginInstalled("StandaloneWorkbenches.esp")
+        Self._DebugTrace("'Standalone Workbenches' detected, using Utility workbench")
+        ; FormID FExxx81C (Keyword) - wSW_UtilityWorkbench_CraftingKey
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x81C, "StandaloneWorkbenches.esp") as Keyword)
+    ElseIf Game.IsPluginInstalled("ArmorKeywords.esm")
+        Self._DebugTrace("'AWKCR' detected, using Utility workbench")
+        ; FormID xx001765 (Keyword) - AEC_ck_UtilityCraftingKey
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x001765, "ArmorKeywords.esm") as Keyword)
+    EndIf
+EndFunction
+
 ; load MCM settings
 Function LoadAllSettingsFromMCM()
     If ModConfigMenuInstalled
@@ -2038,14 +2056,23 @@ Function Uninstall()
 
         ; properties
         ; group Components
+        ComponentListC.List.Revert()
         ComponentListC = None
+        ComponentListU.List.Revert()
         ComponentListU = None
+        ComponentListR.List.Revert()
         ComponentListR = None
+        ComponentListS.List.Revert()
         ComponentListS = None
+        ScrapListC.List.Revert()
         ScrapListC = None
+        ScrapListU.List.Revert()
         ScrapListU = None
+        ScrapListR.List.Revert()
         ScrapListR = None
+        ScrapListS.List.Revert()
         ScrapListS = None
+        ScrapListAll.List.Revert()
         ScrapListAll = None
         DestroyArrayContents(ComponentMappings as var[])
         ComponentMappings = None
@@ -2073,8 +2100,11 @@ Function Uninstall()
         MessageNeverAutoTransferListResetFailBusy = None
         MessageNeverAutoTransferListResetFailRunning = None
         WorkshopParent = None
+        RecyclableItemList.List.Revert()
         RecyclableItemList = None
+        NeverAutoTransferList.List.Revert()
         NeverAutoTransferList = None
+        AlwaysAutoTransferList.List.Revert()
         AlwaysAutoTransferList = None
         ThreadManager = None
 
