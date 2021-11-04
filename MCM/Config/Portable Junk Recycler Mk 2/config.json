@@ -294,6 +294,16 @@
                "type": "section"
             },
             {
+               "help": "$BehaviorOverrideForceAutoRecyclingModeHelp",
+               "text": "$BehaviorOverrideForceAutoRecyclingModeText",
+               "type": "stepper",
+               "valueOptions": {
+                  "options": [
+                     "$HotkeyCtrlShift"
+                  ]
+               }
+            },
+            {
                "help": "$BehaviorOverrideForceTransferJunkHelp",
                "text": "$BehaviorOverrideForceTransferJunkText",
                "type": "stepper",
