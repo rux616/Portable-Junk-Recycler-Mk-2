@@ -290,6 +290,29 @@
                "type": "spacer"
             },
             {
+               "text": "$Crafting",
+               "type": "section"
+            },
+            {
+               "help": "$CraftingStationHelp",
+               "id": "iCraftingStation:Crafting",
+               "text": "$CraftingStationText",
+               "type": "dropdown",
+               "valueOptions": {
+                  "options": [
+                     "$Dynamic",
+                     "$UtilityWorkbenchSW",
+                     "$UtilityWorkbenchAWKCR",
+                     "$ChemistryStationVanilla"
+                  ],
+                  "sourceType": "ModSettingInt"
+               }
+            },
+            {
+               "lines": 1,
+               "type": "spacer"
+            },
+            {
                "text": "$Hotkeys",
                "type": "section"
             },

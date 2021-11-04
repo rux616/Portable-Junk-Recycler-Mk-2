@@ -140,6 +140,9 @@ Group Settings
     SettingBool Property AllowBehaviorOverrides Auto Hidden
     SettingBool Property ReturnItemsSilently Auto Hidden
 
+    ; recycler interface - crafting
+    SettingInt Property CraftingStation Auto Hidden
+
     ; multiplier adjustments - general
     SettingFloat Property MultAdjustGeneralSettlement Auto Hidden
     SettingFloat Property MultAdjustGeneralSettlementC Auto Hidden
@@ -328,7 +331,6 @@ Function Initialize(bool abQuestInit = false)
     Self.InitComponentMappings()
     Self.InitScrapListAll()
     Self.InitScrapperPerks()
-    Self.InitCompatibility()
     Self.LoadAllSettingsFromMCM()
     Self.RegisterForMCMEvents()
     If ScriptExtenderInstalled
@@ -472,6 +474,12 @@ Function InitSettings(bool abForce = false)
     If abForce || ! ReturnItemsSilently
         Self._DebugTrace("Initializing ReturnItemsSilently")
         ReturnItemsSilently = new SettingBool
+    EndIf
+
+    ; recycler interface - crafting
+    if abForce || ! CraftingStation
+        Self._DebugTrace("Initializing CraftingStation")
+        CraftingStation = new SettingInt
     EndIf
 
     ; multiplier adjustments - general
@@ -769,6 +777,12 @@ Function InitSettingsSupplemental()
     ReturnItemsSilently.ValueDefault = true
     ReturnItemsSilently.McmId = "bReturnItemsSilently:Behavior"
 
+    ; recycler interface - crafting
+    CraftingStation.ValueDefault = 0
+    CraftingStation.McmId = "iCraftingStation:Crafting"
+    CraftingStation.ValueMin = 0
+    CraftingStation.ValueMax = 3
+
     ; multiplier adjustments - general
     MultAdjustGeneralSettlement.ValueDefault = 0.0
     MultAdjustGeneralSettlement.McmId = "fMultAdjustGeneralSettlement:MultiplierAdjustments"
@@ -992,103 +1006,13 @@ Function InitSettingsDefaultValues()
     Self._DebugTrace("Initializing settings (default values)")
 
     ; add all the settings to an array to pass to the ThreadManager
-    var[] settingsToChange = new var[0]
-
-    ; settings - general
-    settingsToChange.Add(MultBase)
-    settingsToChange.Add(ReturnAtLeastOneComponent)
-    settingsToChange.Add(FractionalComponentHandling)
-    settingsToChange.Add(HasLimitedUses)
-    settingsToChange.Add(NumberOfUses)
-
-    ; settings - adjustment options
-    settingsToChange.Add(GeneralMultAdjust)
-    settingsToChange.Add(IntAffectsMult)
-    settingsToChange.Add(LckAffectsMult)
-    settingsToChange.Add(RngAffectsMult)
-    settingsToChange.Add(ScrapperAffectsMult)
-
-    ; settings - recycler behavior
-    settingsToChange.Add(AutoRecyclingMode)
-    settingsToChange.Add(AllowJunkOnly)
-    settingsToChange.Add(AutoTransferJunk)
-    settingsToChange.Add(UseAlwaysAutoTransferList)
-    settingsToChange.Add(UseNeverAutoTransferList)
-    settingsToChange.Add(AllowBehaviorOverrides)
-    settingsToChange.Add(ReturnItemsSilently)
-
-    ; multiplier adjustments - general
-    settingsToChange.Add(MultAdjustGeneralSettlement)
-    settingsToChange.Add(MultAdjustGeneralSettlementC)
-    settingsToChange.Add(MultAdjustGeneralSettlementU)
-    settingsToChange.Add(MultAdjustGeneralSettlementR)
-    settingsToChange.Add(MultAdjustGeneralSettlementS)
-
-    settingsToChange.Add(MultAdjustGeneralNotSettlement)
-    settingsToChange.Add(MultAdjustGeneralNotSettlementC)
-    settingsToChange.Add(MultAdjustGeneralNotSettlementU)
-    settingsToChange.Add(MultAdjustGeneralNotSettlementR)
-    settingsToChange.Add(MultAdjustGeneralNotSettlementS)
-
-    ; multiplier adjustments - intelligence
-    settingsToChange.Add(MultAdjustInt)
-    settingsToChange.Add(MultAdjustIntC)
-    settingsToChange.Add(MultAdjustIntU)
-    settingsToChange.Add(MultAdjustIntR)
-    settingsToChange.Add(MultAdjustIntS)
-
-    ; multiplier adjustments - luck
-    settingsToChange.Add(MultAdjustLck)
-    settingsToChange.Add(MultAdjustLckC)
-    settingsToChange.Add(MultAdjustLckU)
-    settingsToChange.Add(MultAdjustLckR)
-    settingsToChange.Add(MultAdjustLckS)
-
-    ; multiplier adjustments - randomness
-    settingsToChange.Add(MultAdjustRandomMin)
-    settingsToChange.Add(MultAdjustRandomMinC)
-    settingsToChange.Add(MultAdjustRandomMinU)
-    settingsToChange.Add(MultAdjustRandomMinR)
-    settingsToChange.Add(MultAdjustRandomMinS)
-
-    settingsToChange.Add(MultAdjustRandomMax)
-    settingsToChange.Add(MultAdjustRandomMaxC)
-    settingsToChange.Add(MultAdjustRandomMaxU)
-    settingsToChange.Add(MultAdjustRandomMaxR)
-    settingsToChange.Add(MultAdjustRandomMaxS)
-
-    ; multiplier adjustments - scrapper 1-5
-    int index = 0
-    While index < ScrapperPerkMaxRanksSupported
-        settingsToChange.Add(MultAdjustScrapperSettlement[index])
-        settingsToChange.Add(MultAdjustScrapperSettlementC[index])
-        settingsToChange.Add(MultAdjustScrapperSettlementU[index])
-        settingsToChange.Add(MultAdjustScrapperSettlementR[index])
-        settingsToChange.Add(MultAdjustScrapperSettlementS[index])
-
-        settingsToChange.Add(MultAdjustScrapperNotSettlement[index])
-        settingsToChange.Add(MultAdjustScrapperNotSettlementC[index])
-        settingsToChange.Add(MultAdjustScrapperNotSettlementU[index])
-        settingsToChange.Add(MultAdjustScrapperNotSettlementR[index])
-        settingsToChange.Add(MultAdjustScrapperNotSettlementS[index])
-
-        index += 1
-    EndWhile
+    var[] settingsToChange = Self.CollectMCMSettings()
 
     ; set things to defaults
     ThreadManager.ChangeSettingsToDefaults(settingsToChange, CurrentChangeType, ModName)
 
     ; perform general post-processing
-    MCM_GeneralMultAdjustSimple = GeneralMultAdjust.Value == 0
-    MCM_GeneralMultAdjustDetailed = GeneralMultAdjust.Value > 0
-    MCM_IntAffectsMultSimple = IntAffectsMult.Value == 1
-    MCM_IntAffectsMultDetailed = IntAffectsMult.Value > 1
-    MCM_LckAffectsMultSimple = LckAffectsMult.Value == 1
-    MCM_LckAffectsMultDetailed = LckAffectsMult.Value > 1
-    MCM_RngAffectsMultSimple = RngAffectsMult.Value == 1
-    MCM_RngAffectsMultDetailed = RngAffectsMult.Value > 1
-    MCM_ScrapperAffectsMultSimple = ScrapperAffectsMult.Value == 1
-    MCM_ScrapperAffectsMultDetailed = ScrapperAffectsMult.Value > 1
+    Self.PerformMCMSettingPostProcessing()
 EndFunction
 
 ; initialize FormList wrappers
@@ -1204,126 +1128,156 @@ Function InitScrapperPerks()
     EndWhile
 EndFunction
 
-Function InitCompatibility()
-    Self._DebugTrace("Initializing compatibility")
-
-    If Game.IsPluginInstalled("StandaloneWorkbenches.esp")
-        Self._DebugTrace("'Standalone Workbenches' detected, using Utility workbench")
-        ; FormID FExxx81C (Keyword) - wSW_UtilityWorkbench_CraftingKey
-        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x81C, "StandaloneWorkbenches.esp") as Keyword)
-    ElseIf Game.IsPluginInstalled("ArmorKeywords.esm")
-        Self._DebugTrace("'AWKCR' detected, using Utility workbench")
-        ; FormID xx001765 (Keyword) - AEC_ck_UtilityCraftingKey
-        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x001765, "ArmorKeywords.esm") as Keyword)
-    EndIf
-EndFunction
-
 ; load MCM settings
 Function LoadAllSettingsFromMCM()
     If ModConfigMenuInstalled
         Self._DebugTrace("Loading settings from MCM")
 
         ; add all the settings to an array to pass to the ThreadManager
-        var[] settingsToLoad = new var[0]
-
-        ; settings - general
-        settingsToLoad.Add(MultBase)
-        settingsToLoad.Add(ReturnAtLeastOneComponent)
-        settingsToLoad.Add(FractionalComponentHandling)
-        settingsToLoad.Add(HasLimitedUses)
-        settingsToLoad.Add(NumberOfUses)
-
-        ; settings - adjustment options
-        settingsToLoad.Add(GeneralMultAdjust)
-        settingsToLoad.Add(IntAffectsMult)
-        settingsToLoad.Add(LckAffectsMult)
-        settingsToLoad.Add(RngAffectsMult)
-        settingsToLoad.Add(ScrapperAffectsMult)
-
-        ; recycler interface - behavior
-        settingsToLoad.Add(AutoRecyclingMode)
-        settingsToLoad.Add(AllowJunkOnly)
-        settingsToLoad.Add(AutoTransferJunk)
-        settingsToLoad.Add(UseAlwaysAutoTransferList)
-        settingsToLoad.Add(UseNeverAutoTransferList)
-        settingsToLoad.Add(AllowBehaviorOverrides)
-        settingsToLoad.Add(ReturnItemsSilently)
-
-        ; multiplier adjustments - general
-        settingsToLoad.Add(MultAdjustGeneralSettlement)
-        settingsToLoad.Add(MultAdjustGeneralSettlementC)
-        settingsToLoad.Add(MultAdjustGeneralSettlementU)
-        settingsToLoad.Add(MultAdjustGeneralSettlementR)
-        settingsToLoad.Add(MultAdjustGeneralSettlementS)
-
-        settingsToLoad.Add(MultAdjustGeneralNotSettlement)
-        settingsToLoad.Add(MultAdjustGeneralNotSettlementC)
-        settingsToLoad.Add(MultAdjustGeneralNotSettlementU)
-        settingsToLoad.Add(MultAdjustGeneralNotSettlementR)
-        settingsToLoad.Add(MultAdjustGeneralNotSettlementS)
-
-        ; multiplier adjustments - intelligence
-        settingsToLoad.Add(MultAdjustInt)
-        settingsToLoad.Add(MultAdjustIntC)
-        settingsToLoad.Add(MultAdjustIntU)
-        settingsToLoad.Add(MultAdjustIntR)
-        settingsToLoad.Add(MultAdjustIntS)
-
-        ; multiplier adjustments - luck
-        settingsToLoad.Add(MultAdjustLck)
-        settingsToLoad.Add(MultAdjustLckC)
-        settingsToLoad.Add(MultAdjustLckU)
-        settingsToLoad.Add(MultAdjustLckR)
-        settingsToLoad.Add(MultAdjustLckS)
-
-        ; multiplier adjustments - randomness
-        settingsToLoad.Add(MultAdjustRandomMin)
-        settingsToLoad.Add(MultAdjustRandomMinC)
-        settingsToLoad.Add(MultAdjustRandomMinU)
-        settingsToLoad.Add(MultAdjustRandomMinR)
-        settingsToLoad.Add(MultAdjustRandomMinS)
-
-        settingsToLoad.Add(MultAdjustRandomMax)
-        settingsToLoad.Add(MultAdjustRandomMaxC)
-        settingsToLoad.Add(MultAdjustRandomMaxU)
-        settingsToLoad.Add(MultAdjustRandomMaxR)
-        settingsToLoad.Add(MultAdjustRandomMaxS)
-
-        ; multiplier adjustments - scrapper 1-5
-        int index = 0
-        While index < ScrapperPerkMaxRanksSupported
-            settingsToLoad.Add(MultAdjustScrapperSettlement[index])
-            settingsToLoad.Add(MultAdjustScrapperSettlementC[index])
-            settingsToLoad.Add(MultAdjustScrapperSettlementU[index])
-            settingsToLoad.Add(MultAdjustScrapperSettlementR[index])
-            settingsToLoad.Add(MultAdjustScrapperSettlementS[index])
-
-            settingsToLoad.Add(MultAdjustScrapperNotSettlement[index])
-            settingsToLoad.Add(MultAdjustScrapperNotSettlementC[index])
-            settingsToLoad.Add(MultAdjustScrapperNotSettlementU[index])
-            settingsToLoad.Add(MultAdjustScrapperNotSettlementR[index])
-            settingsToLoad.Add(MultAdjustScrapperNotSettlementS[index])
-
-            index += 1
-        EndWhile
+        var[] settingsToLoad = Self.CollectMCMSettings()
 
         ; load all the settings, multithread to cut down on time
         ThreadManager.LoadMCMSettings(settingsToLoad, ModName)
 
         ; perform general post-processing
-        MCM_GeneralMultAdjustSimple = GeneralMultAdjust.Value == 0
-        MCM_GeneralMultAdjustDetailed = GeneralMultAdjust.Value > 0
-        MCM_IntAffectsMultSimple = IntAffectsMult.Value == 1
-        MCM_IntAffectsMultDetailed = IntAffectsMult.Value > 1
-        MCM_LckAffectsMultSimple = LckAffectsMult.Value == 1
-        MCM_LckAffectsMultDetailed = LckAffectsMult.Value > 1
-        MCM_RngAffectsMultSimple = RngAffectsMult.Value == 1
-        MCM_RngAffectsMultDetailed = RngAffectsMult.Value > 1
-        MCM_ScrapperAffectsMultSimple = ScrapperAffectsMult.Value == 1
-        MCM_ScrapperAffectsMultDetailed = ScrapperAffectsMult.Value > 1
-        MultAdjustRandomSanityCheck()
+        Self.PerformMCMSettingPostProcessing()
+        Self.MultAdjustRandomSanityCheck()
     Else
         Self._DebugTrace("Loading settings from MCM; skipping (MCM not enabled)")
+    EndIf
+EndFunction
+
+; returns an array containing all the MCM settings
+var[] Function CollectMCMSettings()
+    Self._DebugTrace("Collecting MCM settings")
+
+    var[] toReturn = new var[0]
+
+    ; settings - general
+    toReturn.Add(MultBase)
+    toReturn.Add(ReturnAtLeastOneComponent)
+    toReturn.Add(FractionalComponentHandling)
+    toReturn.Add(HasLimitedUses)
+    toReturn.Add(NumberOfUses)
+
+    ; settings - adjustment options
+    toReturn.Add(GeneralMultAdjust)
+    toReturn.Add(IntAffectsMult)
+    toReturn.Add(LckAffectsMult)
+    toReturn.Add(RngAffectsMult)
+    toReturn.Add(ScrapperAffectsMult)
+
+    ; recycler interface - behavior
+    toReturn.Add(AutoRecyclingMode)
+    toReturn.Add(AllowJunkOnly)
+    toReturn.Add(AutoTransferJunk)
+    toReturn.Add(UseAlwaysAutoTransferList)
+    toReturn.Add(UseNeverAutoTransferList)
+    toReturn.Add(AllowBehaviorOverrides)
+    toReturn.Add(ReturnItemsSilently)
+
+    ; recycler interface - crafting
+    toReturn.Add(CraftingStation)
+
+    ; multiplier adjustments - general
+    toReturn.Add(MultAdjustGeneralSettlement)
+    toReturn.Add(MultAdjustGeneralSettlementC)
+    toReturn.Add(MultAdjustGeneralSettlementU)
+    toReturn.Add(MultAdjustGeneralSettlementR)
+    toReturn.Add(MultAdjustGeneralSettlementS)
+
+    toReturn.Add(MultAdjustGeneralNotSettlement)
+    toReturn.Add(MultAdjustGeneralNotSettlementC)
+    toReturn.Add(MultAdjustGeneralNotSettlementU)
+    toReturn.Add(MultAdjustGeneralNotSettlementR)
+    toReturn.Add(MultAdjustGeneralNotSettlementS)
+
+    ; multiplier adjustments - intelligence
+    toReturn.Add(MultAdjustInt)
+    toReturn.Add(MultAdjustIntC)
+    toReturn.Add(MultAdjustIntU)
+    toReturn.Add(MultAdjustIntR)
+    toReturn.Add(MultAdjustIntS)
+
+    ; multiplier adjustments - luck
+    toReturn.Add(MultAdjustLck)
+    toReturn.Add(MultAdjustLckC)
+    toReturn.Add(MultAdjustLckU)
+    toReturn.Add(MultAdjustLckR)
+    toReturn.Add(MultAdjustLckS)
+
+    ; multiplier adjustments - randomness
+    toReturn.Add(MultAdjustRandomMin)
+    toReturn.Add(MultAdjustRandomMinC)
+    toReturn.Add(MultAdjustRandomMinU)
+    toReturn.Add(MultAdjustRandomMinR)
+    toReturn.Add(MultAdjustRandomMinS)
+
+    toReturn.Add(MultAdjustRandomMax)
+    toReturn.Add(MultAdjustRandomMaxC)
+    toReturn.Add(MultAdjustRandomMaxU)
+    toReturn.Add(MultAdjustRandomMaxR)
+    toReturn.Add(MultAdjustRandomMaxS)
+
+    ; multiplier adjustments - scrapper 1-5
+    int index = 0
+    While index < ScrapperPerkMaxRanksSupported
+        toReturn.Add(MultAdjustScrapperSettlement[index])
+        toReturn.Add(MultAdjustScrapperSettlementC[index])
+        toReturn.Add(MultAdjustScrapperSettlementU[index])
+        toReturn.Add(MultAdjustScrapperSettlementR[index])
+        toReturn.Add(MultAdjustScrapperSettlementS[index])
+
+        toReturn.Add(MultAdjustScrapperNotSettlement[index])
+        toReturn.Add(MultAdjustScrapperNotSettlementC[index])
+        toReturn.Add(MultAdjustScrapperNotSettlementU[index])
+        toReturn.Add(MultAdjustScrapperNotSettlementR[index])
+        toReturn.Add(MultAdjustScrapperNotSettlementS[index])
+
+        index += 1
+    EndWhile
+
+    Return toReturn
+EndFunction
+
+; do common post-processing tasks when an MCM setting is changed
+Function PerformMCMSettingPostProcessing()
+    Self._DebugTrace("Performing MCM setting change post processing")
+
+    ; set variables that control what the MCM shows
+    MCM_GeneralMultAdjustSimple = GeneralMultAdjust.Value == 0
+    MCM_GeneralMultAdjustDetailed = GeneralMultAdjust.Value > 0
+    MCM_IntAffectsMultSimple = IntAffectsMult.Value == 1
+    MCM_IntAffectsMultDetailed = IntAffectsMult.Value > 1
+    MCM_LckAffectsMultSimple = LckAffectsMult.Value == 1
+    MCM_LckAffectsMultDetailed = LckAffectsMult.Value > 1
+    MCM_RngAffectsMultSimple = RngAffectsMult.Value == 1
+    MCM_RngAffectsMultDetailed = RngAffectsMult.Value > 1
+    MCM_ScrapperAffectsMultSimple = ScrapperAffectsMult.Value == 1
+    MCM_ScrapperAffectsMultDetailed = ScrapperAffectsMult.Value > 1
+
+    ; determine where the crafting recipe lives
+    If (CraftingStation.Value == 1 || CraftingStation.Value == 0) && Game.IsPluginInstalled("StandaloneWorkbenches.esp")
+        ; Standalone Workbenches
+        Self._DebugTrace("Crafting station: Standalone Workbenches detected")
+        ; FormID FExxx81C (Keyword) - wSW_UtilityWorkbench_CraftingKey
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x81C, "StandaloneWorkbenches.esp") as Keyword)
+    ElseIf (CraftingStation.Value == 2 || CraftingStation.Value == 0) && Game.IsPluginInstalled("ArmorKeywords.esm")
+        ; AWKCR
+        Self._DebugTrace("Crafting station: AWKCR detected")
+        ; FormID xx001765 (Keyword) - AEC_ck_UtilityCraftingKey
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x001765, "ArmorKeywords.esm") as Keyword)
+    Else
+        ; Vanilla
+        If CraftingStation.Value == 1
+            Self._DebugTrace("Crafting station: Standalone Workbenches specified but not detected; falling back to vanilla")
+        ElseIF CraftingStation.Value == 2
+            Self._DebugTrace("Crafting station: AWKCR specified but not detected; falling back to vanilla")
+        Else
+            Self._DebugTrace("Crafting station: Vanilla detected")
+        EndIf
+        ; FormID xx102158 (Keyword) - WorkbenchChemlab
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x102158, "Fallout4.esm") as Keyword)
     EndIf
 EndFunction
 
@@ -1347,9 +1301,9 @@ EndFunction
 
 ; callback function for when MCM changes settings
 Function OnMCMSettingChange(string asModName, string asControlId)
-    Self._DebugTrace("MCM setting changed")
     If asModName == ModName
-        var oldValue
+        int defaultValue = 2147483647 ; use 32-bit signed integer maximum to serve as a default value
+        var oldValue = defaultValue
         var newValue
 
         ; settings - general
@@ -1379,36 +1333,26 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             oldValue = GeneralMultAdjust.Value
             LoadSettingFromMCM(GeneralMultAdjust, ModName)
             newValue = GeneralMultAdjust.Value
-            MCM_GeneralMultAdjustSimple = GeneralMultAdjust.Value == 0
-            MCM_GeneralMultAdjustDetailed = GeneralMultAdjust.Value > 0
             MCM.RefreshMenu()
         ElseIf asControlId == IntAffectsMult.McmId
             oldValue = IntAffectsMult.Value
             LoadSettingFromMCM(IntAffectsMult, ModName)
             newValue = IntAffectsMult.Value
-            MCM_IntAffectsMultSimple = IntAffectsMult.Value == 1
-            MCM_IntAffectsMultDetailed = IntAffectsMult.Value > 1
             MCM.RefreshMenu()
         ElseIf asControlId == LckAffectsMult.McmId
             oldValue = LckAffectsMult.Value
             LoadSettingFromMCM(LckAffectsMult, ModName)
             newValue = LckAffectsMult.Value
-            MCM_LckAffectsMultSimple = LckAffectsMult.Value == 1
-            MCM_LckAffectsMultDetailed = LckAffectsMult.Value > 1
             MCM.RefreshMenu()
         ElseIf asControlId == RngAffectsMult.McmId
             oldValue = RngAffectsMult.Value
             LoadSettingFromMCM(RngAffectsMult, ModName)
             newValue = RngAffectsMult.Value
-            MCM_RngAffectsMultSimple = RngAffectsMult.Value == 1
-            MCM_RngAffectsMultDetailed = RngAffectsMult.Value > 1
             MCM.RefreshMenu()
         ElseIf asControlId == ScrapperAffectsMult.McmId
             oldValue = ScrapperAffectsMult.Value
             LoadSettingFromMCM(ScrapperAffectsMult, ModName)
             newValue = ScrapperAffectsMult.Value
-            MCM_ScrapperAffectsMultSimple = ScrapperAffectsMult.Value == 1
-            MCM_ScrapperAffectsMultDetailed = ScrapperAffectsMult.Value > 1
             MCM.RefreshMenu()
 
         ; recycler interface - behavior
@@ -1440,6 +1384,12 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             oldValue = ReturnItemsSilently.Value
             LoadSettingFromMCM(ReturnItemsSilently, ModName)
             newValue = ReturnItemsSilently.Value
+
+        ; recycler interface - crafting
+        ElseIf asControlId == CraftingStation.McmId
+            oldValue = CraftingStation.Value
+            LoadSettingFromMCM(CraftingStation, ModName)
+            newValue = CraftingStation.Value
 
         ; multiplier adjustments - general
         ElseIf asControlId == MultAdjustGeneralSettlement.McmId
@@ -1573,72 +1523,62 @@ Function OnMCMSettingChange(string asModName, string asControlId)
 
         ; multiplier adjustments - scrapper 1-5
         Else
-            bool controlFound = false
             int index = 0
-            While index < ScrapperPerkMaxRanksSupported && ! controlFound
+            While index < ScrapperPerkMaxRanksSupported && oldValue as int == defaultValue
                 If asControlId == MultAdjustScrapperSettlement[index].McmId
                     oldValue = MultAdjustScrapperSettlement[index].Value
                     LoadSettingFromMCM(MultAdjustScrapperSettlement[index], ModName)
                     newValue = MultAdjustScrapperSettlement[index].Value
-                    controlFound = true
                 ElseIf asControlId == MultAdjustScrapperSettlementC[index].McmId
                     oldValue = MultAdjustScrapperSettlementC[index].Value
                     LoadSettingFromMCM(MultAdjustScrapperSettlementC[index], ModName)
                     newValue = MultAdjustScrapperSettlementC[index].Value
-                    controlFound = true
                 ElseIf asControlId == MultAdjustScrapperSettlementU[index].McmId
                     oldValue = MultAdjustScrapperSettlementU[index].Value
                     LoadSettingFromMCM(MultAdjustScrapperSettlementU[index], ModName)
                     newValue = MultAdjustScrapperSettlementU[index].Value
-                    controlFound = true
                 ElseIf asControlId == MultAdjustScrapperSettlementR[index].McmId
                     oldValue = MultAdjustScrapperSettlementR[index].Value
                     LoadSettingFromMCM(MultAdjustScrapperSettlementR[index], ModName)
                     newValue = MultAdjustScrapperSettlementR[index].Value
-                    controlFound = true
                 ElseIf asControlId == MultAdjustScrapperSettlementS[index].McmId
                     oldValue = MultAdjustScrapperSettlementS[index].Value
                     LoadSettingFromMCM(MultAdjustScrapperSettlementS[index], ModName)
                     newValue = MultAdjustScrapperSettlementS[index].Value
-                    controlFound = true
 
                 ElseIf asControlId == MultAdjustScrapperNotSettlement[index].McmId
                     oldValue = MultAdjustScrapperNotSettlement[index].Value
                     LoadSettingFromMCM(MultAdjustScrapperNotSettlement[index], ModName)
                     newValue = MultAdjustScrapperNotSettlement[index].Value
-                    controlFound = true
                 ElseIf asControlId == MultAdjustScrapperNotSettlementC[index].McmId
                     oldValue = MultAdjustScrapperNotSettlementC[index].Value
                     LoadSettingFromMCM(MultAdjustScrapperNotSettlementC[index], ModName)
                     newValue = MultAdjustScrapperNotSettlementC[index].Value
-                    controlFound = true
                 ElseIf asControlId == MultAdjustScrapperNotSettlementU[index].McmId
                     oldValue = MultAdjustScrapperNotSettlementU[index].Value
                     LoadSettingFromMCM(MultAdjustScrapperNotSettlementU[index], ModName)
                     newValue = MultAdjustScrapperNotSettlementU[index].Value
-                    controlFound = true
                 ElseIf asControlId == MultAdjustScrapperNotSettlementR[index].McmId
                     oldValue = MultAdjustScrapperNotSettlementR[index].Value
                     LoadSettingFromMCM(MultAdjustScrapperNotSettlementR[index], ModName)
                     newValue = MultAdjustScrapperNotSettlementR[index].Value
-                    controlFound = true
                 ElseIf asControlId == MultAdjustScrapperNotSettlementS[index].McmId
                     oldValue = MultAdjustScrapperNotSettlementS[index].Value
                     LoadSettingFromMCM(MultAdjustScrapperNotSettlementS[index], ModName)
                     newValue = MultAdjustScrapperNotSettlementS[index].Value
-                    controlFound = true
                 EndIf
 
                 index += 1
             EndWhile
-
-            if ! controlFound
-                Self._DebugTrace("Unknown control ID: " + asControlId, 2)
-                Return
-            EndIf
         EndIf
-        Self._DebugTrace("MCM control ID '" + asControlId + "' was changed. Old value = " + oldValue + \
-            ", new value = " + newValue)
+        
+        If oldValue as int != defaultValue
+            Self._DebugTrace("MCM control ID '" + asControlId + "' was changed. Old value = " + oldValue + \
+                ", new value = " + newValue)
+            Self.PerformMCMSettingPostProcessing()
+            Else
+            Self._DebugTrace("Unknown control ID: " + asControlId, 2)
+        EndIf
     EndIf
 EndFunction
 

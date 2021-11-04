@@ -130,6 +130,11 @@ local stat_adjust_step = 0.005;
           mcm.control.switcher(text='$ReturnItemsSilentlyText', source=mcm.helper.source.mod_setting.bool(id='bReturnItemsSilently:Behavior'), help='$ReturnItemsSilentlyHelp'),
           mcm.control.spacer(lines=1),
 
+          // recycler interface - crafting
+          mcm.control.section(text='$Crafting'),
+          mcm.control.dropdown(text='$CraftingStationText', options=['$Dynamic', '$UtilityWorkbenchSW', '$UtilityWorkbenchAWKCR', '$ChemistryStationVanilla'], source=mcm.helper.source.mod_setting.int(id='iCraftingStation:Crafting'), help='$CraftingStationHelp'),
+          mcm.control.spacer(lines=1),
+
           // recycler interface - hotkeys
           mcm.control.section(text='$Hotkeys'),
           mcm.control.stepper(text='$BehaviorOverrideForceAutoRecyclingModeText', options=['$HotkeyCtrlShift'], help='$BehaviorOverrideForceAutoRecyclingModeHelp'),
