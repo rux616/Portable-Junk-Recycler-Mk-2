@@ -332,7 +332,6 @@ local stat_adjust_step = 0.005;
           mcm.control.section(text='Scrapper: Rank 5', group=mcm.helper.group.condition.and([mod.group_id.scrapper_affects_mult_simple, mod.group_id.scrapper_5_available])),
           mcm.control.slider(text=str_settlement, min=adjust_min, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustScrapperSettlement5:MultiplierAdjustments'), group=mcm.helper.group.condition.and([mod.group_id.scrapper_affects_mult_simple, mod.group_id.scrapper_5_available])),
           mcm.control.slider(text=str_not_settlement, min=adjust_min, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustScrapperNotSettlement5:MultiplierAdjustments'), group=mcm.helper.group.condition.and([mod.group_id.scrapper_affects_mult_simple, mod.group_id.scrapper_5_available])),
-          //mcm.control.spacer(lines=1, group=mcm.helper.group.condition.and([mod.group_id.scrapper_affects_mult_simple, mod.group_id.scrapper_5_available])),
 
           mcm.control.section(text='Scrapper: Rank 5', group=mcm.helper.group.condition.and([mod.group_id.scrapper_affects_mult_detailed, mod.group_id.scrapper_5_available])),
           mcm.control.section(text=str_indent_comp_c, group=mcm.helper.group.condition.and([mod.group_id.scrapper_affects_mult_detailed, mod.group_id.scrapper_5_available])),
@@ -347,7 +346,6 @@ local stat_adjust_step = 0.005;
           mcm.control.section(text=str_indent_comp_s, group=mcm.helper.group.condition.and([mod.group_id.scrapper_affects_mult_detailed, mod.group_id.scrapper_5_available])),
           mcm.control.slider(text=str_indent_settlement, min=adjust_min, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustScrapperSettlementS5:MultiplierAdjustments'), group=mcm.helper.group.condition.and([mod.group_id.scrapper_affects_mult_detailed, mod.group_id.scrapper_5_available])),
           mcm.control.slider(text=str_indent_not_settlement, min=adjust_min, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustScrapperNotSettlementS5:MultiplierAdjustments'), group=mcm.helper.group.condition.and([mod.group_id.scrapper_affects_mult_detailed, mod.group_id.scrapper_5_available])),
-          //mcm.control.spacer(lines=1, group=mcm.helper.group.condition.and([mod.group_id.scrapper_affects_mult_detailed, mod.group_id.scrapper_5_available])),
         ],
       },
       {
