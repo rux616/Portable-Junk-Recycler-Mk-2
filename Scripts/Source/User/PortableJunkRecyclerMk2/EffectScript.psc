@@ -90,22 +90,30 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
         bool forceRetainJunk = PortableRecyclerControl.HotkeyForceRetainJunk
         bool forceTransferJunk = PortableRecyclerControl.HotkeyForceTransferJunk
         bool editAutoTransferLists = PortableRecyclerControl.HotkeyEditAutoTransferLists
+        Self._DebugTrace("Hotkeys: forceRetainJunk = " + forceRetainJunk + ", forceTransferJunk = " + forceTransferJunk + \
+            ", editAutoTransferLists = " + editAutoTransferLists)
 
-        ; place temp containers at the player; if the 'Allow Junk Only' option is turned on, or the player wants to edit the
-        ; auto transfer exemptions list, a filtered container is placed
-        If PortableRecyclerControl.AllowJunkOnly.Value || editAutoTransferLists
+        ; establish some convenience variables
+        bool editNeverTransferList = editAutoTransferLists && forceRetainJunk
+        bool editAlwaysTransferList = editAutoTransferLists && forceTransferJunk
+        bool useFilteredContainer = editNeverTransferList || editAlwaysTransferList || PortableRecyclerControl.AllowJunkOnly.Value
+
+        ; place temp containers at the player; if the 'Allow Junk Only' option is turned on, or the player wants to edit an
+        ; auto transfer list, a filtered container is placed
+        If useFilteredContainer
             TempContainerPrimary = PlayerRef.PlaceAtMe(PortableRecyclerContainerFiltered as Form, abForcePersist = true)
         Else
             TempContainerPrimary = PlayerRef.PlaceAtMe(PortableRecyclerContainer as Form, abForcePersist = true)
         EndIf
-        Self._DebugTrace("Primary temp container " + TempContainerPrimary + " created (filtered: " + \
-            PortableRecyclerControl.AllowJunkOnly.Value + ")")
+        Self._DebugTrace("Primary temp container " + TempContainerPrimary + " created (filtered: " + useFilteredContainer + ")")
         TempContainerSecondary = PlayerRef.PlaceAtMe(PortableRecyclerContainer as Form, abForcePersist = true)
         Self._DebugTrace("Secondary temp container " + TempContainerSecondary + " created")
 
-        If editAutoTransferLists && forceRetainJunk
+        If editNeverTransferList
+            Self._DebugTrace("Editing 'Never Automatically Transfer' list")
             Self.EditAutoTransferList(PortableRecyclerControl.NeverAutoTransferList, MessageEditNeverAutoTransferListMode)
-        ElseIf editAutoTransferLists && forceTransferJunk
+        ElseIf editAlwaysTransferList
+            Self._DebugTrace("Editing 'Always Automatically Transfer' list")
             Self.EditAutoTransferList(PortableRecyclerControl.AlwaysAutoTransferList, MessageEditAlwaysAutoTransferListMode)
         Else
             If PortableRecyclerControl.AllowBehaviorOverrides.Value
@@ -319,7 +327,7 @@ EndFunction
 
 ; handles editing an auto transfer list
 Function EditAutoTransferList(FormListWrapper akAutoTransferList, Message akModeMessage)
-    Self._DebugTrace("Started editing Auto Transfer List")
+    Self._DebugTrace("Started editing Auto Transfer List: " + akAutoTransferList.List)
 
     ; update the FormList holding the recyclable items
     Self.UpdateRecyclableItemList()
