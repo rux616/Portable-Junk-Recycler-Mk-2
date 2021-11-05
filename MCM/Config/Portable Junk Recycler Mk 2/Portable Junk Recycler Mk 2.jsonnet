@@ -68,6 +68,7 @@ local stat_adjust_step = 0.005;
       scrapper_4_available: 12,
       scrapper_5_available: 13,
       uninstall_safeguard: 14,
+      behavior_override: 15,
     },
   },
 
@@ -126,20 +127,21 @@ local stat_adjust_step = 0.005;
           mcm.control.switcher(text='$AutoTransferJunkText', source=mcm.helper.source.mod_setting.bool(id='bAutoTransferJunk:Behavior'), help='$AutoTransferJunkHelp'),
           mcm.control.switcher(text='$UseAlwaysAutoTransferListText', source=mcm.helper.source.mod_setting.bool(id='bUseAlwaysAutoTransferList:Behavior'), help='$UseAlwaysAutoTransferListHelp'),
           mcm.control.switcher(text='$UseNeverAutoTransferListText', source=mcm.helper.source.mod_setting.bool(id='bUseNeverAutoTransferList:Behavior'), help='$UseNeverAutoTransferListHelp'),
-          mcm.control.switcher(text='$AllowBehaviorOverridesText', source=mcm.helper.source.mod_setting.bool(id='bAllowBehaviorOverrides:Behavior'), help='$AllowBehaviorOverridesHelp'),
+          mcm.control.switcher(text='$AllowBehaviorOverridesText', source=mcm.helper.source.mod_setting.bool(id='bAllowBehaviorOverrides:Behavior'), group=mcm.helper.group.control(mod.group_id.behavior_override), help='$AllowBehaviorOverridesHelp'),
           mcm.control.switcher(text='$ReturnItemsSilentlyText', source=mcm.helper.source.mod_setting.bool(id='bReturnItemsSilently:Behavior'), help='$ReturnItemsSilentlyHelp'),
           mcm.control.spacer(lines=1),
 
           // recycler interface - crafting
           mcm.control.section(text='$Crafting'),
-          mcm.control.dropdown(text='$CraftingStationText', options=['$Dynamic', '$UtilityWorkbenchSW', '$UtilityWorkbenchAWKCR', '$ChemistryStationVanilla'], source=mcm.helper.source.mod_setting.int(id='iCraftingStation:Crafting'), help='$CraftingStationHelp'),
+          mcm.control.dropdown(text='$CraftingStationText', options=['$Dynamic', '$SWElectronics', '$SWEngineering', '$SWManufacturing', '$SWUtility', '$AWKCRAdvEngineering', '$AWKCRElectronics', '$AWKCRUtility', '$VanillaChemistry'], source=mcm.helper.source.mod_setting.int(id='iCraftingStation:Crafting'), help='$CraftingStationHelp'),
           mcm.control.spacer(lines=1),
 
           // recycler interface - hotkeys
+          // TODO - put in group control tieing BO controls to toggle above
           mcm.control.section(text='$Hotkeys'),
-          mcm.control.stepper(text='$BehaviorOverrideForceAutoRecyclingModeText', options=['$HotkeyCtrlShift'], help='$BehaviorOverrideForceAutoRecyclingModeHelp'),
-          mcm.control.stepper(text='$BehaviorOverrideForceTransferJunkText', options=['$HotkeyShift'], help='$BehaviorOverrideForceTransferJunkHelp'),
-          mcm.control.stepper(text='$BehaviorOverrideForceRetainJunkText', options=['$HotkeyCtrl'], help='$BehaviorOverrideForceRetainJunkHelp'),
+          mcm.control.stepper(text='$BehaviorOverrideForceAutoRecyclingModeText', options=['$HotkeyCtrlShift'], group=mcm.helper.group.condition.or(mod.group_id.behavior_override), help='$BehaviorOverrideForceAutoRecyclingModeHelp'),
+          mcm.control.stepper(text='$BehaviorOverrideForceTransferJunkText', options=['$HotkeyShift'], group=mcm.helper.group.condition.or(mod.group_id.behavior_override), help='$BehaviorOverrideForceTransferJunkHelp'),
+          mcm.control.stepper(text='$BehaviorOverrideForceRetainJunkText', options=['$HotkeyCtrl'], group=mcm.helper.group.condition.or(mod.group_id.behavior_override), help='$BehaviorOverrideForceRetainJunkHelp'),
           mcm.control.stepper(text='$EditAlwaysAutoTransferListText', options=['$HotkeyAltShift'], help='$EditAlwaysAutoTransferListHelp'),
           mcm.control.stepper(text='$EditNeverAutoTransferListText', options=['$HotkeyAltCtrl'], help='$EditNeverAutoTransferListHelp'),
         ],

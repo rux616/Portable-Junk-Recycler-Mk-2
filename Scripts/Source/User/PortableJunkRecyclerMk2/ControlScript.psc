@@ -781,7 +781,7 @@ Function InitSettingsSupplemental()
     CraftingStation.ValueDefault = 0
     CraftingStation.McmId = "iCraftingStation:Crafting"
     CraftingStation.ValueMin = 0
-    CraftingStation.ValueMax = 3
+    CraftingStation.ValueMax = 8
 
     ; multiplier adjustments - general
     MultAdjustGeneralSettlement.ValueDefault = 0.0
@@ -1257,26 +1257,47 @@ Function PerformMCMSettingPostProcessing()
     MCM_ScrapperAffectsMultDetailed = ScrapperAffectsMult.Value > 1
 
     ; determine where the crafting recipe lives
-    If (CraftingStation.Value == 1 || CraftingStation.Value == 0) && Game.IsPluginInstalled("StandaloneWorkbenches.esp")
-        ; Standalone Workbenches
-        Self._DebugTrace("Crafting station: Standalone Workbenches detected")
-        ; FormID FExxx81C (Keyword) - wSW_UtilityWorkbench_CraftingKey
-        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x81C, "StandaloneWorkbenches.esp") as Keyword)
-    ElseIf (CraftingStation.Value == 2 || CraftingStation.Value == 0) && Game.IsPluginInstalled("ArmorKeywords.esm")
-        ; AWKCR
-        Self._DebugTrace("Crafting station: AWKCR detected")
-        ; FormID xx001765 (Keyword) - AEC_ck_UtilityCraftingKey
-        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x001765, "ArmorKeywords.esm") as Keyword)
+    string pluginNameSW = "StandaloneWorkbenches.esp" const
+    string pluginNameAWKCR = "ArmorKeywords.esm" const
+    bool isSWInstalled = Game.IsPluginInstalled(pluginNameSW)
+    bool isAWKCRInstalled = Game.IsPluginInstalled(pluginNameAWKCR)
+    If CraftingStation.Value == 1 && isSWInstalled
+        ; Standalone Workbenches - Electronics Workbench (Keyword FExxx80D - wSW_ElectronicsWorkbench_CraftingKey)
+        Self._DebugTrace("Crafting station: Standalone Workbenches - Electronics Workbench")
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x80D, pluginNameSW) as Keyword)
+    ElseIf CraftingStation.Value == 2 && isSWInstalled
+        ; Standalone Workbenches - Engineering Workbench (Keyword FExxx810 - wSW_EngineeringWorkbench_CraftingKey)
+        Self._DebugTrace("Crafting station: Standalone Workbenches - Engineering Workbench")
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x810, pluginNameSW) as Keyword)
+    ElseIf CraftingStation.Value == 3 && isSWInstalled
+        ; Standalone Workbenches - Manufacturing Workbench (Keyword FExxx822 - wSW_ManufacturingWorkbench_CraftingKey)
+        Self._DebugTrace("Crafting station: Standalone Workbenches - Manufacturing Workbench")
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x822, pluginNameSW) as Keyword)
+    ElseIf (CraftingStation.Value == 4 || CraftingStation.Value == 0) && isSWInstalled
+        ; Standalone Workbenches - Utility Workbench (Keyword FExxx81C - wSW_UtilityWorkbench_CraftingKey)
+        Self._DebugTrace("Crafting station: Standalone Workbenches - Utility Workbench")
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x81C, pluginNameSW) as Keyword)
+    ElseIf CraftingStation.Value == 5 && isAWKCRInstalled
+        ; AWKCR - Advanced Engineering Workbench (Keyword xx00195A - AEC_ck_AdvancedEngineeringCraftingKey)
+        Self._DebugTrace("Crafting station: AWKCR - Advanced Engineering Workbench")
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x00195A, pluginNameAWKCR) as Keyword)
+    ElseIf CraftingStation.Value == 6 && isAWKCRInstalled
+        ; AWKCR - Electronics Workstation (Keyword xx001764 - AEC_ck_ElectronicsCraftingKey)
+        Self._DebugTrace("Crafting station: AWKCR - Electronics Workstation")
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x001764, pluginNameAWKCR) as Keyword)
+    ElseIf (CraftingStation.Value == 7 || CraftingStation.Value == 0) && isAWKCRInstalled
+        ; AWKCR - Utility Workbench (Keyword xx001765 - AEC_ck_UtilityCraftingKey)
+        Self._DebugTrace("Crafting station: AWKCR - Utility Workbench")
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x001765, pluginNameAWKCR) as Keyword)
     Else
-        ; Vanilla
-        If CraftingStation.Value == 1
-            Self._DebugTrace("Crafting station: Standalone Workbenches specified but not detected; falling back to vanilla")
-        ElseIF CraftingStation.Value == 2
-            Self._DebugTrace("Crafting station: AWKCR specified but not detected; falling back to vanilla")
+        ; Vanilla - Chemistry Station (Keyword xx102158 - WorkbenchChemlab)
+        If CraftingStation.Value >= 1 && CraftingStation.Value <= 4
+            Self._DebugTrace("Crafting station: Standalone Workbenches workbench specified but mod not detected; falling back to vanilla")
+        ElseIF CraftingStation.Value >= 5 && CraftingStation.Value <= 7
+            Self._DebugTrace("Crafting station: AWKCR workbench specified but mod not detected; falling back to vanilla")
         Else
-            Self._DebugTrace("Crafting station: Vanilla detected")
+            Self._DebugTrace("Crafting station: Vanilla - Chemistry Station")
         EndIf
-        ; FormID xx102158 (Keyword) - WorkbenchChemlab
         PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x102158, "Fallout4.esm") as Keyword)
     EndIf
 EndFunction
@@ -1302,6 +1323,7 @@ EndFunction
 ; callback function for when MCM changes settings
 Function OnMCMSettingChange(string asModName, string asControlId)
     If asModName == ModName
+        bool doMenuRefresh
         int defaultValue = 2147483647 ; use 32-bit signed integer maximum to serve as a default value
         var oldValue = defaultValue
         var newValue
@@ -1333,27 +1355,27 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             oldValue = GeneralMultAdjust.Value
             LoadSettingFromMCM(GeneralMultAdjust, ModName)
             newValue = GeneralMultAdjust.Value
-            MCM.RefreshMenu()
+            doMenuRefresh = true
         ElseIf asControlId == IntAffectsMult.McmId
             oldValue = IntAffectsMult.Value
             LoadSettingFromMCM(IntAffectsMult, ModName)
             newValue = IntAffectsMult.Value
-            MCM.RefreshMenu()
+            doMenuRefresh = true
         ElseIf asControlId == LckAffectsMult.McmId
             oldValue = LckAffectsMult.Value
             LoadSettingFromMCM(LckAffectsMult, ModName)
             newValue = LckAffectsMult.Value
-            MCM.RefreshMenu()
+            doMenuRefresh = true
         ElseIf asControlId == RngAffectsMult.McmId
             oldValue = RngAffectsMult.Value
             LoadSettingFromMCM(RngAffectsMult, ModName)
             newValue = RngAffectsMult.Value
-            MCM.RefreshMenu()
+            doMenuRefresh = true
         ElseIf asControlId == ScrapperAffectsMult.McmId
             oldValue = ScrapperAffectsMult.Value
             LoadSettingFromMCM(ScrapperAffectsMult, ModName)
             newValue = ScrapperAffectsMult.Value
-            MCM.RefreshMenu()
+            doMenuRefresh = true
 
         ; recycler interface - behavior
         ElseIf asControlId == AutoRecyclingMode.McmId
@@ -1571,11 +1593,14 @@ Function OnMCMSettingChange(string asModName, string asControlId)
                 index += 1
             EndWhile
         EndIf
-        
+
         If oldValue as int != defaultValue
             Self._DebugTrace("MCM control ID '" + asControlId + "' was changed. Old value = " + oldValue + \
                 ", new value = " + newValue)
             Self.PerformMCMSettingPostProcessing()
+            If doMenuRefresh
+                MCM.RefreshMenu()
+            EndIf
             Else
             Self._DebugTrace("Unknown control ID: " + asControlId, 2)
         EndIf
