@@ -428,7 +428,7 @@
                      1
                   ]
                },
-               "help": "",
+               "help": "$MultAdjustGeneralSettlementHelp",
                "id": "fMultAdjustGeneralSettlement:MultiplierAdjustments",
                "text": "$InSettlements",
                "type": "slider",
@@ -445,7 +445,7 @@
                      1
                   ]
                },
-               "help": "",
+               "help": "$MultAdjustGeneralNotSettlementHelp",
                "id": "fMultAdjustGeneralNotSettlement:MultiplierAdjustments",
                "text": "$EverywhereElse",
                "type": "slider",
@@ -471,7 +471,7 @@
                      2
                   ]
                },
-               "help": "",
+               "help": "$MultAdjustGeneralSettlementCHelp",
                "id": "fMultAdjustGeneralSettlementC:MultiplierAdjustments",
                "text": "$IndentInSettlements",
                "type": "slider",
@@ -488,7 +488,7 @@
                      2
                   ]
                },
-               "help": "",
+               "help": "$MultAdjustGeneralNotSettlementCHelp",
                "id": "fMultAdjustGeneralNotSettlementC:MultiplierAdjustments",
                "text": "$IndentEverywhereElse",
                "type": "slider",
@@ -514,7 +514,7 @@
                      2
                   ]
                },
-               "help": "",
+               "help": "$MultAdjustGeneralSettlementUHelp",
                "id": "fMultAdjustGeneralSettlementU:MultiplierAdjustments",
                "text": "$IndentInSettlements",
                "type": "slider",
@@ -531,7 +531,7 @@
                      2
                   ]
                },
-               "help": "",
+               "help": "$MultAdjustGeneralNotSettlementUHelp",
                "id": "fMultAdjustGeneralNotSettlementU:MultiplierAdjustments",
                "text": "$IndentEverywhereElse",
                "type": "slider",
@@ -557,7 +557,7 @@
                      2
                   ]
                },
-               "help": "",
+               "help": "$MultAdjustGeneralSettlementRHelp",
                "id": "fMultAdjustGeneralSettlementR:MultiplierAdjustments",
                "text": "$IndentInSettlements",
                "type": "slider",
@@ -574,7 +574,7 @@
                      2
                   ]
                },
-               "help": "",
+               "help": "$MultAdjustGeneralNotSettlementRHelp",
                "id": "fMultAdjustGeneralNotSettlementR:MultiplierAdjustments",
                "text": "$IndentEverywhereElse",
                "type": "slider",
@@ -600,7 +600,7 @@
                      2
                   ]
                },
-               "help": "",
+               "help": "$MultAdjustGeneralSettlementSHelp",
                "id": "fMultAdjustGeneralSettlementS:MultiplierAdjustments",
                "text": "$IndentInSettlements",
                "type": "slider",
@@ -617,7 +617,7 @@
                      2
                   ]
                },
-               "help": "",
+               "help": "$MultAdjustGeneralNotSettlementSHelp",
                "id": "fMultAdjustGeneralNotSettlementS:MultiplierAdjustments",
                "text": "$IndentEverywhereElse",
                "type": "slider",
@@ -674,6 +674,7 @@
                      3
                   ]
                },
+               "help": "$MultAdjustIntHelp",
                "id": "fMultAdjustInt:MultiplierAdjustments",
                "text": "$AdjustmentInt",
                "type": "slider",
@@ -699,6 +700,7 @@
                      4
                   ]
                },
+               "help": "$MultAdjustIntCHelp",
                "id": "fMultAdjustIntC:MultiplierAdjustments",
                "text": "$IndentAdjustmentInt",
                "type": "slider",
@@ -724,6 +726,7 @@
                      4
                   ]
                },
+               "help": "$MultAdjustIntUHelp",
                "id": "fMultAdjustIntU:MultiplierAdjustments",
                "text": "$IndentAdjustmentInt",
                "type": "slider",
@@ -749,6 +752,7 @@
                      4
                   ]
                },
+               "help": "$MultAdjustIntRHelp",
                "id": "fMultAdjustIntR:MultiplierAdjustments",
                "text": "$IndentAdjustmentInt",
                "type": "slider",
@@ -774,6 +778,7 @@
                      4
                   ]
                },
+               "help": "$MultAdjustIntSHelp",
                "id": "fMultAdjustIntS:MultiplierAdjustments",
                "text": "$IndentAdjustmentInt",
                "type": "slider",
@@ -830,6 +835,7 @@
                      5
                   ]
                },
+               "help": "$MultAdjustLckHelp",
                "id": "fMultAdjustLck:MultiplierAdjustments",
                "text": "$AdjustmentLck",
                "type": "slider",
@@ -855,6 +861,7 @@
                      6
                   ]
                },
+               "help": "$MultAdjustLckCHelp",
                "id": "fMultAdjustLckC:MultiplierAdjustments",
                "text": "$IndentAdjustmentLck",
                "type": "slider",
@@ -880,6 +887,7 @@
                      6
                   ]
                },
+               "help": "$MultAdjustLckUHelp",
                "id": "fMultAdjustLckU:MultiplierAdjustments",
                "text": "$IndentAdjustmentLck",
                "type": "slider",
@@ -905,6 +913,7 @@
                      6
                   ]
                },
+               "help": "$MultAdjustLckRHelp",
                "id": "fMultAdjustLckR:MultiplierAdjustments",
                "text": "$IndentAdjustmentLck",
                "type": "slider",
@@ -930,6 +939,7 @@
                      6
                   ]
                },
+               "help": "$MultAdjustLckSHelp",
                "id": "fMultAdjustLckS:MultiplierAdjustments",
                "text": "$IndentAdjustmentLck",
                "type": "slider",
@@ -977,7 +987,7 @@
                      8
                   ]
                },
-               "text": "Randomness",
+               "text": "$Randomness",
                "type": "section"
             },
             {
@@ -986,6 +996,7 @@
                      7
                   ]
                },
+               "help": "$MultAdjustRandomMinHelp",
                "id": "fMultAdjustRandomMin:MultiplierAdjustments",
                "text": "$Minimum",
                "type": "slider",
@@ -1002,6 +1013,7 @@
                      7
                   ]
                },
+               "help": "$MultAdjustRandomMaxHelp",
                "id": "fMultAdjustRandomMax:MultiplierAdjustments",
                "text": "$Maximum",
                "type": "slider",
@@ -1027,6 +1039,7 @@
                      8
                   ]
                },
+               "help": "$MultAdjustRandomMinCHelp",
                "id": "fMultAdjustRandomMinC:MultiplierAdjustments",
                "text": "$IndentMinimum",
                "type": "slider",
@@ -1043,6 +1056,7 @@
                      8
                   ]
                },
+               "help": "$MultAdjustRandomMaxCHelp",
                "id": "fMultAdjustRandomMaxC:MultiplierAdjustments",
                "text": "$IndentMaximum",
                "type": "slider",
@@ -1068,6 +1082,7 @@
                      8
                   ]
                },
+               "help": "$MultAdjustRandomMinUHelp",
                "id": "fMultAdjustRandomMinU:MultiplierAdjustments",
                "text": "$IndentMinimum",
                "type": "slider",
@@ -1084,6 +1099,7 @@
                      8
                   ]
                },
+               "help": "$MultAdjustRandomMaxUHelp",
                "id": "fMultAdjustRandomMaxU:MultiplierAdjustments",
                "text": "$IndentMaximum",
                "type": "slider",
@@ -1109,6 +1125,7 @@
                      8
                   ]
                },
+               "help": "$MultAdjustRandomMinRHelp",
                "id": "fMultAdjustRandomMinR:MultiplierAdjustments",
                "text": "$IndentMinimum",
                "type": "slider",
@@ -1125,6 +1142,7 @@
                      8
                   ]
                },
+               "help": "$MultAdjustRandomMaxRHelp",
                "id": "fMultAdjustRandomMaxR:MultiplierAdjustments",
                "text": "$IndentMaximum",
                "type": "slider",
@@ -1150,6 +1168,7 @@
                      8
                   ]
                },
+               "help": "$MultAdjustRandomMinSHelp",
                "id": "fMultAdjustRandomMinS:MultiplierAdjustments",
                "text": "$IndentMinimum",
                "type": "slider",
@@ -1166,6 +1185,7 @@
                      8
                   ]
                },
+               "help": "$MultAdjustRandomMaxSHelp",
                "id": "fMultAdjustRandomMaxS:MultiplierAdjustments",
                "text": "$IndentMaximum",
                "type": "slider",
@@ -1213,7 +1233,7 @@
                      10
                   ]
                },
-               "text": "Scrapper: Rank 1",
+               "text": "$ScrapperRank1",
                "type": "section"
             },
             {
@@ -1222,6 +1242,7 @@
                      9
                   ]
                },
+               "help": "$MultAdjustScrapperSettlement1Help",
                "id": "fMultAdjustScrapperSettlement1:MultiplierAdjustments",
                "text": "$InSettlements",
                "type": "slider",
@@ -1238,6 +1259,7 @@
                      9
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlement1Help",
                "id": "fMultAdjustScrapperNotSettlement1:MultiplierAdjustments",
                "text": "$EverywhereElse",
                "type": "slider",
@@ -1263,6 +1285,7 @@
                      10
                   ]
                },
+               "help": "$MultAdjustScrapperSettlementC1Help",
                "id": "fMultAdjustScrapperSettlementC1:MultiplierAdjustments",
                "text": "$IndentInSettlements",
                "type": "slider",
@@ -1279,6 +1302,7 @@
                      10
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlementC1Help",
                "id": "fMultAdjustScrapperNotSettlementC1:MultiplierAdjustments",
                "text": "$IndentEverywhereElse",
                "type": "slider",
@@ -1304,6 +1328,7 @@
                      10
                   ]
                },
+               "help": "$MultAdjustScrapperSettlementU1Help",
                "id": "fMultAdjustScrapperSettlementU1:MultiplierAdjustments",
                "text": "$IndentInSettlements",
                "type": "slider",
@@ -1320,6 +1345,7 @@
                      10
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlementU1Help",
                "id": "fMultAdjustScrapperNotSettlementU1:MultiplierAdjustments",
                "text": "$IndentEverywhereElse",
                "type": "slider",
@@ -1345,6 +1371,7 @@
                      10
                   ]
                },
+               "help": "$MultAdjustScrapperSettlementR1Help",
                "id": "fMultAdjustScrapperSettlementR1:MultiplierAdjustments",
                "text": "$IndentInSettlements",
                "type": "slider",
@@ -1361,6 +1388,7 @@
                      10
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlementR1Help",
                "id": "fMultAdjustScrapperNotSettlementR1:MultiplierAdjustments",
                "text": "$IndentEverywhereElse",
                "type": "slider",
@@ -1386,6 +1414,7 @@
                      10
                   ]
                },
+               "help": "$MultAdjustScrapperSettlementS1Help",
                "id": "fMultAdjustScrapperSettlementS1:MultiplierAdjustments",
                "text": "$IndentInSettlements",
                "type": "slider",
@@ -1402,6 +1431,7 @@
                      10
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlementS1Help",
                "id": "fMultAdjustScrapperNotSettlementS1:MultiplierAdjustments",
                "text": "$IndentEverywhereElse",
                "type": "slider",
@@ -1429,7 +1459,7 @@
                      10
                   ]
                },
-               "text": "Scrapper: Rank 2",
+               "text": "$ScrapperRank2",
                "type": "section"
             },
             {
@@ -1438,6 +1468,7 @@
                      9
                   ]
                },
+               "help": "$MultAdjustScrapperSettlement2Help",
                "id": "fMultAdjustScrapperSettlement2:MultiplierAdjustments",
                "text": "$InSettlements",
                "type": "slider",
@@ -1454,6 +1485,7 @@
                      9
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlement2Help",
                "id": "fMultAdjustScrapperNotSettlement2:MultiplierAdjustments",
                "text": "$EverywhereElse",
                "type": "slider",
@@ -1479,6 +1511,7 @@
                      10
                   ]
                },
+               "help": "$MultAdjustScrapperSettlementC2Help",
                "id": "fMultAdjustScrapperSettlementC2:MultiplierAdjustments",
                "text": "$IndentInSettlements",
                "type": "slider",
@@ -1495,6 +1528,7 @@
                      10
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlementC2Help",
                "id": "fMultAdjustScrapperNotSettlementC2:MultiplierAdjustments",
                "text": "$IndentEverywhereElse",
                "type": "slider",
@@ -1520,6 +1554,7 @@
                      10
                   ]
                },
+               "help": "$MultAdjustScrapperSettlementU2Help",
                "id": "fMultAdjustScrapperSettlementU2:MultiplierAdjustments",
                "text": "$IndentInSettlements",
                "type": "slider",
@@ -1536,6 +1571,7 @@
                      10
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlementU2Help",
                "id": "fMultAdjustScrapperNotSettlementU2:MultiplierAdjustments",
                "text": "$IndentEverywhereElse",
                "type": "slider",
@@ -1561,6 +1597,7 @@
                      10
                   ]
                },
+               "help": "$MultAdjustScrapperSettlementR2Help",
                "id": "fMultAdjustScrapperSettlementR2:MultiplierAdjustments",
                "text": "$IndentInSettlements",
                "type": "slider",
@@ -1577,6 +1614,7 @@
                      10
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlementR2Help",
                "id": "fMultAdjustScrapperNotSettlementR2:MultiplierAdjustments",
                "text": "$IndentEverywhereElse",
                "type": "slider",
@@ -1602,6 +1640,7 @@
                      10
                   ]
                },
+               "help": "$MultAdjustScrapperSettlementS2Help",
                "id": "fMultAdjustScrapperSettlementS2:MultiplierAdjustments",
                "text": "$IndentInSettlements",
                "type": "slider",
@@ -1618,6 +1657,7 @@
                      10
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlementS2Help",
                "id": "fMultAdjustScrapperNotSettlementS2:MultiplierAdjustments",
                "text": "$IndentEverywhereElse",
                "type": "slider",
@@ -1655,7 +1695,7 @@
                      11
                   ]
                },
-               "text": "Scrapper: Rank 3",
+               "text": "$ScrapperRank3",
                "type": "section"
             },
             {
@@ -1665,6 +1705,7 @@
                      11
                   ]
                },
+               "help": "$MultAdjustScrapperSettlement3Help",
                "id": "fMultAdjustScrapperSettlement3:MultiplierAdjustments",
                "text": "$InSettlements",
                "type": "slider",
@@ -1682,6 +1723,7 @@
                      11
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlement3Help",
                "id": "fMultAdjustScrapperNotSettlement3:MultiplierAdjustments",
                "text": "$EverywhereElse",
                "type": "slider",
@@ -1710,7 +1752,7 @@
                      11
                   ]
                },
-               "text": "Scrapper: Rank 3",
+               "text": "$ScrapperRank3",
                "type": "section"
             },
             {
@@ -1730,6 +1772,7 @@
                      11
                   ]
                },
+               "help": "$MultAdjustScrapperSettlementC3Help",
                "id": "fMultAdjustScrapperSettlementC3:MultiplierAdjustments",
                "text": "$IndentInSettlements",
                "type": "slider",
@@ -1747,6 +1790,7 @@
                      11
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlementC3Help",
                "id": "fMultAdjustScrapperNotSettlementC3:MultiplierAdjustments",
                "text": "$IndentEverywhereElse",
                "type": "slider",
@@ -1774,6 +1818,7 @@
                      11
                   ]
                },
+               "help": "$MultAdjustScrapperSettlementU3Help",
                "id": "fMultAdjustScrapperSettlementU3:MultiplierAdjustments",
                "text": "$IndentInSettlements",
                "type": "slider",
@@ -1791,6 +1836,7 @@
                      11
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlementU3Help",
                "id": "fMultAdjustScrapperNotSettlementU3:MultiplierAdjustments",
                "text": "$IndentEverywhereElse",
                "type": "slider",
@@ -1818,6 +1864,7 @@
                      11
                   ]
                },
+               "help": "$MultAdjustScrapperSettlementR3Help",
                "id": "fMultAdjustScrapperSettlementR3:MultiplierAdjustments",
                "text": "$IndentInSettlements",
                "type": "slider",
@@ -1835,6 +1882,7 @@
                      11
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlementR3Help",
                "id": "fMultAdjustScrapperNotSettlementR3:MultiplierAdjustments",
                "text": "$IndentEverywhereElse",
                "type": "slider",
@@ -1862,6 +1910,7 @@
                      11
                   ]
                },
+               "help": "$MultAdjustScrapperSettlementS3Help",
                "id": "fMultAdjustScrapperSettlementS3:MultiplierAdjustments",
                "text": "$IndentInSettlements",
                "type": "slider",
@@ -1879,6 +1928,7 @@
                      11
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlementS3Help",
                "id": "fMultAdjustScrapperNotSettlementS3:MultiplierAdjustments",
                "text": "$IndentEverywhereElse",
                "type": "slider",
@@ -1917,7 +1967,7 @@
                      12
                   ]
                },
-               "text": "Scrapper: Rank 4",
+               "text": "$ScrapperRank4",
                "type": "section"
             },
             {
@@ -1927,6 +1977,7 @@
                      12
                   ]
                },
+               "help": "$MultAdjustScrapperSettlement4Help",
                "id": "fMultAdjustScrapperSettlement4:MultiplierAdjustments",
                "text": "$InSettlements",
                "type": "slider",
@@ -1944,6 +1995,7 @@
                      12
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlement4Help",
                "id": "fMultAdjustScrapperNotSettlement4:MultiplierAdjustments",
                "text": "$EverywhereElse",
                "type": "slider",
@@ -1972,7 +2024,7 @@
                      12
                   ]
                },
-               "text": "Scrapper: Rank 4",
+               "text": "$ScrapperRank4",
                "type": "section"
             },
             {
@@ -1992,6 +2044,7 @@
                      12
                   ]
                },
+               "help": "$MultAdjustScrapperSettlementC4Help",
                "id": "fMultAdjustScrapperSettlementC4:MultiplierAdjustments",
                "text": "$IndentInSettlements",
                "type": "slider",
@@ -2009,6 +2062,7 @@
                      12
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlementC4Help",
                "id": "fMultAdjustScrapperNotSettlementC4:MultiplierAdjustments",
                "text": "$IndentEverywhereElse",
                "type": "slider",
@@ -2036,6 +2090,7 @@
                      12
                   ]
                },
+               "help": "$MultAdjustScrapperSettlementU4Help",
                "id": "fMultAdjustScrapperSettlementU4:MultiplierAdjustments",
                "text": "$IndentInSettlements",
                "type": "slider",
@@ -2053,6 +2108,7 @@
                      12
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlementU4Help",
                "id": "fMultAdjustScrapperNotSettlementU4:MultiplierAdjustments",
                "text": "$IndentEverywhereElse",
                "type": "slider",
@@ -2080,6 +2136,7 @@
                      12
                   ]
                },
+               "help": "$MultAdjustScrapperSettlementR4Help",
                "id": "fMultAdjustScrapperSettlementR4:MultiplierAdjustments",
                "text": "$IndentInSettlements",
                "type": "slider",
@@ -2097,6 +2154,7 @@
                      12
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlementR4Help",
                "id": "fMultAdjustScrapperNotSettlementR4:MultiplierAdjustments",
                "text": "$IndentEverywhereElse",
                "type": "slider",
@@ -2124,6 +2182,7 @@
                      12
                   ]
                },
+               "help": "$MultAdjustScrapperSettlementS4Help",
                "id": "fMultAdjustScrapperSettlementS4:MultiplierAdjustments",
                "text": "$IndentInSettlements",
                "type": "slider",
@@ -2141,6 +2200,7 @@
                      12
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlementS4Help",
                "id": "fMultAdjustScrapperNotSettlementS4:MultiplierAdjustments",
                "text": "$IndentEverywhereElse",
                "type": "slider",
@@ -2179,7 +2239,7 @@
                      13
                   ]
                },
-               "text": "Scrapper: Rank 5",
+               "text": "$ScrapperRank5",
                "type": "section"
             },
             {
@@ -2189,6 +2249,7 @@
                      13
                   ]
                },
+               "help": "$MultAdjustScrapperSettlement5Help",
                "id": "fMultAdjustScrapperSettlement5:MultiplierAdjustments",
                "text": "$InSettlements",
                "type": "slider",
@@ -2206,6 +2267,7 @@
                      13
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlement5Help",
                "id": "fMultAdjustScrapperNotSettlement5:MultiplierAdjustments",
                "text": "$EverywhereElse",
                "type": "slider",
@@ -2223,7 +2285,7 @@
                      13
                   ]
                },
-               "text": "Scrapper: Rank 5",
+               "text": "$ScrapperRank5",
                "type": "section"
             },
             {
@@ -2243,6 +2305,7 @@
                      13
                   ]
                },
+               "help": "$MultAdjustScrapperSettlementC5Help",
                "id": "fMultAdjustScrapperSettlementC5:MultiplierAdjustments",
                "text": "$IndentInSettlements",
                "type": "slider",
@@ -2260,6 +2323,7 @@
                      13
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlementC5Help",
                "id": "fMultAdjustScrapperNotSettlementC5:MultiplierAdjustments",
                "text": "$IndentEverywhereElse",
                "type": "slider",
@@ -2287,6 +2351,7 @@
                      13
                   ]
                },
+               "help": "$MultAdjustScrapperSettlementU5Help",
                "id": "fMultAdjustScrapperSettlementU5:MultiplierAdjustments",
                "text": "$IndentInSettlements",
                "type": "slider",
@@ -2304,6 +2369,7 @@
                      13
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlementU5Help",
                "id": "fMultAdjustScrapperNotSettlementU5:MultiplierAdjustments",
                "text": "$IndentEverywhereElse",
                "type": "slider",
@@ -2331,6 +2397,7 @@
                      13
                   ]
                },
+               "help": "$MultAdjustScrapperSettlementR5Help",
                "id": "fMultAdjustScrapperSettlementR5:MultiplierAdjustments",
                "text": "$IndentInSettlements",
                "type": "slider",
@@ -2348,6 +2415,7 @@
                      13
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlementR5Help",
                "id": "fMultAdjustScrapperNotSettlementR5:MultiplierAdjustments",
                "text": "$IndentEverywhereElse",
                "type": "slider",
@@ -2375,6 +2443,7 @@
                      13
                   ]
                },
+               "help": "$MultAdjustScrapperSettlementS5Help",
                "id": "fMultAdjustScrapperSettlementS5:MultiplierAdjustments",
                "text": "$IndentInSettlements",
                "type": "slider",
@@ -2392,6 +2461,7 @@
                      13
                   ]
                },
+               "help": "$MultAdjustScrapperNotSettlementS5Help",
                "id": "fMultAdjustScrapperNotSettlementS5:MultiplierAdjustments",
                "text": "$IndentEverywhereElse",
                "type": "slider",
