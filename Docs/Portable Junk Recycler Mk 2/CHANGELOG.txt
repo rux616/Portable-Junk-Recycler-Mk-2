@@ -1,19 +1,21 @@
 v0.5.0 beta
 -----------
+- Added some optional light plugins to change the crafting category of the recycler device: "Devices", "Other", and "Tools" from AWKCR; "Devices", and "Utility" from Lively's Keyword Resources (LKR)
 - Added a "Never Automatically Transfer" list so that certain items never get transferred to the recycler inventory automatically
 - Added an "Always Automatically Transfer" list so that certain items always get transferred to the recycler inventory automatically
-- Added new setting: Use "Never Automatically Transfer" List (uses the list)
-- Added new setting: Use "Always Automatically Transfer" List (uses the list)
-- Added new setting: Crafting Station (choose where the recycler device is crafted, can dynamically choose from the Utility Workbench from Standalone Workbenches, the Utility Workbench from AWKCR, or the Chemistry Station from Vanilla, or manually specify one of them, falling back to vanilla if the choice isn't found)
-- Added new button ('Advanced' page in the MCM): "Reset List: Always Automatically Transfer" (resets the FormList associated with determining what junk items are always automatically moved to the recycler inventory)
-- Added new button ('Advanced' page in the MCM): "Reset List: Never Automatically Transfer" (resets the FormList associated with determining what junk items are never automatically moved to the recycler inventory)
-- Renamed button ('Advanced' page in the MCM): "Reset Recyclable Item List" -> "Reset List: Recyclable Items"
-- Removed button ('Advanced' page in the MCM): "Reset Behavior Overrides" as it is no longer needed
+- Added MCM setting: 'Use "Never Automatically Transfer" List' ('Recycler Interface' page) - uses the lis
+- Added MCM setting: 'Use "Always Automatically Transfer" List' ('Recycler Interface' page) - uses the list
+- Added MCM setting: 'Crafting Station' ('Recycler Interface' page) - choose where the recycler device is crafted, can dynamically choose from the Utility Workbench from Standalone Workbenches, the Utility Workbench from AWKCR, or the Chemistry Station from Vanilla, or manually specify one of them, falling back to Chemistry Station from Vanilla if the choice isn't detected
+- Added MCM button: 'Reset List: Always Automatically Transfer' ('Advanced' page) - resets the FormList associated with determining what junk items are always automatically moved to the recycler inventory
+- Added MCM button: 'Reset List: Never Automatically Transfer' ('Advanced' page) - resets the FormList associated with determining what junk items are never automatically moved to the recycler inventory
+- Added a safeguard in MCM so you don't accidentally click the uninstall button ('Advanced' page)
+- Added help entries for all settings and buttons in the MCM
+- Improved some of the descriptions of MCM settings and buttons
+- Changed MCM button: 'Reset Recyclable Item List' ('Advanced' page) -> 'Reset List: Recyclable Items' ('Advanced' page)
 - Changed settings.ini categories of settings to broadly match the names of their locations in the menus
-- Uninstall now cannot be triggered when there is a recycling process running or the control script is busy
-- Added a safeguard in MCM so you don't accidentally click the uninstall button
-- Improved some of the descriptions of MCM options
-- Adopted the GPL 3.0 license
+- Changed MCM button: 'Uninstall' ('Advanced' page) - cannot be triggered when there is a recycling process running or the control script is busy
+- Removed MCM button: 'Reset Behavior Overrides' ('Advanced' page) - no longer needed
+- Adopted the GPL 3.0 license (with the "or later" option) for the source code of the mod
 
 v0.4.0 beta
 -----------
