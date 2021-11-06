@@ -16,8 +16,9 @@
     <Variables>
         <Variable Name="ModName" Value="Portable Junk Recycler Mk 2"/>
         <Variable Name="ModNameShort" Value="PJRM2"/>
+        <Variable Name="ModNameRelease" Value="Portable_Junk_Recycler_Mk_2"/>
         <Variable Name="ModResourceName" Value="PortableJunkRecyclerMk2"/>
-        <Variable Name="ModVersion" Value="0.5.0 beta"/>
+        <Variable Name="ModVersion" Value="0.5.0-beta"/>
         <Variable Name="ModPath" Value="..\..\.."/>
         <Variable Name="BuildPath" Value="@ModPath\Build"/>
         <Variable Name="CompilePath" Value="@ModPath\Scripts"/>
@@ -48,7 +49,7 @@
         </Package>
     </Packages>
     <ZipFiles Output="@BuildPath\Release\@ModVersion">
-        <ZipFile Name="@ModName v@ModVersion" RootDir="@ModPath" Compression="deflate">
+        <ZipFile Name="@ModNameRelease-v@ModVersion" RootDir="@ModPath" Compression="deflate">
             <Include>**\@ModName.esp</Include>
             <Include>Docs\**\*.txt</Include>
             <Include>fomod\*.*</Include>
