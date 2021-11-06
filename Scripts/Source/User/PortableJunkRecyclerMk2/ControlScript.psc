@@ -1013,6 +1013,7 @@ Function InitSettingsDefaultValues()
 
     ; perform general post-processing
     Self.PerformMCMSettingPostProcessing()
+    Self.SetCraftingStation()
 EndFunction
 
 ; initialize FormList wrappers
@@ -1141,6 +1142,7 @@ Function LoadAllSettingsFromMCM()
 
         ; perform general post-processing
         Self.PerformMCMSettingPostProcessing()
+        Self.SetCraftingStation()
         Self.MultAdjustRandomSanityCheck()
     Else
         Self._DebugTrace("Loading settings from MCM; skipping (MCM not enabled)")
@@ -1242,8 +1244,6 @@ EndFunction
 
 ; do common post-processing tasks when an MCM setting is changed
 Function PerformMCMSettingPostProcessing()
-    Self._DebugTrace("Performing MCM setting change post processing")
-
     ; set variables that control what the MCM shows
     MCM_GeneralMultAdjustSimple = GeneralMultAdjust.Value == 0
     MCM_GeneralMultAdjustDetailed = GeneralMultAdjust.Value > 0
@@ -1255,8 +1255,10 @@ Function PerformMCMSettingPostProcessing()
     MCM_RngAffectsMultDetailed = RngAffectsMult.Value > 1
     MCM_ScrapperAffectsMultSimple = ScrapperAffectsMult.Value == 1
     MCM_ScrapperAffectsMultDetailed = ScrapperAffectsMult.Value > 1
+EndFunction
 
-    ; determine where the crafting recipe lives
+; determine where the crafting recipe lives
+Function SetCraftingStation()
     string pluginNameSW = "StandaloneWorkbenches.esp" const
     string pluginNameAWKCR = "ArmorKeywords.esm" const
     bool isSWInstalled = Game.IsPluginInstalled(pluginNameSW)
@@ -1412,6 +1414,7 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             oldValue = CraftingStation.Value
             LoadSettingFromMCM(CraftingStation, ModName)
             newValue = CraftingStation.Value
+            Self.SetCraftingStation()
 
         ; multiplier adjustments - general
         ElseIf asControlId == MultAdjustGeneralSettlement.McmId
@@ -1615,6 +1618,10 @@ EndFunction
 
 ; show the current multipliers for where the player is located right now
 Function ShowCurrentMultipliers()
+    ; engage a short non-menu-mode wait so that the multiplier isn't calculated until the player comes out of
+    ; menu mode in order to take into account any changes that might still be made
+    Utility.Wait(0.1)
+
     Self._DebugTrace("Current multipliers:")
     MultiplierSet currentMults = Self.GetMultipliers()
     If RngAffectsMult.Value == 1
@@ -1643,6 +1650,10 @@ EndFunction
 
 ; get the number of uses left
 Function ShowNumberOfUsesLeft()
+    ; engage a short non-menu-mode wait so that the number of uses remaining isn't calculated until the player
+    ; comes out of menu mode in order to take into account any changes that might still be made
+    Utility.Wait(0.1)
+
     If HasLimitedUses.Value
         Self._DebugTrace("Number of uses remaining: " + (NumberOfUses.Value - NumberOfTimesUsed))
         MessageUsesLeftLimited.Show(NumberOfUses.Value - NumberOfTimesUsed)
