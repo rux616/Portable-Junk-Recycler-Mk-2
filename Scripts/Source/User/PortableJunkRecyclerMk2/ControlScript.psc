@@ -204,7 +204,7 @@ int Property iSaveFileMonitor Auto Hidden ; Do not mess with ever - this is used
 ; ---------
 
 string ModName = "Portable Junk Recycler Mk 2" const
-string ModVersion = "0.5.0 beta" const
+string ModVersion = "0.5.0-beta" const
 string FullScriptName = "PortableJunkRecyclerMk2:ControlScript" const
 int ScrapperPerkMaxRanksSupported = 5 const
 SettingChangeType AvailableChangeTypes
@@ -314,7 +314,7 @@ EndFunction
 
 ; consolidated init
 Function Initialize(bool abQuestInit = false)
-    Self._DebugTrace(modName + " v" + ModVersion)
+    Self._DebugTrace(ModName + " v" + ModVersion)
     Self._DebugTrace("ThreadManager initialized: " + ThreadManager.Initialized)
     If abQuestInit
         Self._DebugTrace("Beginning onetime init process")

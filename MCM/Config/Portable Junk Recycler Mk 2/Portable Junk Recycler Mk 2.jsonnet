@@ -47,7 +47,7 @@ local stat_adjust_step = 0.005;
   local mod = {
     name: 'Portable Junk Recycler Mk 2',
     localized_name: '$PortableJunkRecyclerMk2',
-    version: '0.5.0 beta',
+    version: '0.5.0-beta',
     plugin_name: mod.name + '.esp',
     quest_form: mod.plugin_name + '|800',
     control_script: 'PortableJunkRecyclerMk2:ControlScript',

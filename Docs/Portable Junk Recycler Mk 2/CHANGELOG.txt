@@ -1,4 +1,4 @@
-v0.5.0 beta
+v0.5.0-beta
 -----------
 - Added some optional light plugins to change the crafting category of the recycler device: "Devices", "Other", and "Tools" from AWKCR; "Devices", and "Utility" from Lively's Keyword Resources (LKR)
 - Added a "Never Automatically Transfer" list so that certain items never get transferred to the recycler inventory automatically
