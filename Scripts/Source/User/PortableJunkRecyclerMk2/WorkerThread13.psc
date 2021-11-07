@@ -17,8 +17,15 @@
 
 
 
-ScriptName PortableJunkRecyclerMk2:WorkerThread0x9 Extends PortableJunkRecyclerMk2:WorkerThreadBase
+ScriptName PortableJunkRecyclerMk2:WorkerThread13 Extends PortableJunkRecyclerMk2:WorkerThreadBase
 
 Function _DebugTrace(string asMessage, int aiSeverity = 0) DebugOnly
-    Debug.TraceUser(ModName, "WorkerThread 0x9: " + asMessage, aiSeverity)
+    string baseMessage = "WorkerThread 13: " const
+    If aiSeverity == 0
+        Debug.TraceUser(ModName, baseMessage + asMessage)
+    ElseIf aiSeverity == 1
+        Debug.TraceUser(ModName, "WARNING: " + baseMessage + asMessage)
+    ElseIf aiSeverity == 2
+        Debug.TraceUser(ModName, "ERROR: " + baseMessage + asMessage)
+    EndIf
 EndFunction
