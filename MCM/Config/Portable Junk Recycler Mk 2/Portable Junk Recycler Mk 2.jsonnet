@@ -17,6 +17,9 @@
 
 local mcm = import 'lib/mcm.libsonnet';
 
+local str_on_simple = '$ONSimple';
+local str_on_detailed = '$ONDetailed';
+local str_off = '$OFF';
 local str_indent_comp_c = '$IndentComponentsCommon';
 local str_indent_comp_u = '$IndentComponentsUncommon';
 local str_indent_comp_r = '$IndentComponentsRare';
@@ -47,7 +50,7 @@ local stat_adjust_step = 0.005;
   local mod = {
     name: 'Portable Junk Recycler Mk 2',
     localized_name: '$PortableJunkRecyclerMk2',
-    version: '0.5.0-beta',
+    version: '1.0.0-rc1',
     plugin_name: mod.name + '.esp',
     quest_form: mod.plugin_name + '|800',
     control_script: 'PortableJunkRecyclerMk2:ControlScript',
@@ -110,10 +113,10 @@ local stat_adjust_step = 0.005;
           // settings - adjustment options
           mcm.control.section(text='$AdjustmentOptions'),
           mcm.control.dropdown(text='$GeneralAdjustmentsText', options=['$Simple', '$Detailed'], source=mcm.helper.source.mod_setting.int(id='iGeneralMultAdjust:AdjustmentOptions'), help='$GeneralAdjustmentsHelp'),
-          mcm.control.dropdown(text='$IntelligenceAffectsMultiplierText', options=['$OFF', '$ONSimple', '$ONDetailed'], source=mcm.helper.source.mod_setting.int(id='iIntAffectsMult:AdjustmentOptions'), help='$IntelligenceAffectsMultiplierHelp'),
-          mcm.control.dropdown(text='$LuckAffectsMultiplierText', options=['$OFF', '$ONSimple', '$ONDetailed'], source=mcm.helper.source.mod_setting.int(id='iLckAffectsMult:AdjustmentOptions'), help='$LuckAffectsMultiplierHelp'),
-          mcm.control.dropdown(text='$AddRandomnessToMultiplierText', options=['$OFF', '$ONSimple', '$ONDetailed'], source=mcm.helper.source.mod_setting.int(id='iRngAffectsMult:AdjustmentOptions'), help='$AddRandomnessToMultiplierHelp'),
-          mcm.control.dropdown(text='$ScrapperPerkAffectsMultiplierText', options=['$OFF', '$ONSimple', '$ONDetailed'], source=mcm.helper.source.mod_setting.int(id='iScrapperAffectsMult:AdjustmentOptions'), help='$ScrapperPerkAffectsMultiplierHelp'),
+          mcm.control.dropdown(text='$IntelligenceAffectsMultiplierText', options=[str_off, str_on_simple, str_on_detailed], source=mcm.helper.source.mod_setting.int(id='iIntAffectsMult:AdjustmentOptions'), help='$IntelligenceAffectsMultiplierHelp'),
+          mcm.control.dropdown(text='$LuckAffectsMultiplierText', options=[str_off, str_on_simple, str_on_detailed], source=mcm.helper.source.mod_setting.int(id='iLckAffectsMult:AdjustmentOptions'), help='$LuckAffectsMultiplierHelp'),
+          mcm.control.dropdown(text='$AddRandomnessToMultiplierText', options=[str_off, str_on_simple, str_on_detailed], source=mcm.helper.source.mod_setting.int(id='iRngAffectsMult:AdjustmentOptions'), help='$AddRandomnessToMultiplierHelp'),
+          mcm.control.dropdown(text='$ScrapperPerkAffectsMultiplierText', options=[str_off, str_on_simple, str_on_detailed], source=mcm.helper.source.mod_setting.int(id='iScrapperAffectsMult:AdjustmentOptions'), help='$ScrapperPerkAffectsMultiplierHelp'),
           mcm.control.spacer(lines=1),
         ],
       },
@@ -125,6 +128,8 @@ local stat_adjust_step = 0.005;
           mcm.control.switcher(text='$AutoRecyclingModeText', source=mcm.helper.source.mod_setting.bool(id='bAutoRecyclingMode:Behavior'), help='$AutoRecyclingModeHelp'),
           mcm.control.switcher(text='$AllowJunkOnlyText', source=mcm.helper.source.mod_setting.bool(id='bAllowJunkOnly:Behavior'), help='$AllowJunkOnlyHelp'),
           mcm.control.switcher(text='$AutoTransferJunkText', source=mcm.helper.source.mod_setting.bool(id='bAutoTransferJunk:Behavior'), help='$AutoTransferJunkHelp'),
+          mcm.control.dropdown(text='$IndentTransferLowWeightRatioItemsText', options=[str_off, str_settlement, '$NotPlayerOwnedSettlement', '$Everywhere'], source=mcm.helper.source.mod_setting.int(id='iTransferLowWeightRatioItems:Behavior'), help='$TransferLowWeightRatioItemsHelp'),
+          mcm.control.text(text='$IndentTransferLowWeightRatioItemsNote'),
           mcm.control.switcher(text='$UseAlwaysAutoTransferListText', source=mcm.helper.source.mod_setting.bool(id='bUseAlwaysAutoTransferList:Behavior'), help='$UseAlwaysAutoTransferListHelp'),
           mcm.control.switcher(text='$UseNeverAutoTransferListText', source=mcm.helper.source.mod_setting.bool(id='bUseNeverAutoTransferList:Behavior'), help='$UseNeverAutoTransferListHelp'),
           mcm.control.switcher(text='$AllowBehaviorOverridesText', source=mcm.helper.source.mod_setting.bool(id='bAllowBehaviorOverrides:Behavior'), group=mcm.helper.group.control(mod.group_id.behavior_override), help='$AllowBehaviorOverridesHelp'),
