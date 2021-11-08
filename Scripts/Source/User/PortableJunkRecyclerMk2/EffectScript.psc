@@ -154,7 +154,14 @@ EndEvent
 
 ; add a bit of text to traces going into the papyrus user log
 Function _DebugTrace(string asMessage, int aiSeverity = 0) DebugOnly
-    Debug.TraceUser(ModName, "EffectScript: " + asMessage, aiSeverity)
+    string baseMessage = "EffectScript: " const
+    If aiSeverity == 0
+        Debug.TraceUser(ModName, baseMessage + asMessage)
+    ElseIf aiSeverity == 1
+        Debug.TraceUser(ModName, "WARNING: " + baseMessage + asMessage)
+    ElseIf aiSeverity == 2
+        Debug.TraceUser(ModName, "ERROR: " + baseMessage + asMessage)
+    EndIf
 EndFunction
 
 ; handle the recycling functionality of the device
@@ -162,6 +169,9 @@ Function Recycle(bool abForceRetainJunk, bool abForceTransferJunk)
     Self._DebugTrace("Recycler process started")
 
     ; set some convenience variables
+
+    ; check to see whether the player is at a player-owned settlement
+    bool playerAtOwnedWorkshop = PortableRecyclerControl.IsPlayerAtOwnedWorkshop()
 
     ; junk will be automatically transferred under the following conditions:
     ;   - the ForceRetainJunk hotkey IS pressed && the ForceTransferJunk hotkey IS pressed
@@ -175,6 +185,17 @@ Function Recycle(bool abForceRetainJunk, bool abForceTransferJunk)
     bool transferJunk = abForceTransferJunk || (! abForceRetainJunk && PortableRecyclerControl.AutoTransferJunk.Value) || \
         (! abForceRetainJunk && PortableRecyclerControl.AutoRecyclingMode.Value)
     Self._DebugTrace("Transfer junk: " + transferJunk)
+
+    ; all junk will be automatically transferred under the following conditions (otherwise just low component weight ratio items):
+    ;   - the TransferLowWeightRatioItems option is OFF
+    ;   - the ForceTransferJunk hotkey IS pressed && the ForceRetainJunk hotkey IS NOT pressed
+    ;   - the player IS in a player-owned settlement && the TransferLowWeightRatioItems option is set to 'not in player-owned settlements'
+    ;   - the player IS NOT in a player-owned settlement && the TransferLowWeightRatioItems option is set to 'in player-owned settlements'
+    bool transferAllJunk = ! PortableRecyclerControl.TransferLowWeightRatioItems.Value || \
+        (abForceTransferJunk && ! abForceRetainJunk) || \
+        (playerAtOwnedWorkshop && PortableRecyclerControl.TransferLowWeightRatioItems.Value == 2) || \
+        (! playerAtOwnedWorkshop && PortableRecyclerControl.TransferLowWeightRatioItems.Value == 1)
+    Self._DebugTrace("Transfer ALL junk: " + transferAllJunk)
 
     ; the recyclable item FormList will be updated under the following conditions:
     ;   - junk will be automatically transferred
@@ -197,7 +218,7 @@ Function Recycle(bool abForceRetainJunk, bool abForceTransferJunk)
     Self._DebugTrace("Open container: " + openContainer)
 
     ; get the set of multipliers that will be applied to this recycling run
-    MultiplierSet multipliers = PortableRecyclerControl.GetMultipliers()
+    MultiplierSet multipliers = PortableRecyclerControl.GetMultipliers(playerAtOwnedWorkshop)
     Self._DebugTrace("Multipliers: C=" + multipliers.MultC + "; U=" + multipliers.MultU + "; R=" + multipliers.MultR + \
         "; S=" + multipliers.MultS)
 
@@ -209,7 +230,12 @@ Function Recycle(bool abForceRetainJunk, bool abForceTransferJunk)
 
     ; transfer (or not) junk to the container.
     If transferJunk
-        If PortableRecyclerControl.RecyclableItemList.Size
+        ; always transfer at least the items that have low component weight ratios as long as there are items in the list
+        If PortableRecyclerControl.LowWeightRatioItemList.Size
+            PlayerRef.RemoveItem(PortableRecyclerControl.LowWeightRatioItemList.List, -1, true, TempContainerPrimary)
+        EndIf
+        ; if all junk is slated to be transferred, also transfer non-low component weight ratio items
+        If PortableRecyclerControl.RecyclableItemList.Size && transferAllJunk
             PlayerRef.RemoveItem(PortableRecyclerControl.RecyclableItemList.List, -1, true, TempContainerPrimary)
         EndIf
     Else
@@ -371,15 +397,16 @@ EndFunction
 
 ; updates the FormList containing recyclable items
 Function UpdateRecyclableItemList()
-    ; if the recyclable items FormList already has items in it, move any of those items in the player's inventory
-    ; to the primary temp container in order to reduce the number of items that this function will need to iterate over
+    ; if any of the FormLists below have items in them, transfer these items to the primary temp container in
+    ; order to reduce the number of items that this function will need to iterate over
     If PortableRecyclerControl.RecyclableItemList.Size
-        Self._DebugTrace("Moving current recyclable items from player to primary temp container")
+        Self._DebugTrace("Moving currently known recyclable items from player to primary temp container")
         PlayerRef.RemoveItem(PortableRecyclerControl.RecyclableItemList.List, -1, true, TempContainerPrimary)
     EndIf
-
-    ; move all scrap items from the player to the primary temp container to avoid them being added to the
-    ; recyclable items list
+    If PortableRecyclerControl.LowWeightRatioItemList.Size
+        Self._DebugTrace("Moving currently known low weight ratio items from player to primary temp container")
+        PlayerRef.RemoveItem(PortableRecyclerControl.LowWeightRatioItemList.List, -1, true, TempContainerPrimary)
+    EndIf
     If PortableRecyclerControl.ScrapListAll.Size
         Self._DebugTrace("Moving scrap items from player to primary temp container")
         PlayerRef.RemoveItem(PortableRecyclerControl.ScrapListAll.List, -1, true, TempContainerPrimary)
@@ -388,7 +415,7 @@ Function UpdateRecyclableItemList()
     ; give the game a moment to update the player's inventory data structure, otherwise the returned array
     ; from the GetInventoryItems() call that comes next may still have items in it that were removed by the
     ; previous RemoveItem() calls
-    Utility.WaitMenuMode(0.05)
+    Utility.WaitMenuMode(0.04)
 
     ; get the list of forms in the player's inventory
     Form[] playerInventory = PlayerRef.GetInventoryItems()
@@ -404,32 +431,46 @@ Function UpdateRecyclableItemList()
     EndWhile
     Self._DebugTrace("Pruned " + (oldSize - playerInventory.Length) + " non-MiscObjects from inventory array")
 
-    ; actually add any recyclables to the FormList
+    ; record current size of lists and prep an array of current components
     oldSize = PortableRecyclerControl.RecyclableItemList.Size
-    ThreadManager.AddRecyclableItemsToList(playerInventory, PortableRecyclerControl.RecyclableItemList)
+    int oldSize2 = PortableRecyclerControl.LowWeightRatioItemList.Size
+    Component[] components = new Component[0]
+    index = 0
+    While index < PortableRecyclerControl.ComponentMappings.Length
+        components.Add(PortableRecyclerControl.ComponentMappings[index].ComponentPart)
+        index += 1
+    EndWhile
+
+    ; actually add any recyclables to the FormList
+    ThreadManager.AddRecyclableItemsToList(playerInventory, PortableRecyclerControl.RecyclableItemList, \
+        PortableRecyclerControl.LowWeightRatioItemList, PortableRecyclerControl.ComponentMappings, components)
     playerInventory = None
 
-    ; log any size change
-    Self._DebugTrace("Old size of list = " + oldSize + ", new size of list = " + \
+    ; log any size changes
+    Self._DebugTrace("Recyclable item list: old size = " + oldSize + ", new size = " + \
         PortableRecyclerControl.RecyclableItemList.Size)
+    Self._DebugTrace("Low weight ratio item list: old size = " + oldSize2 + ", new size = " + \
+        PortableRecyclerControl.LowWeightRatioItemList.Size)
 
-    ; move junk items that were moved to the primary temp container back to the player inventory
-    If PortableRecyclerControl.RecyclableItemList.Size
-        Self._DebugTrace("Moving recyclable items back from primary temp container to player")
-        TempContainerPrimary.RemoveItem(PortableRecyclerControl.RecyclableItemList.List, -1, true, PlayerRef)
-    EndIf
-
-    ; move scrap items that were moved to the primary temp container back to player
+    ; move any items that were moved to the primary temp container back to the player
     If PortableRecyclerControl.ScrapListAll.Size
         Self._DebugTrace("Moving scrap items back from primary temp container to player")
         TempContainerPrimary.RemoveItem(PortableRecyclerControl.ScrapListAll.List, -1, true, PlayerRef)
+    EndIf
+    If PortableRecyclerControl.LowWeightRatioItemList.Size
+        Self._DebugTrace("Moving low weight ratio items back from primary temp container to player")
+        TempContainerPrimary.RemoveItem(PortableRecyclerControl.LowWeightRatioItemList.List, -1, true, PlayerRef)
+    EndIf
+    If PortableRecyclerControl.RecyclableItemList.Size
+        Self._DebugTrace("Moving recyclable items back from primary temp container to player")
+        TempContainerPrimary.RemoveItem(PortableRecyclerControl.RecyclableItemList.List, -1, true, PlayerRef)
     EndIf
 EndFunction
 
 ; updates the FormList containing recyclable items without moving any items from the player inventory
 ; currently not used because it's much slower, but since the work is done and there might be an unforeseen
 ; reason it needs to get used in the future, it stays
-Function UpdateRecyclableItemList2()
+Function UpdateRecyclableItemListNoTouch()
     ; add temporary container
     ObjectReference tempContainer = PlayerRef.PlaceAtMe(PortableRecyclerContainer, 1, true)
 
@@ -454,32 +495,44 @@ Function UpdateRecyclableItemList2()
     ; if the recyclable items FormList already has items in it, remove any of those items in the container's
     ; inventory in order to reduce the number of items that this function will need to iterate over
     If PortableRecyclerControl.RecyclableItemList.Size
-        Self._DebugTrace("Removing current recyclable items from the secondary temp container")
+        Self._DebugTrace("Removing currently known recyclable items from the temp container")
         tempContainer.RemoveItem(PortableRecyclerControl.RecyclableItemList.List, -1, true, None)
     EndIf
 
     ; remove all scrap items from the container to avoid them being added to the recyclable items list
     If PortableRecyclerControl.ScrapListAll.Size
-        Self._DebugTrace("Removing scrap items from the secondary temp container")
+        Self._DebugTrace("Removing scrap items from the temp container")
         tempContainer.RemoveItem(PortableRecyclerControl.ScrapListAll.List, -1, true, None)
     EndIf
 
     ; give the game a moment to update the container's inventory data structure, otherwise the returned array
     ; from the GetInventoryItems() call that comes next may still have items in it that were removed by the
     ; previous RemoveItem() calls
-    Utility.WaitMenuMode(0.05)
+    Utility.WaitMenuMode(0.04)
+
+    ; record current size of lists and prep an array of current components
+    oldSize = PortableRecyclerControl.RecyclableItemList.Size
+    int oldSize2 = PortableRecyclerControl.LowWeightRatioItemList.Size
+    Component[] components = new Component[0]
+    index = 0
+    While index < PortableRecyclerControl.ComponentMappings.Length
+        components.Add(PortableRecyclerControl.ComponentMappings[index].ComponentPart)
+        index += 1
+    EndWhile
 
     ; actually add any recyclables to the FormList
-    oldSize = PortableRecyclerControl.RecyclableItemList.Size
-    ThreadManager.AddRecyclableItemsToList(tempContainer.GetInventoryItems(), PortableRecyclerControl.RecyclableItemList)
+    ThreadManager.AddRecyclableItemsToList(playerInventory, PortableRecyclerControl.RecyclableItemList, \
+        PortableRecyclerControl.LowWeightRatioItemList, PortableRecyclerControl.ComponentMappings, components)
 
     ; nuke the temp container
     tempContainer.Delete()
     tempContainer = None
 
-    ; log any size change
-    Self._DebugTrace("Old size of list = " + oldSize + ", new size of list = " + \
+    ; log any size changes
+    Self._DebugTrace("Recyclable item list: old size = " + oldSize + ", new size = " + \
         PortableRecyclerControl.RecyclableItemList.Size)
+    Self._DebugTrace("Low weight ratio item list: old size = " + oldSize2 + ", new size = " + \
+        PortableRecyclerControl.LowWeightRatioItemList.Size)
 EndFunction
 
 ; remove all items from the origin container to the destination container
