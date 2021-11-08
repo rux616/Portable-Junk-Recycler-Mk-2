@@ -213,7 +213,7 @@ Function AddRecyclableItemsToList(Form[] akItems, FormListWrapper akRecyclableIt
     params[6] = Utility.VarArrayToVar(akComponents as var[]) as var
 
     ; do the actual multithreading
-    Self.ThreadDispatcher("AddRecyclableItemsToList2", akItems.Length, params)
+    Self.ThreadDispatcher("AddRecyclableItemsToList", akItems.Length, params)
 
     ; update the size of the FormList
     akRecyclableItemsList.Size = akRecyclableItemsList.List.GetSize()
