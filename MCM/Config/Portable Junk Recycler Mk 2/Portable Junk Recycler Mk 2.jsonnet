@@ -50,7 +50,7 @@ local stat_adjust_step = 0.005;
   local mod = {
     name: 'Portable Junk Recycler Mk 2',
     localized_name: '$PortableJunkRecyclerMk2',
-    version: '1.0.0-rc1',
+    version: '1.0.0',
     plugin_name: mod.name + '.esp',
     quest_form: mod.plugin_name + '|800',
     control_script: 'PortableJunkRecyclerMk2:ControlScript',
@@ -90,11 +90,8 @@ local stat_adjust_step = 0.005;
       mcm.control.text(text='$AboutText'),
       mcm.control.spacer(lines=1),
 
-      mcm.control.section(text='$Multipliers'),
+      mcm.control.section(text='$Information'),
       mcm.control.button(text='$ViewCurrentMultipliersText', action=mcm.helper.action.call_function(mod.quest_form, 'ShowCurrentMultipliers', script_name=mod.control_script), help='$ViewCurrentMultipliersHelp'),
-      mcm.control.spacer(lines=1),
-
-      mcm.control.section(text='$Uses'),
       mcm.control.button(text='$ViewNumberOfUsesRemainingText', action=mcm.helper.action.call_function(mod.quest_form, 'ShowNumberOfUsesLeft', script_name=mod.control_script), help='$ViewNumberOfUsesRemainingHelp'),
     ],
     [mcm.field.pages]: [
@@ -368,7 +365,7 @@ local stat_adjust_step = 0.005;
 
           // advanced - reset item lists
           mcm.control.section(text='$ItemLists'),
-          mcm.control.button(text='$ResetRecyclableItemListText', action=mcm.helper.action.call_function(form=mod.quest_form, function_name='ResetRecyclableItemList', script_name=mod.control_script), help='$ResetRecyclableItemListHelp'),
+          mcm.control.button(text='$ResetRecyclableItemsListsText', action=mcm.helper.action.call_function(form=mod.quest_form, function_name='ResetRecyclableItemsLists', script_name=mod.control_script), help='$ResetRecyclableItemsListsHelp'),
           mcm.control.button(text='$ResetAlwaysAutoTransferListText', action=mcm.helper.action.call_function(form=mod.quest_form, function_name='ResetAlwaysAutoTransferList', script_name=mod.control_script), help='$ResetAlwaysAutoTransferListHelp'),
           mcm.control.button(text='$ResetNeverAutoTransferListText', action=mcm.helper.action.call_function(form=mod.quest_form, function_name='ResetNeverAutoTransferList', script_name=mod.control_script), help='$ResetNeverAutoTransferListHelp'),
           mcm.control.spacer(lines=1),

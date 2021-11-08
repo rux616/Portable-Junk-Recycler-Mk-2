@@ -12,7 +12,7 @@
       },
       {
          "html": true,
-         "text": "<p align=\"center\">v1.0.0-rc1</p>",
+         "text": "<p align=\"center\">v1.0.0</p>",
          "type": "text"
       },
       {
@@ -32,7 +32,7 @@
          "type": "spacer"
       },
       {
-         "text": "$Multipliers",
+         "text": "$Information",
          "type": "section"
       },
       {
@@ -45,14 +45,6 @@
          "help": "$ViewCurrentMultipliersHelp",
          "text": "$ViewCurrentMultipliersText",
          "type": "button"
-      },
-      {
-         "lines": 1,
-         "type": "spacer"
-      },
-      {
-         "text": "$Uses",
-         "type": "section"
       },
       {
          "action": {
@@ -2541,12 +2533,12 @@
             {
                "action": {
                   "form": "Portable Junk Recycler Mk 2.esp|800",
-                  "function": "ResetRecyclableItemList",
+                  "function": "ResetRecyclableItemsLists",
                   "scriptName": "PortableJunkRecyclerMk2:ControlScript",
                   "type": "CallFunction"
                },
-               "help": "$ResetRecyclableItemListHelp",
-               "text": "$ResetRecyclableItemListText",
+               "help": "$ResetRecyclableItemsListsHelp",
+               "text": "$ResetRecyclableItemsListsText",
                "type": "button"
             },
             {

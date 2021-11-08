@@ -62,14 +62,14 @@ EndFunction
 ; perform general housekeeping when a work function starts
 Function WorkerStart()
     Running = true
-    Debug.StartStackProfiling()
+    ; Debug.StartStackProfiling()
     Results = None
 EndFunction
 
 ; perform general housekeeping when a work function stops
 Function WorkerStop()
     Running = False
-    Debug.StopStackProfiling()
+    ; Debug.StopStackProfiling()
 EndFunction
 
 ; reset a thread
@@ -101,10 +101,10 @@ Function AddArrayItemsToInventory(var[] akItems, int aiIndex, int aiIndexEnd, Ob
 
     Form[] items = akItems as Form[]
     Self._DebugTrace("AddArrayItemsToInventory started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
-	While aiIndex <= aiIndexEnd
+    While aiIndex <= aiIndexEnd
         akDestinationRef.AddItem(items[aiIndex], aiQuantity, true)
-		aiIndex += 1
-	EndWhile
+        aiIndex += 1
+    EndWhile
     Self._DebugTrace("AddArrayItemsToInventory finished")
 
     Self.WorkerStop()
@@ -116,10 +116,10 @@ Function AddItemsToList(int aiIndex, int aiIndexEnd, var[] akItems, FormList akF
 
     Self._DebugTrace("AddItemsToList started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
     Form[] items = akItems as Form[]
-	While aiIndex <= aiIndexEnd
+    While aiIndex <= aiIndexEnd
         akFormList.AddForm(items[aiIndex])
-		aiIndex += 1
-	EndWhile
+        aiIndex += 1
+    EndWhile
     Self._DebugTrace("AddItemsToList Finished")
 
     Self.WorkerStop()
@@ -130,10 +130,10 @@ Function AddListItemsToInventory(int aiIndex, int aiIndexEnd, FormList akFormLis
     Self.WorkerStart()
 
     Self._DebugTrace("AddListItemsToInventory started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
-	While aiIndex <= aiIndexEnd
+    While aiIndex <= aiIndexEnd
         akDestinationRef.AddItem(akFormList.GetAt(aiIndex), aiQuantity, true)
-		aiIndex += 1
-	EndWhile
+        aiIndex += 1
+    EndWhile
     Self._DebugTrace("AddListItemsToInventory finished")
 
     Self.WorkerStop()
@@ -155,7 +155,7 @@ Function AddRecyclableItemsToList(int aiIndex, int aiIndexEnd, var[] akItems, Fo
     float totalComponentWeight
     int componentIndex
     int index
-	While aiIndex <= aiIndexEnd
+    While aiIndex <= aiIndexEnd
         neededComponents = items[aiIndex].GetMiscComponents()
         If neededComponents.Length
             ; (re)set variables for the loop to determine whether the weight of the item is greater than the sum of its
@@ -193,8 +193,8 @@ Function AddRecyclableItemsToList(int aiIndex, int aiIndexEnd, var[] akItems, Fo
             EndIf
         EndIf
         neededComponents = None
-		aiIndex += 1
-	EndWhile
+        aiIndex += 1
+    EndWhile
     Self._DebugTrace("AddRecyclableItemsToList finished")
 
     Self.WorkerStop()
@@ -230,7 +230,7 @@ Function ChangeSettingsToDefaults(int aiIndex, int aiIndexEnd, var[] akSettings,
     Self.WorkerStart()
 
     Self._DebugTrace("ChangeSettingsToDefaults started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
-	While aiIndex <= aiIndexEnd
+    While aiIndex <= aiIndexEnd
         If akSettings[aiIndex] is SettingFloat
             ChangeSetting(akSettings[aiIndex], aiChangeType, (akSettings[aiIndex] as SettingFloat).ValueDefault, asModName)
         ElseIf akSettings[aiIndex] is SettingBool
@@ -238,8 +238,8 @@ Function ChangeSettingsToDefaults(int aiIndex, int aiIndexEnd, var[] akSettings,
         ElseIf akSettings[aiIndex] is SettingInt
             ChangeSetting(akSettings[aiIndex], aiChangeType, (akSettings[aiIndex] as SettingInt).ValueDefault, asModName)
         EndIf
-		aiIndex += 1
-	EndWhile
+        aiIndex += 1
+    EndWhile
     Self._DebugTrace("ChangeSettingsToDefaults finished")
 
     Self.WorkerStop()
@@ -272,10 +272,10 @@ Function LoadMCMSettings(int aiIndex, int aiIndexEnd, var[] akSettings, string a
     Self.WorkerStart()
 
     Self._DebugTrace("LoadMCMSettings started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
-	While aiIndex <= aiIndexEnd
+    While aiIndex <= aiIndexEnd
         LoadSettingFromMCM(akSettings[aiIndex], asModName)
-		aiIndex += 1
-	EndWhile
+        aiIndex += 1
+    EndWhile
     Self._DebugTrace("LoadMCMSettings finished")
 
     Self.WorkerStop()
