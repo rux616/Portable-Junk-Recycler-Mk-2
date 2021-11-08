@@ -55,9 +55,9 @@ Group Messages
     Message Property MessageSettingsResetFailBusy Auto Mandatory
     Message Property MessageSettingsResetFailRunning Auto Mandatory
     Message Property MessageLocksReset Auto Mandatory
-    Message Property MessageRecyclableItemListReset Auto Mandatory
-    Message Property MessageRecyclableItemListResetFailBusy Auto Mandatory
-    Message Property MessageRecyclableItemListResetFailRunning Auto Mandatory
+    Message Property MessageRecyclableItemsListsReset Auto Mandatory
+    Message Property MessageRecyclableItemsListsResetFailBusy Auto Mandatory
+    Message Property MessageRecyclableItemsListsResetFailRunning Auto Mandatory
     Message Property MessageAlwaysAutoTransferListReset Auto Mandatory
     Message Property MessageAlwaysAutoTransferListResetFailBusy Auto Mandatory
     Message Property MessageAlwaysAutoTransferListResetFailRunning Auto Mandatory
@@ -209,7 +209,7 @@ int Property iSaveFileMonitor Auto Hidden ; Do not mess with ever - this is used
 ; ---------
 
 string ModName = "Portable Junk Recycler Mk 2" const
-string ModVersion = "1.0.0-rc1" const
+string ModVersion = "1.0.0" const
 string FullScriptName = "PortableJunkRecyclerMk2:ControlScript" const
 int ScrapperPerkMaxRanksSupported = 5 const
 SettingChangeType AvailableChangeTypes
@@ -230,17 +230,17 @@ int RAlt = 165 const
 
 Event OnQuestInit()
     MutexBusy = true
-    Debug.StartStackProfiling()
+    ; Debug.StartStackProfiling()
     Debug.OpenUserLog(ModName)
 
     Self.Initialize(abQuestInit = true)
 
-    Debug.StopStackProfiling()
+    ; Debug.StopStackProfiling()
     MutexBusy = false
 EndEvent
 
 Event Actor.OnPlayerLoadGame(Actor akSender)
-    Debug.StartStackProfiling()
+    ; Debug.StartStackProfiling()
     Debug.OpenUserLog(ModName)
 
     ; immediately abort if there's already a thread waiting on mutex release
@@ -270,7 +270,7 @@ Event Actor.OnPlayerLoadGame(Actor akSender)
         Self._DebugTrace("OnPlayerLoadGame: Mutexes didn't release within time limit", 1)
     EndIf
 
-    Debug.StopStackProfiling()
+    ; Debug.StopStackProfiling()
     MutexWaiting = false
 EndEvent
 
@@ -1693,13 +1693,13 @@ EndFunction
 Function ResetToDefaults()
     If ! (MutexRunning || MutexBusy)
         MutexBusy = true
-        Debug.StartStackProfiling()
+        ; Debug.StartStackProfiling()
         Self._DebugTrace("Resetting settings to defaults")
         Self.InitSettings(abForce = true)
         Self.InitSettingsSupplemental()
         Self.InitSettingsDefaultValues()
         MCM.RefreshMenu()
-        Debug.StopStackProfiling()
+        ; Debug.StopStackProfiling()
         MutexBusy = false
         MessageSettingsReset.Show()
     ElseIf MutexRunning && ! MutexBusy
@@ -1720,21 +1720,23 @@ Function ResetMutexes()
     MessageLocksReset.Show()
 EndFunction
 
-; reset the recyclable item list
-Function ResetRecyclableItemList()
+; reset the recyclable item and low weight ratio item lists
+Function ResetRecyclableItemsLists()
     If ! MutexBusy && ! MutexRunning
         MutexBusy = true
-        Self._DebugTrace("Resetting recyclable item list")
+        Self._DebugTrace("Resetting recyclable item and low weight ratio item lists")
         RecyclableItemList.List.Revert()
         RecyclableItemList.Size = RecyclableItemList.List.GetSize()
+        LowWeightRatioItemList.List.Revert()
+        LowWeightRatioItemList.Size = LowWeightRatioItemList.List.GetSize()
         MutexBusy = false
-        MessageRecyclableItemListReset.Show()
+        MessageRecyclableItemsListsReset.Show()
     ElseIf MutexBusy && ! MutexRunning
-        Self._DebugTrace("Failed to reset recyclable item list: Control script busy")
-        MessageRecyclableItemListResetFailBusy.Show()
+        Self._DebugTrace("Failed to reset recyclable item and low weight ratio item lists: Control script busy")
+        MessageRecyclableItemsListsResetFailBusy.Show()
     ElseIf MutexRunning
-        Self._DebugTrace("Failed to reset recyclable item list: Recycling process running")
-        MessageRecyclableItemListResetFailRunning.Show()
+        Self._DebugTrace("Failed to reset recyclable item and low weight ratio item lists: Recycling process running")
+        MessageRecyclableItemsListsResetFailRunning.Show()
     EndIf
 EndFunction
 
@@ -1825,7 +1827,7 @@ Function CheckForCanary()
         params[1] = FullScriptName
         Utility.CallGlobalFunction("Canary:API", "MonitorForDataLoss", params)
         Self._DebugTrace("Canary integration activated")
-	EndIf
+    EndIf
 EndFunction
 
 ; returns true if the player is an an owned workshop
@@ -2091,9 +2093,9 @@ Function Uninstall()
         MessageSettingsResetFailBusy = None
         MessageSettingsResetFailRunning = None
         MessageLocksReset = None
-        MessageRecyclableItemListReset = None
-        MessageRecyclableItemListResetFailBusy = None
-        MessageRecyclableItemListResetFailRunning = None
+        MessageRecyclableItemsListsReset = None
+        MessageRecyclableItemsListsResetFailBusy = None
+        MessageRecyclableItemsListsResetFailRunning = None
         MessageAlwaysAutoTransferListReset = None
         MessageAlwaysAutoTransferListResetFailBusy = None
         MessageAlwaysAutoTransferListResetFailRunning = None

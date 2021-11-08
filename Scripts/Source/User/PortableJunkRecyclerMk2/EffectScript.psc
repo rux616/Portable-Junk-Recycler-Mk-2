@@ -39,6 +39,8 @@ Group PortableJunkRecycler
     Container Property PortableRecyclerContainerFiltered Auto Mandatory
     Potion Property PortableRecyclerItem Auto Mandatory
     FormListWrapper Property PortableRecyclerContents Auto Mandatory
+    Container Property NeverAutoTransferContainer Auto Mandatory
+    Container Property AlwaysAutoTransferContainer Auto Mandatory
 EndGroup
 
 Group Sounds
@@ -54,8 +56,10 @@ Group Messages
     Message Property MessageFinishedUsesLeft Auto Mandatory
     Message Property MessageFinishedNothingUsesLeft Auto Mandatory
     Message Property MessageF4SENotInstalled Auto Mandatory
-    Message Property MessageEditNeverAutoTransferListMode Auto Mandatory
-    Message Property MessageEditAlwaysAutoTransferListMode Auto Mandatory
+    Message Property MessageEditNeverAutoTransferListModeBox Auto Mandatory
+    Message Property MessageEditNeverAutoTransferListModeNotification Auto Mandatory
+    Message Property MessageEditAlwaysAutoTransferListModeBox Auto Mandatory
+    Message Property MessageEditAlwaysAutoTransferListModeNotification Auto Mandatory
 EndGroup
 
 
@@ -84,7 +88,7 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
     ElseIf ! PortableRecyclerControl.MutexRunning && ! PortableRecyclerControl.MutexBusy
         ; normal mode of operation: a recycler process isn't already running nor is the quest busy
         PortableRecyclerControl.MutexRunning = true
-        Debug.StartStackProfiling()
+        ; Debug.StartStackProfiling()
 
         ; record the status of the behavior overrides/modifiers immediately
         bool forceRetainJunk = PortableRecyclerControl.HotkeyForceRetainJunk
@@ -109,12 +113,20 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
         TempContainerSecondary = PlayerRef.PlaceAtMe(PortableRecyclerContainer as Form, abForcePersist = true)
         Self._DebugTrace("Secondary temp container " + TempContainerSecondary + " created")
 
+        ObjectReference editListContainer = None
+
         If editNeverTransferList
+            editListContainer = PlayerRef.PlaceAtMe(NeverAutoTransferContainer as Form, abForcePersist = true)
+            Self._DebugTrace("List edit container " + editListContainer + " created")
             Self._DebugTrace("Editing 'Never Automatically Transfer' list")
-            Self.EditAutoTransferList(PortableRecyclerControl.NeverAutoTransferList, MessageEditNeverAutoTransferListMode)
+            Self.EditAutoTransferList(PortableRecyclerControl.NeverAutoTransferList, editListContainer, \
+                MessageEditNeverAutoTransferListModeBox, MessageEditNeverAutoTransferListModeNotification)
         ElseIf editAlwaysTransferList
+            editListContainer = PlayerRef.PlaceAtMe(AlwaysAutoTransferContainer as Form, abForcePersist = true)
+            Self._DebugTrace("List edit container " + editListContainer + " created")
             Self._DebugTrace("Editing 'Always Automatically Transfer' list")
-            Self.EditAutoTransferList(PortableRecyclerControl.AlwaysAutoTransferList, MessageEditAlwaysAutoTransferListMode)
+            Self.EditAutoTransferList(PortableRecyclerControl.AlwaysAutoTransferList, editListContainer, \
+                MessageEditAlwaysAutoTransferListModeBox, MessageEditAlwaysAutoTransferListModeNotification)
         Else
             If PortableRecyclerControl.AllowBehaviorOverrides.Value
                 Self.Recycle(forceRetainJunk, forceTransferJunk)
@@ -132,7 +144,7 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
         TempContainerSecondary = None
 
         ; enable the recycle process to be run again
-        Debug.StopStackProfiling()
+        ; Debug.StopStackProfiling()
         PortableRecyclerControl.MutexRunning = false
     ElseIf PortableRecyclerControl.MutexRunning && ! PortableRecyclerControl.MutexBusy
         ; another recycling process is already running, tell the user
@@ -289,6 +301,7 @@ Function Recycle(bool abForceRetainJunk, bool abForceTransferJunk)
         PortableRecyclerControl.ReturnAtLeastOneComponent.Value, \
         PortableRecyclerControl.FractionalComponentHandling.Value \
     )
+    Self._DebugTrace("Items recycled? " + itemsRecycled)
 
     ; move any previously existing scrap items that were moved into the secondary temp container back to the primary
     ; temp container
@@ -352,7 +365,7 @@ Function Recycle(bool abForceRetainJunk, bool abForceTransferJunk)
 EndFunction
 
 ; handles editing an auto transfer list
-Function EditAutoTransferList(FormListWrapper akAutoTransferList, Message akModeMessage)
+Function EditAutoTransferList(FormListWrapper akAutoTransferList, ObjectReference akContainer, Message akModeMessageBox, Message akModeMessageNotification)
     Self._DebugTrace("Started editing Auto Transfer List: " + akAutoTransferList.List)
 
     ; update the FormList holding the recyclable items
@@ -360,16 +373,22 @@ Function EditAutoTransferList(FormListWrapper akAutoTransferList, Message akMode
 
     ; populate the container with 1 of every item in the list
     If akAutoTransferList.Size
-        ThreadManager.AddListItemsToInventory(akAutoTransferList, TempContainerPrimary, 1)
+        ThreadManager.AddListItemsToInventory(akAutoTransferList, akContainer, 1)
     EndIf
 
     ; activate the container (with 1.0s wait prior to, as specified on
     ; https://www.creationkit.com/fallout4/index.php?title=Activate_-_ObjectReference)
     Utility.Wait(1.0)
-    TempContainerPrimary.Activate(PlayerRef as ObjectReference, true)
+    ; show notification stating the player is in list editing mode if the list size is not 0
+    If akAutoTransferList.Size
+        akModeMessageNotification.Show()
+    EndIf
+    akContainer.Activate(PlayerRef as ObjectReference, true)
 
-    ; show message stating the player is in list editing mode
-    akModeMessage.Show()
+    ; show message box stating the player is in list editing mode if the list size is 0
+    If ! akAutoTransferList.Size
+        akModeMessageBox.Show()
+    EndIf
 
     ; trigger a small wait once the container is open because sometimes, if a player has a boatload of items in the
     ; inventory, it can cause the interface to lag just enough for the script to keep processing
@@ -379,13 +398,13 @@ Function EditAutoTransferList(FormListWrapper akAutoTransferList, Message akMode
     Utility.Wait(0.1)
 
     ; clear and re-populate the FormList
-    Form[] tempContainerPrimaryInventory = TempContainerPrimary.GetInventoryItems()
+    Form[] containerInventory = akContainer.GetInventoryItems()
     akAutoTransferList.List.Revert()
-    ThreadManager.AddItemsToList(tempContainerPrimaryInventory, akAutoTransferList)
+    ThreadManager.AddItemsToList(containerInventory, akAutoTransferList)
 
     ; move excess (>1) items back to the player
-    If tempContainerPrimaryInventory.Length
-        ThreadManager.LeaveOnlyXItems(tempContainerPrimaryInventory, TempContainerPrimary, PlayerRef, 1, \
+    If containerInventory.Length
+        ThreadManager.LeaveOnlyXItems(containerInventory, akContainer, PlayerRef, 1, \
             PortableRecyclerControl.ReturnItemsSilently.Value)
     EndIf
 
@@ -543,11 +562,11 @@ Function RemoveAllItems(ObjectReference akOriginRef, ObjectReference akDestinati
     ThreadManager.AddItemsToList(akOriginRef.GetInventoryItems(), PortableRecyclerContents)
 
     ; if the list size is non-zero, there's something to transfer
-	If(PortableRecyclerContents.Size)
-		akOriginRef.RemoveItem(PortableRecyclerContents.List, -1, abSilent, akDestinationRef)
+    If(PortableRecyclerContents.Size)
+        akOriginRef.RemoveItem(PortableRecyclerContents.List, -1, abSilent, akDestinationRef)
 
         ; avoid keeping stuff in the FormList
         PortableRecyclerContents.List.Revert()
         PortableRecyclerContents.Size = 0
-	EndIf
+    EndIf
 EndFunction

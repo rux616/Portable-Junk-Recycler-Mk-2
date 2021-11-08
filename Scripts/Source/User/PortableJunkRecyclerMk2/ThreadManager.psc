@@ -284,15 +284,15 @@ Function LoadMCMSettings(var[] akSettingsToLoad, string asModName)
     params[2] = Utility.VarArrayToVar(akSettingsToLoad as var[]) as var
     params[3] = asModName as string
 
-     ; do the actual multithreading
-     Self.ThreadDispatcher("LoadMCMSettings", akSettingsToLoad.Length, params)
+    ; do the actual multithreading
+    Self.ThreadDispatcher("LoadMCMSettings", akSettingsToLoad.Length, params)
 EndFunction
 
 ; (multithreaded) recycle the components contained in the passed ComponentMap array
 ; returns true if any components were actually recycled
 bool Function RecycleComponents(ComponentMap[] akComponentMap, MultiplierSet akMultiplierSet, \
-       ObjectReference akContainerRef, int aiRandomAdjustment, bool abReturnAtLeastOneComponent, \
-       int aiFractionalComponentHandling)
+        ObjectReference akContainerRef, int aiRandomAdjustment, bool abReturnAtLeastOneComponent, \
+        int aiFractionalComponentHandling)
     ; create array to hold function arguments
     var[] params = new var[8]
     params[2] = Utility.VarArrayToVar(akComponentMap as var[])
