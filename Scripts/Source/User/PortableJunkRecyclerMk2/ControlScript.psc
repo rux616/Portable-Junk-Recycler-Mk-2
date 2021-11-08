@@ -43,8 +43,7 @@ Group Components
     ComponentMap[] Property ComponentMappings Auto Hidden
 EndGroup
 
-Group Other
-    Actor Property PlayerRef Auto Mandatory
+Group Messages
     Message Property MessageF4SENotInstalled Auto Mandatory
     Message Property MessageMCMNotInstalled Auto Mandatory
     Message Property MessageInitialized Auto Mandatory
@@ -68,11 +67,16 @@ Group Other
     Message Property MessageUninstalled Auto Mandatory
     Message Property MessageUninstallFailBusy Auto Mandatory
     Message Property MessageUninstallFailRunning Auto Mandatory
+EndGroup
+
+Group Other
+    Actor Property PlayerRef Auto Mandatory
     WorkshopParentScript Property WorkshopParent Auto Mandatory
     { the workshop parent script
       enables this script to determine whether its in a player-owned settlement or not }
 
     FormListWrapper Property RecyclableItemList Auto Mandatory
+    FormListWrapper Property LowWeightRatioItemList Auto Mandatory
 
     FormListWrapper Property NeverAutoTransferList Auto Mandatory
     FormListWrapper Property AlwaysAutoTransferList Auto Mandatory
@@ -135,6 +139,7 @@ Group Settings
     SettingBool Property AutoRecyclingMode Auto Hidden
     SettingBool Property AllowJunkOnly Auto Hidden
     SettingBool Property AutoTransferJunk Auto Hidden
+    SettingInt Property TransferLowWeightRatioItems Auto Hidden
     SettingBool Property UseAlwaysAutoTransferList Auto Hidden
     SettingBool Property UseNeverAutoTransferList Auto Hidden
     SettingBool Property AllowBehaviorOverrides Auto Hidden
@@ -204,7 +209,7 @@ int Property iSaveFileMonitor Auto Hidden ; Do not mess with ever - this is used
 ; ---------
 
 string ModName = "Portable Junk Recycler Mk 2" const
-string ModVersion = "0.5.0-beta" const
+string ModVersion = "1.0.0-rc1" const
 string FullScriptName = "PortableJunkRecyclerMk2:ControlScript" const
 int ScrapperPerkMaxRanksSupported = 5 const
 SettingChangeType AvailableChangeTypes
@@ -309,7 +314,14 @@ EndEvent
 
 ; add a bit of text to traces going into the papyrus user log
 Function _DebugTrace(string asMessage, int aiSeverity = 0) DebugOnly
-    Debug.TraceUser(ModName, "ControlScript: " + asMessage, aiSeverity)
+    string baseMessage = "ControlScript: " const
+    If aiSeverity == 0
+        Debug.TraceUser(ModName, baseMessage + asMessage)
+    ElseIf aiSeverity == 1
+        Debug.TraceUser(ModName, "WARNING: " + baseMessage + asMessage)
+    ElseIf aiSeverity == 2
+        Debug.TraceUser(ModName, "ERROR: " + baseMessage + asMessage)
+    EndIf
 EndFunction
 
 ; consolidated init
@@ -458,6 +470,10 @@ Function InitSettings(bool abForce = false)
     If abForce || ! AutoTransferJunk
         Self._DebugTrace("Initializing AutoTransferJunk")
         AutoTransferJunk = new SettingBool
+    EndIf
+    If abForce || ! TransferLowWeightRatioItems
+        Self._DebugTrace("Initializing TransferLowWeightRatioItems")
+        TransferLowWeightRatioItems = new SettingInt
     EndIf
     If abForce || ! UseAlwaysAutoTransferList
         Self._DebugTrace("Initializing UseAlwaysAutoTransferList")
@@ -764,6 +780,11 @@ Function InitSettingsSupplemental()
 
     AutoTransferJunk.ValueDefault = true
     AutoTransferJunk.McmId = "bAutoTransferJunk:Behavior"
+
+    TransferLowWeightRatioItems.ValueDefault = 0
+    TransferLowWeightRatioItems.McmId = "iTransferLowWeightRatioItems:Behavior"
+    TransferLowWeightRatioItems.ValueMin = 0
+    TransferLowWeightRatioItems.ValueMax = 3
 
     UseAlwaysAutoTransferList.ValueDefault = true
     UseAlwaysAutoTransferList.McmId = "bUseAlwaysAutoTransferList:Behavior"
@@ -1173,6 +1194,7 @@ var[] Function CollectMCMSettings()
     toReturn.Add(AutoRecyclingMode)
     toReturn.Add(AllowJunkOnly)
     toReturn.Add(AutoTransferJunk)
+    toReturn.Add(TransferLowWeightRatioItems)
     toReturn.Add(UseAlwaysAutoTransferList)
     toReturn.Add(UseNeverAutoTransferList)
     toReturn.Add(AllowBehaviorOverrides)
@@ -1392,6 +1414,10 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             oldValue = AutoTransferJunk.Value
             LoadSettingFromMCM(AutoTransferJunk, ModName)
             newValue = AutoTransferJunk.Value
+        ElseIf asControlId == TransferLowWeightRatioItems.McmId
+            oldValue = TransferLowWeightRatioItems.Value
+            LoadSettingFromMCM(TransferLowWeightRatioItems, ModName)
+            newValue = TransferLowWeightRatioItems.Value
         ElseIf asControlId == UseAlwaysAutoTransferList.McmId
             oldValue = UseAlwaysAutoTransferList.Value
             LoadSettingFromMCM(UseAlwaysAutoTransferList, ModName)
@@ -1623,7 +1649,7 @@ Function ShowCurrentMultipliers()
     Utility.Wait(0.1)
 
     Self._DebugTrace("Current multipliers:")
-    MultiplierSet currentMults = Self.GetMultipliers()
+    MultiplierSet currentMults = Self.GetMultipliers(IsPlayerAtOwnedWorkshop())
     If RngAffectsMult.Value == 1
         MessageCurrentMultipliersRng.Show( \
             currentMults.MultC + MultAdjustRandomMin.Value, currentMults.MultC + MultAdjustRandomMax.Value, \
@@ -1809,7 +1835,7 @@ bool Function IsPlayerAtOwnedWorkshop()
 EndFunction
 
 ; get the current multipliers
-MultiplierSet Function GetMultipliers()
+MultiplierSet Function GetMultipliers(bool abPlayerAtOwnedWorkshop)
     Self._DebugTrace("Getting multipliers")
     MultiplierSet toReturn = new MultiplierSet
 
@@ -1820,9 +1846,8 @@ MultiplierSet Function GetMultipliers()
     Self._DebugTrace("Base multiplier: " + MultBase.Value)
 
     ; general
-    bool playerAtOwnedWorkshop = IsPlayerAtOwnedWorkshop()
-    Self._DebugTrace("Player is in an owned settlement: " + playerAtOwnedWorkshop)
-    If playerAtOwnedWorkshop
+    Self._DebugTrace("Player is in an owned settlement: " + abPlayerAtOwnedWorkshop)
+    If abPlayerAtOwnedWorkshop
         If GeneralMultAdjust.Value == 0
             ; simple
             toReturn.MultC += MultAdjustGeneralSettlement.Value
@@ -1944,7 +1969,7 @@ MultiplierSet Function GetMultipliers()
         Self._DebugTrace("Player's Scrapper perk index: " + playerScrapperPerkIndex)
 
         If playerScrapperPerkIndex >= 0
-            If playerAtOwnedWorkshop
+            If abPlayerAtOwnedWorkshop
                 If ScrapperAffectsMult.Value == 1
                     ; simple
                     toReturn.MultC += MultAdjustScrapperSettlement[playerScrapperPerkIndex].Value
@@ -2078,6 +2103,8 @@ Function Uninstall()
         WorkshopParent = None
         RecyclableItemList.List.Revert()
         RecyclableItemList = None
+        LowWeightRatioItemList.List.Revert()
+        LowWeightRatioItemList = None
         NeverAutoTransferList.List.Revert()
         NeverAutoTransferList = None
         AlwaysAutoTransferList.List.Revert()
@@ -2105,6 +2132,7 @@ Function Uninstall()
         AutoRecyclingMode = None
         AllowJunkOnly = None
         AutoTransferJunk = None
+        TransferLowWeightRatioItems = None
         UseAlwaysAutoTransferList = None
         UseNeverAutoTransferList = None
         AllowBehaviorOverrides = None
