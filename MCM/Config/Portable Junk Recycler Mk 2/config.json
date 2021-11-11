@@ -12,7 +12,7 @@
       },
       {
          "html": true,
-         "text": "<p align=\"center\">v1.0.0</p>",
+         "text": "<p align=\"center\">v0.6.0-beta</p>",
          "type": "text"
       },
       {
@@ -2488,6 +2488,43 @@
       },
       {
          "content": [
+            {
+               "text": "$Multithreading",
+               "type": "section"
+            },
+            {
+               "help": "$ThreadLimitHelp",
+               "id": "iThreadLimit:Advanced",
+               "text": "$ThreadLimitText",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 32,
+                  "min": 1,
+                  "sourceType": "ModSettingInt",
+                  "step": 1
+               }
+            },
+            {
+               "lines": 1,
+               "type": "spacer"
+            },
+            {
+               "text": "$Methodology",
+               "type": "section"
+            },
+            {
+               "help": "$UseDirectMoveRecyclableItemListUpdateHelp",
+               "id": "bUseDirectMoveRecyclableItemListUpdate:Advanced",
+               "text": "$UseDirectMoveRecyclableItemListUpdateText",
+               "type": "switcher",
+               "valueOptions": {
+                  "sourceType": "ModSettingBool"
+               }
+            },
+            {
+               "lines": 1,
+               "type": "spacer"
+            },
             {
                "text": "$Settings",
                "type": "section"
