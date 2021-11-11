@@ -29,6 +29,7 @@ import PortableJunkRecyclerMk2:Base
 ; ----------
 
 bool Property Initialized = false Auto
+int Property NumberOfWorkerThreads = 32 AutoReadOnly
 
 
 
@@ -36,10 +37,8 @@ bool Property Initialized = false Auto
 ; ---------
 
 string ModName = "Portable Junk Recycler Mk 2" const
-
-int MaxThreads = 32 const
 var[] Threads
-string[] HexNumbers
+int ThreadLimit
 
 
 
@@ -49,7 +48,7 @@ string[] HexNumbers
 Event OnInit()
     Debug.OpenUserLog(ModName)
     Self._DebugTrace("Beginning onetime init process")
-    Threads = new var[MaxThreads]
+    Threads = new var[NumberOfWorkerThreads]
     Threads[00] = (Self as Quest) as WorkerThread00
     Threads[01] = (Self as Quest) as WorkerThread01
     Threads[02] = (Self as Quest) as WorkerThread02
@@ -82,6 +81,7 @@ Event OnInit()
     Threads[29] = (Self as Quest) as WorkerThread29
     Threads[30] = (Self as Quest) as WorkerThread30
     Threads[31] = (Self as Quest) as WorkerThread31
+    ThreadLimit = NumberOfWorkerThreads
     Initialized = true
     Self._DebugTrace("Finished onetime init process")
 EndEvent
@@ -129,6 +129,20 @@ Function WaitForThreads(var[] akThreads, int aiNumThreads)
     EndIf
 EndFunction
 
+; set the maximum number of threads to use, auto-clamps if argument out of bounds
+; 1 <= aiMaxThreads <= NumberOfWorkerThreads
+Function SetThreadLimit(int aiMaxThreads)
+    int lowerLimit = 1 const
+    int upperLimit = NumberOfWorkerThreads const
+    If aiMaxThreads < lowerLimit
+        aiMaxThreads = lowerLimit
+    ElseIf aiMaxThreads > upperLimit
+        aiMaxThreads = upperLimit
+    EndIf
+    ThreadLimit = aiMaxThreads
+    Self._DebugTrace("ThreadLimit set to " + ThreadLimit)
+EndFunction
+
 
 
 ; FUNCTIONS
@@ -138,9 +152,9 @@ EndFunction
 ; akParams[0] and akParams[1] are reserved for the starting and ending indices respectively; everything else is not proscribed
 int Function ThreadDispatcher(string asFunction, int aiNumItems, var[] akParams)
     ; set up multithreading parameters
-    int numThreads = Math.Min(aiNumItems, MaxThreads) as int
+    int numThreads = Math.Min(aiNumItems, ThreadLimit) as int
     float numItemsPerThread
-    If numThreads
+    If numThreads > 0
         numItemsPerThread = aiNumItems as float / numThreads
     EndIf
     Self._DebugTrace("ThreadDispatcher (" + asFunction + "): " + aiNumItems + " items, using " + numThreads + " threads for processing (" + \
@@ -320,7 +334,6 @@ Function Uninstall()
     ; destroy arrays
     DestroyArrayContents(Threads)
     Threads = None
-    HexNumbers = None
 
     ; stop the quest
     Stop()
