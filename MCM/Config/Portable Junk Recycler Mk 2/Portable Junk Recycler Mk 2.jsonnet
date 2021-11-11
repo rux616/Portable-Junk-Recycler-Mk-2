@@ -45,12 +45,15 @@ local adjust_step = 0.01;
 local stat_adjust_min = 0.0;
 local stat_adjust_max = 1.0;
 local stat_adjust_step = 0.005;
+local threads_min = 1;
+local threads_max = 32;
+local threads_step = 1;
 
 {
   local mod = {
     name: 'Portable Junk Recycler Mk 2',
     localized_name: '$PortableJunkRecyclerMk2',
-    version: '1.0.0',
+    version: '0.6.0-beta',
     plugin_name: mod.name + '.esp',
     quest_form: mod.plugin_name + '|800',
     control_script: 'PortableJunkRecyclerMk2:ControlScript',
@@ -353,6 +356,16 @@ local stat_adjust_step = 0.005;
       {
         [mcm.field.page_display_name]: '$Advanced',
         [mcm.field.content]: [
+          // advanced - multithreading
+          mcm.control.section(text='$Multithreading'),
+          mcm.control.slider(text='$ThreadLimitText', min=threads_min, max=threads_max, step=threads_step, source=mcm.helper.source.mod_setting.int(id='iThreadLimit:Advanced'), help='$ThreadLimitHelp'),
+          mcm.control.spacer(lines=1),
+
+          // advanced - methodology
+          mcm.control.section(text='$Methodology'),
+          mcm.control.switcher(text='$UseDirectMoveRecyclableItemListUpdateText', source=mcm.helper.source.mod_setting.bool(id='bUseDirectMoveRecyclableItemListUpdate:Advanced'), help='$UseDirectMoveRecyclableItemListUpdateHelp'),
+          mcm.control.spacer(lines=1),
+
           // advanced - reset settings to default
           mcm.control.section(text='$Settings'),
           mcm.control.button(text='$ResetSettingsToDefaultsText', action=mcm.helper.action.call_function(form=mod.quest_form, function_name='ResetToDefaults', script_name=mod.control_script), help='$ResetSettingsToDefaultsHelp'),
