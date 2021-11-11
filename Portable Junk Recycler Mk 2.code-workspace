@@ -17,11 +17,16 @@
             "AWKCR",
             "Buildable",
             "Chemlab",
+            "CMPO",
             "COBJ",
             "configurability",
             "craftable",
+            "elec",
+            "Esmx",
             "fireundubh",
+            "FLST",
             "fomod",
+            "formid",
             "Grospolina",
             "holotape",
             "jsonnet",
@@ -32,6 +37,7 @@
             "kinggath",
             "libsonnet",
             "lowres",
+            "markdownlint",
             "modders",
             "Mult",
             "multithread",
@@ -42,6 +48,7 @@
             "mutexes",
             "Neanka",
             "PJRM",
+            "Ptbr",
             "pyro",
             "Regen",
             "reqs",
@@ -52,6 +59,7 @@
             "Struct",
             "structs",
             "Thirdstorm",
+            "tldr",
             "uninstallation",
             "Unregistering",
             "Valdacil"
@@ -60,6 +68,14 @@
             "jsonnet",
             "papyrus",
             "papyrus-project"
-        ]
+        ],
+        "markdownlint.config": {
+            "MD007": { "indent": 4 },
+            "MD012": false,
+            "MD022": false,
+            "MD025": false,
+            "MD032": false,
+        },
+        "markdown.extension.list.indentationSize": "inherit"
     }
 }
