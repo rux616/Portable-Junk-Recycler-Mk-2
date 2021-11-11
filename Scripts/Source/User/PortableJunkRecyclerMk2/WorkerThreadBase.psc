@@ -62,14 +62,14 @@ EndFunction
 ; perform general housekeeping when a work function starts
 Function WorkerStart()
     Running = true
-    ; Debug.StartStackProfiling()
+    Debug.StartStackProfiling()
     Results = None
 EndFunction
 
 ; perform general housekeeping when a work function stops
 Function WorkerStop()
     Running = False
-    ; Debug.StopStackProfiling()
+    Debug.StopStackProfiling()
 EndFunction
 
 ; reset a thread
@@ -96,7 +96,7 @@ EndFunction
 ; ---------
 
 ; adds forms from an array to an object reference in a given quantity
-Function AddArrayItemsToInventory(var[] akItems, int aiIndex, int aiIndexEnd, ObjectReference akDestinationRef, int aiQuantity)
+Function AddArrayItemsToInventory(int aiIndex, int aiIndexEnd, var[] akItems, ObjectReference akDestinationRef, int aiQuantity)
     Self.WorkerStart()
 
     Form[] items = akItems as Form[]
@@ -163,7 +163,7 @@ Function AddRecyclableItemsToList(int aiIndex, int aiIndexEnd, var[] akItems, Fo
             itemWeight = items[aiIndex].GetWeight()
             totalComponentWeight = 0
             index = 0
-            While index < neededComponents.Length
+            While index < neededComponents.Length && totalComponentWeight < itemWeight
                 ; check if the item component is a known component and store the result
                 componentIndex = components.Find(neededComponents[index].object)
 
@@ -186,11 +186,10 @@ Function AddRecyclableItemsToList(int aiIndex, int aiIndexEnd, var[] akItems, Fo
             ; add it to the NetWeightReductionList FormList
             If totalComponentWeight < itemWeight
                 NetWeightReductionList.AddForm(items[aiIndex] as Form)
-
-            ; otherwise, it's just a normal recyclable item and should be added to the RecyclableItemList FormList instead
-            Else
-                akRecyclableItemList.AddForm(items[aiIndex] as Form)
             EndIf
+            
+            ; add the item to the RecyclableItemList FormList as well for filtering purposes
+            akRecyclableItemList.AddForm(items[aiIndex] as Form)
         EndIf
         neededComponents = None
         aiIndex += 1
