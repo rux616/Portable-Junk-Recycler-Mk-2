@@ -197,6 +197,12 @@ Group Settings
     SettingFloat[] Property MultAdjustScrapperNotSettlementU Auto Hidden
     SettingFloat[] Property MultAdjustScrapperNotSettlementR Auto Hidden
     SettingFloat[] Property MultAdjustScrapperNotSettlementS Auto Hidden
+
+    ; advanced - multithreading
+    SettingInt Property ThreadLimit Auto Hidden
+
+    ; advanced - methodology
+    SettingBool Property UseDirectMoveRecyclableItemListUpdate Auto Hidden
 EndGroup
 
 int Property iSaveFileMonitor Auto Hidden ; Do not mess with ever - this is used by Canary to track data loss
@@ -209,7 +215,7 @@ int Property iSaveFileMonitor Auto Hidden ; Do not mess with ever - this is used
 ; ---------
 
 string ModName = "Portable Junk Recycler Mk 2" const
-string ModVersion = "1.0.0" const
+string ModVersion = "0.6.0-beta" const
 string FullScriptName = "PortableJunkRecyclerMk2:ControlScript" const
 int ScrapperPerkMaxRanksSupported = 5 const
 SettingChangeType AvailableChangeTypes
@@ -230,17 +236,17 @@ int RAlt = 165 const
 
 Event OnQuestInit()
     MutexBusy = true
-    ; Debug.StartStackProfiling()
+    Debug.StartStackProfiling()
     Debug.OpenUserLog(ModName)
 
     Self.Initialize(abQuestInit = true)
 
-    ; Debug.StopStackProfiling()
+    Debug.StopStackProfiling()
     MutexBusy = false
 EndEvent
 
 Event Actor.OnPlayerLoadGame(Actor akSender)
-    ; Debug.StartStackProfiling()
+    Debug.StartStackProfiling()
     Debug.OpenUserLog(ModName)
 
     ; immediately abort if there's already a thread waiting on mutex release
@@ -270,7 +276,7 @@ Event Actor.OnPlayerLoadGame(Actor akSender)
         Self._DebugTrace("OnPlayerLoadGame: Mutexes didn't release within time limit", 1)
     EndIf
 
-    ; Debug.StopStackProfiling()
+    Debug.StopStackProfiling()
     MutexWaiting = false
 EndEvent
 
@@ -339,11 +345,11 @@ Function Initialize(bool abQuestInit = false)
     Self.CheckForMCM()
     Self.InitSettings(abForce = abQuestInit)
     Self.InitSettingsSupplemental()
+    Self.LoadAllSettingsFromMCM()
     Self.InitFormListWrappers()
     Self.InitComponentMappings()
     Self.InitScrapListAll()
     Self.InitScrapperPerks()
-    Self.LoadAllSettingsFromMCM()
     Self.RegisterForMCMEvents()
     If ScriptExtenderInstalled
         RegisterForKey(LAlt)
@@ -717,6 +723,18 @@ Function InitSettings(bool abForce = false)
 
         index += 1
     EndWhile
+
+    ; advanced - multithreading
+    If abForce || ! ThreadLimit
+        Self._DebugTrace("Initializing ThreadLimit")
+        ThreadLimit = new SettingInt
+    EndIf
+
+    ; advanced - methodology
+    If abForce || ! UseDirectMoveRecyclableItemListUpdate
+        Self._DebugTrace("Initializing UseNoTouchRecyclableItemListUpdate")
+        UseDirectMoveRecyclableItemListUpdate = new SettingBool
+    EndIf
 EndFunction
 
 ; perform supplemental initialization on properties that hold settings
@@ -1020,11 +1038,25 @@ Function InitSettingsSupplemental()
 
         index += 1
     EndWhile
+
+    ; advanced - multithreading
+    ThreadLimit.ValueDefault = ThreadManager.NumberOfWorkerThreads
+    ThreadLimit.McmId = "iThreadLimit:Advanced"
+    ThreadLimit.ValueMin = 1
+    ThreadLimit.ValueMax = ThreadManager.NumberOfWorkerThreads
+
+    ; advanced - methodology
+    UseDirectMoveRecyclableItemListUpdate.ValueDefault = false
+    UseDirectMoveRecyclableItemListUpdate.McmId = "bUseDirectMoveRecyclableItemListUpdate:Advanced"
 EndFunction
 
 ; reset values of properties that hold settings to their defaults
 Function InitSettingsDefaultValues()
     Self._DebugTrace("Initializing settings (default values)")
+
+    ; change thread limit first
+    ChangeSetting(ThreadLimit, CurrentChangeType, ThreadLimit.ValueDefault, ModName)
+    ThreadManager.SetThreadLimit(ThreadLimit.Value)
 
     ; add all the settings to an array to pass to the ThreadManager
     var[] settingsToChange = Self.CollectMCMSettings()
@@ -1260,6 +1292,9 @@ var[] Function CollectMCMSettings()
 
         index += 1
     EndWhile
+
+    ; advanced - methodology
+    toReturn.Add(UseDirectMoveRecyclableItemListUpdate)
 
     Return toReturn
 EndFunction
@@ -1572,6 +1607,19 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             LoadSettingFromMCM(MultAdjustRandomMaxS, ModName)
             newValue = MultAdjustRandomMaxS.Value
 
+        ; advanced - multithreading
+        ElseIf asControlId == ThreadLimit.McmId
+            oldValue = ThreadLimit.Value
+            LoadSettingFromMCM(ThreadLimit, ModName)
+            newValue = ThreadLimit.Value
+            ThreadManager.SetThreadLimit(ThreadLimit.Value)
+
+        ; advanced - methodology
+        ElseIf asControlId == UseDirectMoveRecyclableItemListUpdate.McmId
+            oldValue = UseDirectMoveRecyclableItemListUpdate.Value
+            LoadSettingFromMCM(UseDirectMoveRecyclableItemListUpdate, ModName)
+            newValue = UseDirectMoveRecyclableItemListUpdate.Value
+
         ; multiplier adjustments - scrapper 1-5
         Else
             int index = 0
@@ -1693,13 +1741,13 @@ EndFunction
 Function ResetToDefaults()
     If ! (MutexRunning || MutexBusy)
         MutexBusy = true
-        ; Debug.StartStackProfiling()
+        Debug.StartStackProfiling()
         Self._DebugTrace("Resetting settings to defaults")
         Self.InitSettings(abForce = true)
         Self.InitSettingsSupplemental()
         Self.InitSettingsDefaultValues()
         MCM.RefreshMenu()
-        ; Debug.StopStackProfiling()
+        Debug.StopStackProfiling()
         MutexBusy = false
         MessageSettingsReset.Show()
     ElseIf MutexRunning && ! MutexBusy
@@ -2042,14 +2090,12 @@ Function Uninstall()
         UnregisterForMenuOpenCloseEvent("PauseMenu")
         UnregisterForExternalEvent("OnMCMSettingChange|" + ModName)
         UnregisterForExternalEvent("OnMCMMenuClose|" + ModName)
-        If AllowBehaviorOverrides.Value
-            UnregisterForKey(LAlt)
-            UnregisterForKey(RAlt)
-            UnregisterForKey(LCtrl)
-            UnregisterForKey(RCtrl)
-            UnregisterForKey(LShift)
-            UnregisterForKey(RShift)
-        EndIf
+        UnregisterForKey(LAlt)
+        UnregisterForKey(RAlt)
+        UnregisterForKey(LCtrl)
+        UnregisterForKey(RCtrl)
+        UnregisterForKey(LShift)
+        UnregisterForKey(RShift)
 
         ; stop the ThreadManager
         ThreadManager.Uninstall()
@@ -2080,8 +2126,7 @@ Function Uninstall()
         DestroyArrayContents(ComponentMappings as var[])
         ComponentMappings = None
 
-        ; group Other
-        PlayerRef = None
+        ; group Messages
         MessageF4SENotInstalled = None
         MessageMCMNotInstalled = None
         MessageInitialized = None
@@ -2102,6 +2147,11 @@ Function Uninstall()
         MessageNeverAutoTransferListReset = None
         MessageNeverAutoTransferListResetFailBusy = None
         MessageNeverAutoTransferListResetFailRunning = None
+        MessageUninstallFailRunning = None
+        MessageUninstallFailBusy = None
+
+        ; group Other
+        PlayerRef = None
         WorkshopParent = None
         RecyclableItemList.List.Revert()
         RecyclableItemList = None
@@ -2112,6 +2162,7 @@ Function Uninstall()
         AlwaysAutoTransferList.List.Revert()
         AlwaysAutoTransferList = None
         ThreadManager = None
+        PortableJunkRecyclerConstructibleObject = None
 
         ; group RuntimeState
         DestroyArrayContents(ScrapperPerks as var[])
@@ -2194,6 +2245,10 @@ Function Uninstall()
         MultAdjustScrapperNotSettlementR = None
         DestroyArrayContents(MultAdjustScrapperNotSettlementS as var[])
         MultAdjustScrapperNotSettlementS = None
+        ; advanced - multithreading
+        ThreadLimit = None
+        ; advanced - methodology
+        UseDirectMoveRecyclableItemListUpdate = None
 
         ; local variables
         AvailableChangeTypes = None
