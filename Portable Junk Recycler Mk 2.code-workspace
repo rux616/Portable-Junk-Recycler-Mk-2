@@ -62,7 +62,8 @@
             "tldr",
             "uninstallation",
             "Unregistering",
-            "Valdacil"
+            "Valdacil",
+            "Wabbajack"
         ],
         "cSpell.enableFiletypes": [
             "jsonnet",
@@ -76,6 +77,11 @@
             "MD025": false,
             "MD032": false,
         },
-        "markdown.extension.list.indentationSize": "inherit"
+        "markdown.extension.list.indentationSize": "inherit",
+        "markdown-pdf.displayHeaderFooter": false,
+        "markdown-pdf.margin.bottom": "0px",
+        "markdown-pdf.margin.left": "0px",
+        "markdown-pdf.margin.right": "0px",
+        "markdown-pdf.margin.top": "0px"
     }
 }
