@@ -2,6 +2,7 @@ Portable Junk Recycler Mk 2
 ===========================
 
 - [Portable Junk Recycler Mk 2](#portable-junk-recycler-mk-2)
+    - [(TODO)](#todo)
     - [v0.6.0-beta](#v060-beta)
     - [v0.5.0-beta](#v050-beta)
     - [v0.4.0 beta](#v040-beta)
@@ -12,12 +13,16 @@ Portable Junk Recycler Mk 2
     - [v0.2.1 beta](#v021-beta)
     - [v0.2.0 beta](#v020-beta)
 
+(TODO)
+------
+- Add dummy localization for all possible languages (En/De/Es/Esmx/Fr/It/Pl/Ptbr/Ru/Cn/Ja)
+
 v0.6.0-beta
 -----------
 - Added MCM setting: 'Only Transfer Low Component Weight Ratio Items' ('Recycler Interface' page) - choose whether to only transfer items whose component parts weigh less than the item
 - Added MCM setting: 'Max Number Of Threads To Use' ('Advanced' page) - set the maximum number of threads that will be used in multithreaded operations
 - Added MCM setting: 'Use "Direct Move" Method To Update Recyclable Item List' ('Advanced' page) - when updating the list of recyclable items, a special 'direct move' version of the method will be used, potentially increasing speed by a little bit, but potentially causing lag of its own by moving the contents of the player inventory directly
-- Added dummy localization for all possible languages (En/De/Es/Esmx/Fr/It/Pl/Ptbr/Ru/Cn/Ja)
+- Added message shown when editing an auto transfer list is finished
 - Fixed filtering of items into the Mk 2 inventory
 - Sped up updating of recyclable items list by adding async processing while the script is waiting to open the container
 - Slightly altered the main mod menu page to consolidate informational buttons
