@@ -249,9 +249,9 @@
                "valueOptions": {
                   "options": [
                      "$OFF",
-                     "$InSettlements",
-                     "$NotPlayerOwnedSettlement",
-                     "$Everywhere"
+                     "$WhenInPlayerOwnedSettlement",
+                     "$WhenNotInPlayerOwnedSettlement",
+                     "$Always"
                   ],
                   "sourceType": "ModSettingInt"
                }

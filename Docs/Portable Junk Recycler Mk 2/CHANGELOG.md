@@ -19,7 +19,7 @@ Portable Junk Recycler Mk 2
 
 v0.6.0-beta
 -----------
-- Added MCM setting: 'Only Transfer Low Component Weight Ratio Items' ('Recycler Interface' page) - choose whether to only transfer items whose component parts weigh less than the item
+- Added MCM setting: 'Only Transfer Low Component Weight Ratio Items' ('Recycler Interface' page) - choose when to only transfer items whose component parts weigh less than the item
 - Added MCM setting: 'Max Number Of Threads To Use' ('Advanced' page) - set the maximum number of threads that will be used in multithreaded operations
 - Added MCM setting: 'Use "Direct Move" Method To Update Recyclable Item List' ('Advanced' page) - when updating the list of recyclable items, a special 'direct move' version of the method will be used, potentially increasing speed by a little bit, but potentially causing lag of its own by moving the contents of the player inventory directly
 - Added message shown when editing an auto transfer list is finished

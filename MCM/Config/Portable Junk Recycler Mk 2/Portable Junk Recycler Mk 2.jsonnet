@@ -128,7 +128,7 @@ local threads_step = 1;
           mcm.control.switcher(text='$AutoRecyclingModeText', source=mcm.helper.source.mod_setting.bool(id='bAutoRecyclingMode:Behavior'), help='$AutoRecyclingModeHelp'),
           mcm.control.switcher(text='$AllowJunkOnlyText', source=mcm.helper.source.mod_setting.bool(id='bAllowJunkOnly:Behavior'), help='$AllowJunkOnlyHelp'),
           mcm.control.switcher(text='$AutoTransferJunkText', source=mcm.helper.source.mod_setting.bool(id='bAutoTransferJunk:Behavior'), help='$AutoTransferJunkHelp'),
-          mcm.control.dropdown(text='$IndentTransferLowWeightRatioItemsText', options=[str_off, str_settlement, '$NotPlayerOwnedSettlement', '$Everywhere'], source=mcm.helper.source.mod_setting.int(id='iTransferLowWeightRatioItems:Behavior'), help='$TransferLowWeightRatioItemsHelp'),
+          mcm.control.dropdown(text='$IndentTransferLowWeightRatioItemsText', options=[str_off, '$WhenInPlayerOwnedSettlement', '$WhenNotInPlayerOwnedSettlement', '$Always'], source=mcm.helper.source.mod_setting.int(id='iTransferLowWeightRatioItems:Behavior'), help='$TransferLowWeightRatioItemsHelp'),
           mcm.control.text(text='$IndentTransferLowWeightRatioItemsNote'),
           mcm.control.switcher(text='$UseAlwaysAutoTransferListText', source=mcm.helper.source.mod_setting.bool(id='bUseAlwaysAutoTransferList:Behavior'), help='$UseAlwaysAutoTransferListHelp'),
           mcm.control.switcher(text='$UseNeverAutoTransferListText', source=mcm.helper.source.mod_setting.bool(id='bUseNeverAutoTransferList:Behavior'), help='$UseNeverAutoTransferListHelp'),
