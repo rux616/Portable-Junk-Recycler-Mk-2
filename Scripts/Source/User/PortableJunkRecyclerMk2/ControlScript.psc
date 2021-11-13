@@ -820,7 +820,7 @@ Function InitSettingsSupplemental()
     CraftingStation.ValueDefault = 0
     CraftingStation.McmId = "iCraftingStation:Crafting"
     CraftingStation.ValueMin = 0
-    CraftingStation.ValueMax = 8
+    CraftingStation.ValueMax = 9
 
     ; multiplier adjustments - general
     MultAdjustGeneralSettlement.ValueDefault = 0.0
@@ -1317,43 +1317,57 @@ EndFunction
 ; determine where the crafting recipe lives
 Function SetCraftingStation()
     string pluginNameSW = "StandaloneWorkbenches.esp" const
+    string pluginNameECO = "ECO.esp" const
     string pluginNameAWKCR = "ArmorKeywords.esm" const
     bool isSWInstalled = Game.IsPluginInstalled(pluginNameSW)
+    bool isECOInstalled = Game.IsPluginInstalled(pluginNameECO)
     bool isAWKCRInstalled = Game.IsPluginInstalled(pluginNameAWKCR)
-    If CraftingStation.Value == 1 && isSWInstalled
-        ; Standalone Workbenches - Electronics Workbench (Keyword FExxx80D - wSW_ElectronicsWorkbench_CraftingKey)
-        Self._DebugTrace("Crafting station: Standalone Workbenches - Electronics Workbench")
-        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x80D, pluginNameSW) as Keyword)
-    ElseIf CraftingStation.Value == 2 && isSWInstalled
-        ; Standalone Workbenches - Engineering Workbench (Keyword FExxx810 - wSW_EngineeringWorkbench_CraftingKey)
-        Self._DebugTrace("Crafting station: Standalone Workbenches - Engineering Workbench")
-        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x810, pluginNameSW) as Keyword)
-    ElseIf CraftingStation.Value == 3 && isSWInstalled
-        ; Standalone Workbenches - Manufacturing Workbench (Keyword FExxx822 - wSW_ManufacturingWorkbench_CraftingKey)
-        Self._DebugTrace("Crafting station: Standalone Workbenches - Manufacturing Workbench")
-        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x822, pluginNameSW) as Keyword)
-    ElseIf (CraftingStation.Value == 4 || CraftingStation.Value == 0) && isSWInstalled
+
+    ; handle 'dynamic' workbenches first
+    If (CraftingStation.Value == 5 || CraftingStation.Value == 0) && isSWInstalled
         ; Standalone Workbenches - Utility Workbench (Keyword FExxx81C - wSW_UtilityWorkbench_CraftingKey)
         Self._DebugTrace("Crafting station: Standalone Workbenches - Utility Workbench")
         PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x81C, pluginNameSW) as Keyword)
-    ElseIf CraftingStation.Value == 5 && isAWKCRInstalled
-        ; AWKCR - Advanced Engineering Workbench (Keyword xx00195A - AEC_ck_AdvancedEngineeringCraftingKey)
-        Self._DebugTrace("Crafting station: AWKCR - Advanced Engineering Workbench")
-        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x00195A, pluginNameAWKCR) as Keyword)
-    ElseIf CraftingStation.Value == 6 && isAWKCRInstalled
-        ; AWKCR - Electronics Workstation (Keyword xx001764 - AEC_ck_ElectronicsCraftingKey)
-        Self._DebugTrace("Crafting station: AWKCR - Electronics Workstation")
-        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x001764, pluginNameAWKCR) as Keyword)
-    ElseIf (CraftingStation.Value == 7 || CraftingStation.Value == 0) && isAWKCRInstalled
+    ElseIf (CraftingStation.Value == 9 || CraftingStation.Value == 0) && isECOInstalled
+        ; Equipment and Crafting Overhaul - Utility Station (Keyword xx02788D - Dank_Workbench_TypeUtility)
+        Self._DebugTrace("Crafting station: Equipment and Crafting Overhaul - Utility Station")
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x02788D, pluginNameECO) as Keyword)
+    ElseIf (CraftingStation.Value == 8 || CraftingStation.Value == 0) && isAWKCRInstalled
         ; AWKCR - Utility Workbench (Keyword xx001765 - AEC_ck_UtilityCraftingKey)
         Self._DebugTrace("Crafting station: AWKCR - Utility Workbench")
         PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x001765, pluginNameAWKCR) as Keyword)
-    Else
+
+    ; handle other manual workbench choices
+    ElseIf CraftingStation.Value == 2 && isSWInstalled
+        ; Standalone Workbenches - Electronics Workbench (Keyword FExxx80D - wSW_ElectronicsWorkbench_CraftingKey)
+        Self._DebugTrace("Crafting station: Standalone Workbenches - Electronics Workbench")
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x80D, pluginNameSW) as Keyword)
+    ElseIf CraftingStation.Value == 3 && isSWInstalled
+        ; Standalone Workbenches - Engineering Workbench (Keyword FExxx810 - wSW_EngineeringWorkbench_CraftingKey)
+        Self._DebugTrace("Crafting station: Standalone Workbenches - Engineering Workbench")
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x810, pluginNameSW) as Keyword)
+    ElseIf CraftingStation.Value == 4 && isSWInstalled
+        ; Standalone Workbenches - Manufacturing Workbench (Keyword FExxx822 - wSW_ManufacturingWorkbench_CraftingKey)
+        Self._DebugTrace("Crafting station: Standalone Workbenches - Manufacturing Workbench")
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x822, pluginNameSW) as Keyword)
+    ElseIf CraftingStation.Value == 6 && isAWKCRInstalled
+        ; AWKCR - Advanced Engineering Workbench (Keyword xx00195A - AEC_ck_AdvancedEngineeringCraftingKey)
+        Self._DebugTrace("Crafting station: AWKCR - Advanced Engineering Workbench")
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x00195A, pluginNameAWKCR) as Keyword)
+    ElseIf CraftingStation.Value == 7 && isAWKCRInstalled
+        ; AWKCR - Electronics Workstation (Keyword xx001764 - AEC_ck_ElectronicsCraftingKey)
+        Self._DebugTrace("Crafting station: AWKCR - Electronics Workstation")
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x001764, pluginNameAWKCR) as Keyword)
+
+    ; handle everything else, like missing mods, etc
+    Else ; CraftingStation.Value == 1
         ; Vanilla - Chemistry Station (Keyword xx102158 - WorkbenchChemlab)
-        If CraftingStation.Value >= 1 && CraftingStation.Value <= 4
+        If CraftingStation.Value >= 2 && CraftingStation.Value <= 5
             Self._DebugTrace("Crafting station: Standalone Workbenches workbench specified but mod not detected; falling back to vanilla")
-        ElseIF CraftingStation.Value >= 5 && CraftingStation.Value <= 7
+        ElseIF CraftingStation.Value >= 6 && CraftingStation.Value <= 8
             Self._DebugTrace("Crafting station: AWKCR workbench specified but mod not detected; falling back to vanilla")
+        ElseIf CraftingStation.Value == 9
+            Self._DebugTrace("Crafting station: ECO workbench specified but mod not detected; falling back to vanilla")
         Else
             Self._DebugTrace("Crafting station: Vanilla - Chemistry Station")
         EndIf

@@ -233,34 +233,6 @@
                }
             },
             {
-               "help": "$AutoTransferJunkHelp",
-               "id": "bAutoTransferJunk:Behavior",
-               "text": "$AutoTransferJunkText",
-               "type": "switcher",
-               "valueOptions": {
-                  "sourceType": "ModSettingBool"
-               }
-            },
-            {
-               "help": "$TransferLowWeightRatioItemsHelp",
-               "id": "iTransferLowWeightRatioItems:Behavior",
-               "text": "$IndentTransferLowWeightRatioItemsText",
-               "type": "dropdown",
-               "valueOptions": {
-                  "options": [
-                     "$OFF",
-                     "$WhenInPlayerOwnedSettlement",
-                     "$WhenNotInPlayerOwnedSettlement",
-                     "$Always"
-                  ],
-                  "sourceType": "ModSettingInt"
-               }
-            },
-            {
-               "text": "$IndentTransferLowWeightRatioItemsNote",
-               "type": "text"
-            },
-            {
                "help": "$UseAlwaysAutoTransferListHelp",
                "id": "bUseAlwaysAutoTransferList:Behavior",
                "text": "$UseAlwaysAutoTransferListText",
@@ -298,8 +270,32 @@
                }
             },
             {
-               "lines": 1,
-               "type": "spacer"
+               "help": "$AutoTransferJunkHelp",
+               "id": "bAutoTransferJunk:Behavior",
+               "text": "$AutoTransferJunkText",
+               "type": "switcher",
+               "valueOptions": {
+                  "sourceType": "ModSettingBool"
+               }
+            },
+            {
+               "help": "$TransferLowWeightRatioItemsHelp",
+               "id": "iTransferLowWeightRatioItems:Behavior",
+               "text": "$IndentTransferLowWeightRatioItemsText",
+               "type": "dropdown",
+               "valueOptions": {
+                  "options": [
+                     "$OFF",
+                     "$WhenInPlayerOwnedSettlement",
+                     "$WhenNotInPlayerOwnedSettlement",
+                     "$Always"
+                  ],
+                  "sourceType": "ModSettingInt"
+               }
+            },
+            {
+               "text": "$IndentTransferLowWeightRatioItemsNote",
+               "type": "text"
             },
             {
                "text": "$Crafting",
@@ -313,6 +309,7 @@
                "valueOptions": {
                   "options": [
                      "$Dynamic",
+                     "$VanillaChemistry",
                      "$SWElectronics",
                      "$SWEngineering",
                      "$SWManufacturing",
@@ -320,10 +317,14 @@
                      "$AWKCRAdvEngineering",
                      "$AWKCRElectronics",
                      "$AWKCRUtility",
-                     "$VanillaChemistry"
+                     "$ECOUtility"
                   ],
                   "sourceType": "ModSettingInt"
                }
+            },
+            {
+               "text": "$CraftingStationNote",
+               "type": "text"
             },
             {
                "lines": 1,
