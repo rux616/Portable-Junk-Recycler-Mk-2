@@ -82,6 +82,7 @@
         "markdown-pdf.margin.bottom": "0px",
         "markdown-pdf.margin.left": "0px",
         "markdown-pdf.margin.right": "0px",
-        "markdown-pdf.margin.top": "0px"
+        "markdown-pdf.margin.top": "0px",
+        "trailing-spaces.trimOnSave": true
     }
 }
