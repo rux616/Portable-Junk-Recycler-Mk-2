@@ -187,7 +187,7 @@ Function AddRecyclableItemsToList(int aiIndex, int aiIndexEnd, var[] akItems, Fo
             If totalComponentWeight < itemWeight
                 NetWeightReductionList.AddForm(items[aiIndex] as Form)
             EndIf
-            
+
             ; add the item to the RecyclableItemList FormList as well for filtering purposes
             akRecyclableItemList.AddForm(items[aiIndex] as Form)
         EndIf
