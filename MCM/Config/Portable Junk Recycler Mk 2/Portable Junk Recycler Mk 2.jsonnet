@@ -127,22 +127,21 @@ local threads_step = 1;
           mcm.control.section(text='$Behavior'),
           mcm.control.switcher(text='$AutoRecyclingModeText', source=mcm.helper.source.mod_setting.bool(id='bAutoRecyclingMode:Behavior'), help='$AutoRecyclingModeHelp'),
           mcm.control.switcher(text='$AllowJunkOnlyText', source=mcm.helper.source.mod_setting.bool(id='bAllowJunkOnly:Behavior'), help='$AllowJunkOnlyHelp'),
-          mcm.control.switcher(text='$AutoTransferJunkText', source=mcm.helper.source.mod_setting.bool(id='bAutoTransferJunk:Behavior'), help='$AutoTransferJunkHelp'),
-          mcm.control.dropdown(text='$IndentTransferLowWeightRatioItemsText', options=[str_off, '$WhenInPlayerOwnedSettlement', '$WhenNotInPlayerOwnedSettlement', '$Always'], source=mcm.helper.source.mod_setting.int(id='iTransferLowWeightRatioItems:Behavior'), help='$TransferLowWeightRatioItemsHelp'),
-          mcm.control.text(text='$IndentTransferLowWeightRatioItemsNote'),
           mcm.control.switcher(text='$UseAlwaysAutoTransferListText', source=mcm.helper.source.mod_setting.bool(id='bUseAlwaysAutoTransferList:Behavior'), help='$UseAlwaysAutoTransferListHelp'),
           mcm.control.switcher(text='$UseNeverAutoTransferListText', source=mcm.helper.source.mod_setting.bool(id='bUseNeverAutoTransferList:Behavior'), help='$UseNeverAutoTransferListHelp'),
           mcm.control.switcher(text='$AllowBehaviorOverridesText', source=mcm.helper.source.mod_setting.bool(id='bAllowBehaviorOverrides:Behavior'), group=mcm.helper.group.control(mod.group_id.behavior_override), help='$AllowBehaviorOverridesHelp'),
           mcm.control.switcher(text='$ReturnItemsSilentlyText', source=mcm.helper.source.mod_setting.bool(id='bReturnItemsSilently:Behavior'), help='$ReturnItemsSilentlyHelp'),
-          mcm.control.spacer(lines=1),
+          mcm.control.switcher(text='$AutoTransferJunkText', source=mcm.helper.source.mod_setting.bool(id='bAutoTransferJunk:Behavior'), help='$AutoTransferJunkHelp'),
+          mcm.control.dropdown(text='$IndentTransferLowWeightRatioItemsText', options=[str_off, '$WhenInPlayerOwnedSettlement', '$WhenNotInPlayerOwnedSettlement', '$Always'], source=mcm.helper.source.mod_setting.int(id='iTransferLowWeightRatioItems:Behavior'), help='$TransferLowWeightRatioItemsHelp'),
+          mcm.control.text(text='$IndentTransferLowWeightRatioItemsNote'),
 
           // recycler interface - crafting
           mcm.control.section(text='$Crafting'),
-          mcm.control.dropdown(text='$CraftingStationText', options=['$Dynamic', '$SWElectronics', '$SWEngineering', '$SWManufacturing', '$SWUtility', '$AWKCRAdvEngineering', '$AWKCRElectronics', '$AWKCRUtility', '$VanillaChemistry'], source=mcm.helper.source.mod_setting.int(id='iCraftingStation:Crafting'), help='$CraftingStationHelp'),
+          mcm.control.dropdown(text='$CraftingStationText', options=['$Dynamic', '$VanillaChemistry', '$SWElectronics', '$SWEngineering', '$SWManufacturing', '$SWUtility', '$AWKCRAdvEngineering', '$AWKCRElectronics', '$AWKCRUtility', '$ECOUtility'], source=mcm.helper.source.mod_setting.int(id='iCraftingStation:Crafting'), help='$CraftingStationHelp'),
+          mcm.control.text(text='$CraftingStationNote'),
           mcm.control.spacer(lines=1),
 
           // recycler interface - hotkeys
-          // TODO - put in group control tieing BO controls to toggle above
           mcm.control.section(text='$Hotkeys'),
           mcm.control.stepper(text='$BehaviorOverrideForceAutoRecyclingModeText', options=['$HotkeyCtrlShift'], group=mcm.helper.group.condition.or(mod.group_id.behavior_override), help='$BehaviorOverrideForceAutoRecyclingModeHelp'),
           mcm.control.stepper(text='$BehaviorOverrideForceTransferJunkText', options=['$HotkeyShift'], group=mcm.helper.group.condition.or(mod.group_id.behavior_override), help='$BehaviorOverrideForceTransferJunkHelp'),
