@@ -58,8 +58,10 @@ Group Messages
     Message Property MessageF4SENotInstalled Auto Mandatory
     Message Property MessageEditNeverAutoTransferListModeBox Auto Mandatory
     Message Property MessageEditNeverAutoTransferListModeNotification Auto Mandatory
+    Message Property MessageEditNeverAutoTransferListFinished Auto Mandatory
     Message Property MessageEditAlwaysAutoTransferListModeBox Auto Mandatory
     Message Property MessageEditAlwaysAutoTransferListModeNotification Auto Mandatory
+    Message Property MessageEditAlwaysAutoTransferListFinished Auto Mandatory
 EndGroup
 
 
@@ -121,13 +123,15 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
             Self._DebugTrace("List edit container " + editListContainer + " created")
             Self._DebugTrace("Editing 'Never Automatically Transfer' list")
             Self.EditAutoTransferList(PortableRecyclerControl.NeverAutoTransferList, editListContainer, \
-                MessageEditNeverAutoTransferListModeBox, MessageEditNeverAutoTransferListModeNotification)
+                MessageEditNeverAutoTransferListModeBox, MessageEditNeverAutoTransferListModeNotification, \
+                MessageEditNeverAutoTransferListFinished)
         ElseIf editAlwaysTransferList
             editListContainer = PlayerRef.PlaceAtMe(AlwaysAutoTransferContainer as Form, abForcePersist = true)
             Self._DebugTrace("List edit container " + editListContainer + " created")
             Self._DebugTrace("Editing 'Always Automatically Transfer' list")
             Self.EditAutoTransferList(PortableRecyclerControl.AlwaysAutoTransferList, editListContainer, \
-                MessageEditAlwaysAutoTransferListModeBox, MessageEditAlwaysAutoTransferListModeNotification)
+                MessageEditAlwaysAutoTransferListModeBox, MessageEditAlwaysAutoTransferListModeNotification, \
+                MessageEditAlwaysAutoTransferListFinished)
         Else
             If PortableRecyclerControl.AllowBehaviorOverrides.Value
                 Self.Recycle(hotkeyRetain, hotkeyTransfer)
@@ -393,7 +397,7 @@ EndFunction
 
 ; handles editing an auto transfer list
 Function EditAutoTransferList(FormListWrapper akAutoTransferList, ObjectReference akContainer, Message akModeMessageBox, \
-        Message akModeMessageNotification)
+        Message akModeMessageNotification, Message akFinishedMessage)
     Self._DebugTrace("Started editing Auto Transfer List: " + akAutoTransferList.List)
 
     ; prepare parameters and call asynchronous subprocess
@@ -438,6 +442,9 @@ Function EditAutoTransferList(FormListWrapper akAutoTransferList, ObjectReferenc
 
     ; add the recycler item back to the player
     PlayerRef.AddItem(PortableRecyclerItem as Form, 1, true)
+
+    ; show finished message
+    akFinishedMessage.Show()
 
     Self._DebugTrace("Finished editing Auto Transfer List")
 EndFunction
