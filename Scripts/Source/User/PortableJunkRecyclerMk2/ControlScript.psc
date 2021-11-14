@@ -741,11 +741,18 @@ EndFunction
 Function InitSettingsSupplemental()
     Self._DebugTrace("Initializing settings (supplemental)")
 
+    float adjustMin = -2.0 const
+    float adjustMax = 2.0 const
+    float statAdjustMin = 0.0 const
+    float statAdjustMax = 1.0 const
+    float randomAdjustMin = -6.0 const
+    float randomAdjustMax = 6.0 const
+
     ; settings - general
     MultBase.ValueDefault = 1.0
     MultBase.McmId = "fMultBase:GeneralOptions"
     MultBase.ValueMin = 0.0
-    MultBase.ValueMax = 2.0
+    MultBase.ValueMax = adjustMax
 
     ReturnAtLeastOneComponent.ValueDefault = true
     ReturnAtLeastOneComponent.McmId = "bReturnAtLeastOneComponent:GeneralOptions"
@@ -825,156 +832,156 @@ Function InitSettingsSupplemental()
     ; multiplier adjustments - general
     MultAdjustGeneralSettlement.ValueDefault = 0.0
     MultAdjustGeneralSettlement.McmId = "fMultAdjustGeneralSettlement:MultiplierAdjustments"
-    MultAdjustGeneralSettlement.ValueMin = -1.0
-    MultAdjustGeneralSettlement.ValueMax = 1.0
+    MultAdjustGeneralSettlement.ValueMin = adjustMin
+    MultAdjustGeneralSettlement.ValueMax = adjustMax
 
     MultAdjustGeneralSettlementC.ValueDefault = 0.0
     MultAdjustGeneralSettlementC.McmId = "fMultAdjustGeneralSettlementC:MultiplierAdjustments"
-    MultAdjustGeneralSettlementC.ValueMin = -1.0
-    MultAdjustGeneralSettlementC.ValueMax = 1.0
+    MultAdjustGeneralSettlementC.ValueMin = adjustMin
+    MultAdjustGeneralSettlementC.ValueMax = adjustMax
 
     MultAdjustGeneralSettlementU.ValueDefault = 0.0
     MultAdjustGeneralSettlementU.McmId = "fMultAdjustGeneralSettlementU:MultiplierAdjustments"
-    MultAdjustGeneralSettlementU.ValueMin = -1.0
-    MultAdjustGeneralSettlementU.ValueMax = 1.0
+    MultAdjustGeneralSettlementU.ValueMin = adjustMin
+    MultAdjustGeneralSettlementU.ValueMax = adjustMax
 
     MultAdjustGeneralSettlementR.ValueDefault = 0.0
     MultAdjustGeneralSettlementR.McmId = "fMultAdjustGeneralSettlementR:MultiplierAdjustments"
-    MultAdjustGeneralSettlementR.ValueMin = -1.0
-    MultAdjustGeneralSettlementR.ValueMax = 1.0
+    MultAdjustGeneralSettlementR.ValueMin = adjustMin
+    MultAdjustGeneralSettlementR.ValueMax = adjustMax
 
     MultAdjustGeneralSettlementS.ValueDefault = 0.0
     MultAdjustGeneralSettlementS.McmId = "fMultAdjustGeneralSettlementS:MultiplierAdjustments"
-    MultAdjustGeneralSettlementS.ValueMin = -1.0
-    MultAdjustGeneralSettlementS.ValueMax = 1.0
+    MultAdjustGeneralSettlementS.ValueMin = adjustMin
+    MultAdjustGeneralSettlementS.ValueMax = adjustMax
 
     MultAdjustGeneralNotSettlement.ValueDefault = 0.0
     MultAdjustGeneralNotSettlement.McmId = "fMultAdjustGeneralNotSettlement:MultiplierAdjustments"
-    MultAdjustGeneralNotSettlement.ValueMin = -1.0
-    MultAdjustGeneralNotSettlement.ValueMax = 1.0
+    MultAdjustGeneralNotSettlement.ValueMin = adjustMin
+    MultAdjustGeneralNotSettlement.ValueMax = adjustMax
 
     MultAdjustGeneralNotSettlementC.ValueDefault = 0.0
     MultAdjustGeneralNotSettlementC.McmId = "fMultAdjustGeneralNotSettlementC:MultiplierAdjustments"
-    MultAdjustGeneralNotSettlementC.ValueMin = -1.0
-    MultAdjustGeneralNotSettlementC.ValueMax = 1.0
+    MultAdjustGeneralNotSettlementC.ValueMin = adjustMin
+    MultAdjustGeneralNotSettlementC.ValueMax = adjustMax
 
     MultAdjustGeneralNotSettlementU.ValueDefault = 0.0
     MultAdjustGeneralNotSettlementU.McmId = "fMultAdjustGeneralNotSettlementU:MultiplierAdjustments"
-    MultAdjustGeneralNotSettlementU.ValueMin = -1.0
-    MultAdjustGeneralNotSettlementU.ValueMax = 1.0
+    MultAdjustGeneralNotSettlementU.ValueMin = adjustMin
+    MultAdjustGeneralNotSettlementU.ValueMax = adjustMax
 
     MultAdjustGeneralNotSettlementR.ValueDefault = 0.0
     MultAdjustGeneralNotSettlementR.McmId = "fMultAdjustGeneralNotSettlementR:MultiplierAdjustments"
-    MultAdjustGeneralNotSettlementR.ValueMin = -1.0
-    MultAdjustGeneralNotSettlementR.ValueMax = 1.0
+    MultAdjustGeneralNotSettlementR.ValueMin = adjustMin
+    MultAdjustGeneralNotSettlementR.ValueMax = adjustMax
 
     MultAdjustGeneralNotSettlementS.ValueDefault = 0.0
     MultAdjustGeneralNotSettlementS.McmId = "fMultAdjustGeneralNotSettlementS:MultiplierAdjustments"
-    MultAdjustGeneralNotSettlementS.ValueMin = -1.0
-    MultAdjustGeneralNotSettlementS.ValueMax = 1.0
+    MultAdjustGeneralNotSettlementS.ValueMin = adjustMin
+    MultAdjustGeneralNotSettlementS.ValueMax = adjustMax
 
     ; multiplier adjustments - intelligence
     MultAdjustInt.ValueDefault = 0.01
     MultAdjustInt.McmId = "fMultAdjustInt:MultiplierAdjustments"
-    MultAdjustInt.ValueMin = 0.0
-    MultAdjustInt.ValueMax = 1.0
+    MultAdjustInt.ValueMin = statAdjustMin
+    MultAdjustInt.ValueMax = statAdjustMax
 
     MultAdjustIntC.ValueDefault = 0.01
     MultAdjustIntC.McmId = "fMultAdjustIntC:MultiplierAdjustments"
-    MultAdjustIntC.ValueMin = 0.0
-    MultAdjustIntC.ValueMax = 1.0
+    MultAdjustIntC.ValueMin = statAdjustMin
+    MultAdjustIntC.ValueMax = statAdjustMax
 
     MultAdjustIntU.ValueDefault = 0.01
     MultAdjustIntU.McmId = "fMultAdjustIntU:MultiplierAdjustments"
-    MultAdjustIntU.ValueMin = 0.0
-    MultAdjustIntU.ValueMax = 1.0
+    MultAdjustIntU.ValueMin = statAdjustMin
+    MultAdjustIntU.ValueMax = statAdjustMax
 
     MultAdjustIntR.ValueDefault = 0.01
     MultAdjustIntR.McmId = "fMultAdjustIntR:MultiplierAdjustments"
-    MultAdjustIntR.ValueMin = 0.0
-    MultAdjustIntR.ValueMax = 1.0
+    MultAdjustIntR.ValueMin = statAdjustMin
+    MultAdjustIntR.ValueMax = statAdjustMax
 
     MultAdjustIntS.ValueDefault = 0.0
     MultAdjustIntS.McmId = "fMultAdjustIntS:MultiplierAdjustments"
-    MultAdjustIntS.ValueMin = 0.0
-    MultAdjustIntS.ValueMax = 1.0
+    MultAdjustIntS.ValueMin = statAdjustMin
+    MultAdjustIntS.ValueMax = statAdjustMax
 
     ; multiplier adjustments - luck
     MultAdjustLck.ValueDefault = 0.01
     MultAdjustLck.McmId = "fMultAdjustLck:MultiplierAdjustments"
-    MultAdjustLck.ValueMin = 0.0
-    MultAdjustLck.ValueMax = 1.0
+    MultAdjustLck.ValueMin = statAdjustMin
+    MultAdjustLck.ValueMax = statAdjustMax
 
     MultAdjustLckC.ValueDefault = 0.01
     MultAdjustLckC.McmId = "fMultAdjustLckC:MultiplierAdjustments"
-    MultAdjustLckC.ValueMin = 0.0
-    MultAdjustLckC.ValueMax = 1.0
+    MultAdjustLckC.ValueMin = statAdjustMin
+    MultAdjustLckC.ValueMax = statAdjustMax
 
     MultAdjustLckU.ValueDefault = 0.01
     MultAdjustLckU.McmId = "fMultAdjustLckU:MultiplierAdjustments"
-    MultAdjustLckU.ValueMin = 0.0
-    MultAdjustLckU.ValueMax = 1.0
+    MultAdjustLckU.ValueMin = statAdjustMin
+    MultAdjustLckU.ValueMax = statAdjustMax
 
     MultAdjustLckR.ValueDefault = 0.01
     MultAdjustLckR.McmId = "fMultAdjustLckR:MultiplierAdjustments"
-    MultAdjustLckR.ValueMin = 0.0
-    MultAdjustLckR.ValueMax = 1.0
+    MultAdjustLckR.ValueMin = statAdjustMin
+    MultAdjustLckR.ValueMax = statAdjustMax
 
     MultAdjustLckS.ValueDefault = 0.0
     MultAdjustLckS.McmId = "fMultAdjustLckS:MultiplierAdjustments"
-    MultAdjustLckS.ValueMin = 0.0
-    MultAdjustLckS.ValueMax = 1.0
+    MultAdjustLckS.ValueMin = statAdjustMin
+    MultAdjustLckS.ValueMax = statAdjustMax
 
     ; multiplier adjustments - randomness
     MultAdjustRandomMin.ValueDefault = -0.1
     MultAdjustRandomMin.McmId = "fMultAdjustRandomMin:MultiplierAdjustments"
-    MultAdjustRandomMin.ValueMin = -1.0
-    MultAdjustRandomMin.ValueMax = 1.0
+    MultAdjustRandomMin.ValueMin = randomAdjustMin
+    MultAdjustRandomMin.ValueMax = randomAdjustMax
 
     MultAdjustRandomMinC.ValueDefault = -0.1
     MultAdjustRandomMinC.McmId = "fMultAdjustRandomMinC:MultiplierAdjustments"
-    MultAdjustRandomMinC.ValueMin = -1.0
-    MultAdjustRandomMinC.ValueMax = 1.0
+    MultAdjustRandomMinC.ValueMin = randomAdjustMin
+    MultAdjustRandomMinC.ValueMax = randomAdjustMax
 
     MultAdjustRandomMinU.ValueDefault = -0.1
     MultAdjustRandomMinU.McmId = "fMultAdjustRandomMinU:MultiplierAdjustments"
-    MultAdjustRandomMinU.ValueMin = -1.0
-    MultAdjustRandomMinU.ValueMax = 1.0
+    MultAdjustRandomMinU.ValueMin = randomAdjustMin
+    MultAdjustRandomMinU.ValueMax = randomAdjustMax
 
     MultAdjustRandomMinR.ValueDefault = -0.1
     MultAdjustRandomMinR.McmId = "fMultAdjustRandomMinR:MultiplierAdjustments"
-    MultAdjustRandomMinR.ValueMin = -1.0
-    MultAdjustRandomMinR.ValueMax = 1.0
+    MultAdjustRandomMinR.ValueMin = randomAdjustMin
+    MultAdjustRandomMinR.ValueMax = randomAdjustMax
 
     MultAdjustRandomMinS.ValueDefault = 0.0
     MultAdjustRandomMinS.McmId = "fMultAdjustRandomMinS:MultiplierAdjustments"
-    MultAdjustRandomMinS.ValueMin = -1.0
-    MultAdjustRandomMinS.ValueMax = 1.0
+    MultAdjustRandomMinS.ValueMin = randomAdjustMin
+    MultAdjustRandomMinS.ValueMax = randomAdjustMax
 
     MultAdjustRandomMax.ValueDefault = 0.1
     MultAdjustRandomMax.McmId = "fMultAdjustRandomMax:MultiplierAdjustments"
-    MultAdjustRandomMax.ValueMin = -1.0
-    MultAdjustRandomMax.ValueMax = 1.0
+    MultAdjustRandomMax.ValueMin = randomAdjustMin
+    MultAdjustRandomMax.ValueMax = randomAdjustMax
 
     MultAdjustRandomMaxC.ValueDefault = 0.1
     MultAdjustRandomMaxC.McmId = "fMultAdjustRandomMaxC:MultiplierAdjustments"
-    MultAdjustRandomMaxC.ValueMin = -1.0
-    MultAdjustRandomMaxC.ValueMax = 1.0
+    MultAdjustRandomMaxC.ValueMin = randomAdjustMin
+    MultAdjustRandomMaxC.ValueMax = randomAdjustMax
 
     MultAdjustRandomMaxU.ValueDefault = 0.1
     MultAdjustRandomMaxU.McmId = "fMultAdjustRandomMaxU:MultiplierAdjustments"
-    MultAdjustRandomMaxU.ValueMin = -1.0
-    MultAdjustRandomMaxU.ValueMax = 1.0
+    MultAdjustRandomMaxU.ValueMin = randomAdjustMin
+    MultAdjustRandomMaxU.ValueMax = randomAdjustMax
 
     MultAdjustRandomMaxR.ValueDefault = 0.1
     MultAdjustRandomMaxR.McmId = "fMultAdjustRandomMaxR:MultiplierAdjustments"
-    MultAdjustRandomMaxR.ValueMin = -1.0
-    MultAdjustRandomMaxR.ValueMax = 1.0
+    MultAdjustRandomMaxR.ValueMin = randomAdjustMin
+    MultAdjustRandomMaxR.ValueMax = randomAdjustMax
 
     MultAdjustRandomMaxS.ValueDefault = 0.0
     MultAdjustRandomMaxS.McmId = "fMultAdjustRandomMaxS:MultiplierAdjustments"
-    MultAdjustRandomMaxS.ValueMin = -1.0
-    MultAdjustRandomMaxS.ValueMax = 1.0
+    MultAdjustRandomMaxS.ValueMin = randomAdjustMin
+    MultAdjustRandomMaxS.ValueMax = randomAdjustMax
 
     ; multiplier adjustments - scrapper 1-5
     float[] scrapperSettlementDefaults = new float[ScrapperPerkMaxRanksSupported]
@@ -988,53 +995,53 @@ Function InitSettingsSupplemental()
     While index < ScrapperPerkMaxRanksSupported
         MultAdjustScrapperSettlement[index].ValueDefault = scrapperSettlementDefaults[index]
         MultAdjustScrapperSettlement[index].McmId = "fMultAdjustScrapperSettlement" + (index+1) + ":MultiplierAdjustments"
-        MultAdjustScrapperSettlement[index].ValueMin = -1.0
-        MultAdjustScrapperSettlement[index].ValueMax = 1.0
+        MultAdjustScrapperSettlement[index].ValueMin = adjustMin
+        MultAdjustScrapperSettlement[index].ValueMax = adjustMax
 
         MultAdjustScrapperSettlementC[index].ValueDefault = scrapperSettlementDefaults[index]
         MultAdjustScrapperSettlementC[index].McmId = "fMultAdjustScrapperSettlementC" + (index+1) + ":MultiplierAdjustments"
-        MultAdjustScrapperSettlementC[index].ValueMin = -1.0
-        MultAdjustScrapperSettlementC[index].ValueMax = 1.0
+        MultAdjustScrapperSettlementC[index].ValueMin = adjustMin
+        MultAdjustScrapperSettlementC[index].ValueMax = adjustMax
 
         MultAdjustScrapperSettlementU[index].ValueDefault = scrapperSettlementDefaults[index]
         MultAdjustScrapperSettlementU[index].McmId = "fMultAdjustScrapperSettlementU" + (index+1) + ":MultiplierAdjustments"
-        MultAdjustScrapperSettlementU[index].ValueMin = -1.0
-        MultAdjustScrapperSettlementU[index].ValueMax = 1.0
+        MultAdjustScrapperSettlementU[index].ValueMin = adjustMin
+        MultAdjustScrapperSettlementU[index].ValueMax = adjustMax
 
         MultAdjustScrapperSettlementR[index].ValueDefault = scrapperSettlementDefaults[index]
         MultAdjustScrapperSettlementR[index].McmId = "fMultAdjustScrapperSettlementR" + (index+1) + ":MultiplierAdjustments"
-        MultAdjustScrapperSettlementR[index].ValueMin = -1.0
-        MultAdjustScrapperSettlementR[index].ValueMax = 1.0
+        MultAdjustScrapperSettlementR[index].ValueMin = adjustMin
+        MultAdjustScrapperSettlementR[index].ValueMax = adjustMax
 
         MultAdjustScrapperSettlementS[index].ValueDefault = 0.0
         MultAdjustScrapperSettlementS[index].McmId = "fMultAdjustScrapperSettlementS" + (index+1) + ":MultiplierAdjustments"
-        MultAdjustScrapperSettlementS[index].ValueMin = -1.0
-        MultAdjustScrapperSettlementS[index].ValueMax = 1.0
+        MultAdjustScrapperSettlementS[index].ValueMin = adjustMin
+        MultAdjustScrapperSettlementS[index].ValueMax = adjustMax
 
         MultAdjustScrapperNotSettlement[index].ValueDefault = 0.0
         MultAdjustScrapperNotSettlement[index].McmId = "fMultAdjustScrapperNotSettlement" + (index+1) + ":MultiplierAdjustments"
-        MultAdjustScrapperNotSettlement[index].ValueMin = -1.0
-        MultAdjustScrapperNotSettlement[index].ValueMax = 1.0
+        MultAdjustScrapperNotSettlement[index].ValueMin = adjustMin
+        MultAdjustScrapperNotSettlement[index].ValueMax = adjustMax
 
         MultAdjustScrapperNotSettlementC[index].ValueDefault = 0.0
         MultAdjustScrapperNotSettlementC[index].McmId = "fMultAdjustScrapperNotSettlementC" + (index+1) + ":MultiplierAdjustments"
-        MultAdjustScrapperNotSettlementC[index].ValueMin = -1.0
-        MultAdjustScrapperNotSettlementC[index].ValueMax = 1.0
+        MultAdjustScrapperNotSettlementC[index].ValueMin = adjustMin
+        MultAdjustScrapperNotSettlementC[index].ValueMax = adjustMax
 
         MultAdjustScrapperNotSettlementU[index].ValueDefault = 0.0
         MultAdjustScrapperNotSettlementU[index].McmId = "fMultAdjustScrapperNotSettlementU" + (index+1) + ":MultiplierAdjustments"
-        MultAdjustScrapperNotSettlementU[index].ValueMin = -1.0
-        MultAdjustScrapperNotSettlementU[index].ValueMax = 1.0
+        MultAdjustScrapperNotSettlementU[index].ValueMin = adjustMin
+        MultAdjustScrapperNotSettlementU[index].ValueMax = adjustMax
 
         MultAdjustScrapperNotSettlementR[index].ValueDefault = 0.0
         MultAdjustScrapperNotSettlementR[index].McmId = "fMultAdjustScrapperNotSettlementR" + (index+1) + ":MultiplierAdjustments"
-        MultAdjustScrapperNotSettlementR[index].ValueMin = -1.0
-        MultAdjustScrapperNotSettlementR[index].ValueMax = 1.0
+        MultAdjustScrapperNotSettlementR[index].ValueMin = adjustMin
+        MultAdjustScrapperNotSettlementR[index].ValueMax = adjustMax
 
         MultAdjustScrapperNotSettlementS[index].ValueDefault = 0.0
         MultAdjustScrapperNotSettlementS[index].McmId = "fMultAdjustScrapperNotSettlementS" + (index+1) + ":MultiplierAdjustments"
-        MultAdjustScrapperNotSettlementS[index].ValueMin = -1.0
-        MultAdjustScrapperNotSettlementS[index].ValueMax = 1.0
+        MultAdjustScrapperNotSettlementS[index].ValueMin = adjustMin
+        MultAdjustScrapperNotSettlementS[index].ValueMax = adjustMax
 
         index += 1
     EndWhile

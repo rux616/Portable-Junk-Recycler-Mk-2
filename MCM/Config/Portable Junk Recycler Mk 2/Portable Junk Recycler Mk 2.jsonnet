@@ -39,12 +39,15 @@ local str_max = '$Maximum';
 local str_indent_min = '$IndentMinimum';
 local str_indent_max = '$IndentMaximum';
 
-local adjust_min = -1.0;
-local adjust_max = 1.0;
+local adjust_min = -2.0;
+local adjust_max = 2.0;
 local adjust_step = 0.01;
 local stat_adjust_min = 0.0;
 local stat_adjust_max = 1.0;
 local stat_adjust_step = 0.005;
+local random_adjust_min = -6.0;
+local random_adjust_max = 6.0;
+local random_adjust_step = 0.01;
 local threads_min = 1;
 local threads_max = 32;
 local threads_step = 1;
@@ -103,7 +106,7 @@ local threads_step = 1;
         [mcm.field.content]: [
           // settings - general options
           mcm.control.section(text='$GeneralOptions'),
-          mcm.control.slider(text='$MultBaseText', min=0.0, max=2.0, step=0.01, source=mcm.helper.source.mod_setting.float(id='fMultBase:GeneralOptions'), help='$MultBaseHelp'),
+          mcm.control.slider(text='$MultBaseText', min=0.0, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultBase:GeneralOptions'), help='$MultBaseHelp'),
           mcm.control.switcher(text='$ReturnAtLeastOneComponentText', source=mcm.helper.source.mod_setting.bool(id='bReturnAtLeastOneComponent:GeneralOptions'), help='$ReturnAtLeastOneComponentHelp'),
           mcm.control.dropdown(text='$FractionalComponentHandlingText', options=['$RoundUp', '$RoundNormally', '$RoundDown'], source=mcm.helper.source.mod_setting.int(id='iFractionalComponentHandling:GeneralOptions'), help='$FractionalComponentHandlingHelp'),
           mcm.control.switcher(text='$HasLimitedUsesText', source=mcm.helper.source.mod_setting.bool(id='bHasLimitedUses:GeneralOptions'), help='$HasLimitedUsesHelp'),
@@ -221,21 +224,21 @@ local threads_step = 1;
 
           mcm.control.section(text='$Randomness', group=mcm.helper.group.condition.or([mod.group_id.rng_affects_mult_simple, mod.group_id.rng_affects_mult_detailed])),
 
-          mcm.control.slider(text=str_min, min=adjust_min, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMin:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_simple), help='$MultAdjustRandomMinHelp'),
-          mcm.control.slider(text=str_max, min=adjust_min, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMax:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_simple), help='$MultAdjustRandomMaxHelp'),
+          mcm.control.slider(text=str_min, min=random_adjust_min, max=random_adjust_max, step=random_adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMin:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_simple), help='$MultAdjustRandomMinHelp'),
+          mcm.control.slider(text=str_max, min=random_adjust_min, max=random_adjust_max, step=random_adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMax:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_simple), help='$MultAdjustRandomMaxHelp'),
 
           mcm.control.section(text=str_indent_comp_c, group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed)),
-          mcm.control.slider(text=str_indent_min, min=adjust_min, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMinC:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMinCHelp'),
-          mcm.control.slider(text=str_indent_max, min=adjust_min, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMaxC:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMaxCHelp'),
+          mcm.control.slider(text=str_indent_min, min=random_adjust_min, max=random_adjust_max, step=random_adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMinC:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMinCHelp'),
+          mcm.control.slider(text=str_indent_max, min=random_adjust_min, max=random_adjust_max, step=random_adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMaxC:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMaxCHelp'),
           mcm.control.section(text=str_indent_comp_u, group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed)),
-          mcm.control.slider(text=str_indent_min, min=adjust_min, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMinU:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMinUHelp'),
-          mcm.control.slider(text=str_indent_max, min=adjust_min, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMaxU:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMaxUHelp'),
+          mcm.control.slider(text=str_indent_min, min=random_adjust_min, max=random_adjust_max, step=random_adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMinU:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMinUHelp'),
+          mcm.control.slider(text=str_indent_max, min=random_adjust_min, max=random_adjust_max, step=random_adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMaxU:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMaxUHelp'),
           mcm.control.section(text=str_indent_comp_r, group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed)),
-          mcm.control.slider(text=str_indent_min, min=adjust_min, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMinR:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMinRHelp'),
-          mcm.control.slider(text=str_indent_max, min=adjust_min, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMaxR:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMaxRHelp'),
+          mcm.control.slider(text=str_indent_min, min=random_adjust_min, max=random_adjust_max, step=random_adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMinR:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMinRHelp'),
+          mcm.control.slider(text=str_indent_max, min=random_adjust_min, max=random_adjust_max, step=random_adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMaxR:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMaxRHelp'),
           mcm.control.section(text=str_indent_comp_s, group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed)),
-          mcm.control.slider(text=str_indent_min, min=adjust_min, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMinS:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMinSHelp'),
-          mcm.control.slider(text=str_indent_max, min=adjust_min, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMaxS:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMaxSHelp'),
+          mcm.control.slider(text=str_indent_min, min=random_adjust_min, max=random_adjust_max, step=random_adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMinS:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMinSHelp'),
+          mcm.control.slider(text=str_indent_max, min=random_adjust_min, max=random_adjust_max, step=random_adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMaxS:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMaxSHelp'),
 
           mcm.control.spacer(lines=1, group=mcm.helper.group.condition.or([mod.group_id.rng_affects_mult_simple, mod.group_id.rng_affects_mult_detailed])),
 
