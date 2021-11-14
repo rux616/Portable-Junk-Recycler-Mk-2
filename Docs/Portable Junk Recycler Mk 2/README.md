@@ -12,10 +12,20 @@ by rux616
     - [Summary (TL;DR)](#summary-tldr)
 - [Mod Information](#mod-information)
     - [Hotkeys](#hotkeys)
+    - [Crafting](#crafting)
     - [Scrap Return Formula](#scrap-return-formula)
     - [Known Issues](#known-issues)
+- [Interesting Configurations](#interesting-configurations)
+    - [Brainiac](#brainiac)
+    - [Leprechaun](#leprechaun)
+    - [Loot Piñata](#loot-piñata)
+    - [Magnum Opus Wabbajack Modlist](#magnum-opus-wabbajack-modlist)
+    - [No Scrapper, No Scrap](#no-scrapper-no-scrap)
+    - [Punishing Field Use](#punishing-field-use)
+    - [The Gambler](#the-gambler)
 - [Technical Details](#technical-details)
     - [Plugin FormID Layout](#plugin-formid-layout)
+    - [Limited Uses](#limited-uses)
     - [Scrap Categories](#scrap-categories)
     - [Settings Layout in MCM](#settings-layout-in-mcm)
 - [Credits and Thanks](#credits-and-thanks)
@@ -36,7 +46,7 @@ Features
 - Can be set to only automatically move items that when recycled, will save weight
 - Configurable "Always Automatically Transfer" and "Never Automatically Transfer" lists
 - Has a fully automatic mode (just activate the device and it processes junk items in your inventory)
-- Dynamically supports crafting the device at the "Utility Workbench" from Standalone Workbenches or AWKCR (Standalone Workbenches takes priority if both are installed), can also be crafted at a number of other workbenches
+- Dynamically supports crafting the device at the "Utility Workbench" from Standalone Workbenches, the "Utility Station" from ECO, or the "Utility Workbench" from AWKCR (order of priority is Standalone Workbenches > ECO > AWKCR), can also be crafted at a number of other workbenches
 - Additional plugins included to change the crafting category of the Mk 2
 - Can be configured to only have a limited number uses
 - Sane defaults, so even if not customized, it will work well out of the box
@@ -89,9 +99,9 @@ Here's the TL;DR if you don't care about the details and just want to get on wit
 
 You can heavily customize all these settings and more via the MCM.
 
-This mod *REQUIRES* F4SE and MCM and will not work without them. I had to do this in order to prevent the freezing bug found in the original. Sorry, console players, you're out of luck. This mod also supports the [Canary](https://www.nexusmods.com/fallout4/mods/44949) mod to alert in the case of save game corruption.
+This mod **REQUIRES** both F4SE and MCM and will not work without them. I had to do this in order to prevent the freezing bug found in the original. Sorry, console players, you're out of luck. This mod also supports the [Canary](https://www.nexusmods.com/fallout4/mods/44949) mod to alert in the case of save game corruption.
 
-By default, the Portable Junk Recycler Mk 2 will detect whether the [Standalone Workbenches](https://www.nexusmods.com/fallout4/mods/41832) mod or the [AWKCR](https://www.nexusmods.com/fallout4/mods/6091) mod is installed and will dynamically set itself to be crafted at the respective "Utility Workbench", or at the vanilla "Chemistry Station" if neither are installed. The Standalone Workbenches Utility Workbench takes priority if both are installed. The device can be found under the "UTILITY" category.
+Also by default, the Portable Junk Recycler Mk 2 will detect whether the [Standalone Workbenches](https://www.nexusmods.com/fallout4/mods/41832), [ECO](https://www.nexusmods.com/fallout4/mods/55503), or [AWKCR](https://www.nexusmods.com/fallout4/mods/6091) mods are installed and will dynamically set itself to be crafted at the respective "Utility" workbenches, or at the vanilla "Chemistry Station" if none are installed. The Standalone Workbenches Utility Workbench takes priority, followed by the ECO Utility Station, then the AWKCR Utility Workbench if more than one are installed. The device can be found under the "UTILITY" category (or one of the other categories based on whether any of the category changer addon plugins are active or not).
 
 
 Mod Information
@@ -109,6 +119,30 @@ By default, the mod comes with the "Behavior Override" option set to ON, which e
 To edit the "Never Automatically Transfer" list, ensure that `[ALT]` and `[CTRL]` are both pressed when the recycler is activated.
 
 To edit the "Always Automatically Transfer" list, ensure that `[ALT]` and `[SHIFT]` are both pressed when the recycler is activated.
+
+Crafting
+--------
+The Mk 2 can be crafted at a number of different workbenches from different mods depending on user preference. Currently supported workbenches are as follows:
+
+From Standalone Workbenches:
+- Electronics Workbench
+- Engineering Workbench
+- Manufacturing Workbench
+- Utility Workbench
+
+From AWKCR:
+- Adv. Engineering Workbench
+- Electronics Workstation
+- Utility Workbench
+
+From ECO:
+- Utility Station
+
+One of the options is "Dynamic", which will automatically attempt to and use the following workbenches with decreasing priority:
+- Utility Workbench (Standalone Workbenches)
+- Utility Station (ECO)
+- Utility Workbench (AWKCR)
+- Chemistry Station (vanilla)
 
 Scrap Return Formula
 --------------------
@@ -128,7 +162,7 @@ Overall, it is a simple formula:
 
 The General Multiplier Adjustment and the Scrapper Perk Multiplier Adjustment both have additional configurability for what multiplier to apply whether the player is in a player-owned settlement or not.
 
-Additionally, the left hand side of the formula (`NumberOfComponentsToRecycle * Multiplier`) can be modified in a couple different ways before the final value of `NumberOfComponentsReturned` is reached:
+Additionally, the right hand side of the formula (`NumberOfComponentsToRecycle * Multiplier`) can be modified in a couple different ways before the final value of `NumberOfComponentsReturned` is reached:
 - If the 'Always Return At Least One Component' option is `ON` and `NumberOfComponentsToRecycle` is not 0, then `NumberOfComponentsReturned` will always be at least 1, even if the formula would normally have rounded things to 0. In effect, changes the formula to be
 
       NumberOfComponentsReturned = max(1, NumberOfComponentsToRecycle * Multiplier)
@@ -139,11 +173,44 @@ Additionally, the left hand side of the formula (`NumberOfComponentsToRecycle * 
 
 - If combined, the effective formula is
 
-      NumberOfComponentsReturned = floor/round/ceiling(max(1, NumberOfComponentsToRecycle * Multiplier))
+      NumberOfComponentsReturned = floor/round/ceiling( max(1, NumberOfComponentsToRecycle * Multiplier) )
 
 Known Issues
 ------------
 - If the 'Return Items Silently' option is set to `OFF` and you add scrap items (acid, bone, adhesive, ceramic, etc.) to the recycler, when the recycling process is complete, you may receive more than one notification for those scrap items that you added. I can't do anything about that without compromising the speed of the recycler (it would add almost an entire extra second to the processing time, at least), so if it is undesired behavior, you can set the 'Return Items Silently' option to `ON` or you can set the 'Allow Junk Only' option to `ON` to disallow adding scrap items to the container in the first place, or both. (Both of those options are `ON` by default.) Alternatively, you can simply choose not to add scrap items.
+
+
+Interesting Configurations
+==========================
+With how customizable this device is, there are _many_ ways in which to use it, so here are a few fun ones I've thought of. Note that some of these have the potential to boost the multiplier to ridiculous levels, and are not intended to be balanced. My goal is to give you, the player, ways in which to have fun and customize this mod to _your_ liking.
+
+Brainiac
+--------
+You really value your character's intelligence. Set 'Multiplier Adjustments > Intelligence' gives you a `0.2` multiplier adjustment per point.
+
+Leprechaun
+----------
+Luck is _really_ important to you. So much so that you set it to be the only multiplier adjustment you use (set 'Settings > Adjustment Options > (everything not Luck)' to `OFF`), at `0.5` per point.
+
+Loot Piñata
+-----------
+Set every multiplier adjustment to max. All junk items now explode in showers of components (figuratively).
+
+Magnum Opus Wabbajack Modlist
+-----------------------------
+If you use Wabbajack to install the Magnum Opus modlist by Lively, you can set the Portable Junk Recycler Mk 2 to mimic the way the Scrapper perk works by setting 'Multiplier Adjustments > Scrapper: Rank 1 > In Player-Owned Settlements' to `0.2`, setting 'Multiplier Adjustments > Scrapper: Rank 1 > In Player-Owned Settlements' also to `0.2`, and by setting 'Multiplier Adjustments > Scrapper: Rank 1 > In Player-Owned Settlements' to `0.5`.
+
+No Scrapper, No Scrap
+---------------------
+Configures the Mk 2 so that you don't get any components unless you have at least 1 rank in the Scrapper perk. Set the Base Multiplier to `0.0`, make sure that 'Settings > Adjustment Options > (everything not Scrapper)' is set to `OFF` if it can be, then set 'Multiplier Adjustments > Scrapper: Rank X' to `1.0`/`1.1`/`1.2`/etc. for the proceeding Scrapper ranks.
+
+Punishing Field Use
+-------------------
+Heavily incentivize the use of settlements. 'Multiplier Adjustments > General > Everywhere Else' should be set to `-0.9`.
+
+The Gambler
+-----------
+Set 'Settings > Adjustment Options > Randomness' to `ON (Simple)` and set the minimum to `-1.0`, and the maximum to `1.0`. Set every other multiplier option to `OFF`.
 
 
 Technical Details
@@ -151,7 +218,7 @@ Technical Details
 
 Plugin FormID Layout
 --------------------
-Recycler Item Form ID:
+Recycler Item FormID:
 - `FExxx840`
 
 General FormIDs:
@@ -165,6 +232,10 @@ General FormIDs:
 - `FExxx9**` Message
 
 Note: 'xxx' is the load order position of the mod.
+
+Limited Uses
+------------
+In 'Limited Use' mode, the number of uses left isn't tracked specifically per device, but rather by tracking how many times a recycling process has occurred. This was a design decision made because of how ingestible items work in the game and due to the events and timing of said events surrounding their use. Therefore it doesn't matter whether several Mk 2's are crafted and used, the number of uses will tick up until it reaches the configured threshold and the item simply won't be returned to you after that recycling process.
 
 Scrap Categories
 ----------------
@@ -241,7 +312,7 @@ Recycler Interface:
     - Allow Behavior Overrides [Default = `ON`, Possible Values = `OFF`/`ON`]
     - Return Items Silently [Default = `ON`, Possible Values = `OFF`/`ON`]
 - Crafting
-    - Crafting Station [Default = `Dynamic`, Possible Values = `Dynamic`/`Electronics Workbench (SW)`/`Engineering Workbench (SW)`/`Manufacturing Workbench (SW)`/`Utility Workbench (SW)`/`Adv. Engineering Workbench AWKCR)`/`Electronics Workstation (AWKCR)`/`Utility Workbench (AWKCR)`/`Chemistry Station (Vanilla)`]
+    - Crafting Station [Default = `Dynamic`, Possible Values = `Dynamic`/`Chemistry Station (Vanilla)`/`Electronics Workbench (SW)`/`Engineering Workbench (SW)`/`Manufacturing Workbench (SW)`/`Utility Workbench (SW)`/`Adv. Engineering Workbench AWKCR)`/`Electronics Workstation (AWKCR)`/`Utility Workbench (AWKCR)`/`Utility Station (ECO)`]
 - Hotkeys
     - Behavior Override: Force Automatic Recycling Mode [Default = `Ctrl-Shift`, Possible Values = `(locked)`]
     - Behavior Override: Force Transfer Junk [Default = `Shift`, Possible Values = `(locked)`]
@@ -424,6 +495,7 @@ Credits and Thanks
 - fireundubh: For [pyro](https://github.com/fireundubh/pyro), which made developing the scripts for this mod so much easier
 - Neanka, reg2k, shadowslasher410: For the [Mod Configuration Menu](https://www.nexusmods.com/fallout4/mods/21497/)
 - Joel Day: For the [Papyrus extension](https://marketplace.visualstudio.com/items?itemName=joelday.papyrus-lang-vscode) for Visual Studio Code
+- Dank Rafft: For the [Equipment and Crafting Overhaul (ECO)](https://www.nexusmods.com/fallout4/mods/55503) mod
 
 
 Contact
