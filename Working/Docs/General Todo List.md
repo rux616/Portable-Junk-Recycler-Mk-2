@@ -140,8 +140,4 @@
     * (result): it does not
 * [ ] localize plugin file
 * version locations:
-    * Portable Junk Recycler Mk 2.jsonnet, mod.version variable
-    * ControlScript.psc, ModVersion variable
-    * Papyrus project file
-    * fomod/info.xml
-    * all plugin files
+    * .version file
