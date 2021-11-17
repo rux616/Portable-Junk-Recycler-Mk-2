@@ -101,8 +101,8 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
             ", hotkeyEdit = " + hotkeyEdit)
 
         ; establish some convenience variables
-        bool editNeverTransferList = hotkeyEdit && hotkeyRetain
-        bool editAlwaysTransferList = hotkeyEdit && hotkeyTransfer
+        bool editNeverTransferList = hotkeyEdit && hotkeyRetain && PortableRecyclerControl.AllowAutoTransferListEditing.Value
+        bool editAlwaysTransferList = hotkeyEdit && hotkeyTransfer && PortableRecyclerControl.AllowAutoTransferListEditing.Value
         bool useFilteredContainer = editNeverTransferList || editAlwaysTransferList || PortableRecyclerControl.AllowJunkOnly.Value
 
         ; place temp containers at the player; if the 'Allow Junk Only' option is turned on, or the player wants to edit an

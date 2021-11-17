@@ -233,6 +233,30 @@
                }
             },
             {
+               "help": "$AutoTransferJunkHelp",
+               "id": "bAutoTransferJunk:Behavior",
+               "text": "$AutoTransferJunkText",
+               "type": "switcher",
+               "valueOptions": {
+                  "sourceType": "ModSettingBool"
+               }
+            },
+            {
+               "help": "$TransferLowWeightRatioItemsHelp",
+               "id": "iTransferLowWeightRatioItems:Behavior",
+               "text": "$IndentTransferLowWeightRatioItemsText",
+               "type": "dropdown",
+               "valueOptions": {
+                  "options": [
+                     "$OFF",
+                     "$WhenInPlayerOwnedSettlement",
+                     "$WhenNotInPlayerOwnedSettlement",
+                     "$Always"
+                  ],
+                  "sourceType": "ModSettingInt"
+               }
+            },
+            {
                "help": "$UseAlwaysAutoTransferListHelp",
                "id": "bUseAlwaysAutoTransferList:Behavior",
                "text": "$UseAlwaysAutoTransferListText",
@@ -245,6 +269,16 @@
                "help": "$UseNeverAutoTransferListHelp",
                "id": "bUseNeverAutoTransferList:Behavior",
                "text": "$UseNeverAutoTransferListText",
+               "type": "switcher",
+               "valueOptions": {
+                  "sourceType": "ModSettingBool"
+               }
+            },
+            {
+               "groupControl": 16,
+               "help": "$AllowAutoTransferListEditingHelp",
+               "id": "bAllowAutoTransferListEditing:Behavior",
+               "text": "$AllowAutoTransferListEditingText",
                "type": "switcher",
                "valueOptions": {
                   "sourceType": "ModSettingBool"
@@ -270,32 +304,16 @@
                }
             },
             {
-               "help": "$AutoTransferJunkHelp",
-               "id": "bAutoTransferJunk:Behavior",
-               "text": "$AutoTransferJunkText",
-               "type": "switcher",
-               "valueOptions": {
-                  "sourceType": "ModSettingBool"
-               }
+               "lines": 1,
+               "type": "spacer"
             },
             {
-               "help": "$TransferLowWeightRatioItemsHelp",
-               "id": "iTransferLowWeightRatioItems:Behavior",
-               "text": "$IndentTransferLowWeightRatioItemsText",
-               "type": "dropdown",
-               "valueOptions": {
-                  "options": [
-                     "$OFF",
-                     "$WhenInPlayerOwnedSettlement",
-                     "$WhenNotInPlayerOwnedSettlement",
-                     "$Always"
-                  ],
-                  "sourceType": "ModSettingInt"
-               }
-            },
-            {
-               "text": "$IndentTransferLowWeightRatioItemsNote",
+               "text": "$TransferLowWeightRatioItemsNote",
                "type": "text"
+            },
+            {
+               "lines": 1,
+               "type": "spacer"
             },
             {
                "text": "$Crafting",
@@ -380,6 +398,11 @@
                }
             },
             {
+               "groupCondition": {
+                  "OR": [
+                     16
+                  ]
+               },
                "help": "$EditAlwaysAutoTransferListHelp",
                "text": "$EditAlwaysAutoTransferListText",
                "type": "stepper",
@@ -390,6 +413,11 @@
                }
             },
             {
+               "groupCondition": {
+                  "OR": [
+                     16
+                  ]
+               },
                "help": "$EditNeverAutoTransferListHelp",
                "text": "$EditNeverAutoTransferListText",
                "type": "stepper",

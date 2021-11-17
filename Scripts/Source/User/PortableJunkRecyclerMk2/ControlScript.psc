@@ -142,6 +142,7 @@ Group Settings
     SettingInt Property TransferLowWeightRatioItems Auto Hidden
     SettingBool Property UseAlwaysAutoTransferList Auto Hidden
     SettingBool Property UseNeverAutoTransferList Auto Hidden
+    SettingBool Property AllowAutoTransferListEditing Auto Hidden
     SettingBool Property AllowBehaviorOverrides Auto Hidden
     SettingBool Property ReturnItemsSilently Auto Hidden
 
@@ -489,6 +490,10 @@ Function InitSettings(bool abForce = false)
         Self._DebugTrace("Initializing UseNeverAutoTransferList")
         UseNeverAutoTransferList = new SettingBool
     EndIf
+    If abForce || ! AllowAutoTransferListEditing
+        Self._DebugTrace("Initializing AllowAutoTransferListEditing")
+        AllowAutoTransferListEditing = new SettingBool
+    EndIf
     If abForce || ! AllowBehaviorOverrides
         Self._DebugTrace("Initializing AllowBehaviorOverrides")
         AllowBehaviorOverrides = new SettingBool
@@ -817,7 +822,10 @@ Function InitSettingsSupplemental()
     UseNeverAutoTransferList.ValueDefault = true
     UseNeverAutoTransferList.McmId = "bUseNeverAutoTransferList:Behavior"
 
-    AllowBehaviorOverrides.ValueDefault = true
+    AllowAutoTransferListEditing.Value = false
+    AllowAutoTransferListEditing.McmId = "bAllowAutoTransferListEditing:Behavior"
+
+    AllowBehaviorOverrides.ValueDefault = false
     AllowBehaviorOverrides.McmId = "bAllowBehaviorOverrides:Behavior"
 
     ReturnItemsSilently.ValueDefault = true
@@ -1236,6 +1244,7 @@ var[] Function CollectMCMSettings()
     toReturn.Add(TransferLowWeightRatioItems)
     toReturn.Add(UseAlwaysAutoTransferList)
     toReturn.Add(UseNeverAutoTransferList)
+    toReturn.Add(AllowAutoTransferListEditing)
     toReturn.Add(AllowBehaviorOverrides)
     toReturn.Add(ReturnItemsSilently)
 
@@ -1482,6 +1491,10 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             oldValue = UseNeverAutoTransferList.Value
             LoadSettingFromMCM(UseNeverAutoTransferList, ModName)
             newValue = UseNeverAutoTransferList.Value
+        ElseIf asControlId == AllowAutoTransferListEditing.McmId
+            oldValue = AllowAutoTransferListEditing.Value
+            LoadSettingFromMCM(AllowAutoTransferListEditing, ModName)
+            newValue = AllowAutoTransferListEditing.Value
         ElseIf asControlId == AllowBehaviorOverrides.McmId
             oldValue = AllowBehaviorOverrides.Value
             LoadSettingFromMCM(AllowBehaviorOverrides, ModName)
