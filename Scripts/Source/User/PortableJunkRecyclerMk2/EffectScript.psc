@@ -101,12 +101,12 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
             ", hotkeyEdit = " + hotkeyEdit)
 
         ; establish some convenience variables
-        bool editNeverTransferList = hotkeyEdit && hotkeyRetain && PortableRecyclerControl.AllowAutoTransferListEditing.Value
-        bool editAlwaysTransferList = hotkeyEdit && hotkeyTransfer && PortableRecyclerControl.AllowAutoTransferListEditing.Value
-        bool useFilteredContainer = editNeverTransferList || editAlwaysTransferList || PortableRecyclerControl.AllowJunkOnly.Value
+        bool editNeverTransferList = hotkeyEdit && hotkeyRetain && PortableRecyclerControl.EnableAutoTransferListEditing.Value
+        bool editAlwaysTransferList = hotkeyEdit && hotkeyTransfer && PortableRecyclerControl.EnableAutoTransferListEditing.Value
+        bool useFilteredContainer = editNeverTransferList || editAlwaysTransferList || PortableRecyclerControl.EnableJunkFilter.Value
 
-        ; place temp containers at the player; if the 'Allow Junk Only' option is turned on, or the player wants to edit an
-        ; auto transfer list, a filtered container is placed
+        ; place temp containers at the player; if the 'Enable Junk Filter' option is turned on, or the player wants to edit an
+        ; auto transfer list, a filtered primary container is placed
         If useFilteredContainer
             TempContainerPrimary = PlayerRef.PlaceAtMe(PortableRecyclerContainerFiltered as Form, abForcePersist = true)
         Else
@@ -133,7 +133,7 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
                 MessageEditAlwaysAutoTransferListModeBox, MessageEditAlwaysAutoTransferListModeNotification, \
                 MessageEditAlwaysAutoTransferListFinished)
         Else
-            If PortableRecyclerControl.AllowBehaviorOverrides.Value
+            If PortableRecyclerControl.EnableBehaviorOverrides.Value
                 Self.Recycle(hotkeyRetain, hotkeyTransfer)
             Else
                 Self.Recycle(false, false)
@@ -216,8 +216,8 @@ Function Recycle(bool abForceRetainJunk, bool abForceTransferJunk)
 
     ; the recyclable item FormList will be updated under the following conditions:
     ;   - junk will be automatically transferred
-    ;   - the AllowJunkOnly option is ON
-    bool updateRecyclableList = transferJunk || PortableRecyclerControl.AllowJunkOnly.Value
+    ;   - the Enable Junk Filter option is ON
+    bool updateRecyclableList = transferJunk || PortableRecyclerControl.EnableJunkFilter.Value
     Self._DebugTrace("Update recyclables list: " + updateRecyclableList)
 
     ; the container will be opened under the following conditions:
@@ -274,7 +274,7 @@ Function Recycle(bool abForceRetainJunk, bool abForceTransferJunk)
     EndIf
 
     ; move any existing scrap items from the primary temp container to the secondary temp container
-    If ! PortableRecyclerControl.AllowJunkOnly.Value
+    If ! PortableRecyclerControl.EnableJunkFilter.Value
         Self._DebugTrace("Temporarily moving existing scrap from primary temp container to secondary temp container")
         TempContainerPrimary.RemoveItem(PortableRecyclerControl.ScrapListAll.List, -1, true, TempContainerSecondary)
     EndIf
@@ -292,7 +292,7 @@ Function Recycle(bool abForceRetainJunk, bool abForceTransferJunk)
 
     ; move any previously existing scrap items that were moved into the secondary temp container back to the primary
     ; temp container
-    If ! PortableRecyclerControl.AllowJunkOnly.Value && TempContainerSecondary.GetItemCount()
+    If ! PortableRecyclerControl.EnableJunkFilter.Value && TempContainerSecondary.GetItemCount()
         Self._DebugTrace("Moving previously-existing scrap from secondary temp container to primary temp container")
         TempContainerSecondary.RemoveItem(PortableRecyclerControl.ScrapListAll.List, -1, true, TempContainerPrimary)
         Utility.WaitMenuMode(0.05)

@@ -137,13 +137,13 @@ Group Settings
 
     ; recycler interface - behavior
     SettingBool Property AutoRecyclingMode Auto Hidden
-    SettingBool Property AllowJunkOnly Auto Hidden
+    SettingBool Property EnableJunkFilter Auto Hidden
     SettingBool Property AutoTransferJunk Auto Hidden
     SettingInt Property TransferLowWeightRatioItems Auto Hidden
     SettingBool Property UseAlwaysAutoTransferList Auto Hidden
     SettingBool Property UseNeverAutoTransferList Auto Hidden
-    SettingBool Property AllowAutoTransferListEditing Auto Hidden
-    SettingBool Property AllowBehaviorOverrides Auto Hidden
+    SettingBool Property EnableAutoTransferListEditing Auto Hidden
+    SettingBool Property EnableBehaviorOverrides Auto Hidden
     SettingBool Property ReturnItemsSilently Auto Hidden
 
     ; recycler interface - crafting
@@ -470,9 +470,9 @@ Function InitSettings(bool abForce = false)
         Self._DebugTrace("Initializing AutoRecyclingMode")
         AutoRecyclingMode = new SettingBool
     EndIf
-    If abForce || ! AllowJunkOnly
-        Self._DebugTrace("Initializing AllowJunkOnly")
-        AllowJunkOnly = new SettingBool
+    If abForce || ! EnableJunkFilter
+        Self._DebugTrace("Initializing EnableJunkFilter")
+        EnableJunkFilter = new SettingBool
     EndIf
     If abForce || ! AutoTransferJunk
         Self._DebugTrace("Initializing AutoTransferJunk")
@@ -490,13 +490,13 @@ Function InitSettings(bool abForce = false)
         Self._DebugTrace("Initializing UseNeverAutoTransferList")
         UseNeverAutoTransferList = new SettingBool
     EndIf
-    If abForce || ! AllowAutoTransferListEditing
-        Self._DebugTrace("Initializing AllowAutoTransferListEditing")
-        AllowAutoTransferListEditing = new SettingBool
+    If abForce || ! EnableAutoTransferListEditing
+        Self._DebugTrace("Initializing EnableAutoTransferListEditing")
+        EnableAutoTransferListEditing = new SettingBool
     EndIf
-    If abForce || ! AllowBehaviorOverrides
-        Self._DebugTrace("Initializing AllowBehaviorOverrides")
-        AllowBehaviorOverrides = new SettingBool
+    If abForce || ! EnableBehaviorOverrides
+        Self._DebugTrace("Initializing EnableBehaviorOverrides")
+        EnableBehaviorOverrides = new SettingBool
     EndIf
     If abForce || ! ReturnItemsSilently
         Self._DebugTrace("Initializing ReturnItemsSilently")
@@ -805,8 +805,8 @@ Function InitSettingsSupplemental()
     AutoRecyclingMode.ValueDefault = false
     AutoRecyclingMode.McmId = "bAutoRecyclingMode:Behavior"
 
-    AllowJunkOnly.ValueDefault = true
-    AllowJunkOnly.McmId = "bAllowJunkOnly:Behavior"
+    EnableJunkFilter.ValueDefault = true
+    EnableJunkFilter.McmId = "bEnableJunkFilter:Behavior"
 
     AutoTransferJunk.ValueDefault = true
     AutoTransferJunk.McmId = "bAutoTransferJunk:Behavior"
@@ -822,11 +822,11 @@ Function InitSettingsSupplemental()
     UseNeverAutoTransferList.ValueDefault = true
     UseNeverAutoTransferList.McmId = "bUseNeverAutoTransferList:Behavior"
 
-    AllowAutoTransferListEditing.Value = false
-    AllowAutoTransferListEditing.McmId = "bAllowAutoTransferListEditing:Behavior"
+    EnableAutoTransferListEditing.Value = false
+    EnableAutoTransferListEditing.McmId = "bEnableAutoTransferListEditing:Behavior"
 
-    AllowBehaviorOverrides.ValueDefault = false
-    AllowBehaviorOverrides.McmId = "bAllowBehaviorOverrides:Behavior"
+    EnableBehaviorOverrides.ValueDefault = false
+    EnableBehaviorOverrides.McmId = "bEnableBehaviorOverrides:Behavior"
 
     ReturnItemsSilently.ValueDefault = true
     ReturnItemsSilently.McmId = "bReturnItemsSilently:Behavior"
@@ -1239,13 +1239,13 @@ var[] Function CollectMCMSettings()
 
     ; recycler interface - behavior
     toReturn.Add(AutoRecyclingMode)
-    toReturn.Add(AllowJunkOnly)
+    toReturn.Add(EnableJunkFilter)
     toReturn.Add(AutoTransferJunk)
     toReturn.Add(TransferLowWeightRatioItems)
     toReturn.Add(UseAlwaysAutoTransferList)
     toReturn.Add(UseNeverAutoTransferList)
-    toReturn.Add(AllowAutoTransferListEditing)
-    toReturn.Add(AllowBehaviorOverrides)
+    toReturn.Add(EnableAutoTransferListEditing)
+    toReturn.Add(EnableBehaviorOverrides)
     toReturn.Add(ReturnItemsSilently)
 
     ; recycler interface - crafting
@@ -1471,10 +1471,10 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             oldValue = AutoRecyclingMode.Value
             LoadSettingFromMCM(AutoRecyclingMode, ModName)
             newValue = AutoRecyclingMode.Value
-        ElseIf asControlId == AllowJunkOnly.McmId
-            oldValue = AllowJunkOnly.Value
-            LoadSettingFromMCM(AllowJunkOnly, ModName)
-            newValue = AllowJunkOnly.Value
+        ElseIf asControlId == EnableJunkFilter.McmId
+            oldValue = EnableJunkFilter.Value
+            LoadSettingFromMCM(EnableJunkFilter, ModName)
+            newValue = EnableJunkFilter.Value
         ElseIf asControlId == AutoTransferJunk.McmId
             oldValue = AutoTransferJunk.Value
             LoadSettingFromMCM(AutoTransferJunk, ModName)
@@ -1491,14 +1491,14 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             oldValue = UseNeverAutoTransferList.Value
             LoadSettingFromMCM(UseNeverAutoTransferList, ModName)
             newValue = UseNeverAutoTransferList.Value
-        ElseIf asControlId == AllowAutoTransferListEditing.McmId
-            oldValue = AllowAutoTransferListEditing.Value
-            LoadSettingFromMCM(AllowAutoTransferListEditing, ModName)
-            newValue = AllowAutoTransferListEditing.Value
-        ElseIf asControlId == AllowBehaviorOverrides.McmId
-            oldValue = AllowBehaviorOverrides.Value
-            LoadSettingFromMCM(AllowBehaviorOverrides, ModName)
-            newValue = AllowBehaviorOverrides.Value
+        ElseIf asControlId == EnableAutoTransferListEditing.McmId
+            oldValue = EnableAutoTransferListEditing.Value
+            LoadSettingFromMCM(EnableAutoTransferListEditing, ModName)
+            newValue = EnableAutoTransferListEditing.Value
+        ElseIf asControlId == EnableBehaviorOverrides.McmId
+            oldValue = EnableBehaviorOverrides.Value
+            LoadSettingFromMCM(EnableBehaviorOverrides, ModName)
+            newValue = EnableBehaviorOverrides.Value
         ElseIf asControlId == ReturnItemsSilently.McmId
             oldValue = ReturnItemsSilently.Value
             LoadSettingFromMCM(ReturnItemsSilently, ModName)
@@ -2217,12 +2217,12 @@ Function Uninstall()
         ScrapperAffectsMult = None
         ; recycler interface - behavior
         AutoRecyclingMode = None
-        AllowJunkOnly = None
+        EnableJunkFilter = None
         AutoTransferJunk = None
         TransferLowWeightRatioItems = None
         UseAlwaysAutoTransferList = None
         UseNeverAutoTransferList = None
-        AllowBehaviorOverrides = None
+        EnableBehaviorOverrides = None
         ReturnItemsSilently = None
         ; multiplier adjustments - general
         MultAdjustGeneralSettlement = None
