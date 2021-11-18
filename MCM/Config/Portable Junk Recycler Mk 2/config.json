@@ -12,7 +12,7 @@
       },
       {
          "html": true,
-         "text": "<p align=\"center\">v0.5.0-beta</p>",
+         "text": "<p align=\"center\">v0.6.0-beta</p>",
          "type": "text"
       },
       {
@@ -32,7 +32,7 @@
          "type": "spacer"
       },
       {
-         "text": "$Multipliers",
+         "text": "$Information",
          "type": "section"
       },
       {
@@ -45,14 +45,6 @@
          "help": "$ViewCurrentMultipliersHelp",
          "text": "$ViewCurrentMultipliersText",
          "type": "button"
-      },
-      {
-         "lines": 1,
-         "type": "spacer"
-      },
-      {
-         "text": "$Uses",
-         "type": "section"
       },
       {
          "action": {
@@ -232,9 +224,9 @@
                }
             },
             {
-               "help": "$AllowJunkOnlyHelp",
-               "id": "bAllowJunkOnly:Behavior",
-               "text": "$AllowJunkOnlyText",
+               "help": "$EnableJunkFilterHelp",
+               "id": "bEnableJunkFilter:Behavior",
+               "text": "$EnableJunkFilterText",
                "type": "switcher",
                "valueOptions": {
                   "sourceType": "ModSettingBool"
@@ -247,6 +239,21 @@
                "type": "switcher",
                "valueOptions": {
                   "sourceType": "ModSettingBool"
+               }
+            },
+            {
+               "help": "$TransferLowWeightRatioItemsHelp",
+               "id": "iTransferLowWeightRatioItems:Behavior",
+               "text": "$IndentTransferLowWeightRatioItemsText",
+               "type": "dropdown",
+               "valueOptions": {
+                  "options": [
+                     "$OFF",
+                     "$WhenInPlayerOwnedSettlement",
+                     "$WhenNotInPlayerOwnedSettlement",
+                     "$Always"
+                  ],
+                  "sourceType": "ModSettingInt"
                }
             },
             {
@@ -268,10 +275,20 @@
                }
             },
             {
+               "groupControl": 16,
+               "help": "$EnableAutoTransferListEditingHelp",
+               "id": "bEnableAutoTransferListEditing:Behavior",
+               "text": "$EnableAutoTransferListEditingText",
+               "type": "switcher",
+               "valueOptions": {
+                  "sourceType": "ModSettingBool"
+               }
+            },
+            {
                "groupControl": 15,
-               "help": "$AllowBehaviorOverridesHelp",
-               "id": "bAllowBehaviorOverrides:Behavior",
-               "text": "$AllowBehaviorOverridesText",
+               "help": "$EnableBehaviorOverridesHelp",
+               "id": "bEnableBehaviorOverrides:Behavior",
+               "text": "$EnableBehaviorOverridesText",
                "type": "switcher",
                "valueOptions": {
                   "sourceType": "ModSettingBool"
@@ -291,6 +308,14 @@
                "type": "spacer"
             },
             {
+               "text": "$TransferLowWeightRatioItemsNote",
+               "type": "text"
+            },
+            {
+               "lines": 1,
+               "type": "spacer"
+            },
+            {
                "text": "$Crafting",
                "type": "section"
             },
@@ -302,6 +327,7 @@
                "valueOptions": {
                   "options": [
                      "$Dynamic",
+                     "$VanillaChemistry",
                      "$SWElectronics",
                      "$SWEngineering",
                      "$SWManufacturing",
@@ -309,10 +335,14 @@
                      "$AWKCRAdvEngineering",
                      "$AWKCRElectronics",
                      "$AWKCRUtility",
-                     "$VanillaChemistry"
+                     "$ECOUtility"
                   ],
                   "sourceType": "ModSettingInt"
                }
+            },
+            {
+               "text": "$CraftingStationNote",
+               "type": "text"
             },
             {
                "lines": 1,
@@ -368,6 +398,11 @@
                }
             },
             {
+               "groupCondition": {
+                  "OR": [
+                     16
+                  ]
+               },
                "help": "$EditAlwaysAutoTransferListHelp",
                "text": "$EditAlwaysAutoTransferListText",
                "type": "stepper",
@@ -378,6 +413,11 @@
                }
             },
             {
+               "groupCondition": {
+                  "OR": [
+                     16
+                  ]
+               },
                "help": "$EditNeverAutoTransferListHelp",
                "text": "$EditNeverAutoTransferListText",
                "type": "stepper",
@@ -433,8 +473,8 @@
                "text": "$InSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -450,8 +490,8 @@
                "text": "$EverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -476,8 +516,8 @@
                "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -493,8 +533,8 @@
                "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -519,8 +559,8 @@
                "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -536,8 +576,8 @@
                "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -562,8 +602,8 @@
                "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -579,8 +619,8 @@
                "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -605,8 +645,8 @@
                "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -622,8 +662,8 @@
                "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1001,8 +1041,8 @@
                "text": "$Minimum",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 6,
+                  "min": -6,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1018,8 +1058,8 @@
                "text": "$Maximum",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 6,
+                  "min": -6,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1044,8 +1084,8 @@
                "text": "$IndentMinimum",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 6,
+                  "min": -6,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1061,8 +1101,8 @@
                "text": "$IndentMaximum",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 6,
+                  "min": -6,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1087,8 +1127,8 @@
                "text": "$IndentMinimum",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 6,
+                  "min": -6,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1104,8 +1144,8 @@
                "text": "$IndentMaximum",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 6,
+                  "min": -6,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1130,8 +1170,8 @@
                "text": "$IndentMinimum",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 6,
+                  "min": -6,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1147,8 +1187,8 @@
                "text": "$IndentMaximum",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 6,
+                  "min": -6,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1173,8 +1213,8 @@
                "text": "$IndentMinimum",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 6,
+                  "min": -6,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1190,8 +1230,8 @@
                "text": "$IndentMaximum",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 6,
+                  "min": -6,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1247,8 +1287,8 @@
                "text": "$InSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1264,8 +1304,8 @@
                "text": "$EverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1290,8 +1330,8 @@
                "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1307,8 +1347,8 @@
                "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1333,8 +1373,8 @@
                "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1350,8 +1390,8 @@
                "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1376,8 +1416,8 @@
                "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1393,8 +1433,8 @@
                "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1419,8 +1459,8 @@
                "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1436,8 +1476,8 @@
                "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1473,8 +1513,8 @@
                "text": "$InSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1490,8 +1530,8 @@
                "text": "$EverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1516,8 +1556,8 @@
                "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1533,8 +1573,8 @@
                "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1559,8 +1599,8 @@
                "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1576,8 +1616,8 @@
                "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1602,8 +1642,8 @@
                "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1619,8 +1659,8 @@
                "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1645,8 +1685,8 @@
                "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1662,8 +1702,8 @@
                "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1710,8 +1750,8 @@
                "text": "$InSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1728,8 +1768,8 @@
                "text": "$EverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1777,8 +1817,8 @@
                "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1795,8 +1835,8 @@
                "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1823,8 +1863,8 @@
                "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1841,8 +1881,8 @@
                "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1869,8 +1909,8 @@
                "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1887,8 +1927,8 @@
                "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1915,8 +1955,8 @@
                "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1933,8 +1973,8 @@
                "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -1982,8 +2022,8 @@
                "text": "$InSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -2000,8 +2040,8 @@
                "text": "$EverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -2049,8 +2089,8 @@
                "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -2067,8 +2107,8 @@
                "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -2095,8 +2135,8 @@
                "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -2113,8 +2153,8 @@
                "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -2141,8 +2181,8 @@
                "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -2159,8 +2199,8 @@
                "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -2187,8 +2227,8 @@
                "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -2205,8 +2245,8 @@
                "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -2254,8 +2294,8 @@
                "text": "$InSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -2272,8 +2312,8 @@
                "text": "$EverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -2310,8 +2350,8 @@
                "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -2328,8 +2368,8 @@
                "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -2356,8 +2396,8 @@
                "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -2374,8 +2414,8 @@
                "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -2402,8 +2442,8 @@
                "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -2420,8 +2460,8 @@
                "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -2448,8 +2488,8 @@
                "text": "$IndentInSettlements",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -2466,8 +2506,8 @@
                "text": "$IndentEverywhereElse",
                "type": "slider",
                "valueOptions": {
-                  "max": 1,
-                  "min": -1,
+                  "max": 2,
+                  "min": -2,
                   "sourceType": "ModSettingFloat",
                   "step": 0.01
                }
@@ -2477,6 +2517,43 @@
       },
       {
          "content": [
+            {
+               "text": "$Multithreading",
+               "type": "section"
+            },
+            {
+               "help": "$ThreadLimitHelp",
+               "id": "iThreadLimit:Advanced",
+               "text": "$ThreadLimitText",
+               "type": "slider",
+               "valueOptions": {
+                  "max": 32,
+                  "min": 1,
+                  "sourceType": "ModSettingInt",
+                  "step": 1
+               }
+            },
+            {
+               "lines": 1,
+               "type": "spacer"
+            },
+            {
+               "text": "$Methodology",
+               "type": "section"
+            },
+            {
+               "help": "$UseDirectMoveRecyclableItemListUpdateHelp",
+               "id": "bUseDirectMoveRecyclableItemListUpdate:Advanced",
+               "text": "$UseDirectMoveRecyclableItemListUpdateText",
+               "type": "switcher",
+               "valueOptions": {
+                  "sourceType": "ModSettingBool"
+               }
+            },
+            {
+               "lines": 1,
+               "type": "spacer"
+            },
             {
                "text": "$Settings",
                "type": "section"
@@ -2522,12 +2599,12 @@
             {
                "action": {
                   "form": "Portable Junk Recycler Mk 2.esp|800",
-                  "function": "ResetRecyclableItemList",
+                  "function": "ResetRecyclableItemsLists",
                   "scriptName": "PortableJunkRecyclerMk2:ControlScript",
                   "type": "CallFunction"
                },
-               "help": "$ResetRecyclableItemListHelp",
-               "text": "$ResetRecyclableItemListText",
+               "help": "$ResetRecyclableItemsListsHelp",
+               "text": "$ResetRecyclableItemsListsText",
                "type": "button"
             },
             {

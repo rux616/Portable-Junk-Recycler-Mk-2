@@ -43,8 +43,7 @@ Group Components
     ComponentMap[] Property ComponentMappings Auto Hidden
 EndGroup
 
-Group Other
-    Actor Property PlayerRef Auto Mandatory
+Group Messages
     Message Property MessageF4SENotInstalled Auto Mandatory
     Message Property MessageMCMNotInstalled Auto Mandatory
     Message Property MessageInitialized Auto Mandatory
@@ -56,9 +55,9 @@ Group Other
     Message Property MessageSettingsResetFailBusy Auto Mandatory
     Message Property MessageSettingsResetFailRunning Auto Mandatory
     Message Property MessageLocksReset Auto Mandatory
-    Message Property MessageRecyclableItemListReset Auto Mandatory
-    Message Property MessageRecyclableItemListResetFailBusy Auto Mandatory
-    Message Property MessageRecyclableItemListResetFailRunning Auto Mandatory
+    Message Property MessageRecyclableItemsListsReset Auto Mandatory
+    Message Property MessageRecyclableItemsListsResetFailBusy Auto Mandatory
+    Message Property MessageRecyclableItemsListsResetFailRunning Auto Mandatory
     Message Property MessageAlwaysAutoTransferListReset Auto Mandatory
     Message Property MessageAlwaysAutoTransferListResetFailBusy Auto Mandatory
     Message Property MessageAlwaysAutoTransferListResetFailRunning Auto Mandatory
@@ -68,11 +67,16 @@ Group Other
     Message Property MessageUninstalled Auto Mandatory
     Message Property MessageUninstallFailBusy Auto Mandatory
     Message Property MessageUninstallFailRunning Auto Mandatory
+EndGroup
+
+Group Other
+    Actor Property PlayerRef Auto Mandatory
     WorkshopParentScript Property WorkshopParent Auto Mandatory
     { the workshop parent script
       enables this script to determine whether its in a player-owned settlement or not }
 
     FormListWrapper Property RecyclableItemList Auto Mandatory
+    FormListWrapper Property LowWeightRatioItemList Auto Mandatory
 
     FormListWrapper Property NeverAutoTransferList Auto Mandatory
     FormListWrapper Property AlwaysAutoTransferList Auto Mandatory
@@ -133,11 +137,13 @@ Group Settings
 
     ; recycler interface - behavior
     SettingBool Property AutoRecyclingMode Auto Hidden
-    SettingBool Property AllowJunkOnly Auto Hidden
+    SettingBool Property EnableJunkFilter Auto Hidden
     SettingBool Property AutoTransferJunk Auto Hidden
+    SettingInt Property TransferLowWeightRatioItems Auto Hidden
     SettingBool Property UseAlwaysAutoTransferList Auto Hidden
     SettingBool Property UseNeverAutoTransferList Auto Hidden
-    SettingBool Property AllowBehaviorOverrides Auto Hidden
+    SettingBool Property EnableAutoTransferListEditing Auto Hidden
+    SettingBool Property EnableBehaviorOverrides Auto Hidden
     SettingBool Property ReturnItemsSilently Auto Hidden
 
     ; recycler interface - crafting
@@ -192,6 +198,12 @@ Group Settings
     SettingFloat[] Property MultAdjustScrapperNotSettlementU Auto Hidden
     SettingFloat[] Property MultAdjustScrapperNotSettlementR Auto Hidden
     SettingFloat[] Property MultAdjustScrapperNotSettlementS Auto Hidden
+
+    ; advanced - multithreading
+    SettingInt Property ThreadLimit Auto Hidden
+
+    ; advanced - methodology
+    SettingBool Property UseDirectMoveRecyclableItemListUpdate Auto Hidden
 EndGroup
 
 int Property iSaveFileMonitor Auto Hidden ; Do not mess with ever - this is used by Canary to track data loss
@@ -204,7 +216,7 @@ int Property iSaveFileMonitor Auto Hidden ; Do not mess with ever - this is used
 ; ---------
 
 string ModName = "Portable Junk Recycler Mk 2" const
-string ModVersion = "0.5.0-beta" const
+string ModVersion = "0.6.0-beta" const
 string FullScriptName = "PortableJunkRecyclerMk2:ControlScript" const
 int ScrapperPerkMaxRanksSupported = 5 const
 SettingChangeType AvailableChangeTypes
@@ -309,7 +321,14 @@ EndEvent
 
 ; add a bit of text to traces going into the papyrus user log
 Function _DebugTrace(string asMessage, int aiSeverity = 0) DebugOnly
-    Debug.TraceUser(ModName, "ControlScript: " + asMessage, aiSeverity)
+    string baseMessage = "ControlScript: " const
+    If aiSeverity == 0
+        Debug.TraceUser(ModName, baseMessage + asMessage)
+    ElseIf aiSeverity == 1
+        Debug.TraceUser(ModName, "WARNING: " + baseMessage + asMessage)
+    ElseIf aiSeverity == 2
+        Debug.TraceUser(ModName, "ERROR: " + baseMessage + asMessage)
+    EndIf
 EndFunction
 
 ; consolidated init
@@ -327,11 +346,11 @@ Function Initialize(bool abQuestInit = false)
     Self.CheckForMCM()
     Self.InitSettings(abForce = abQuestInit)
     Self.InitSettingsSupplemental()
+    Self.LoadAllSettingsFromMCM()
     Self.InitFormListWrappers()
     Self.InitComponentMappings()
     Self.InitScrapListAll()
     Self.InitScrapperPerks()
-    Self.LoadAllSettingsFromMCM()
     Self.RegisterForMCMEvents()
     If ScriptExtenderInstalled
         RegisterForKey(LAlt)
@@ -451,13 +470,17 @@ Function InitSettings(bool abForce = false)
         Self._DebugTrace("Initializing AutoRecyclingMode")
         AutoRecyclingMode = new SettingBool
     EndIf
-    If abForce || ! AllowJunkOnly
-        Self._DebugTrace("Initializing AllowJunkOnly")
-        AllowJunkOnly = new SettingBool
+    If abForce || ! EnableJunkFilter
+        Self._DebugTrace("Initializing EnableJunkFilter")
+        EnableJunkFilter = new SettingBool
     EndIf
     If abForce || ! AutoTransferJunk
         Self._DebugTrace("Initializing AutoTransferJunk")
         AutoTransferJunk = new SettingBool
+    EndIf
+    If abForce || ! TransferLowWeightRatioItems
+        Self._DebugTrace("Initializing TransferLowWeightRatioItems")
+        TransferLowWeightRatioItems = new SettingInt
     EndIf
     If abForce || ! UseAlwaysAutoTransferList
         Self._DebugTrace("Initializing UseAlwaysAutoTransferList")
@@ -467,9 +490,13 @@ Function InitSettings(bool abForce = false)
         Self._DebugTrace("Initializing UseNeverAutoTransferList")
         UseNeverAutoTransferList = new SettingBool
     EndIf
-    If abForce || ! AllowBehaviorOverrides
-        Self._DebugTrace("Initializing AllowBehaviorOverrides")
-        AllowBehaviorOverrides = new SettingBool
+    If abForce || ! EnableAutoTransferListEditing
+        Self._DebugTrace("Initializing EnableAutoTransferListEditing")
+        EnableAutoTransferListEditing = new SettingBool
+    EndIf
+    If abForce || ! EnableBehaviorOverrides
+        Self._DebugTrace("Initializing EnableBehaviorOverrides")
+        EnableBehaviorOverrides = new SettingBool
     EndIf
     If abForce || ! ReturnItemsSilently
         Self._DebugTrace("Initializing ReturnItemsSilently")
@@ -701,17 +728,36 @@ Function InitSettings(bool abForce = false)
 
         index += 1
     EndWhile
+
+    ; advanced - multithreading
+    If abForce || ! ThreadLimit
+        Self._DebugTrace("Initializing ThreadLimit")
+        ThreadLimit = new SettingInt
+    EndIf
+
+    ; advanced - methodology
+    If abForce || ! UseDirectMoveRecyclableItemListUpdate
+        Self._DebugTrace("Initializing UseNoTouchRecyclableItemListUpdate")
+        UseDirectMoveRecyclableItemListUpdate = new SettingBool
+    EndIf
 EndFunction
 
 ; perform supplemental initialization on properties that hold settings
 Function InitSettingsSupplemental()
     Self._DebugTrace("Initializing settings (supplemental)")
 
+    float adjustMin = -2.0 const
+    float adjustMax = 2.0 const
+    float statAdjustMin = 0.0 const
+    float statAdjustMax = 1.0 const
+    float randomAdjustMin = -6.0 const
+    float randomAdjustMax = 6.0 const
+
     ; settings - general
     MultBase.ValueDefault = 1.0
     MultBase.McmId = "fMultBase:GeneralOptions"
     MultBase.ValueMin = 0.0
-    MultBase.ValueMax = 2.0
+    MultBase.ValueMax = adjustMax
 
     ReturnAtLeastOneComponent.ValueDefault = true
     ReturnAtLeastOneComponent.McmId = "bReturnAtLeastOneComponent:GeneralOptions"
@@ -759,11 +805,16 @@ Function InitSettingsSupplemental()
     AutoRecyclingMode.ValueDefault = false
     AutoRecyclingMode.McmId = "bAutoRecyclingMode:Behavior"
 
-    AllowJunkOnly.ValueDefault = true
-    AllowJunkOnly.McmId = "bAllowJunkOnly:Behavior"
+    EnableJunkFilter.ValueDefault = true
+    EnableJunkFilter.McmId = "bEnableJunkFilter:Behavior"
 
     AutoTransferJunk.ValueDefault = true
     AutoTransferJunk.McmId = "bAutoTransferJunk:Behavior"
+
+    TransferLowWeightRatioItems.ValueDefault = 0
+    TransferLowWeightRatioItems.McmId = "iTransferLowWeightRatioItems:Behavior"
+    TransferLowWeightRatioItems.ValueMin = 0
+    TransferLowWeightRatioItems.ValueMax = 3
 
     UseAlwaysAutoTransferList.ValueDefault = true
     UseAlwaysAutoTransferList.McmId = "bUseAlwaysAutoTransferList:Behavior"
@@ -771,8 +822,11 @@ Function InitSettingsSupplemental()
     UseNeverAutoTransferList.ValueDefault = true
     UseNeverAutoTransferList.McmId = "bUseNeverAutoTransferList:Behavior"
 
-    AllowBehaviorOverrides.ValueDefault = true
-    AllowBehaviorOverrides.McmId = "bAllowBehaviorOverrides:Behavior"
+    EnableAutoTransferListEditing.Value = false
+    EnableAutoTransferListEditing.McmId = "bEnableAutoTransferListEditing:Behavior"
+
+    EnableBehaviorOverrides.ValueDefault = false
+    EnableBehaviorOverrides.McmId = "bEnableBehaviorOverrides:Behavior"
 
     ReturnItemsSilently.ValueDefault = true
     ReturnItemsSilently.McmId = "bReturnItemsSilently:Behavior"
@@ -781,161 +835,161 @@ Function InitSettingsSupplemental()
     CraftingStation.ValueDefault = 0
     CraftingStation.McmId = "iCraftingStation:Crafting"
     CraftingStation.ValueMin = 0
-    CraftingStation.ValueMax = 8
+    CraftingStation.ValueMax = 9
 
     ; multiplier adjustments - general
     MultAdjustGeneralSettlement.ValueDefault = 0.0
     MultAdjustGeneralSettlement.McmId = "fMultAdjustGeneralSettlement:MultiplierAdjustments"
-    MultAdjustGeneralSettlement.ValueMin = -1.0
-    MultAdjustGeneralSettlement.ValueMax = 1.0
+    MultAdjustGeneralSettlement.ValueMin = adjustMin
+    MultAdjustGeneralSettlement.ValueMax = adjustMax
 
     MultAdjustGeneralSettlementC.ValueDefault = 0.0
     MultAdjustGeneralSettlementC.McmId = "fMultAdjustGeneralSettlementC:MultiplierAdjustments"
-    MultAdjustGeneralSettlementC.ValueMin = -1.0
-    MultAdjustGeneralSettlementC.ValueMax = 1.0
+    MultAdjustGeneralSettlementC.ValueMin = adjustMin
+    MultAdjustGeneralSettlementC.ValueMax = adjustMax
 
     MultAdjustGeneralSettlementU.ValueDefault = 0.0
     MultAdjustGeneralSettlementU.McmId = "fMultAdjustGeneralSettlementU:MultiplierAdjustments"
-    MultAdjustGeneralSettlementU.ValueMin = -1.0
-    MultAdjustGeneralSettlementU.ValueMax = 1.0
+    MultAdjustGeneralSettlementU.ValueMin = adjustMin
+    MultAdjustGeneralSettlementU.ValueMax = adjustMax
 
     MultAdjustGeneralSettlementR.ValueDefault = 0.0
     MultAdjustGeneralSettlementR.McmId = "fMultAdjustGeneralSettlementR:MultiplierAdjustments"
-    MultAdjustGeneralSettlementR.ValueMin = -1.0
-    MultAdjustGeneralSettlementR.ValueMax = 1.0
+    MultAdjustGeneralSettlementR.ValueMin = adjustMin
+    MultAdjustGeneralSettlementR.ValueMax = adjustMax
 
     MultAdjustGeneralSettlementS.ValueDefault = 0.0
     MultAdjustGeneralSettlementS.McmId = "fMultAdjustGeneralSettlementS:MultiplierAdjustments"
-    MultAdjustGeneralSettlementS.ValueMin = -1.0
-    MultAdjustGeneralSettlementS.ValueMax = 1.0
+    MultAdjustGeneralSettlementS.ValueMin = adjustMin
+    MultAdjustGeneralSettlementS.ValueMax = adjustMax
 
     MultAdjustGeneralNotSettlement.ValueDefault = 0.0
     MultAdjustGeneralNotSettlement.McmId = "fMultAdjustGeneralNotSettlement:MultiplierAdjustments"
-    MultAdjustGeneralNotSettlement.ValueMin = -1.0
-    MultAdjustGeneralNotSettlement.ValueMax = 1.0
+    MultAdjustGeneralNotSettlement.ValueMin = adjustMin
+    MultAdjustGeneralNotSettlement.ValueMax = adjustMax
 
     MultAdjustGeneralNotSettlementC.ValueDefault = 0.0
     MultAdjustGeneralNotSettlementC.McmId = "fMultAdjustGeneralNotSettlementC:MultiplierAdjustments"
-    MultAdjustGeneralNotSettlementC.ValueMin = -1.0
-    MultAdjustGeneralNotSettlementC.ValueMax = 1.0
+    MultAdjustGeneralNotSettlementC.ValueMin = adjustMin
+    MultAdjustGeneralNotSettlementC.ValueMax = adjustMax
 
     MultAdjustGeneralNotSettlementU.ValueDefault = 0.0
     MultAdjustGeneralNotSettlementU.McmId = "fMultAdjustGeneralNotSettlementU:MultiplierAdjustments"
-    MultAdjustGeneralNotSettlementU.ValueMin = -1.0
-    MultAdjustGeneralNotSettlementU.ValueMax = 1.0
+    MultAdjustGeneralNotSettlementU.ValueMin = adjustMin
+    MultAdjustGeneralNotSettlementU.ValueMax = adjustMax
 
     MultAdjustGeneralNotSettlementR.ValueDefault = 0.0
     MultAdjustGeneralNotSettlementR.McmId = "fMultAdjustGeneralNotSettlementR:MultiplierAdjustments"
-    MultAdjustGeneralNotSettlementR.ValueMin = -1.0
-    MultAdjustGeneralNotSettlementR.ValueMax = 1.0
+    MultAdjustGeneralNotSettlementR.ValueMin = adjustMin
+    MultAdjustGeneralNotSettlementR.ValueMax = adjustMax
 
     MultAdjustGeneralNotSettlementS.ValueDefault = 0.0
     MultAdjustGeneralNotSettlementS.McmId = "fMultAdjustGeneralNotSettlementS:MultiplierAdjustments"
-    MultAdjustGeneralNotSettlementS.ValueMin = -1.0
-    MultAdjustGeneralNotSettlementS.ValueMax = 1.0
+    MultAdjustGeneralNotSettlementS.ValueMin = adjustMin
+    MultAdjustGeneralNotSettlementS.ValueMax = adjustMax
 
     ; multiplier adjustments - intelligence
     MultAdjustInt.ValueDefault = 0.01
     MultAdjustInt.McmId = "fMultAdjustInt:MultiplierAdjustments"
-    MultAdjustInt.ValueMin = 0.0
-    MultAdjustInt.ValueMax = 1.0
+    MultAdjustInt.ValueMin = statAdjustMin
+    MultAdjustInt.ValueMax = statAdjustMax
 
     MultAdjustIntC.ValueDefault = 0.01
     MultAdjustIntC.McmId = "fMultAdjustIntC:MultiplierAdjustments"
-    MultAdjustIntC.ValueMin = 0.0
-    MultAdjustIntC.ValueMax = 1.0
+    MultAdjustIntC.ValueMin = statAdjustMin
+    MultAdjustIntC.ValueMax = statAdjustMax
 
     MultAdjustIntU.ValueDefault = 0.01
     MultAdjustIntU.McmId = "fMultAdjustIntU:MultiplierAdjustments"
-    MultAdjustIntU.ValueMin = 0.0
-    MultAdjustIntU.ValueMax = 1.0
+    MultAdjustIntU.ValueMin = statAdjustMin
+    MultAdjustIntU.ValueMax = statAdjustMax
 
     MultAdjustIntR.ValueDefault = 0.01
     MultAdjustIntR.McmId = "fMultAdjustIntR:MultiplierAdjustments"
-    MultAdjustIntR.ValueMin = 0.0
-    MultAdjustIntR.ValueMax = 1.0
+    MultAdjustIntR.ValueMin = statAdjustMin
+    MultAdjustIntR.ValueMax = statAdjustMax
 
     MultAdjustIntS.ValueDefault = 0.0
     MultAdjustIntS.McmId = "fMultAdjustIntS:MultiplierAdjustments"
-    MultAdjustIntS.ValueMin = 0.0
-    MultAdjustIntS.ValueMax = 1.0
+    MultAdjustIntS.ValueMin = statAdjustMin
+    MultAdjustIntS.ValueMax = statAdjustMax
 
     ; multiplier adjustments - luck
     MultAdjustLck.ValueDefault = 0.01
     MultAdjustLck.McmId = "fMultAdjustLck:MultiplierAdjustments"
-    MultAdjustLck.ValueMin = 0.0
-    MultAdjustLck.ValueMax = 1.0
+    MultAdjustLck.ValueMin = statAdjustMin
+    MultAdjustLck.ValueMax = statAdjustMax
 
     MultAdjustLckC.ValueDefault = 0.01
     MultAdjustLckC.McmId = "fMultAdjustLckC:MultiplierAdjustments"
-    MultAdjustLckC.ValueMin = 0.0
-    MultAdjustLckC.ValueMax = 1.0
+    MultAdjustLckC.ValueMin = statAdjustMin
+    MultAdjustLckC.ValueMax = statAdjustMax
 
     MultAdjustLckU.ValueDefault = 0.01
     MultAdjustLckU.McmId = "fMultAdjustLckU:MultiplierAdjustments"
-    MultAdjustLckU.ValueMin = 0.0
-    MultAdjustLckU.ValueMax = 1.0
+    MultAdjustLckU.ValueMin = statAdjustMin
+    MultAdjustLckU.ValueMax = statAdjustMax
 
     MultAdjustLckR.ValueDefault = 0.01
     MultAdjustLckR.McmId = "fMultAdjustLckR:MultiplierAdjustments"
-    MultAdjustLckR.ValueMin = 0.0
-    MultAdjustLckR.ValueMax = 1.0
+    MultAdjustLckR.ValueMin = statAdjustMin
+    MultAdjustLckR.ValueMax = statAdjustMax
 
     MultAdjustLckS.ValueDefault = 0.0
     MultAdjustLckS.McmId = "fMultAdjustLckS:MultiplierAdjustments"
-    MultAdjustLckS.ValueMin = 0.0
-    MultAdjustLckS.ValueMax = 1.0
+    MultAdjustLckS.ValueMin = statAdjustMin
+    MultAdjustLckS.ValueMax = statAdjustMax
 
     ; multiplier adjustments - randomness
     MultAdjustRandomMin.ValueDefault = -0.1
     MultAdjustRandomMin.McmId = "fMultAdjustRandomMin:MultiplierAdjustments"
-    MultAdjustRandomMin.ValueMin = -1.0
-    MultAdjustRandomMin.ValueMax = 1.0
+    MultAdjustRandomMin.ValueMin = randomAdjustMin
+    MultAdjustRandomMin.ValueMax = randomAdjustMax
 
     MultAdjustRandomMinC.ValueDefault = -0.1
     MultAdjustRandomMinC.McmId = "fMultAdjustRandomMinC:MultiplierAdjustments"
-    MultAdjustRandomMinC.ValueMin = -1.0
-    MultAdjustRandomMinC.ValueMax = 1.0
+    MultAdjustRandomMinC.ValueMin = randomAdjustMin
+    MultAdjustRandomMinC.ValueMax = randomAdjustMax
 
     MultAdjustRandomMinU.ValueDefault = -0.1
     MultAdjustRandomMinU.McmId = "fMultAdjustRandomMinU:MultiplierAdjustments"
-    MultAdjustRandomMinU.ValueMin = -1.0
-    MultAdjustRandomMinU.ValueMax = 1.0
+    MultAdjustRandomMinU.ValueMin = randomAdjustMin
+    MultAdjustRandomMinU.ValueMax = randomAdjustMax
 
     MultAdjustRandomMinR.ValueDefault = -0.1
     MultAdjustRandomMinR.McmId = "fMultAdjustRandomMinR:MultiplierAdjustments"
-    MultAdjustRandomMinR.ValueMin = -1.0
-    MultAdjustRandomMinR.ValueMax = 1.0
+    MultAdjustRandomMinR.ValueMin = randomAdjustMin
+    MultAdjustRandomMinR.ValueMax = randomAdjustMax
 
     MultAdjustRandomMinS.ValueDefault = 0.0
     MultAdjustRandomMinS.McmId = "fMultAdjustRandomMinS:MultiplierAdjustments"
-    MultAdjustRandomMinS.ValueMin = -1.0
-    MultAdjustRandomMinS.ValueMax = 1.0
+    MultAdjustRandomMinS.ValueMin = randomAdjustMin
+    MultAdjustRandomMinS.ValueMax = randomAdjustMax
 
     MultAdjustRandomMax.ValueDefault = 0.1
     MultAdjustRandomMax.McmId = "fMultAdjustRandomMax:MultiplierAdjustments"
-    MultAdjustRandomMax.ValueMin = -1.0
-    MultAdjustRandomMax.ValueMax = 1.0
+    MultAdjustRandomMax.ValueMin = randomAdjustMin
+    MultAdjustRandomMax.ValueMax = randomAdjustMax
 
     MultAdjustRandomMaxC.ValueDefault = 0.1
     MultAdjustRandomMaxC.McmId = "fMultAdjustRandomMaxC:MultiplierAdjustments"
-    MultAdjustRandomMaxC.ValueMin = -1.0
-    MultAdjustRandomMaxC.ValueMax = 1.0
+    MultAdjustRandomMaxC.ValueMin = randomAdjustMin
+    MultAdjustRandomMaxC.ValueMax = randomAdjustMax
 
     MultAdjustRandomMaxU.ValueDefault = 0.1
     MultAdjustRandomMaxU.McmId = "fMultAdjustRandomMaxU:MultiplierAdjustments"
-    MultAdjustRandomMaxU.ValueMin = -1.0
-    MultAdjustRandomMaxU.ValueMax = 1.0
+    MultAdjustRandomMaxU.ValueMin = randomAdjustMin
+    MultAdjustRandomMaxU.ValueMax = randomAdjustMax
 
     MultAdjustRandomMaxR.ValueDefault = 0.1
     MultAdjustRandomMaxR.McmId = "fMultAdjustRandomMaxR:MultiplierAdjustments"
-    MultAdjustRandomMaxR.ValueMin = -1.0
-    MultAdjustRandomMaxR.ValueMax = 1.0
+    MultAdjustRandomMaxR.ValueMin = randomAdjustMin
+    MultAdjustRandomMaxR.ValueMax = randomAdjustMax
 
     MultAdjustRandomMaxS.ValueDefault = 0.0
     MultAdjustRandomMaxS.McmId = "fMultAdjustRandomMaxS:MultiplierAdjustments"
-    MultAdjustRandomMaxS.ValueMin = -1.0
-    MultAdjustRandomMaxS.ValueMax = 1.0
+    MultAdjustRandomMaxS.ValueMin = randomAdjustMin
+    MultAdjustRandomMaxS.ValueMax = randomAdjustMax
 
     ; multiplier adjustments - scrapper 1-5
     float[] scrapperSettlementDefaults = new float[ScrapperPerkMaxRanksSupported]
@@ -949,61 +1003,75 @@ Function InitSettingsSupplemental()
     While index < ScrapperPerkMaxRanksSupported
         MultAdjustScrapperSettlement[index].ValueDefault = scrapperSettlementDefaults[index]
         MultAdjustScrapperSettlement[index].McmId = "fMultAdjustScrapperSettlement" + (index+1) + ":MultiplierAdjustments"
-        MultAdjustScrapperSettlement[index].ValueMin = -1.0
-        MultAdjustScrapperSettlement[index].ValueMax = 1.0
+        MultAdjustScrapperSettlement[index].ValueMin = adjustMin
+        MultAdjustScrapperSettlement[index].ValueMax = adjustMax
 
         MultAdjustScrapperSettlementC[index].ValueDefault = scrapperSettlementDefaults[index]
         MultAdjustScrapperSettlementC[index].McmId = "fMultAdjustScrapperSettlementC" + (index+1) + ":MultiplierAdjustments"
-        MultAdjustScrapperSettlementC[index].ValueMin = -1.0
-        MultAdjustScrapperSettlementC[index].ValueMax = 1.0
+        MultAdjustScrapperSettlementC[index].ValueMin = adjustMin
+        MultAdjustScrapperSettlementC[index].ValueMax = adjustMax
 
         MultAdjustScrapperSettlementU[index].ValueDefault = scrapperSettlementDefaults[index]
         MultAdjustScrapperSettlementU[index].McmId = "fMultAdjustScrapperSettlementU" + (index+1) + ":MultiplierAdjustments"
-        MultAdjustScrapperSettlementU[index].ValueMin = -1.0
-        MultAdjustScrapperSettlementU[index].ValueMax = 1.0
+        MultAdjustScrapperSettlementU[index].ValueMin = adjustMin
+        MultAdjustScrapperSettlementU[index].ValueMax = adjustMax
 
         MultAdjustScrapperSettlementR[index].ValueDefault = scrapperSettlementDefaults[index]
         MultAdjustScrapperSettlementR[index].McmId = "fMultAdjustScrapperSettlementR" + (index+1) + ":MultiplierAdjustments"
-        MultAdjustScrapperSettlementR[index].ValueMin = -1.0
-        MultAdjustScrapperSettlementR[index].ValueMax = 1.0
+        MultAdjustScrapperSettlementR[index].ValueMin = adjustMin
+        MultAdjustScrapperSettlementR[index].ValueMax = adjustMax
 
         MultAdjustScrapperSettlementS[index].ValueDefault = 0.0
         MultAdjustScrapperSettlementS[index].McmId = "fMultAdjustScrapperSettlementS" + (index+1) + ":MultiplierAdjustments"
-        MultAdjustScrapperSettlementS[index].ValueMin = -1.0
-        MultAdjustScrapperSettlementS[index].ValueMax = 1.0
+        MultAdjustScrapperSettlementS[index].ValueMin = adjustMin
+        MultAdjustScrapperSettlementS[index].ValueMax = adjustMax
 
         MultAdjustScrapperNotSettlement[index].ValueDefault = 0.0
         MultAdjustScrapperNotSettlement[index].McmId = "fMultAdjustScrapperNotSettlement" + (index+1) + ":MultiplierAdjustments"
-        MultAdjustScrapperNotSettlement[index].ValueMin = -1.0
-        MultAdjustScrapperNotSettlement[index].ValueMax = 1.0
+        MultAdjustScrapperNotSettlement[index].ValueMin = adjustMin
+        MultAdjustScrapperNotSettlement[index].ValueMax = adjustMax
 
         MultAdjustScrapperNotSettlementC[index].ValueDefault = 0.0
         MultAdjustScrapperNotSettlementC[index].McmId = "fMultAdjustScrapperNotSettlementC" + (index+1) + ":MultiplierAdjustments"
-        MultAdjustScrapperNotSettlementC[index].ValueMin = -1.0
-        MultAdjustScrapperNotSettlementC[index].ValueMax = 1.0
+        MultAdjustScrapperNotSettlementC[index].ValueMin = adjustMin
+        MultAdjustScrapperNotSettlementC[index].ValueMax = adjustMax
 
         MultAdjustScrapperNotSettlementU[index].ValueDefault = 0.0
         MultAdjustScrapperNotSettlementU[index].McmId = "fMultAdjustScrapperNotSettlementU" + (index+1) + ":MultiplierAdjustments"
-        MultAdjustScrapperNotSettlementU[index].ValueMin = -1.0
-        MultAdjustScrapperNotSettlementU[index].ValueMax = 1.0
+        MultAdjustScrapperNotSettlementU[index].ValueMin = adjustMin
+        MultAdjustScrapperNotSettlementU[index].ValueMax = adjustMax
 
         MultAdjustScrapperNotSettlementR[index].ValueDefault = 0.0
         MultAdjustScrapperNotSettlementR[index].McmId = "fMultAdjustScrapperNotSettlementR" + (index+1) + ":MultiplierAdjustments"
-        MultAdjustScrapperNotSettlementR[index].ValueMin = -1.0
-        MultAdjustScrapperNotSettlementR[index].ValueMax = 1.0
+        MultAdjustScrapperNotSettlementR[index].ValueMin = adjustMin
+        MultAdjustScrapperNotSettlementR[index].ValueMax = adjustMax
 
         MultAdjustScrapperNotSettlementS[index].ValueDefault = 0.0
         MultAdjustScrapperNotSettlementS[index].McmId = "fMultAdjustScrapperNotSettlementS" + (index+1) + ":MultiplierAdjustments"
-        MultAdjustScrapperNotSettlementS[index].ValueMin = -1.0
-        MultAdjustScrapperNotSettlementS[index].ValueMax = 1.0
+        MultAdjustScrapperNotSettlementS[index].ValueMin = adjustMin
+        MultAdjustScrapperNotSettlementS[index].ValueMax = adjustMax
 
         index += 1
     EndWhile
+
+    ; advanced - multithreading
+    ThreadLimit.ValueDefault = ThreadManager.NumberOfWorkerThreads
+    ThreadLimit.McmId = "iThreadLimit:Advanced"
+    ThreadLimit.ValueMin = 1
+    ThreadLimit.ValueMax = ThreadManager.NumberOfWorkerThreads
+
+    ; advanced - methodology
+    UseDirectMoveRecyclableItemListUpdate.ValueDefault = false
+    UseDirectMoveRecyclableItemListUpdate.McmId = "bUseDirectMoveRecyclableItemListUpdate:Advanced"
 EndFunction
 
 ; reset values of properties that hold settings to their defaults
 Function InitSettingsDefaultValues()
     Self._DebugTrace("Initializing settings (default values)")
+
+    ; change thread limit first
+    ChangeSetting(ThreadLimit, CurrentChangeType, ThreadLimit.ValueDefault, ModName)
+    ThreadManager.SetThreadLimit(ThreadLimit.Value)
 
     ; add all the settings to an array to pass to the ThreadManager
     var[] settingsToChange = Self.CollectMCMSettings()
@@ -1171,11 +1239,13 @@ var[] Function CollectMCMSettings()
 
     ; recycler interface - behavior
     toReturn.Add(AutoRecyclingMode)
-    toReturn.Add(AllowJunkOnly)
+    toReturn.Add(EnableJunkFilter)
     toReturn.Add(AutoTransferJunk)
+    toReturn.Add(TransferLowWeightRatioItems)
     toReturn.Add(UseAlwaysAutoTransferList)
     toReturn.Add(UseNeverAutoTransferList)
-    toReturn.Add(AllowBehaviorOverrides)
+    toReturn.Add(EnableAutoTransferListEditing)
+    toReturn.Add(EnableBehaviorOverrides)
     toReturn.Add(ReturnItemsSilently)
 
     ; recycler interface - crafting
@@ -1239,6 +1309,9 @@ var[] Function CollectMCMSettings()
         index += 1
     EndWhile
 
+    ; advanced - methodology
+    toReturn.Add(UseDirectMoveRecyclableItemListUpdate)
+
     Return toReturn
 EndFunction
 
@@ -1260,43 +1333,57 @@ EndFunction
 ; determine where the crafting recipe lives
 Function SetCraftingStation()
     string pluginNameSW = "StandaloneWorkbenches.esp" const
+    string pluginNameECO = "ECO.esp" const
     string pluginNameAWKCR = "ArmorKeywords.esm" const
     bool isSWInstalled = Game.IsPluginInstalled(pluginNameSW)
+    bool isECOInstalled = Game.IsPluginInstalled(pluginNameECO)
     bool isAWKCRInstalled = Game.IsPluginInstalled(pluginNameAWKCR)
-    If CraftingStation.Value == 1 && isSWInstalled
-        ; Standalone Workbenches - Electronics Workbench (Keyword FExxx80D - wSW_ElectronicsWorkbench_CraftingKey)
-        Self._DebugTrace("Crafting station: Standalone Workbenches - Electronics Workbench")
-        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x80D, pluginNameSW) as Keyword)
-    ElseIf CraftingStation.Value == 2 && isSWInstalled
-        ; Standalone Workbenches - Engineering Workbench (Keyword FExxx810 - wSW_EngineeringWorkbench_CraftingKey)
-        Self._DebugTrace("Crafting station: Standalone Workbenches - Engineering Workbench")
-        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x810, pluginNameSW) as Keyword)
-    ElseIf CraftingStation.Value == 3 && isSWInstalled
-        ; Standalone Workbenches - Manufacturing Workbench (Keyword FExxx822 - wSW_ManufacturingWorkbench_CraftingKey)
-        Self._DebugTrace("Crafting station: Standalone Workbenches - Manufacturing Workbench")
-        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x822, pluginNameSW) as Keyword)
-    ElseIf (CraftingStation.Value == 4 || CraftingStation.Value == 0) && isSWInstalled
+
+    ; handle 'dynamic' workbenches first
+    If (CraftingStation.Value == 5 || CraftingStation.Value == 0) && isSWInstalled
         ; Standalone Workbenches - Utility Workbench (Keyword FExxx81C - wSW_UtilityWorkbench_CraftingKey)
         Self._DebugTrace("Crafting station: Standalone Workbenches - Utility Workbench")
         PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x81C, pluginNameSW) as Keyword)
-    ElseIf CraftingStation.Value == 5 && isAWKCRInstalled
-        ; AWKCR - Advanced Engineering Workbench (Keyword xx00195A - AEC_ck_AdvancedEngineeringCraftingKey)
-        Self._DebugTrace("Crafting station: AWKCR - Advanced Engineering Workbench")
-        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x00195A, pluginNameAWKCR) as Keyword)
-    ElseIf CraftingStation.Value == 6 && isAWKCRInstalled
-        ; AWKCR - Electronics Workstation (Keyword xx001764 - AEC_ck_ElectronicsCraftingKey)
-        Self._DebugTrace("Crafting station: AWKCR - Electronics Workstation")
-        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x001764, pluginNameAWKCR) as Keyword)
-    ElseIf (CraftingStation.Value == 7 || CraftingStation.Value == 0) && isAWKCRInstalled
+    ElseIf (CraftingStation.Value == 9 || CraftingStation.Value == 0) && isECOInstalled
+        ; Equipment and Crafting Overhaul - Utility Station (Keyword xx02788D - Dank_Workbench_TypeUtility)
+        Self._DebugTrace("Crafting station: Equipment and Crafting Overhaul - Utility Station")
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x02788D, pluginNameECO) as Keyword)
+    ElseIf (CraftingStation.Value == 8 || CraftingStation.Value == 0) && isAWKCRInstalled
         ; AWKCR - Utility Workbench (Keyword xx001765 - AEC_ck_UtilityCraftingKey)
         Self._DebugTrace("Crafting station: AWKCR - Utility Workbench")
         PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x001765, pluginNameAWKCR) as Keyword)
-    Else
+
+    ; handle other manual workbench choices
+    ElseIf CraftingStation.Value == 2 && isSWInstalled
+        ; Standalone Workbenches - Electronics Workbench (Keyword FExxx80D - wSW_ElectronicsWorkbench_CraftingKey)
+        Self._DebugTrace("Crafting station: Standalone Workbenches - Electronics Workbench")
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x80D, pluginNameSW) as Keyword)
+    ElseIf CraftingStation.Value == 3 && isSWInstalled
+        ; Standalone Workbenches - Engineering Workbench (Keyword FExxx810 - wSW_EngineeringWorkbench_CraftingKey)
+        Self._DebugTrace("Crafting station: Standalone Workbenches - Engineering Workbench")
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x810, pluginNameSW) as Keyword)
+    ElseIf CraftingStation.Value == 4 && isSWInstalled
+        ; Standalone Workbenches - Manufacturing Workbench (Keyword FExxx822 - wSW_ManufacturingWorkbench_CraftingKey)
+        Self._DebugTrace("Crafting station: Standalone Workbenches - Manufacturing Workbench")
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x822, pluginNameSW) as Keyword)
+    ElseIf CraftingStation.Value == 6 && isAWKCRInstalled
+        ; AWKCR - Advanced Engineering Workbench (Keyword xx00195A - AEC_ck_AdvancedEngineeringCraftingKey)
+        Self._DebugTrace("Crafting station: AWKCR - Advanced Engineering Workbench")
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x00195A, pluginNameAWKCR) as Keyword)
+    ElseIf CraftingStation.Value == 7 && isAWKCRInstalled
+        ; AWKCR - Electronics Workstation (Keyword xx001764 - AEC_ck_ElectronicsCraftingKey)
+        Self._DebugTrace("Crafting station: AWKCR - Electronics Workstation")
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x001764, pluginNameAWKCR) as Keyword)
+
+    ; handle everything else, like missing mods, etc
+    Else ; CraftingStation.Value == 1
         ; Vanilla - Chemistry Station (Keyword xx102158 - WorkbenchChemlab)
-        If CraftingStation.Value >= 1 && CraftingStation.Value <= 4
+        If CraftingStation.Value >= 2 && CraftingStation.Value <= 5
             Self._DebugTrace("Crafting station: Standalone Workbenches workbench specified but mod not detected; falling back to vanilla")
-        ElseIF CraftingStation.Value >= 5 && CraftingStation.Value <= 7
+        ElseIF CraftingStation.Value >= 6 && CraftingStation.Value <= 8
             Self._DebugTrace("Crafting station: AWKCR workbench specified but mod not detected; falling back to vanilla")
+        ElseIf CraftingStation.Value == 9
+            Self._DebugTrace("Crafting station: ECO workbench specified but mod not detected; falling back to vanilla")
         Else
             Self._DebugTrace("Crafting station: Vanilla - Chemistry Station")
         EndIf
@@ -1384,14 +1471,18 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             oldValue = AutoRecyclingMode.Value
             LoadSettingFromMCM(AutoRecyclingMode, ModName)
             newValue = AutoRecyclingMode.Value
-        ElseIf asControlId == AllowJunkOnly.McmId
-            oldValue = AllowJunkOnly.Value
-            LoadSettingFromMCM(AllowJunkOnly, ModName)
-            newValue = AllowJunkOnly.Value
+        ElseIf asControlId == EnableJunkFilter.McmId
+            oldValue = EnableJunkFilter.Value
+            LoadSettingFromMCM(EnableJunkFilter, ModName)
+            newValue = EnableJunkFilter.Value
         ElseIf asControlId == AutoTransferJunk.McmId
             oldValue = AutoTransferJunk.Value
             LoadSettingFromMCM(AutoTransferJunk, ModName)
             newValue = AutoTransferJunk.Value
+        ElseIf asControlId == TransferLowWeightRatioItems.McmId
+            oldValue = TransferLowWeightRatioItems.Value
+            LoadSettingFromMCM(TransferLowWeightRatioItems, ModName)
+            newValue = TransferLowWeightRatioItems.Value
         ElseIf asControlId == UseAlwaysAutoTransferList.McmId
             oldValue = UseAlwaysAutoTransferList.Value
             LoadSettingFromMCM(UseAlwaysAutoTransferList, ModName)
@@ -1400,10 +1491,14 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             oldValue = UseNeverAutoTransferList.Value
             LoadSettingFromMCM(UseNeverAutoTransferList, ModName)
             newValue = UseNeverAutoTransferList.Value
-        ElseIf asControlId == AllowBehaviorOverrides.McmId
-            oldValue = AllowBehaviorOverrides.Value
-            LoadSettingFromMCM(AllowBehaviorOverrides, ModName)
-            newValue = AllowBehaviorOverrides.Value
+        ElseIf asControlId == EnableAutoTransferListEditing.McmId
+            oldValue = EnableAutoTransferListEditing.Value
+            LoadSettingFromMCM(EnableAutoTransferListEditing, ModName)
+            newValue = EnableAutoTransferListEditing.Value
+        ElseIf asControlId == EnableBehaviorOverrides.McmId
+            oldValue = EnableBehaviorOverrides.Value
+            LoadSettingFromMCM(EnableBehaviorOverrides, ModName)
+            newValue = EnableBehaviorOverrides.Value
         ElseIf asControlId == ReturnItemsSilently.McmId
             oldValue = ReturnItemsSilently.Value
             LoadSettingFromMCM(ReturnItemsSilently, ModName)
@@ -1546,6 +1641,19 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             LoadSettingFromMCM(MultAdjustRandomMaxS, ModName)
             newValue = MultAdjustRandomMaxS.Value
 
+        ; advanced - multithreading
+        ElseIf asControlId == ThreadLimit.McmId
+            oldValue = ThreadLimit.Value
+            LoadSettingFromMCM(ThreadLimit, ModName)
+            newValue = ThreadLimit.Value
+            ThreadManager.SetThreadLimit(ThreadLimit.Value)
+
+        ; advanced - methodology
+        ElseIf asControlId == UseDirectMoveRecyclableItemListUpdate.McmId
+            oldValue = UseDirectMoveRecyclableItemListUpdate.Value
+            LoadSettingFromMCM(UseDirectMoveRecyclableItemListUpdate, ModName)
+            newValue = UseDirectMoveRecyclableItemListUpdate.Value
+
         ; multiplier adjustments - scrapper 1-5
         Else
             int index = 0
@@ -1623,7 +1731,7 @@ Function ShowCurrentMultipliers()
     Utility.Wait(0.1)
 
     Self._DebugTrace("Current multipliers:")
-    MultiplierSet currentMults = Self.GetMultipliers()
+    MultiplierSet currentMults = Self.GetMultipliers(IsPlayerAtOwnedWorkshop())
     If RngAffectsMult.Value == 1
         MessageCurrentMultipliersRng.Show( \
             currentMults.MultC + MultAdjustRandomMin.Value, currentMults.MultC + MultAdjustRandomMax.Value, \
@@ -1694,21 +1802,23 @@ Function ResetMutexes()
     MessageLocksReset.Show()
 EndFunction
 
-; reset the recyclable item list
-Function ResetRecyclableItemList()
+; reset the recyclable item and low weight ratio item lists
+Function ResetRecyclableItemsLists()
     If ! MutexBusy && ! MutexRunning
         MutexBusy = true
-        Self._DebugTrace("Resetting recyclable item list")
+        Self._DebugTrace("Resetting recyclable item and low weight ratio item lists")
         RecyclableItemList.List.Revert()
         RecyclableItemList.Size = RecyclableItemList.List.GetSize()
+        LowWeightRatioItemList.List.Revert()
+        LowWeightRatioItemList.Size = LowWeightRatioItemList.List.GetSize()
         MutexBusy = false
-        MessageRecyclableItemListReset.Show()
+        MessageRecyclableItemsListsReset.Show()
     ElseIf MutexBusy && ! MutexRunning
-        Self._DebugTrace("Failed to reset recyclable item list: Control script busy")
-        MessageRecyclableItemListResetFailBusy.Show()
+        Self._DebugTrace("Failed to reset recyclable item and low weight ratio item lists: Control script busy")
+        MessageRecyclableItemsListsResetFailBusy.Show()
     ElseIf MutexRunning
-        Self._DebugTrace("Failed to reset recyclable item list: Recycling process running")
-        MessageRecyclableItemListResetFailRunning.Show()
+        Self._DebugTrace("Failed to reset recyclable item and low weight ratio item lists: Recycling process running")
+        MessageRecyclableItemsListsResetFailRunning.Show()
     EndIf
 EndFunction
 
@@ -1799,7 +1909,7 @@ Function CheckForCanary()
         params[1] = FullScriptName
         Utility.CallGlobalFunction("Canary:API", "MonitorForDataLoss", params)
         Self._DebugTrace("Canary integration activated")
-	EndIf
+    EndIf
 EndFunction
 
 ; returns true if the player is an an owned workshop
@@ -1809,7 +1919,7 @@ bool Function IsPlayerAtOwnedWorkshop()
 EndFunction
 
 ; get the current multipliers
-MultiplierSet Function GetMultipliers()
+MultiplierSet Function GetMultipliers(bool abPlayerAtOwnedWorkshop)
     Self._DebugTrace("Getting multipliers")
     MultiplierSet toReturn = new MultiplierSet
 
@@ -1820,9 +1930,8 @@ MultiplierSet Function GetMultipliers()
     Self._DebugTrace("Base multiplier: " + MultBase.Value)
 
     ; general
-    bool playerAtOwnedWorkshop = IsPlayerAtOwnedWorkshop()
-    Self._DebugTrace("Player is in an owned settlement: " + playerAtOwnedWorkshop)
-    If playerAtOwnedWorkshop
+    Self._DebugTrace("Player is in an owned settlement: " + abPlayerAtOwnedWorkshop)
+    If abPlayerAtOwnedWorkshop
         If GeneralMultAdjust.Value == 0
             ; simple
             toReturn.MultC += MultAdjustGeneralSettlement.Value
@@ -1944,7 +2053,7 @@ MultiplierSet Function GetMultipliers()
         Self._DebugTrace("Player's Scrapper perk index: " + playerScrapperPerkIndex)
 
         If playerScrapperPerkIndex >= 0
-            If playerAtOwnedWorkshop
+            If abPlayerAtOwnedWorkshop
                 If ScrapperAffectsMult.Value == 1
                     ; simple
                     toReturn.MultC += MultAdjustScrapperSettlement[playerScrapperPerkIndex].Value
@@ -2015,14 +2124,12 @@ Function Uninstall()
         UnregisterForMenuOpenCloseEvent("PauseMenu")
         UnregisterForExternalEvent("OnMCMSettingChange|" + ModName)
         UnregisterForExternalEvent("OnMCMMenuClose|" + ModName)
-        If AllowBehaviorOverrides.Value
-            UnregisterForKey(LAlt)
-            UnregisterForKey(RAlt)
-            UnregisterForKey(LCtrl)
-            UnregisterForKey(RCtrl)
-            UnregisterForKey(LShift)
-            UnregisterForKey(RShift)
-        EndIf
+        UnregisterForKey(LAlt)
+        UnregisterForKey(RAlt)
+        UnregisterForKey(LCtrl)
+        UnregisterForKey(RCtrl)
+        UnregisterForKey(LShift)
+        UnregisterForKey(RShift)
 
         ; stop the ThreadManager
         ThreadManager.Uninstall()
@@ -2053,8 +2160,7 @@ Function Uninstall()
         DestroyArrayContents(ComponentMappings as var[])
         ComponentMappings = None
 
-        ; group Other
-        PlayerRef = None
+        ; group Messages
         MessageF4SENotInstalled = None
         MessageMCMNotInstalled = None
         MessageInitialized = None
@@ -2066,23 +2172,31 @@ Function Uninstall()
         MessageSettingsResetFailBusy = None
         MessageSettingsResetFailRunning = None
         MessageLocksReset = None
-        MessageRecyclableItemListReset = None
-        MessageRecyclableItemListResetFailBusy = None
-        MessageRecyclableItemListResetFailRunning = None
+        MessageRecyclableItemsListsReset = None
+        MessageRecyclableItemsListsResetFailBusy = None
+        MessageRecyclableItemsListsResetFailRunning = None
         MessageAlwaysAutoTransferListReset = None
         MessageAlwaysAutoTransferListResetFailBusy = None
         MessageAlwaysAutoTransferListResetFailRunning = None
         MessageNeverAutoTransferListReset = None
         MessageNeverAutoTransferListResetFailBusy = None
         MessageNeverAutoTransferListResetFailRunning = None
+        MessageUninstallFailRunning = None
+        MessageUninstallFailBusy = None
+
+        ; group Other
+        PlayerRef = None
         WorkshopParent = None
         RecyclableItemList.List.Revert()
         RecyclableItemList = None
+        LowWeightRatioItemList.List.Revert()
+        LowWeightRatioItemList = None
         NeverAutoTransferList.List.Revert()
         NeverAutoTransferList = None
         AlwaysAutoTransferList.List.Revert()
         AlwaysAutoTransferList = None
         ThreadManager = None
+        PortableJunkRecyclerConstructibleObject = None
 
         ; group RuntimeState
         DestroyArrayContents(ScrapperPerks as var[])
@@ -2103,11 +2217,13 @@ Function Uninstall()
         ScrapperAffectsMult = None
         ; recycler interface - behavior
         AutoRecyclingMode = None
-        AllowJunkOnly = None
+        EnableJunkFilter = None
         AutoTransferJunk = None
+        TransferLowWeightRatioItems = None
         UseAlwaysAutoTransferList = None
         UseNeverAutoTransferList = None
-        AllowBehaviorOverrides = None
+        EnableAutoTransferListEditing = None
+        EnableBehaviorOverrides = None
         ReturnItemsSilently = None
         ; multiplier adjustments - general
         MultAdjustGeneralSettlement = None
@@ -2164,6 +2280,10 @@ Function Uninstall()
         MultAdjustScrapperNotSettlementR = None
         DestroyArrayContents(MultAdjustScrapperNotSettlementS as var[])
         MultAdjustScrapperNotSettlementS = None
+        ; advanced - multithreading
+        ThreadLimit = None
+        ; advanced - methodology
+        UseDirectMoveRecyclableItemListUpdate = None
 
         ; local variables
         AvailableChangeTypes = None

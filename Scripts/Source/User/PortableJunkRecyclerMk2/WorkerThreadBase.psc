@@ -80,7 +80,14 @@ EndFunction
 
 ; add a bit of text to traces going into the papyrus user log
 Function _DebugTrace(string asMessage, int aiSeverity = 0) DebugOnly
-    Debug.TraceUser(ModName, "WorkerThread Base: " + asMessage, aiSeverity)
+    string baseMessage = "WorkerThread Base: " const
+    If aiSeverity == 0
+        Debug.TraceUser(ModName, baseMessage + asMessage)
+    ElseIf aiSeverity == 1
+        Debug.TraceUser(ModName, "WARNING: " + baseMessage + asMessage)
+    ElseIf aiSeverity == 2
+        Debug.TraceUser(ModName, "ERROR: " + baseMessage + asMessage)
+    EndIf
 EndFunction
 
 
@@ -89,15 +96,15 @@ EndFunction
 ; ---------
 
 ; adds forms from an array to an object reference in a given quantity
-Function AddArrayItemsToInventory(var[] akItems, int aiIndex, int aiIndexEnd, ObjectReference akDestinationRef, int aiQuantity)
+Function AddArrayItemsToInventory(int aiIndex, int aiIndexEnd, var[] akItems, ObjectReference akDestinationRef, int aiQuantity)
     Self.WorkerStart()
 
     Form[] items = akItems as Form[]
     Self._DebugTrace("AddArrayItemsToInventory started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
-	While aiIndex <= aiIndexEnd
+    While aiIndex <= aiIndexEnd
         akDestinationRef.AddItem(items[aiIndex], aiQuantity, true)
-		aiIndex += 1
-	EndWhile
+        aiIndex += 1
+    EndWhile
     Self._DebugTrace("AddArrayItemsToInventory finished")
 
     Self.WorkerStop()
@@ -109,10 +116,10 @@ Function AddItemsToList(int aiIndex, int aiIndexEnd, var[] akItems, FormList akF
 
     Self._DebugTrace("AddItemsToList started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
     Form[] items = akItems as Form[]
-	While aiIndex <= aiIndexEnd
+    While aiIndex <= aiIndexEnd
         akFormList.AddForm(items[aiIndex])
-		aiIndex += 1
-	EndWhile
+        aiIndex += 1
+    EndWhile
     Self._DebugTrace("AddItemsToList Finished")
 
     Self.WorkerStop()
@@ -123,28 +130,70 @@ Function AddListItemsToInventory(int aiIndex, int aiIndexEnd, FormList akFormLis
     Self.WorkerStart()
 
     Self._DebugTrace("AddListItemsToInventory started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
-	While aiIndex <= aiIndexEnd
+    While aiIndex <= aiIndexEnd
         akDestinationRef.AddItem(akFormList.GetAt(aiIndex), aiQuantity, true)
-		aiIndex += 1
-	EndWhile
+        aiIndex += 1
+    EndWhile
     Self._DebugTrace("AddListItemsToInventory finished")
 
     Self.WorkerStop()
 EndFunction
 
-; adds forms that have components (meaning they can be broken down) to a FormList
+; adds forms that have components (meaning they can be broken down) to one FormList if the total weight of the
+; components adds up to less than the item itself weighs, and a different FormList otherwise
 ; expects only MiscObjects in akItems
-Function AddRecyclableItemsToList(int aiIndex, int aiIndexEnd, var[] akItems, FormList akFormList)
+Function AddRecyclableItemsToList(int aiIndex, int aiIndexEnd, var[] akItems, FormList akRecyclableItemList, \
+        FormList NetWeightReductionList, var[] akComponentMap, var[] akComponents)
     Self.WorkerStart()
 
     Self._DebugTrace("AddRecyclableItemsToList started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
-    Form[] items = akItems as Form[]
-	While aiIndex <= aiIndexEnd
-        If (items[aiIndex] as MiscObject).GetMiscComponents()
-            akFormList.AddForm(items[aiIndex])
+    MiscObject[] items = akItems as MiscObject[]
+    ComponentMap[] cMap = akComponentMap as ComponentMap[]
+    Component[] components = akComponents as Component[]
+    MiscObject:MiscComponent[] neededComponents = None
+    float itemWeight
+    float totalComponentWeight
+    int componentIndex
+    int index
+    While aiIndex <= aiIndexEnd
+        neededComponents = items[aiIndex].GetMiscComponents()
+        If neededComponents.Length
+            ; (re)set variables for the loop to determine whether the weight of the item is greater than the sum of its
+            ; components
+            itemWeight = items[aiIndex].GetWeight()
+            totalComponentWeight = 0
+            index = 0
+            While index < neededComponents.Length && totalComponentWeight < itemWeight
+                ; check if the item component is a known component and store the result
+                componentIndex = components.Find(neededComponents[index].object)
+
+                ; if it's a known component, grab the weight from the component mappings, multiply it by how many
+                ; there are in the item and add the result to the total component weight
+                If componentIndex >= 0
+                    totalComponentWeight += cMap[componentIndex].Weight * neededComponents[index].count
+
+                ; if it's an unknown component, look up the scrap item and get the weight of that, then multiply
+                ; it by how many there are in the item and add the result to the total component weight; warn
+                ; when this happens as it's relatively expensive - has two delayed native function calls
+                Else
+                    totalComponentWeight += neededComponents[index].object.GetScrapItem().GetWeight() * neededComponents[index].count
+                    Self._DebugTrace("Component not in component mappings: " + neededComponents[index].object, 1)
+                EndIf
+                index += 1
+            EndWhile
+
+            ; if the combined weight of all the components an item would be broken down into weights less then the item itself,
+            ; add it to the NetWeightReductionList FormList
+            If totalComponentWeight < itemWeight
+                NetWeightReductionList.AddForm(items[aiIndex] as Form)
+            EndIf
+
+            ; add the item to the RecyclableItemList FormList as well for filtering purposes
+            akRecyclableItemList.AddForm(items[aiIndex] as Form)
         EndIf
-		aiIndex += 1
-	EndWhile
+        neededComponents = None
+        aiIndex += 1
+    EndWhile
     Self._DebugTrace("AddRecyclableItemsToList finished")
 
     Self.WorkerStop()
@@ -163,6 +212,7 @@ Function BuildComponentMap(int aiIndex, int aiIndexEnd, FormList akComponentList
         toReturn[returnIndex].ComponentPartName = toReturn[returnIndex].ComponentPart.GetName()
         toReturn[returnIndex].ScrapPart = akMiscObjectList.GetAt(aiIndex) as MiscObject
         toReturn[returnIndex].ScrapPartName = toReturn[returnIndex].ScrapPart.GetName()
+        toReturn[returnIndex].Weight = toReturn[returnIndex].ScrapPart.GetWeight()
         Self._DebugTrace(toReturn[returnIndex].ComponentPart + " (" + toReturn[returnIndex].ComponentPartName + \
             ") is mapped to " + toReturn[returnIndex].ScrapPart + " (" + toReturn[returnIndex].ScrapPartName + ")")
         aiIndex += 1
@@ -179,7 +229,7 @@ Function ChangeSettingsToDefaults(int aiIndex, int aiIndexEnd, var[] akSettings,
     Self.WorkerStart()
 
     Self._DebugTrace("ChangeSettingsToDefaults started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
-	While aiIndex <= aiIndexEnd
+    While aiIndex <= aiIndexEnd
         If akSettings[aiIndex] is SettingFloat
             ChangeSetting(akSettings[aiIndex], aiChangeType, (akSettings[aiIndex] as SettingFloat).ValueDefault, asModName)
         ElseIf akSettings[aiIndex] is SettingBool
@@ -187,8 +237,8 @@ Function ChangeSettingsToDefaults(int aiIndex, int aiIndexEnd, var[] akSettings,
         ElseIf akSettings[aiIndex] is SettingInt
             ChangeSetting(akSettings[aiIndex], aiChangeType, (akSettings[aiIndex] as SettingInt).ValueDefault, asModName)
         EndIf
-		aiIndex += 1
-	EndWhile
+        aiIndex += 1
+    EndWhile
     Self._DebugTrace("ChangeSettingsToDefaults finished")
 
     Self.WorkerStop()
@@ -221,10 +271,10 @@ Function LoadMCMSettings(int aiIndex, int aiIndexEnd, var[] akSettings, string a
     Self.WorkerStart()
 
     Self._DebugTrace("LoadMCMSettings started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
-	While aiIndex <= aiIndexEnd
+    While aiIndex <= aiIndexEnd
         LoadSettingFromMCM(akSettings[aiIndex], asModName)
-		aiIndex += 1
-	EndWhile
+        aiIndex += 1
+    EndWhile
     Self._DebugTrace("LoadMCMSettings finished")
 
     Self.WorkerStop()

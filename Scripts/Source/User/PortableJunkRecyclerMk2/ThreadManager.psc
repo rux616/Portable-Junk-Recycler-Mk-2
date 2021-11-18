@@ -29,6 +29,7 @@ import PortableJunkRecyclerMk2:Base
 ; ----------
 
 bool Property Initialized = false Auto
+int Property NumberOfWorkerThreads = 32 AutoReadOnly
 
 
 
@@ -36,10 +37,8 @@ bool Property Initialized = false Auto
 ; ---------
 
 string ModName = "Portable Junk Recycler Mk 2" const
-
-int MaxThreads = 16 const
 var[] Threads
-string[] HexNumbers
+int ThreadLimit
 
 
 
@@ -49,40 +48,40 @@ string[] HexNumbers
 Event OnInit()
     Debug.OpenUserLog(ModName)
     Self._DebugTrace("Beginning onetime init process")
-    Threads = new var[MaxThreads]
-    Threads[0x0] = (Self as Quest) as WorkerThread0x0
-    Threads[0x1] = (Self as Quest) as WorkerThread0x1
-    Threads[0x2] = (Self as Quest) as WorkerThread0x2
-    Threads[0x3] = (Self as Quest) as WorkerThread0x3
-    Threads[0x4] = (Self as Quest) as WorkerThread0x4
-    Threads[0x5] = (Self as Quest) as WorkerThread0x5
-    Threads[0x6] = (Self as Quest) as WorkerThread0x6
-    Threads[0x7] = (Self as Quest) as WorkerThread0x7
-    Threads[0x8] = (Self as Quest) as WorkerThread0x8
-    Threads[0x9] = (Self as Quest) as WorkerThread0x9
-    Threads[0xA] = (Self as Quest) as WorkerThread0xA
-    Threads[0xB] = (Self as Quest) as WorkerThread0xB
-    Threads[0xC] = (Self as Quest) as WorkerThread0xC
-    Threads[0xD] = (Self as Quest) as WorkerThread0xD
-    Threads[0xE] = (Self as Quest) as WorkerThread0xE
-    Threads[0xF] = (Self as Quest) as WorkerThread0xF
-    HexNumbers = new string[16]
-    HexNumbers[0x0] = "0x0"
-    HexNumbers[0x1] = "0x1"
-    HexNumbers[0x2] = "0x2"
-    HexNumbers[0x3] = "0x3"
-    HexNumbers[0x4] = "0x4"
-    HexNumbers[0x5] = "0x5"
-    HexNumbers[0x6] = "0x6"
-    HexNumbers[0x7] = "0x7"
-    HexNumbers[0x8] = "0x8"
-    HexNumbers[0x9] = "0x9"
-    HexNumbers[0xA] = "0xA"
-    HexNumbers[0xB] = "0xB"
-    HexNumbers[0xC] = "0xC"
-    HexNumbers[0xD] = "0xD"
-    HexNumbers[0xE] = "0xE"
-    HexNumbers[0xF] = "0xF"
+    Threads = new var[NumberOfWorkerThreads]
+    Threads[00] = (Self as Quest) as WorkerThread00
+    Threads[01] = (Self as Quest) as WorkerThread01
+    Threads[02] = (Self as Quest) as WorkerThread02
+    Threads[03] = (Self as Quest) as WorkerThread03
+    Threads[04] = (Self as Quest) as WorkerThread04
+    Threads[05] = (Self as Quest) as WorkerThread05
+    Threads[06] = (Self as Quest) as WorkerThread06
+    Threads[07] = (Self as Quest) as WorkerThread07
+    Threads[08] = (Self as Quest) as WorkerThread08
+    Threads[09] = (Self as Quest) as WorkerThread09
+    Threads[10] = (Self as Quest) as WorkerThread10
+    Threads[11] = (Self as Quest) as WorkerThread11
+    Threads[12] = (Self as Quest) as WorkerThread12
+    Threads[13] = (Self as Quest) as WorkerThread13
+    Threads[14] = (Self as Quest) as WorkerThread14
+    Threads[15] = (Self as Quest) as WorkerThread15
+    Threads[16] = (Self as Quest) as WorkerThread16
+    Threads[17] = (Self as Quest) as WorkerThread17
+    Threads[18] = (Self as Quest) as WorkerThread18
+    Threads[19] = (Self as Quest) as WorkerThread19
+    Threads[20] = (Self as Quest) as WorkerThread20
+    Threads[21] = (Self as Quest) as WorkerThread21
+    Threads[22] = (Self as Quest) as WorkerThread22
+    Threads[23] = (Self as Quest) as WorkerThread23
+    Threads[24] = (Self as Quest) as WorkerThread24
+    Threads[25] = (Self as Quest) as WorkerThread25
+    Threads[26] = (Self as Quest) as WorkerThread26
+    Threads[27] = (Self as Quest) as WorkerThread27
+    Threads[28] = (Self as Quest) as WorkerThread28
+    Threads[29] = (Self as Quest) as WorkerThread29
+    Threads[30] = (Self as Quest) as WorkerThread30
+    Threads[31] = (Self as Quest) as WorkerThread31
+    ThreadLimit = NumberOfWorkerThreads
     Initialized = true
     Self._DebugTrace("Finished onetime init process")
 EndEvent
@@ -94,7 +93,14 @@ EndEvent
 
 ; add a bit of text to traces going into the papyrus user log
 Function _DebugTrace(string asMessage, int aiSeverity = 0) DebugOnly
-    Debug.TraceUser(ModName, "ThreadManager: " + asMessage, aiSeverity)
+    string baseMessage = "ThreadManager: " const
+    If aiSeverity == 0
+        Debug.TraceUser(ModName, baseMessage + asMessage)
+    ElseIf aiSeverity == 1
+        Debug.TraceUser(ModName, "WARNING: " + baseMessage + asMessage)
+    ElseIf aiSeverity == 2
+        Debug.TraceUser(ModName, "ERROR: " + baseMessage + asMessage)
+    EndIf
 EndFunction
 
 ; waits for a specified number of threads to finish before returning
@@ -123,6 +129,20 @@ Function WaitForThreads(var[] akThreads, int aiNumThreads)
     EndIf
 EndFunction
 
+; set the maximum number of threads to use, auto-clamps if argument out of bounds
+; 1 <= aiMaxThreads <= NumberOfWorkerThreads
+Function SetThreadLimit(int aiMaxThreads)
+    int lowerLimit = 1 const
+    int upperLimit = NumberOfWorkerThreads const
+    If aiMaxThreads < lowerLimit
+        aiMaxThreads = lowerLimit
+    ElseIf aiMaxThreads > upperLimit
+        aiMaxThreads = upperLimit
+    EndIf
+    ThreadLimit = aiMaxThreads
+    Self._DebugTrace("ThreadLimit set to " + ThreadLimit)
+EndFunction
+
 
 
 ; FUNCTIONS
@@ -130,14 +150,14 @@ EndFunction
 
 ; handles the actual multithreading of a specified function; designed for data parallelism
 ; akParams[0] and akParams[1] are reserved for the starting and ending indices respectively; everything else is not proscribed
-int Function MultiThread(string asFunction, int aiNumItems, var[] akParams)
+int Function ThreadDispatcher(string asFunction, int aiNumItems, var[] akParams)
     ; set up multithreading parameters
-    int numThreads = Math.Min(aiNumItems, MaxThreads) as int
+    int numThreads = Math.Min(aiNumItems, ThreadLimit) as int
     float numItemsPerThread
-    If numThreads
+    If numThreads > 0
         numItemsPerThread = aiNumItems as float / numThreads
     EndIf
-    Self._DebugTrace("MultiThread (" + asFunction + "): " + aiNumItems + " items, using " + numThreads + " threads for processing (" + \
+    Self._DebugTrace("ThreadDispatcher (" + asFunction + "): " + aiNumItems + " items, using " + numThreads + " threads for processing (" + \
         numItemsPerThread + " items per thread)")
 
     ; start multithreading
@@ -146,14 +166,14 @@ int Function MultiThread(string asFunction, int aiNumItems, var[] akParams)
         akParams[0] = (index * numItemsPerThread) as int
         akParams[1] = ((index + 1) * numItemsPerThread) as int - 1
         (Threads[index] as ScriptObject).CallFunctionNoWait(asFunction, akParams)
-        Self._DebugTrace("Called WorkerThread " + HexNumbers[index] + " (" + asFunction + "): Index (Start) = " + akParams[0] + \
+        Self._DebugTrace("Called WorkerThread " + index + " (" + asFunction + "): Index (Start) = " + akParams[0] + \
             ", Index (End) = " + akParams[1])
         index += 1
     EndWhile
 
     ; wait for multithreading to finish
     Self.WaitForThreads(Threads, numThreads)
-    Self._DebugTrace("MultiThread (" + asFunction + "): Threads finished")
+    Self._DebugTrace("ThreadDispatcher (" + asFunction + "): Threads finished")
     Return numThreads
 EndFunction
 
@@ -166,7 +186,7 @@ Function AddArrayItemsToInventory(Form[] akItems, ObjectReference akDestinationR
     params[4] = aiQuantity as int
 
     ; do the actual multithreading
-    Self.MultiThread("AddArrayItemsToInventory", akItems.Length, params)
+    Self.ThreadDispatcher("AddArrayItemsToInventory", akItems.Length, params)
 EndFunction
 
 ; (multithreaded) add items to a FormList
@@ -177,7 +197,7 @@ Function AddItemsToList(Form[] akItems, FormListWrapper akFormList)
     params[3] = akFormList.List as FormList
 
     ; do the actual multithreading
-    Self.MultiThread("AddItemsToList", akItems.Length, params)
+    Self.ThreadDispatcher("AddItemsToList", akItems.Length, params)
 
     ; update the size of the FormList
     akFormList.Size = akFormList.List.GetSize()
@@ -192,21 +212,26 @@ Function AddListItemsToInventory(FormListWrapper akFormList, ObjectReference akD
     params[4] = aiQuantity as int
 
     ; do the actual multithreading
-    Self.MultiThread("AddListItemsToInventory", akFormList.Size, params)
+    Self.ThreadDispatcher("AddListItemsToInventory", akFormList.Size, params)
 EndFunction
 
 ; (multithreaded) checks items that are passed in to see if they are recyclable and if so, add them to the specified FormList
-Function AddRecyclableItemsToList(Form[] akItems, FormListWrapper akFormList)
+Function AddRecyclableItemsToList(Form[] akItems, FormListWrapper akRecyclableItemsList, FormListWrapper akNetWeightReductionList, \
+        ComponentMap[] akComponentMap, Component[] akComponents)
     ; create array to hold function arguments
-    var[] params = new var[4]
+    var[] params = new var[7]
     params[2] = Utility.VarArrayToVar(akItems as var[]) as var
-    params[3] = akFormList.List as FormList
+    params[3] = akRecyclableItemsList.List as FormList
+    params[4] = akNetWeightReductionList.List as FormList
+    params[5] = Utility.VarArrayToVar(akComponentMap as var[]) as var
+    params[6] = Utility.VarArrayToVar(akComponents as var[]) as var
 
     ; do the actual multithreading
-    Self.MultiThread("AddRecyclableItemsToList", akItems.Length, params)
+    Self.ThreadDispatcher("AddRecyclableItemsToList", akItems.Length, params)
 
     ; update the size of the FormList
-    akFormList.Size = akFormList.List.GetSize()
+    akRecyclableItemsList.Size = akRecyclableItemsList.List.GetSize()
+    akNetWeightReductionList.Size = akNetWeightReductionList.List.GetSize()
 EndFunction
 
 ; (multithreaded) build a component map from a FormList of components and a FormList of MiscObjects
@@ -217,7 +242,7 @@ ComponentMap[] Function BuildComponentMap(FormListWrapper akComponentList, FormL
     params[3] = akMiscObjectList.List as FormList
 
     ; do the actual multithreading
-    int numThreadsUsed = Self.MultiThread("BuildComponentMap", akComponentList.Size, params)
+    int numThreadsUsed = Self.ThreadDispatcher("BuildComponentMap", akComponentList.Size, params)
 
     ; collect results
     ComponentMap[] toReturn = new ComponentMap[akComponentList.Size]
@@ -248,7 +273,7 @@ Function ChangeSettingsToDefaults(var[] akSettingsToChange, int aiCurrentChangeT
     params[4] = asModName as string
 
     ; do the actual multithreading
-    Self.MultiThread("ChangeSettingsToDefaults", akSettingsToChange.Length, params)
+    Self.ThreadDispatcher("ChangeSettingsToDefaults", akSettingsToChange.Length, params)
 EndFunction
 
 ; (multithreaded) removes all but X number of items from the origin, optionally moving them to the destination
@@ -263,7 +288,7 @@ Function LeaveOnlyXItems(Form[] akItems, ObjectReference akOriginRef, ObjectRefe
     params[6] = abSilent as bool
 
     ; do the actual multithreading
-    Self.MultiThread("LeaveOnlyXItems", akItems.Length, params)
+    Self.ThreadDispatcher("LeaveOnlyXItems", akItems.Length, params)
 EndFunction
 
 ; (multithreaded) load MCM settings
@@ -273,15 +298,15 @@ Function LoadMCMSettings(var[] akSettingsToLoad, string asModName)
     params[2] = Utility.VarArrayToVar(akSettingsToLoad as var[]) as var
     params[3] = asModName as string
 
-     ; do the actual multithreading
-     Self.MultiThread("LoadMCMSettings", akSettingsToLoad.Length, params)
+    ; do the actual multithreading
+    Self.ThreadDispatcher("LoadMCMSettings", akSettingsToLoad.Length, params)
 EndFunction
 
 ; (multithreaded) recycle the components contained in the passed ComponentMap array
 ; returns true if any components were actually recycled
 bool Function RecycleComponents(ComponentMap[] akComponentMap, MultiplierSet akMultiplierSet, \
-       ObjectReference akContainerRef, int aiRandomAdjustment, bool abReturnAtLeastOneComponent, \
-       int aiFractionalComponentHandling)
+        ObjectReference akContainerRef, int aiRandomAdjustment, bool abReturnAtLeastOneComponent, \
+        int aiFractionalComponentHandling)
     ; create array to hold function arguments
     var[] params = new var[8]
     params[2] = Utility.VarArrayToVar(akComponentMap as var[])
@@ -292,7 +317,7 @@ bool Function RecycleComponents(ComponentMap[] akComponentMap, MultiplierSet akM
     params[7] = aiFractionalComponentHandling as int
 
     ; do the actual multithreading
-    int numThreadsUsed = Self.MultiThread("RecycleComponents", akComponentMap.Length, params)
+    int numThreadsUsed = Self.ThreadDispatcher("RecycleComponents", akComponentMap.Length, params)
 
     ; collect results
     bool toReturn = false
@@ -309,7 +334,6 @@ Function Uninstall()
     ; destroy arrays
     DestroyArrayContents(Threads)
     Threads = None
-    HexNumbers = None
 
     ; stop the quest
     Stop()

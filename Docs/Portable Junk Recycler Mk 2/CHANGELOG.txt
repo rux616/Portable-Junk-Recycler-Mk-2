@@ -1,9 +1,38 @@
+Portable Junk Recycler Mk 2
+===========================
+
+Table of Contents:
+- Portable Junk Recycler Mk 2
+    - v0.6.0-beta
+    - v0.5.0-beta
+    - v0.4.0 beta
+    - v0.3.1 beta
+    - v0.3.0 beta
+    - v0.2.3 beta
+    - v0.2.2 beta
+    - v0.2.1 beta
+    - v0.2.0 beta
+
+v0.6.0-beta
+-----------
+- Added MCM setting: 'Only Transfer Low Component Weight Ratio Items' ('Recycler Interface' page) - choose when to only transfer items whose component parts weigh less than the item
+- Added MCM setting: 'Max Number Of Threads To Use' ('Advanced' page) - set the maximum number of threads that will be used in multithreaded operations
+- Added MCM setting: 'Use "Direct Move" Method To Update Recyclable Item List' ('Advanced' page) - when updating the list of recyclable items, a special 'direct move' version of the method will be used, potentially increasing speed by a little bit, but potentially causing lag of its own by moving the contents of the player inventory directly
+- Added MCM setting: 'Enable Automatic Transfer List Editing' ('Recycler Interface' page) - enables the ability to edit the auto transfer lists; off by default to prevent accidental activation
+- Added message shown when editing an auto transfer list is finished
+- Filter out items with UnscrappableObject keyword when building recyclable items list
+- Changed Override Behavior setting to off by default to prevent accidental activation
+- Changed options with "Allow" in name to "Enable"
+- Fixed filtering of items into the Mk 2 inventory
+- Sped up updating of recyclable items list by adding async processing while the script is waiting to open the container
+- Slightly altered the main mod menu page to consolidate informational buttons
+
 v0.5.0-beta
 -----------
 - Added some optional light plugins to change the crafting category of the recycler device: "Devices", "Other", and "Tools" from AWKCR; "Devices", and "Utility" from Lively's Keyword Resources (LKR)
 - Added a "Never Automatically Transfer" list so that certain items never get transferred to the recycler inventory automatically
 - Added an "Always Automatically Transfer" list so that certain items always get transferred to the recycler inventory automatically
-- Added MCM setting: 'Use "Never Automatically Transfer" List' ('Recycler Interface' page) - uses the lis
+- Added MCM setting: 'Use "Never Automatically Transfer" List' ('Recycler Interface' page) - uses the list
 - Added MCM setting: 'Use "Always Automatically Transfer" List' ('Recycler Interface' page) - uses the list
 - Added MCM setting: 'Crafting Station' ('Recycler Interface' page) - choose where the recycler device is crafted, can dynamically choose from the Utility Workbench from Standalone Workbenches, the Utility Workbench from AWKCR, or the Chemistry Station from Vanilla, or manually specify one of them, falling back to Chemistry Station from Vanilla if the choice isn't detected
 - Added MCM button: 'Reset List: Always Automatically Transfer' ('Advanced' page) - resets the FormList associated with determining what junk items are always automatically moved to the recycler inventory
@@ -31,13 +60,13 @@ v0.4.0 beta
 - Increase timeout for runtime init mutex release
 - Started localizing MCM config and adding help strings
 - Changed crafting materials required:
-  - Enhanced Targeting Card x1
-  - Fusion Core x1
-  - High-powered Magnet x1
-  - Power Relay Coil x2
-  - Screws x12
-  - Sensor Module x1
-  - Steel x20
+    - Enhanced Targeting Card x1
+    - Fusion Core x1
+    - High-powered Magnet x1
+    - Power Relay Coil x2
+    - Screws x12
+    - Sensor Module x1
+    - Steel x20
 
 v0.3.1 beta
 -----------

@@ -30,6 +30,7 @@ Struct ComponentMap
     string ComponentPartName
     MiscObject ScrapPart
     string ScrapPartName
+    float Weight
     int Rarity
 EndStruct
 
