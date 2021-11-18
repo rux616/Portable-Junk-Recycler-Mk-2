@@ -31,6 +31,7 @@ Table Of Contents
     - Limited Uses
     - Scrap Categories
     - Settings Layout in MCM
+- Copyrights and Licenses
 - Credits and Thanks
 - Contact
 
@@ -489,6 +490,15 @@ Advanced:
     - Max Number Of Threads To Use [Default = `32`, Minimum = `1`, Maximum = `32`, Step = `1`]
 - Methodology
     - Use "Direct Move" Method To Update Recyclable Item List [Default = `OFF`, Possible Values = `OFF`/`ON`]
+
+
+Copyrights and Licenses
+=======================
+Copyright 2021 by Dan Cassidy.
+
+All code in this mod is licensed under the GPL 3.0 or later to the extent that it can be covered by said license.
+
+All documentation and textures created by me are CC-BY-SA licensed.
 
 
 Credits and Thanks
