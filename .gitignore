@@ -1,6 +1,4 @@
 /Build
-/Docs/Portable Junk Recycler Mk 2/CHANGELOG.txt
-/Docs/Portable Junk Recycler Mk 2/README.txt
-/Docs/Portable Junk Recycler Mk 2/README.nexusbbcode
 /meta.ini
 *.pex
+*.backup.*
