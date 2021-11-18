@@ -4,35 +4,35 @@ by rux616
 
 Table Of Contents
 -----------------
-- [Portable Junk Recycler Mk 2](#portable-junk-recycler-mk-2)
-    - [Table Of Contents](#table-of-contents)
-- [Overview](#overview)
-    - [Features](#features)
-    - [Requirements](#requirements)
-    - [Installation](#installation)
-    - [Uninstallation](#uninstallation)
-    - [Crafting Materials Required](#crafting-materials-required)
-    - [Summary](#summary)
-- [Mod Information](#mod-information)
-    - [Hotkeys](#hotkeys)
-    - [Crafting](#crafting)
-    - [Scrap Return Formula](#scrap-return-formula)
-    - [Known Issues](#known-issues)
-- [Interesting Configurations](#interesting-configurations)
-    - [Brainiac](#brainiac)
-    - [Leprechaun](#leprechaun)
-    - [Loot Piñata](#loot-piñata)
-    - [Magnum Opus Wabbajack Modlist](#magnum-opus-wabbajack-modlist)
-    - [No Scrapper, No Scrap](#no-scrapper-no-scrap)
-    - [Punishing Field Use](#punishing-field-use)
-    - [The Gambler](#the-gambler)
-- [Technical Details](#technical-details)
-    - [Plugin FormID Layout](#plugin-formid-layout)
-    - [Limited Uses](#limited-uses)
-    - [Scrap Categories](#scrap-categories)
-    - [Settings Layout in MCM](#settings-layout-in-mcm)
-- [Credits and Thanks](#credits-and-thanks)
-- [Contact](#contact)
+- Portable Junk Recycler Mk 2
+    - Table Of Contents
+- Overview
+    - Features
+    - Requirements
+    - Installation
+    - Uninstallation
+    - Crafting Materials Required
+    - Summary
+- Mod Information
+    - Hotkeys
+    - Crafting
+    - Scrap Return Formula
+    - Known Issues
+- Interesting Configurations
+    - Brainiac
+    - Leprechaun
+    - Loot Piñata
+    - Magnum Opus Wabbajack Modlist
+    - No Scrapper, No Scrap
+    - Punishing Field Use
+    - The Gambler
+- Technical Details
+    - Plugin FormID Layout
+    - Limited Uses
+    - Scrap Categories
+    - Settings Layout in MCM
+- Credits and Thanks
+- Contact
 
 
 Overview
@@ -57,16 +57,16 @@ Features
 - Doesn't require any DLC
 - Dynamic support of up to 5 ranks of the Scrapper perk (if you have some mod that adds them)
 - The mesh used for the device has physics, so it won't just hang in the air if you ever drop it from your inventory
-- [Canary](https://www.nexusmods.com/fallout4/mods/44949) save file monitor support
+- Canary (https://www.nexusmods.com/fallout4/mods/44949) save file monitor support
 
 Requirements
 ------------
-- [Fallout 4 Script Extender (F4SE)](https://f4se.silverlock.org/)
-- [Mod Configuration Menu (MCM)](https://www.nexusmods.com/fallout4/mods/21497)
+- Fallout 4 Script Extender (F4SE) (https://f4se.silverlock.org/)
+- Mod Configuration Menu (MCM) (https://www.nexusmods.com/fallout4/mods/21497)
 
 Installation
 ------------
-I **highly** recommend that you use a mod manager to install this mod, as there is a FOMOD installer included. I personally recommend Mod Organizer 2, but Vortex is fine too. If you must, however, this mod can be installed by unzipping it directly into the Data folder of your Fallout 4 installation.
+I *highly* recommend that you use a mod manager to install this mod, as there is a FOMOD installer included. I personally recommend Mod Organizer 2, but Vortex is fine too. If you must, however, this mod can be installed by unzipping it directly into the Data folder of your Fallout 4 installation.
 
 Uninstallation
 --------------
@@ -104,9 +104,9 @@ By default the Mk 2 functions like the original, that is, you use it, exit the P
 
 You can heavily customize all these options and more via the MCM.
 
-This mod **REQUIRES** both F4SE and MCM and will not work without them. I had to do this in order to prevent the freezing bug found in the original. Sorry, console players, you're out of luck. This mod also supports the [Canary](https://www.nexusmods.com/fallout4/mods/44949) mod to alert in the event of save game corruption.
+This mod *REQUIRES* both F4SE and MCM and will not work without them. I had to do this in order to prevent the freezing bug found in the original. Sorry, console players, you're out of luck. This mod also supports the Canary (https://www.nexusmods.com/fallout4/mods/44949) mod to alert in the event of save game corruption.
 
-Also by default, the Portable Junk Recycler Mk 2 will detect whether the [Standalone Workbenches](https://www.nexusmods.com/fallout4/mods/41832), [ECO](https://www.nexusmods.com/fallout4/mods/55503), or [AWKCR](https://www.nexusmods.com/fallout4/mods/6091) mods are installed and will dynamically set itself to be crafted at the respective "Utility" workbenches, or at the vanilla "Chemistry Station" if none are installed. If more than one of the preceding mods are installed, the Standalone Workbenches Utility Workbench takes priority, followed by the ECO Utility Station, then the AWKCR Utility Workbench. The device can be found under the "UTILITY" category (or one of the other categories based on whether any of the category changer addon plugins are active or not).
+Also by default, the Portable Junk Recycler Mk 2 will detect whether the Standalone Workbenches (https://www.nexusmods.com/fallout4/mods/41832), ECO (https://www.nexusmods.com/fallout4/mods/55503), or AWKCR (https://www.nexusmods.com/fallout4/mods/6091) mods are installed and will dynamically set itself to be crafted at the respective "Utility" workbenches, or at the vanilla "Chemistry Station" if none are installed. If more than one of the preceding mods are installed, the Standalone Workbenches Utility Workbench takes priority, followed by the ECO Utility Station, then the AWKCR Utility Workbench. The device can be found under the "UTILITY" category (or one of the other categories based on whether any of the category changer addon plugins are active or not).
 
 
 Mod Information
@@ -173,15 +173,15 @@ The General Multiplier Adjustment and the Scrapper Perk Multiplier Adjustment bo
 Additionally, the right hand side of the formula (`NumberOfComponentsToRecycle * Multiplier`) can be modified in a couple different ways before the final value of `NumberOfComponentsReturned` is reached:
 - If the "Always Return At Least One Component" option is `ON` and `NumberOfComponentsToRecycle` is not 0, then `NumberOfComponentsReturned` will always be at least 1, even if the formula would normally have rounded things to 0. In effect, changes the formula to be
 
-      NumberOfComponentsReturned = max(1, NumberOfComponentsToRecycle * Multiplier)
+    NumberOfComponentsReturned = max(1, NumberOfComponentsToRecycle * Multiplier)
 
 - The "Fractional Component Handling" option specifies whether to round down (floor), normally, or up (ceiling), so a value of 5.1 would be rounded to 5.0, 5.0, or 6.0 respectively. In effect, changes the formula to be
 
-      NumberOfComponentsReturned = floor/round/ceiling(NumberOfComponentsToRecycle * Multiplier)
+    NumberOfComponentsReturned = floor/round/ceiling(NumberOfComponentsToRecycle * Multiplier)
 
 - If combined, the effective formula is
 
-      NumberOfComponentsReturned = floor/round/ceiling( max(1, NumberOfComponentsToRecycle * Multiplier) )
+    NumberOfComponentsReturned = floor/round/ceiling( max(1, NumberOfComponentsToRecycle * Multiplier) )
 
 Known Issues
 ------------
@@ -303,7 +303,7 @@ Settings:
     - Always Return At Least One Component [Default = `ON`, Possible Values = `OFF`/`ON`]
     - Fractional Component Handling [Default = `Round Down`, Possible Values = `Round Up`/`Round Normally`/`Round Down`]
     - Has Limited Uses [Default = `OFF`, Possible Values = `OFF`/`ON`]
-        - Number Of Uses [Default = `50`, Minimum = `1`, Maximum = `200`, Step = `1`]
+     - Number Of Uses [Default = `50`, Minimum = `1`, Maximum = `200`, Step = `1`]
 - Adjustment Options
     - General Adjustments [Default = `Simple`, Possible Values = `Simple`/`Detailed`]
     - Intelligence Affects Multiplier [Default = `ON (Simple)`, Possible Values = `OFF`/`ON (Simple)`/`ON (Detailed)`]
@@ -316,7 +316,7 @@ Recycler Interface:
     - Automatic Recycling Mode [Default = `OFF`, Possible Values = `OFF`/`ON`]
     - Enable Junk Filter [Default = `ON`, Possible Values = `OFF`/`ON`]
     - Automatically Transfer Junk [Default = `ON`, Possible Values = `OFF`/`ON`]
-        - Only Transfer Low Component Weight Ratio Items [Default = `OFF`, Possible Values = `OFF`/`In Player-Owned Settlements`/`Not In Player-Owned Settlements`/`Everywhere`]
+     - Only Transfer Low Component Weight Ratio Items [Default = `OFF`, Possible Values = `OFF`/`In Player-Owned Settlements`/`Not In Player-Owned Settlements`/`Everywhere`]
     - Enable "Always Automatically Transfer" List [Default = `ON`, Possible Values = `OFF`/`ON`]
     - Enable "Never Automatically Transfer" List [Default = `ON`, Possible Values = `OFF`/`ON`]
     - Enable Automatic Transfer List Editing [Default = `OFF`, Possible Values = `OFF`/`ON`]
@@ -338,16 +338,16 @@ Multiplier Adjustments:
     - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - (If "Settings > Adjustment Options > General Adjustments" is set to `Detailed`)
     - Components: Common
-        - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+     - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Uncommon
-        - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+     - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Rare
-        - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+     - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Special
-        - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+     - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
 - (If "Settings > Adjustment Options > Intelligence Affects Multiplier" is not set to `OFF`)
 - Intelligence
@@ -355,26 +355,26 @@ Multiplier Adjustments:
     - Adjustment Per Point Of Intelligence [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
     - (If "Settings > Adjustment Options > Intelligence Affects Multiplier" is set to `ON (Detailed)`)
     - Components: Common
-        - Adjustment Per Point Of Intelligence [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
+     - Adjustment Per Point Of Intelligence [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
     - Components: Uncommon
-        - Adjustment Per Point Of Intelligence [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
+     - Adjustment Per Point Of Intelligence [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
     - Components: Rare
-        - Adjustment Per Point Of Intelligence [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
+     - Adjustment Per Point Of Intelligence [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
     - Components: Special
-        - Adjustment Per Point Of Intelligence [Default = `0.0`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
+     - Adjustment Per Point Of Intelligence [Default = `0.0`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
 - (If "Settings > Adjustment Options > Luck Affects Multiplier" is not set to `OFF`)
 - Luck
     - (If "Settings > Adjustment Options > Luck Affects Multiplier" is set to `ON (Simple)`)
     - Adjustment Per Point Of Luck [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
     - (If "Settings > Adjustment Options > Luck Affects Multiplier" is set to `ON (Detailed)`)
     - Components: Common
-        - Adjustment Per Point Of Luck [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
+     - Adjustment Per Point Of Luck [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
     - Components: Uncommon
-        - Adjustment Per Point Of Luck [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
+     - Adjustment Per Point Of Luck [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
     - Components: Rare
-        - Adjustment Per Point Of Luck [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
+     - Adjustment Per Point Of Luck [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
     - Components: Special
-        - Adjustment Per Point Of Luck [Default = `0.0`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
+     - Adjustment Per Point Of Luck [Default = `0.0`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
 - (If "Settings > Adjustment Options > Add Randomness To Multiplier" is not set to `OFF`)
 - Randomness
     - (If "Settings > Adjustment Options > Add Randomness To Multiplier" is set to `ON (Simple)`)
@@ -382,16 +382,16 @@ Multiplier Adjustments:
     - Maximum [Default = `0.1`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
     - (If "Settings > Adjustment Options > Add Randomness To Multiplier" is set to `ON (Detailed)`)
     - Components: Common
-        - Minimum [Default = `-0.1`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
+     - Minimum [Default = `-0.1`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
         - Maximum [Default = `0.1`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
     - Components: Uncommon
-        - Minimum [Default = `-0.1`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
+     - Minimum [Default = `-0.1`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
         - Maximum [Default = `0.1`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
     - Components: Rare
-        - Minimum [Default = `-0.1`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
+     - Minimum [Default = `-0.1`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
         - Maximum [Default = `0.1`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
     - Components: Special
-        - Minimum [Default = `0.0`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
+     - Minimum [Default = `0.0`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
         - Maximum [Default = `0.1`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
 - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is not set to `OFF`)
 - Scrapper: Rank 1
@@ -400,16 +400,16 @@ Multiplier Adjustments:
     - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to "ON (Detailed)")
     - Components: Common
-        - In Player-Owned Settlements [Default = `0.1`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+     - In Player-Owned Settlements [Default = `0.1`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Uncommon
-        - In Player-Owned Settlements [Default = `0.1`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+     - In Player-Owned Settlements [Default = `0.1`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Rare
-        - In Player-Owned Settlements [Default = `0.1`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+     - In Player-Owned Settlements [Default = `0.1`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Special
-        - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+     - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
 - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is not set to `OFF`)
 - Scrapper: Rank 2
@@ -418,16 +418,16 @@ Multiplier Adjustments:
     - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to "ON (Detailed)")
     - Components: Common
-        - In Player-Owned Settlements [Default = `0.2`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+     - In Player-Owned Settlements [Default = `0.2`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Uncommon
-        - In Player-Owned Settlements [Default = `0.2`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+     - In Player-Owned Settlements [Default = `0.2`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Rare
-        - In Player-Owned Settlements [Default = `0.2`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+     - In Player-Owned Settlements [Default = `0.2`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Special
-        - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+     - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
 - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is not set to `OFF` and Scrapper Rank 3 perk exists)
 - Scrapper: Rank 3
@@ -436,16 +436,16 @@ Multiplier Adjustments:
     - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to "ON (Detailed)")
     - Components: Common
-        - In Player-Owned Settlements [Default = `0.3`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+     - In Player-Owned Settlements [Default = `0.3`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Uncommon
-        - In Player-Owned Settlements [Default = `0.3`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+     - In Player-Owned Settlements [Default = `0.3`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Rare
-        - In Player-Owned Settlements [Default = `0.3`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+     - In Player-Owned Settlements [Default = `0.3`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Special
-        - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+     - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
 - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is not set to `OFF` and Scrapper Rank 4 perk exists)
 - Scrapper: Rank 4
@@ -454,16 +454,16 @@ Multiplier Adjustments:
     - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to "ON (Detailed)")
     - Components: Common
-        - In Player-Owned Settlements [Default = `0.4`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+     - In Player-Owned Settlements [Default = `0.4`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Uncommon
-        - In Player-Owned Settlements [Default = `0.4`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+     - In Player-Owned Settlements [Default = `0.4`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Rare
-        - In Player-Owned Settlements [Default = `0.4`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+     - In Player-Owned Settlements [Default = `0.4`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Special
-        - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+     - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
 - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is not set to `OFF` and Scrapper Rank 5 perk exists)
 - Scrapper: Rank 5
@@ -472,16 +472,16 @@ Multiplier Adjustments:
     - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to `ON (Detailed)`)
     - Components: Common
-        - In Player-Owned Settlements [Default = `0.5`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+     - In Player-Owned Settlements [Default = `0.5`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Uncommon
-        - In Player-Owned Settlements [Default = `0.5`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+     - In Player-Owned Settlements [Default = `0.5`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Rare
-        - In Player-Owned Settlements [Default = `0.5`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+     - In Player-Owned Settlements [Default = `0.5`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Special
-        - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+     - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
 
 Advanced:
@@ -494,26 +494,26 @@ Advanced:
 Credits and Thanks
 ==================
 - Bethesda: For the base low res texture and the meshes used; also for Fallout 4
-- SavrenX: For the textures from the [SavrenX HD Settlement and Clutters](https://www.nexusmods.com/fallout4/mods/40485) mod
-- pra: For some feature ideas based on their [Scrapping Machine](https://www.nexusmods.com/fallout4/mods/35793) mod
-- Kentington: For the OG [Portable Junk Recycler](https://www.nexusmods.com/fallout4/mods/14110) mod
-- DieFeM: For the [code inspiration](https://forums.nexusmods.com/index.php?/topic/7090211-removing-the-notifications-from-removeallitems-used-on-player/page-4#entry64900091) to relatively quickly transfer items from one container to another while bypassing the ObjectReference.RemoveAllItems() function to avoid the freeze associated with it
-- Lively: For allowing me to post the beta of this mod on his Discord server to get some play testing done, and for the [Lively's Keyword Resource](https://www.nexusmods.com/fallout4/mods/51510) mod
-- kinggath: For the [Canary](https://www.nexusmods.com/fallout4/mods/44949) save file monitoring mod
-- Whisper: For the [Standalone Workbenches](https://www.nexusmods.com/fallout4/mods/41832) mod
-- Gambit77, Valdacil, Thirdstorm: For the [AWKCR](https://www.nexusmods.com/fallout4/mods/6091) mod
-- F4SE team: For [F4SE](https://f4se.silverlock.org/), without which this mod would not exist
-- fireundubh: For [pyro](https://github.com/fireundubh/pyro), which made developing the scripts for this mod so much easier
-- Neanka, reg2k, shadowslasher410: For the [Mod Configuration Menu](https://www.nexusmods.com/fallout4/mods/21497/)
-- Joel Day: For the [Papyrus extension](https://marketplace.visualstudio.com/items?itemName=joelday.papyrus-lang-vscode) for Visual Studio Code
-- Dank Rafft: For the [Equipment and Crafting Overhaul (ECO)](https://www.nexusmods.com/fallout4/mods/55503) mod
+- SavrenX: For the textures from the SavrenX HD Settlement and Clutters (https://www.nexusmods.com/fallout4/mods/40485) mod
+- pra: For some feature ideas based on their Scrapping Machine (https://www.nexusmods.com/fallout4/mods/35793) mod
+- Kentington: For the OG Portable Junk Recycler (https://www.nexusmods.com/fallout4/mods/14110) mod
+- DieFeM: For the code inspiration (https://forums.nexusmods.com/index.php?/topic/7090211-removing-the-notifications-from-removeallitems-used-on-player/page-4#entry64900091) to relatively quickly transfer items from one container to another while bypassing the ObjectReference.RemoveAllItems() function to avoid the freeze associated with it
+- Lively: For allowing me to post the beta of this mod on his Discord server to get some play testing done, and for the Lively's Keyword Resource (https://www.nexusmods.com/fallout4/mods/51510) mod
+- kinggath: For the Canary (https://www.nexusmods.com/fallout4/mods/44949) save file monitoring mod
+- Whisper: For the Standalone Workbenches (https://www.nexusmods.com/fallout4/mods/41832) mod
+- Gambit77, Valdacil, Thirdstorm: For the AWKCR (https://www.nexusmods.com/fallout4/mods/6091) mod
+- F4SE team: For F4SE (https://f4se.silverlock.org/), without which this mod would not exist
+- fireundubh: For pyro (https://github.com/fireundubh/pyro), which made developing the scripts for this mod so much easier
+- Neanka, reg2k, shadowslasher410: For the Mod Configuration Menu (https://www.nexusmods.com/fallout4/mods/21497/)
+- Joel Day: For the Papyrus extension (https://marketplace.visualstudio.com/items?itemName=joelday.papyrus-lang-vscode) for Visual Studio Code
+- Dank Rafft: For the Equipment and Crafting Overhaul (ECO) (https://www.nexusmods.com/fallout4/mods/55503) mod
 
 
 Contact
 =======
-If you find a bug or have a question about the mod, please post it on the [mod page at Nexus Mods](https://www.nexusmods.com/fallout4/mods/54138), or in the [GitHub project](https://github.com/rux616/Portable-Junk-Recycler-Mk-2).
+If you find a bug or have a question about the mod, please post it on the mod page at Nexus Mods (https://www.nexusmods.com/fallout4/mods/54138), or in the GitHub project (https://github.com/rux616/Portable-Junk-Recycler-Mk-2).
 
 If you need to contact me personally, I can be reached through one of the following means:
-- A message via my [Nexus Mods user profile page](https://www.nexusmods.com/fallout4/users/124191)
+- A message via my Nexus Mods user profile page (https://www.nexusmods.com/fallout4/users/124191)
 - My email (replace `-at-` with `@` and `-dot-` with `.`): rux616-at-pm-dot-me
-- I also tend to hang out on various Discord servers (e.g. the ones for [Nexus Mods](https://discord.gg/nexusmods) and [Wabbajack](https://discord.gg/wabbajack))
+- I also tend to hang out on various Discord servers (e.g. the ones for Nexus Mods (https://discord.gg/nexusmods) and Wabbajack (https://discord.gg/wabbajack))
