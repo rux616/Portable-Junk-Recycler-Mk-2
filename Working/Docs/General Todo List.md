@@ -138,6 +138,7 @@
 * [X] add setting to change max number of threads used
     * [X] see if that reduces stuttering when activating
     * (result): it does not
-* [ ] localize plugin file
+* [-] localize MCM strings file (Cn/De/En/Es/Esmx/Fr/It/Ja/Pl/Ptbr/Ru)
+* [-] localize plugin file (Cn/De/En/Es/Esmx/Fr/It/Ja/Pl/Ptbr/Ru)
 * version locations:
     * .version file
