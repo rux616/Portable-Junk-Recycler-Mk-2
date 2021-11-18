@@ -2,16 +2,16 @@ Portable Junk Recycler Mk 2
 ===========================
 
 Table of Contents:
-- [Portable Junk Recycler Mk 2](#portable-junk-recycler-mk-2)
-    - [v0.6.0-beta](#v060-beta)
-    - [v0.5.0-beta](#v050-beta)
-    - [v0.4.0 beta](#v040-beta)
-    - [v0.3.1 beta](#v031-beta)
-    - [v0.3.0 beta](#v030-beta)
-    - [v0.2.3 beta](#v023-beta)
-    - [v0.2.2 beta](#v022-beta)
-    - [v0.2.1 beta](#v021-beta)
-    - [v0.2.0 beta](#v020-beta)
+- Portable Junk Recycler Mk 2
+    - v0.6.0-beta
+    - v0.5.0-beta
+    - v0.4.0 beta
+    - v0.3.1 beta
+    - v0.3.0 beta
+    - v0.2.3 beta
+    - v0.2.2 beta
+    - v0.2.1 beta
+    - v0.2.0 beta
 
 v0.6.0-beta
 -----------

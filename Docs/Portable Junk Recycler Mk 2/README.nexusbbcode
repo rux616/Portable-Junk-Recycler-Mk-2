@@ -1,0 +1,490 @@
+[size=6]Portable Junk Recycler Mk 2[/size]
+by rux616
+
+[size=5]Table Of Contents[/size]
+- Portable Junk Recycler Mk 2
+    - Table Of Contents
+- Overview
+    - Features
+    - Requirements
+    - Installation
+    - Uninstallation
+    - Crafting Materials Required
+    - Summary
+- Mod Information
+    - Hotkeys
+    - Crafting
+    - Scrap Return Formula
+    - Known Issues
+- Interesting Configurations
+    - Brainiac
+    - Leprechaun
+    - Loot Piñata
+    - Magnum Opus Wabbajack Modlist
+    - No Scrapper, No Scrap
+    - Punishing Field Use
+    - The Gambler
+- Technical Details
+    - Plugin FormID Layout
+    - Limited Uses
+    - Scrap Categories
+    - Settings Layout in MCM
+- Credits and Thanks
+- Contact
+
+
+[size=6]Overview[/size]
+A fast, highly configurable device that will scrap junk items transferred into its inventory, returning the component parts.
+
+I created this mod because while I really liked the original Portable Junk Recycler by Kentington, I wanted something that I could customize and additionally I wanted to see if I could fix the crash issue.
+
+[size=5]Features[/size]
+- Extremely customizable via the Mod Config Menu
+- Fast
+- Can automatically move junk items to the recycler inventory
+- Can be set to only automatically move items that when recycled, will save weight
+- Configurable "Always Automatically Transfer" and "Never Automatically Transfer" lists
+- Has a fully automatic mode (just activate the device and it processes junk items in your inventory)
+- Dynamically supports crafting the device at the "Utility Workbench" from Standalone Workbenches, the "Utility Station" from ECO, or the "Utility Workbench" from AWKCR (order of priority is Standalone Workbenches > ECO > AWKCR), can also be crafted at a number of other workbenches
+- Additional plugins included to change the crafting category of the Mk 2
+- Can be configured to only have a limited number uses
+- Sane defaults, so even if not customized, it will work well out of the box
+- Customized low- and high-res textures
+- Doesn't require any DLC
+- Dynamic support of up to 5 ranks of the Scrapper perk (if you have some mod that adds them)
+- The mesh used for the device has physics, so it won't just hang in the air if you ever drop it from your inventory
+- [url=https://www.nexusmods.com/fallout4/mods/44949]Canary[/url] save file monitor support
+
+[size=5]Requirements[/size]
+- [url=https://f4se.silverlock.org/]Fallout 4 Script Extender (F4SE)[/url]
+- [url=https://www.nexusmods.com/fallout4/mods/21497]Mod Configuration Menu (MCM)[/url]
+
+[size=5]Installation[/size]
+I [b]highly[/b] recommend that you use a mod manager to install this mod, as there is a FOMOD installer included. I personally recommend Mod Organizer 2, but Vortex is fine too. If you must, however, this mod can be installed by unzipping it directly into the Data folder of your Fallout 4 installation.
+
+[size=5]Uninstallation[/size]
+Note that uninstallation is technically unsupported because this mod uses scripts which will embed data in your save. That being said, if you still want to uninstall, here is a process which attempts to minimize complications.
+
+To uninstall this mod, make sure that a recycling process is not underway, then follow these steps:
+- Go to the Pause Menu
+- Go into the Mod Config menu
+- Find "Portable Junk Recycler Mk 2" and go into the "Advanced" page
+- Disengage the safeguard (click "Show The "Uninstall Mod" Button")
+- Click the "Uninstall Mod" button
+- Close the Pause Menu
+- Wait a few seconds for the pop up message to appear
+- Save your game
+- Exit the game
+- Disable or remove this mod and its files
+
+[size=5]Crafting Materials Required[/size]
+- Enhanced Targeting Card x1
+- Fusion Core x1
+- High-powered Magnet x1
+- Power Relay Coil x2
+- Screws x12
+- Sensor Module x1
+- Steel x20
+
+[size=5]Summary[/size]
+By default the Mk 2 functions like the original, that is, you use it, exit the Pip-boy, move the junk objects you want to be recycled into the container that then opens, close said container, and then you get a bunch of components back. However it has the following bonuses by default:
+
+- You get a 1% bonus to the number of components returned for each point of Intelligence
+- You get a 1% bonus to the number of components returned for each point of Luck
+- You get a 10% bonus to the number of components returned per Scrapper perk rank, but [i]only[/i] in player-owned settlements
+
+You can heavily customize all these options and more via the MCM.
+
+This mod [b]REQUIRES[/b] both F4SE and MCM and will not work without them. I had to do this in order to prevent the freezing bug found in the original. Sorry, console players, you're out of luck. This mod also supports the [url=https://www.nexusmods.com/fallout4/mods/44949]Canary[/url] mod to alert in the event of save game corruption.
+
+Also by default, the Portable Junk Recycler Mk 2 will detect whether the [url=https://www.nexusmods.com/fallout4/mods/41832]Standalone Workbenches[/url], [url=https://www.nexusmods.com/fallout4/mods/55503]ECO[/url], or [url=https://www.nexusmods.com/fallout4/mods/6091]AWKCR[/url] mods are installed and will dynamically set itself to be crafted at the respective "Utility" workbenches, or at the vanilla "Chemistry Station" if none are installed. If more than one of the preceding mods are installed, the Standalone Workbenches Utility Workbench takes priority, followed by the ECO Utility Station, then the AWKCR Utility Workbench. The device can be found under the "UTILITY" category (or one of the other categories based on whether any of the category changer addon plugins are active or not).
+
+
+[size=6]Mod Information[/size]
+
+[size=5]Hotkeys[/size]
+All hotkeys in this mod work as modifiers, meaning that in order for the effect of the hotkey to take place, said hotkey(s) need to be pressed at the time the Portable Junk Recycler Mk 2 is activated.
+
+By default, the mod comes with the "Behavior Override" option set to [font=Courier New][color=#6d9eeb]OFF[/color][/font]; to enabled overriding the behavior of the Portable Junk Recycler Mk 2, turn that option [font=Courier New][color=#6d9eeb]ON[/color][/font]:
+- If both [font=Courier New][color=#6d9eeb][CTRL][/color][/font] and [font=Courier New][color=#6d9eeb][SHIFT][/color][/font] are pressed when the recycler is activated, the recycler inventory will not open and instead, all recyclable junk items, except for those items on the "Never Automatically Transfer" list (unless the use of that list is turned [font=Courier New][color=#6d9eeb]OFF[/color][/font]) and maybe those items in the Low Weight Ratio list, depending on how your options are set, will be broken down and their component parts returned. This is identical in functionality to having the "Automatic Recycling Mode" option set to [font=Courier New][color=#6d9eeb]ON[/color][/font].
+- If only [font=Courier New][color=#6d9eeb][SHIFT][/color][/font] is pressed when the recycler is activated, the recycler inventory will open and all recyclable junk items from the player inventory will be moved into it, except for those items on the "Never Automatically Transfer" list (unless the use of that list is turned OFF). This is identical in functionality to having the "Automatically Transfer Junk" option set to [font=Courier New][color=#6d9eeb]ON[/color][/font].
+- If only [font=Courier New][color=#6d9eeb][CTRL][/color][/font] is pressed when the recycler is activated, the recycler inventory will open and no recyclable junk items from the player inventory will be moved into it, except for those items on the "Always Automatically Transfer" list (unless the use of that list is turned OFF). This is identical in functionality to having the "Automatically Transfer Junk" option set to [font=Courier New][color=#6d9eeb]OFF[/color][/font].
+
+Editing the "Never/Always Automatically Transfer" lists is also [font=Courier New][color=#6d9eeb]OFF[/color][/font] by default; to enable editing these lists, turn that option [font=Courier New][color=#6d9eeb]ON[/color][/font]:
+- To edit the "Never Automatically Transfer" list, ensure that [font=Courier New][color=#6d9eeb][ALT][/color][/font] and [font=Courier New][color=#6d9eeb][CTRL][/color][/font] are both pressed when the recycler is activated.
+- To edit the "Always Automatically Transfer" list, ensure that [font=Courier New][color=#6d9eeb][ALT][/color][/font] and [font=Courier New][color=#6d9eeb][SHIFT][/color][/font] are both pressed when the recycler is activated.
+
+[size=5]Crafting[/size]
+The Mk 2 can be crafted at a number of different workbenches from different mods depending on user preference. Currently supported workbenches are as follows:
+
+From Standalone Workbenches:
+- Electronics Workbench
+- Engineering Workbench
+- Manufacturing Workbench
+- Utility Workbench
+
+From AWKCR:
+- Adv. Engineering Workbench
+- Electronics Workstation
+- Utility Workbench
+
+From ECO:
+- Utility Station
+
+From vanilla:
+- Chemistry Station
+
+Note that one of the options is "Dynamic", which will automatically attempt to use the following workbenches with decreasing priority:
+- Utility Workbench (Standalone Workbenches)
+- Utility Station (ECO)
+- Utility Workbench (AWKCR)
+- Chemistry Station (vanilla)
+
+[size=5]Scrap Return Formula[/size]
+The Mk 2 works off of a multiplier for different scrap rarities, which are organized into four categories: Common, Uncommon, Rare, and Special. (See the lists below for details about which components are in which category by default.) This multiplier is composed of several different elements, and in the most basic configuration will be the same for each category.
+
+Overall, it is a simple formula:
+
+    [font=Courier New][color=#6d9eeb]NumberOfComponentsReturned = NumberOfComponentsToRecycle * Multiplier[/color][/font]
+
+[font=Courier New][color=#6d9eeb]Multiplier[/color][/font] is composed of the following:
+- Base Multiplier [Default = [font=Courier New][color=#6d9eeb]1.0[/color][/font], Min = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Max = [font=Courier New][color=#6d9eeb]2.0[/color][/font]]
+- General Multiplier Adjustment [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Min = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Max = [font=Courier New][color=#6d9eeb]2.0[/color][/font]]
+- Intelligence Multiplier Adjustment [Default Per Point = [font=Courier New][color=#6d9eeb]0.01[/color][/font], Min = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Max = [font=Courier New][color=#6d9eeb]1.0[/color][/font]]
+- Luck Multiplier Adjustment [Default Per Point = [font=Courier New][color=#6d9eeb]0.01[/color][/font], Min = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Max = [font=Courier New][color=#6d9eeb]1.0[/color][/font]]
+- Random Multiplier Adjustment [Default Minimum = [font=Courier New][color=#6d9eeb]-0.1[/color][/font], Default Maximum = [font=Courier New][color=#6d9eeb]0.1[/color][/font], Min = [font=Courier New][color=#6d9eeb]-6.0[/color][/font], Max = [font=Courier New][color=#6d9eeb]6.0[/color][/font]]
+- Scrapper Perk Multiplier Adjustment [Default = [font=Courier New][color=#6d9eeb](variable)[/color][/font], Min = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Max = [font=Courier New][color=#6d9eeb]2.0[/color][/font]]
+
+The General Multiplier Adjustment and the Scrapper Perk Multiplier Adjustment both have additional configurability for what multiplier to apply whether the player is in a player-owned settlement or not.
+
+Additionally, the right hand side of the formula ([font=Courier New][color=#6d9eeb]NumberOfComponentsToRecycle * Multiplier[/color][/font]) can be modified in a couple different ways before the final value of [font=Courier New][color=#6d9eeb]NumberOfComponentsReturned[/color][/font] is reached:
+- If the "Always Return At Least One Component" option is [font=Courier New][color=#6d9eeb]ON[/color][/font] and [font=Courier New][color=#6d9eeb]NumberOfComponentsToRecycle[/color][/font] is not 0, then [font=Courier New][color=#6d9eeb]NumberOfComponentsReturned[/color][/font] will always be at least 1, even if the formula would normally have rounded things to 0. In effect, changes the formula to be
+
+    [font=Courier New][color=#6d9eeb]NumberOfComponentsReturned = max(1, NumberOfComponentsToRecycle * Multiplier)[/color][/font]
+
+- The "Fractional Component Handling" option specifies whether to round down (floor), normally, or up (ceiling), so a value of 5.1 would be rounded to 5.0, 5.0, or 6.0 respectively. In effect, changes the formula to be
+
+    [font=Courier New][color=#6d9eeb]NumberOfComponentsReturned = floor/round/ceiling(NumberOfComponentsToRecycle * Multiplier)[/color][/font]
+
+- If combined, the effective formula is
+
+    [font=Courier New][color=#6d9eeb]NumberOfComponentsReturned = floor/round/ceiling( max(1, NumberOfComponentsToRecycle * Multiplier) )[/color][/font]
+
+[size=5]Known Issues[/size]
+- If the "Return Items Silently" option is set to [font=Courier New][color=#6d9eeb]OFF[/color][/font] and you add scrap items (acid, bone, adhesive, ceramic, etc.) to the recycler, when the recycling process is complete, you may receive more than one notification for those scrap items that you added. I can't do anything about that without compromising the speed of the recycler (it would add almost an entire extra second to the processing time, at least), so if it is undesired behavior, you can set the "Return Items Silently" option to [font=Courier New][color=#6d9eeb]ON[/color][/font] or you can set the "Enable Container Filtering" option to [font=Courier New][color=#6d9eeb]ON[/color][/font] so that scrap items cannot be added to the container in the first place, or both. (Both of those options are [font=Courier New][color=#6d9eeb]ON[/color][/font] by default.) Alternatively, you can simply choose not to add scrap items.
+
+
+[size=6]Interesting Configurations[/size]
+With how customizable this device is, there are [i]many[/i] ways in which to use it, so here are a few fun ones I've thought of. Note that some of these have the potential to boost the multiplier to ridiculous levels, and are not intended to be balanced. My goal is to give you, the player, ways in which to have fun and customize this mod to [i]your[/i] liking.
+
+[size=5]Brainiac[/size]
+You really value your character's intelligence. Set "Multiplier Adjustments > Intelligence" to give you a [font=Courier New][color=#6d9eeb]0.2[/color][/font] multiplier adjustment per point.
+
+[size=5]Leprechaun[/size]
+Luck is [i]really[/i] important to you. So much so that you set it to be the only multiplier adjustment you use (set "Settings > Adjustment Options > (everything not Luck)" to [font=Courier New][color=#6d9eeb]OFF[/color][/font]), at [font=Courier New][color=#6d9eeb]0.5[/color][/font] per point.
+
+[size=5]Loot Piñata[/size]
+Set every multiplier adjustment to max. All junk items now explode in showers of components (figuratively).
+
+[size=5]Magnum Opus Wabbajack Modlist[/size]
+If you use Wabbajack to install the Magnum Opus modlist by Lively, you can set the Portable Junk Recycler Mk 2 to mimic the way the Scrapper perk works by setting "Multiplier Adjustments > Scrapper: Rank 1 > In Player-Owned Settlements" to [font=Courier New][color=#6d9eeb]0.2[/color][/font], setting "Multiplier Adjustments > Scrapper: Rank 1 > In Player-Owned Settlements" also to [font=Courier New][color=#6d9eeb]0.2[/color][/font], and by setting "Multiplier Adjustments > Scrapper: Rank 1 > In Player-Owned Settlements" to [font=Courier New][color=#6d9eeb]0.5[/color][/font].
+
+[size=5]No Scrapper, No Scrap[/size]
+Configures the Mk 2 so that you don't get any components unless you have at least 1 rank in the Scrapper perk. Set the Base Multiplier to [font=Courier New][color=#6d9eeb]0.0[/color][/font], make sure that "Settings > Adjustment Options > (everything not Scrapper)" is set to [font=Courier New][color=#6d9eeb]OFF[/color][/font] if it can be, then set "Multiplier Adjustments > Scrapper: Rank X" to [font=Courier New][color=#6d9eeb]1.0[/color][/font]/[font=Courier New][color=#6d9eeb]1.1[/color][/font]/[font=Courier New][color=#6d9eeb]1.2[/color][/font]/etc. for the proceeding Scrapper ranks.
+
+[size=5]Punishing Field Use[/size]
+Heavily incentivize the use of settlements. "Multiplier Adjustments > General > Everywhere Else" should be set to [font=Courier New][color=#6d9eeb]-0.9[/color][/font].
+
+[size=5]The Gambler[/size]
+Set "Settings > Adjustment Options > Randomness" to [font=Courier New][color=#6d9eeb]ON (Simple)[/color][/font] and set the minimum to [font=Courier New][color=#6d9eeb]-1.0[/color][/font], and the maximum to [font=Courier New][color=#6d9eeb]1.0[/color][/font]. Set every other multiplier option to [font=Courier New][color=#6d9eeb]OFF[/color][/font].
+
+
+[size=6]Technical Details[/size]
+
+[size=5]Plugin FormID Layout[/size]
+Recycler Item FormID:
+- [font=Courier New][color=#6d9eeb]FExxx840[/color][/font]
+
+General FormIDs:
+- [font=Courier New][color=#6d9eeb]FExxx80*[/color][/font] Quest
+- [font=Courier New][color=#6d9eeb]FExxx81*[/color][/font] FormID List
+- [font=Courier New][color=#6d9eeb]FExxx82*[/color][/font] Magic Effect
+- [font=Courier New][color=#6d9eeb]FExxx83*[/color][/font] Container
+- [font=Courier New][color=#6d9eeb]FExxx84*[/color][/font] Ingestible
+- [font=Courier New][color=#6d9eeb]FExxx85*[/color][/font] Transform
+- [font=Courier New][color=#6d9eeb]FExxx86*[/color][/font] Constructable Object
+- [font=Courier New][color=#6d9eeb]FExxx9**[/color][/font] Message
+
+Note: 'xxx' is the load order position of the mod.
+
+[size=5]Limited Uses[/size]
+In "Limited Use" mode, the number of uses left isn't tracked specifically per device, but rather by tracking how many times a recycling process has occurred. This was a design decision made because of how ingestible items work in the game and due to the events and timing of said events surrounding their use. Therefore it doesn't matter whether several Mk 2's are crafted and used, the number of uses will tick up until it reaches the configured threshold and the item simply won't be returned to you after that recycling process finishes.
+
+Note that the number of uses is not incremented when there is no junk to break down.
+
+[size=5]Scrap Categories[/size]
+Common:
+- Bone
+- Ceramic
+- Cloth
+- Concrete
+- Leather
+- Plastic
+- Rubber
+- Steel
+- Wood
+
+Uncommon:
+- Adhesive
+- Aluminum
+- Copper
+- Cork
+- Fertilizer
+- Fiberglass
+- Gears
+- Glass
+- Lead
+- Oil
+- Screws
+- Silver
+- Springs
+
+Rare:
+- Acid
+- Ballistic Fiber
+- Antiseptic
+- Asbestos
+- Circuitry
+- Crystal
+- Fiber Optics
+- Gold
+- Nuclear Material
+
+Special:
+- (None)
+
+The "Special" category is intended for modders to add components that might not fit into other categories.
+
+If changing any FormList associated with any of the scrap categories, make sure that the contents of the lists match in length and have the corresponding Component and MiscObject forms at the same position in the list. For example, in the "PJRM22[i]ComponentsC" [font=Courier New][color=#6d9eeb][FLST:FExxx810][/color][/font] list, the first entry is "c[/i]Bone" [font=Courier New][color=#6d9eeb][Fallout4.esm:CMPO:xx01FA98][/color][/font], which matches the first entry in the "PJRM2[i]ScrapC" [font=Courier New][color=#6d9eeb][FLST:FExxx814][/color][/font] list, "c[/i]Bone_scrap" [font=Courier New][color=#6d9eeb][Fallout4.esm:MISC:xx0AEC5D][/color][/font].
+
+These lists are reread every time a game is loaded.
+
+[size=5]Settings Layout in MCM[/size]
+Settings:
+- General Options
+    - Base Multiplier [Default = [font=Courier New][color=#6d9eeb]1.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Always Return At Least One Component [Default = [font=Courier New][color=#6d9eeb]ON[/color][/font], Possible Values = [font=Courier New][color=#6d9eeb]OFF[/color][/font]/[font=Courier New][color=#6d9eeb]ON[/color][/font]]
+    - Fractional Component Handling [Default = [font=Courier New][color=#6d9eeb]Round Down[/color][/font], Possible Values = [font=Courier New][color=#6d9eeb]Round Up[/color][/font]/[font=Courier New][color=#6d9eeb]Round Normally[/color][/font]/[font=Courier New][color=#6d9eeb]Round Down[/color][/font]]
+    - Has Limited Uses [Default = [font=Courier New][color=#6d9eeb]OFF[/color][/font], Possible Values = [font=Courier New][color=#6d9eeb]OFF[/color][/font]/[font=Courier New][color=#6d9eeb]ON[/color][/font]]
+    [font=Courier New][color=#6d9eeb] - Number Of Uses [Default = [font=Courier New][color=#6d9eeb]50[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]1[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]200[/color][/font], Step = [font=Courier New][color=#6d9eeb]1[/color][/font]][/color][/font]
+- Adjustment Options
+    - General Adjustments [Default = [font=Courier New][color=#6d9eeb]Simple[/color][/font], Possible Values = [font=Courier New][color=#6d9eeb]Simple[/color][/font]/[font=Courier New][color=#6d9eeb]Detailed[/color][/font]]
+    - Intelligence Affects Multiplier [Default = [font=Courier New][color=#6d9eeb]ON (Simple)[/color][/font], Possible Values = [font=Courier New][color=#6d9eeb]OFF[/color][/font]/[font=Courier New][color=#6d9eeb]ON (Simple)[/color][/font]/[font=Courier New][color=#6d9eeb]ON (Detailed)[/color][/font]]
+    - Luck Affects Multiplier [Default = [font=Courier New][color=#6d9eeb]ON (Simple)[/color][/font], Possible Values = [font=Courier New][color=#6d9eeb]OFF[/color][/font]/[font=Courier New][color=#6d9eeb]ON (Simple)[/color][/font]/[font=Courier New][color=#6d9eeb]ON (Detailed)[/color][/font]]
+    - Add Randomness To Multiplier [Default = [font=Courier New][color=#6d9eeb]OFF[/color][/font], Possible Values = [font=Courier New][color=#6d9eeb]OFF[/color][/font]/[font=Courier New][color=#6d9eeb]ON (Simple)[/color][/font]/[font=Courier New][color=#6d9eeb]ON (Detailed)[/color][/font]]
+    - Scrapper Perk Affects Multiplier [Default = [font=Courier New][color=#6d9eeb]ON (Simple)[/color][/font], Possible Values = [font=Courier New][color=#6d9eeb]OFF[/color][/font]/[font=Courier New][color=#6d9eeb]ON (Simple)[/color][/font]/[font=Courier New][color=#6d9eeb]ON (Detailed)[/color][/font]]
+
+Recycler Interface:
+- Behavior
+    - Automatic Recycling Mode [Default = [font=Courier New][color=#6d9eeb]OFF[/color][/font], Possible Values = [font=Courier New][color=#6d9eeb]OFF[/color][/font]/[font=Courier New][color=#6d9eeb]ON[/color][/font]]
+    - Enable Junk Filter [Default = [font=Courier New][color=#6d9eeb]ON[/color][/font], Possible Values = [font=Courier New][color=#6d9eeb]OFF[/color][/font]/[font=Courier New][color=#6d9eeb]ON[/color][/font]]
+    - Automatically Transfer Junk [Default = [font=Courier New][color=#6d9eeb]ON[/color][/font], Possible Values = [font=Courier New][color=#6d9eeb]OFF[/color][/font]/[font=Courier New][color=#6d9eeb]ON[/color][/font]]
+    [font=Courier New][color=#6d9eeb] - Only Transfer Low Component Weight Ratio Items [Default = [font=Courier New][color=#6d9eeb]OFF[/color][/font], Possible Values = [font=Courier New][color=#6d9eeb]OFF[/color][/font]/[font=Courier New][color=#6d9eeb]In Player-Owned Settlements[/color][/font]/[font=Courier New][color=#6d9eeb]Not In Player-Owned Settlements[/color][/font]/[font=Courier New][color=#6d9eeb]Everywhere[/color][/font]][/color][/font]
+    - Enable "Always Automatically Transfer" List [Default = [font=Courier New][color=#6d9eeb]ON[/color][/font], Possible Values = [font=Courier New][color=#6d9eeb]OFF[/color][/font]/[font=Courier New][color=#6d9eeb]ON[/color][/font]]
+    - Enable "Never Automatically Transfer" List [Default = [font=Courier New][color=#6d9eeb]ON[/color][/font], Possible Values = [font=Courier New][color=#6d9eeb]OFF[/color][/font]/[font=Courier New][color=#6d9eeb]ON[/color][/font]]
+    - Enable Automatic Transfer List Editing [Default = [font=Courier New][color=#6d9eeb]OFF[/color][/font], Possible Values = [font=Courier New][color=#6d9eeb]OFF[/color][/font]/[font=Courier New][color=#6d9eeb]ON[/color][/font]]
+    - Enable Behavior Overrides [Default = [font=Courier New][color=#6d9eeb]OFF[/color][/font], Possible Values = [font=Courier New][color=#6d9eeb]OFF[/color][/font]/[font=Courier New][color=#6d9eeb]ON[/color][/font]]
+    - Return Items Silently [Default = [font=Courier New][color=#6d9eeb]ON[/color][/font], Possible Values = [font=Courier New][color=#6d9eeb]OFF[/color][/font]/[font=Courier New][color=#6d9eeb]ON[/color][/font]]
+- Crafting
+    - Crafting Station [Default = [font=Courier New][color=#6d9eeb]Dynamic[/color][/font], Possible Values = [font=Courier New][color=#6d9eeb]Dynamic[/color][/font]/[font=Courier New][color=#6d9eeb]Chemistry Station (Vanilla)[/color][/font]/[font=Courier New][color=#6d9eeb]Electronics Workbench (SW)[/color][/font]/[font=Courier New][color=#6d9eeb]Engineering Workbench (SW)[/color][/font]/[font=Courier New][color=#6d9eeb]Manufacturing Workbench (SW)[/color][/font]/[font=Courier New][color=#6d9eeb]Utility Workbench (SW)[/color][/font]/[font=Courier New][color=#6d9eeb]Adv. Engineering Workbench AWKCR)[/color][/font]/[font=Courier New][color=#6d9eeb]Electronics Workstation (AWKCR)[/color][/font]/[font=Courier New][color=#6d9eeb]Utility Workbench (AWKCR)[/color][/font]/[font=Courier New][color=#6d9eeb]Utility Station (ECO)[/color][/font]]
+- Hotkeys
+    - Behavior Override: Force Automatic Recycling Mode [Default = [font=Courier New][color=#6d9eeb]Ctrl-Shift[/color][/font], Possible Values = [font=Courier New][color=#6d9eeb](locked)[/color][/font]]
+    - Behavior Override: Force Transfer Junk [Default = [font=Courier New][color=#6d9eeb]Shift[/color][/font], Possible Values = [font=Courier New][color=#6d9eeb](locked)[/color][/font]]
+    - Behavior Override: Force Retain Junk [Default = [font=Courier New][color=#6d9eeb]Ctrl[/color][/font], Possible Values = [font=Courier New][color=#6d9eeb](locked)[/color][/font]]
+    - Modifier: Edit "Always Automatically Transfer" List [Default = [font=Courier New][color=#6d9eeb]Alt-Shift[/color][/font], Possible Values = [font=Courier New][color=#6d9eeb](locked)[/color][/font]]
+    - Modifier: Edit "Never Automatically Transfer" List [Default = [font=Courier New][color=#6d9eeb]Alt-Ctrl[/color][/font], Possible Values = [font=Courier New][color=#6d9eeb](locked)[/color][/font]]
+
+Multiplier Adjustments:
+- General
+    - (If "Settings > Adjustment Options > General Adjustments" is set to [font=Courier New][color=#6d9eeb]Simple[/color][/font])
+    - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - (If "Settings > Adjustment Options > General Adjustments" is set to [font=Courier New][color=#6d9eeb]Detailed[/color][/font])
+    - Components: Common
+    [font=Courier New][color=#6d9eeb] - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Components: Uncommon
+    [font=Courier New][color=#6d9eeb] - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Components: Rare
+    [font=Courier New][color=#6d9eeb] - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Components: Special
+    [font=Courier New][color=#6d9eeb] - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+- (If "Settings > Adjustment Options > Intelligence Affects Multiplier" is not set to [font=Courier New][color=#6d9eeb]OFF[/color][/font])
+- Intelligence
+    - (If "Settings > Adjustment Options > Intelligence Affects Multiplier" is set to [font=Courier New][color=#6d9eeb]ON (Simple)[/color][/font])
+    - Adjustment Per Point Of Intelligence [Default = [font=Courier New][color=#6d9eeb]0.01[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]1.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.005[/color][/font]]
+    - (If "Settings > Adjustment Options > Intelligence Affects Multiplier" is set to [font=Courier New][color=#6d9eeb]ON (Detailed)[/color][/font])
+    - Components: Common
+    [font=Courier New][color=#6d9eeb] - Adjustment Per Point Of Intelligence [Default = [font=Courier New][color=#6d9eeb]0.01[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]1.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.005[/color][/font]][/color][/font]
+    - Components: Uncommon
+    [font=Courier New][color=#6d9eeb] - Adjustment Per Point Of Intelligence [Default = [font=Courier New][color=#6d9eeb]0.01[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]1.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.005[/color][/font]][/color][/font]
+    - Components: Rare
+    [font=Courier New][color=#6d9eeb] - Adjustment Per Point Of Intelligence [Default = [font=Courier New][color=#6d9eeb]0.01[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]1.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.005[/color][/font]][/color][/font]
+    - Components: Special
+    [font=Courier New][color=#6d9eeb] - Adjustment Per Point Of Intelligence [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]1.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.005[/color][/font]][/color][/font]
+- (If "Settings > Adjustment Options > Luck Affects Multiplier" is not set to [font=Courier New][color=#6d9eeb]OFF[/color][/font])
+- Luck
+    - (If "Settings > Adjustment Options > Luck Affects Multiplier" is set to [font=Courier New][color=#6d9eeb]ON (Simple)[/color][/font])
+    - Adjustment Per Point Of Luck [Default = [font=Courier New][color=#6d9eeb]0.01[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]1.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.005[/color][/font]]
+    - (If "Settings > Adjustment Options > Luck Affects Multiplier" is set to [font=Courier New][color=#6d9eeb]ON (Detailed)[/color][/font])
+    - Components: Common
+    [font=Courier New][color=#6d9eeb] - Adjustment Per Point Of Luck [Default = [font=Courier New][color=#6d9eeb]0.01[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]1.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.005[/color][/font]][/color][/font]
+    - Components: Uncommon
+    [font=Courier New][color=#6d9eeb] - Adjustment Per Point Of Luck [Default = [font=Courier New][color=#6d9eeb]0.01[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]1.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.005[/color][/font]][/color][/font]
+    - Components: Rare
+    [font=Courier New][color=#6d9eeb] - Adjustment Per Point Of Luck [Default = [font=Courier New][color=#6d9eeb]0.01[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]1.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.005[/color][/font]][/color][/font]
+    - Components: Special
+    [font=Courier New][color=#6d9eeb] - Adjustment Per Point Of Luck [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]1.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.005[/color][/font]][/color][/font]
+- (If "Settings > Adjustment Options > Add Randomness To Multiplier" is not set to [font=Courier New][color=#6d9eeb]OFF[/color][/font])
+- Randomness
+    - (If "Settings > Adjustment Options > Add Randomness To Multiplier" is set to [font=Courier New][color=#6d9eeb]ON (Simple)[/color][/font])
+    - Minimum [Default = [font=Courier New][color=#6d9eeb]-0.1[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-6.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]6.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Maximum [Default = [font=Courier New][color=#6d9eeb]0.1[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-6.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]6.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - (If "Settings > Adjustment Options > Add Randomness To Multiplier" is set to [font=Courier New][color=#6d9eeb]ON (Detailed)[/color][/font])
+    - Components: Common
+    [font=Courier New][color=#6d9eeb] - Minimum [Default = [font=Courier New][color=#6d9eeb]-0.1[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-6.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]6.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Maximum [Default = [font=Courier New][color=#6d9eeb]0.1[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-6.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]6.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Components: Uncommon
+    [font=Courier New][color=#6d9eeb] - Minimum [Default = [font=Courier New][color=#6d9eeb]-0.1[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-6.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]6.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Maximum [Default = [font=Courier New][color=#6d9eeb]0.1[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-6.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]6.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Components: Rare
+    [font=Courier New][color=#6d9eeb] - Minimum [Default = [font=Courier New][color=#6d9eeb]-0.1[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-6.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]6.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Maximum [Default = [font=Courier New][color=#6d9eeb]0.1[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-6.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]6.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Components: Special
+    [font=Courier New][color=#6d9eeb] - Minimum [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-6.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]6.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Maximum [Default = [font=Courier New][color=#6d9eeb]0.1[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-6.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]6.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+- (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is not set to [font=Courier New][color=#6d9eeb]OFF[/color][/font])
+- Scrapper: Rank 1
+    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to [font=Courier New][color=#6d9eeb]ON (Simple)[/color][/font])
+    - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.1[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to "ON (Detailed)")
+    - Components: Common
+    [font=Courier New][color=#6d9eeb] - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.1[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Components: Uncommon
+    [font=Courier New][color=#6d9eeb] - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.1[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Components: Rare
+    [font=Courier New][color=#6d9eeb] - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.1[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Components: Special
+    [font=Courier New][color=#6d9eeb] - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+- (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is not set to [font=Courier New][color=#6d9eeb]OFF[/color][/font])
+- Scrapper: Rank 2
+    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to [font=Courier New][color=#6d9eeb]ON (Simple)[/color][/font])
+    - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.2[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to "ON (Detailed)")
+    - Components: Common
+    [font=Courier New][color=#6d9eeb] - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.2[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Components: Uncommon
+    [font=Courier New][color=#6d9eeb] - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.2[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Components: Rare
+    [font=Courier New][color=#6d9eeb] - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.2[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Components: Special
+    [font=Courier New][color=#6d9eeb] - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+- (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is not set to [font=Courier New][color=#6d9eeb]OFF[/color][/font] and Scrapper Rank 3 perk exists)
+- Scrapper: Rank 3
+    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to "ON (Simple)")
+    - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.3[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to "ON (Detailed)")
+    - Components: Common
+    [font=Courier New][color=#6d9eeb] - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.3[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Components: Uncommon
+    [font=Courier New][color=#6d9eeb] - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.3[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Components: Rare
+    [font=Courier New][color=#6d9eeb] - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.3[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Components: Special
+    [font=Courier New][color=#6d9eeb] - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+- (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is not set to [font=Courier New][color=#6d9eeb]OFF[/color][/font] and Scrapper Rank 4 perk exists)
+- Scrapper: Rank 4
+    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to "ON (Simple)")
+    - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.4[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to "ON (Detailed)")
+    - Components: Common
+    [font=Courier New][color=#6d9eeb] - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.4[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Components: Uncommon
+    [font=Courier New][color=#6d9eeb] - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.4[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Components: Rare
+    [font=Courier New][color=#6d9eeb] - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.4[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Components: Special
+    [font=Courier New][color=#6d9eeb] - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+- (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is not set to [font=Courier New][color=#6d9eeb]OFF[/color][/font] and Scrapper Rank 5 perk exists)
+- Scrapper: Rank 5
+    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to [font=Courier New][color=#6d9eeb]ON (Simple)[/color][/font])
+    - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.5[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to [font=Courier New][color=#6d9eeb]ON (Detailed)[/color][/font])
+    - Components: Common
+    [font=Courier New][color=#6d9eeb] - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.5[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Components: Uncommon
+    [font=Courier New][color=#6d9eeb] - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.5[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Components: Rare
+    [font=Courier New][color=#6d9eeb] - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.5[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+    - Components: Special
+    [font=Courier New][color=#6d9eeb] - In Player-Owned Settlements [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]][/color][/font]
+        - Everywhere Else [Default = [font=Courier New][color=#6d9eeb]0.0[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]-2.0[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]2.0[/color][/font], Step = [font=Courier New][color=#6d9eeb]0.01[/color][/font]]
+
+Advanced:
+- Multithreading
+    - Max Number Of Threads To Use [Default = [font=Courier New][color=#6d9eeb]32[/color][/font], Minimum = [font=Courier New][color=#6d9eeb]1[/color][/font], Maximum = [font=Courier New][color=#6d9eeb]32[/color][/font], Step = [font=Courier New][color=#6d9eeb]1[/color][/font]]
+- Methodology
+    - Use "Direct Move" Method To Update Recyclable Item List [Default = [font=Courier New][color=#6d9eeb]OFF[/color][/font], Possible Values = [font=Courier New][color=#6d9eeb]OFF[/color][/font]/[font=Courier New][color=#6d9eeb]ON[/color][/font]]
+
+
+[size=6]Credits and Thanks[/size]
+- Bethesda: For the base low res texture and the meshes used; also for Fallout 4
+- SavrenX: For the textures from the [url=https://www.nexusmods.com/fallout4/mods/40485]SavrenX HD Settlement and Clutters[/url] mod
+- pra: For some feature ideas based on their [url=https://www.nexusmods.com/fallout4/mods/35793]Scrapping Machine[/url] mod
+- Kentington: For the OG [url=https://www.nexusmods.com/fallout4/mods/14110]Portable Junk Recycler[/url] mod
+- DieFeM: For the [url=https://forums.nexusmods.com/index.php?/topic/7090211-removing-the-notifications-from-removeallitems-used-on-player/page-4#entry64900091]code inspiration[/url] to relatively quickly transfer items from one container to another while bypassing the ObjectReference.RemoveAllItems() function to avoid the freeze associated with it
+- Lively: For allowing me to post the beta of this mod on his Discord server to get some play testing done, and for the [url=https://www.nexusmods.com/fallout4/mods/51510]Lively's Keyword Resource[/url] mod
+- kinggath: For the [url=https://www.nexusmods.com/fallout4/mods/44949]Canary[/url] save file monitoring mod
+- Whisper: For the [url=https://www.nexusmods.com/fallout4/mods/41832]Standalone Workbenches[/url] mod
+- Gambit77, Valdacil, Thirdstorm: For the [url=https://www.nexusmods.com/fallout4/mods/6091]AWKCR[/url] mod
+- F4SE team: For [url=https://f4se.silverlock.org/]F4SE[/url], without which this mod would not exist
+- fireundubh: For [url=https://github.com/fireundubh/pyro]pyro[/url], which made developing the scripts for this mod so much easier
+- Neanka, reg2k, shadowslasher410: For the [url=https://www.nexusmods.com/fallout4/mods/21497/]Mod Configuration Menu[/url]
+- Joel Day: For the [url=https://marketplace.visualstudio.com/items?itemName=joelday.papyrus-lang-vscode]Papyrus extension[/url] for Visual Studio Code
+- Dank Rafft: For the [url=https://www.nexusmods.com/fallout4/mods/55503]Equipment and Crafting Overhaul (ECO)[/url] mod
+
+
+[size=6]Contact[/size]
+If you find a bug or have a question about the mod, please post it on the [url=https://www.nexusmods.com/fallout4/mods/54138]mod page at Nexus Mods[/url], or in the [url=https://github.com/rux616/Portable-Junk-Recycler-Mk-2]GitHub project[/url].
+
+If you need to contact me personally, I can be reached through one of the following means:
+- A message via my [url=https://www.nexusmods.com/fallout4/users/124191]Nexus Mods user profile page[/url]
+- My email (replace [font=Courier New][color=#6d9eeb]-at-[/color][/font] with [font=Courier New][color=#6d9eeb]@[/color][/font] and [font=Courier New][color=#6d9eeb]-dot-[/color][/font] with [font=Courier New][color=#6d9eeb].[/color][/font]): rux616-at-pm-dot-me
+- I also tend to hang out on various Discord servers (e.g. the ones for [url=https://discord.gg/nexusmods]Nexus Mods[/url] and [url=https://discord.gg/wabbajack]Wabbajack[/url])
