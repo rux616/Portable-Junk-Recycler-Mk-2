@@ -224,9 +224,9 @@
                }
             },
             {
-               "help": "$AllowJunkOnlyHelp",
-               "id": "bAllowJunkOnly:Behavior",
-               "text": "$AllowJunkOnlyText",
+               "help": "$EnableJunkFilterHelp",
+               "id": "bEnableJunkFilter:Behavior",
+               "text": "$EnableJunkFilterText",
                "type": "switcher",
                "valueOptions": {
                   "sourceType": "ModSettingBool"
@@ -276,9 +276,9 @@
             },
             {
                "groupControl": 16,
-               "help": "$AllowAutoTransferListEditingHelp",
-               "id": "bAllowAutoTransferListEditing:Behavior",
-               "text": "$AllowAutoTransferListEditingText",
+               "help": "$EnableAutoTransferListEditingHelp",
+               "id": "bEnableAutoTransferListEditing:Behavior",
+               "text": "$EnableAutoTransferListEditingText",
                "type": "switcher",
                "valueOptions": {
                   "sourceType": "ModSettingBool"
@@ -286,9 +286,9 @@
             },
             {
                "groupControl": 15,
-               "help": "$AllowBehaviorOverridesHelp",
-               "id": "bAllowBehaviorOverrides:Behavior",
-               "text": "$AllowBehaviorOverridesText",
+               "help": "$EnableBehaviorOverridesHelp",
+               "id": "bEnableBehaviorOverrides:Behavior",
+               "text": "$EnableBehaviorOverridesText",
                "type": "switcher",
                "valueOptions": {
                   "sourceType": "ModSettingBool"
