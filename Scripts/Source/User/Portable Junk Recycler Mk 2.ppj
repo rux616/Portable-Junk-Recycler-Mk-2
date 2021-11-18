@@ -39,7 +39,7 @@
         <Package Name="@ModName - Main" RootDir="@ModPath">
             <Include>Meshes\**\*.nif</Include>
             <Include>Scripts\**\*.pex</Include>
-            <Include>Strings\**\*.*STRINGS</Include>
+            <!-- <Include>Strings\**\*.*STRINGS</Include> -->
         </Package>
         <Package Name="High Res Textures\@ModName - Textures" RootDir="@ModPath">
             <Include>Textures\@ModResourceName\*.dds</Include>
@@ -65,7 +65,7 @@
             <Include Path="Options\Loose Files\Low Res Textures\@ModResourceName">Textures\@ModResourceName\lowres\*.dds</Include>
             <Include Path="Options\Loose Files\Meshes\@ModResourceName">Meshes\**\*.nif</Include>
             <Include Path="Options\Loose Files\Scripts\@ModResourceName">Scripts\**\*.pex</Include>
-            <Include Path="Options\Loose Files\Strings">Strings\**\*.*STRINGS</Include>
+            <!-- <Include Path="Options\Loose Files\Strings">Strings\**\*.*STRINGS</Include> -->
             <Include Path="Options\Source\Scripts\Source\User\@ModResourceName">Scripts\**\*.psc</Include>
         </ZipFile>
     </ZipFiles>
