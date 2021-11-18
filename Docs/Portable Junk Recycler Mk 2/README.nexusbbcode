@@ -100,6 +100,8 @@ This mod [b]REQUIRES[/b] both F4SE and MCM and will not work without them. I had
 
 Also by default, the Portable Junk Recycler Mk 2 will detect whether the [url=https://www.nexusmods.com/fallout4/mods/41832]Standalone Workbenches[/url], [url=https://www.nexusmods.com/fallout4/mods/55503]ECO[/url], or [url=https://www.nexusmods.com/fallout4/mods/6091]AWKCR[/url] mods are installed and will dynamically set itself to be crafted at the respective "Utility" workbenches, or at the vanilla "Chemistry Station" if none are installed. If more than one of the preceding mods are installed, the Standalone Workbenches Utility Workbench takes priority, followed by the ECO Utility Station, then the AWKCR Utility Workbench. The device can be found under the "UTILITY" category (or one of the other categories based on whether any of the category changer addon plugins are active or not).
 
+This mod (plus all of its extra bits like images, build scripts, etc.) is also available at the [url=https://github.com/rux616/Portable-Junk-Recycler-Mk-2]GitHub project[/url].
+
 
 [size=6]Mod Information[/size]
 
@@ -172,7 +174,7 @@ Additionally, the right hand side of the formula ([font=Courier New][color=#6d9e
     [font=Courier New][color=#6d9eeb]NumberOfComponentsReturned = floor/round/ceiling( max(1, NumberOfComponentsToRecycle * Multiplier) )[/color][/font]
 
 [size=5]Known Issues[/size]
-- If the "Return Items Silently" option is set to [font=Courier New][color=#6d9eeb]OFF[/color][/font] and you add scrap items (acid, bone, adhesive, ceramic, etc.) to the recycler, when the recycling process is complete, you may receive more than one notification for those scrap items that you added. I can't do anything about that without compromising the speed of the recycler (it would add almost an entire extra second to the processing time, at least), so if it is undesired behavior, you can set the "Return Items Silently" option to [font=Courier New][color=#6d9eeb]ON[/color][/font] or you can set the "Enable Container Filtering" option to [font=Courier New][color=#6d9eeb]ON[/color][/font] so that scrap items cannot be added to the container in the first place, or both. (Both of those options are [font=Courier New][color=#6d9eeb]ON[/color][/font] by default.) Alternatively, you can simply choose not to add scrap items.
+- If the "Return Items Silently" option is set to [font=Courier New][color=#6d9eeb]OFF[/color][/font] and you add scrap items (acid, bone, adhesive, ceramic, etc.) to the recycler, when the recycling process is complete, you may receive more than one notification for those scrap items that you added. I can't do anything about that without compromising the speed of the recycler (it could add almost an entire extra second to the processing time, at least), so if it is undesired behavior, you can set the "Return Items Silently" option to [font=Courier New][color=#6d9eeb]ON[/color][/font] or you can set the "Enable Junk Filter" option to [font=Courier New][color=#6d9eeb]ON[/color][/font] so that scrap items cannot be added to the container in the first place, or both. (Both of those options are [font=Courier New][color=#6d9eeb]ON[/color][/font] by default.) Alternatively, you can simply choose not to add scrap items.
 
 
 [size=6]Interesting Configurations[/size]
