@@ -17,6 +17,9 @@
 
 local mcm = import 'lib/mcm.libsonnet';
 
+local str_on_simple = '$ONSimple';
+local str_on_detailed = '$ONDetailed';
+local str_off = '$OFF';
 local str_indent_comp_c = '$IndentComponentsCommon';
 local str_indent_comp_u = '$IndentComponentsUncommon';
 local str_indent_comp_r = '$IndentComponentsRare';
@@ -36,18 +39,24 @@ local str_max = '$Maximum';
 local str_indent_min = '$IndentMinimum';
 local str_indent_max = '$IndentMaximum';
 
-local adjust_min = -1.0;
-local adjust_max = 1.0;
+local adjust_min = -2.0;
+local adjust_max = 2.0;
 local adjust_step = 0.01;
 local stat_adjust_min = 0.0;
 local stat_adjust_max = 1.0;
 local stat_adjust_step = 0.005;
+local random_adjust_min = -6.0;
+local random_adjust_max = 6.0;
+local random_adjust_step = 0.01;
+local threads_min = 1;
+local threads_max = 32;
+local threads_step = 1;
 
 {
   local mod = {
     name: 'Portable Junk Recycler Mk 2',
     localized_name: '$PortableJunkRecyclerMk2',
-    version: '0.5.0-beta',
+    version: '0.6.0-beta',
     plugin_name: mod.name + '.esp',
     quest_form: mod.plugin_name + '|800',
     control_script: 'PortableJunkRecyclerMk2:ControlScript',
@@ -69,6 +78,7 @@ local stat_adjust_step = 0.005;
       scrapper_5_available: 13,
       uninstall_safeguard: 14,
       behavior_override: 15,
+      edit_auto_transfer_list: 16,
     },
   },
 
@@ -87,11 +97,8 @@ local stat_adjust_step = 0.005;
       mcm.control.text(text='$AboutText'),
       mcm.control.spacer(lines=1),
 
-      mcm.control.section(text='$Multipliers'),
+      mcm.control.section(text='$Information'),
       mcm.control.button(text='$ViewCurrentMultipliersText', action=mcm.helper.action.call_function(mod.quest_form, 'ShowCurrentMultipliers', script_name=mod.control_script), help='$ViewCurrentMultipliersHelp'),
-      mcm.control.spacer(lines=1),
-
-      mcm.control.section(text='$Uses'),
       mcm.control.button(text='$ViewNumberOfUsesRemainingText', action=mcm.helper.action.call_function(mod.quest_form, 'ShowNumberOfUsesLeft', script_name=mod.control_script), help='$ViewNumberOfUsesRemainingHelp'),
     ],
     [mcm.field.pages]: [
@@ -100,7 +107,7 @@ local stat_adjust_step = 0.005;
         [mcm.field.content]: [
           // settings - general options
           mcm.control.section(text='$GeneralOptions'),
-          mcm.control.slider(text='$MultBaseText', min=0.0, max=2.0, step=0.01, source=mcm.helper.source.mod_setting.float(id='fMultBase:GeneralOptions'), help='$MultBaseHelp'),
+          mcm.control.slider(text='$MultBaseText', min=0.0, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultBase:GeneralOptions'), help='$MultBaseHelp'),
           mcm.control.switcher(text='$ReturnAtLeastOneComponentText', source=mcm.helper.source.mod_setting.bool(id='bReturnAtLeastOneComponent:GeneralOptions'), help='$ReturnAtLeastOneComponentHelp'),
           mcm.control.dropdown(text='$FractionalComponentHandlingText', options=['$RoundUp', '$RoundNormally', '$RoundDown'], source=mcm.helper.source.mod_setting.int(id='iFractionalComponentHandling:GeneralOptions'), help='$FractionalComponentHandlingHelp'),
           mcm.control.switcher(text='$HasLimitedUsesText', source=mcm.helper.source.mod_setting.bool(id='bHasLimitedUses:GeneralOptions'), help='$HasLimitedUsesHelp'),
@@ -110,10 +117,10 @@ local stat_adjust_step = 0.005;
           // settings - adjustment options
           mcm.control.section(text='$AdjustmentOptions'),
           mcm.control.dropdown(text='$GeneralAdjustmentsText', options=['$Simple', '$Detailed'], source=mcm.helper.source.mod_setting.int(id='iGeneralMultAdjust:AdjustmentOptions'), help='$GeneralAdjustmentsHelp'),
-          mcm.control.dropdown(text='$IntelligenceAffectsMultiplierText', options=['$OFF', '$ONSimple', '$ONDetailed'], source=mcm.helper.source.mod_setting.int(id='iIntAffectsMult:AdjustmentOptions'), help='$IntelligenceAffectsMultiplierHelp'),
-          mcm.control.dropdown(text='$LuckAffectsMultiplierText', options=['$OFF', '$ONSimple', '$ONDetailed'], source=mcm.helper.source.mod_setting.int(id='iLckAffectsMult:AdjustmentOptions'), help='$LuckAffectsMultiplierHelp'),
-          mcm.control.dropdown(text='$AddRandomnessToMultiplierText', options=['$OFF', '$ONSimple', '$ONDetailed'], source=mcm.helper.source.mod_setting.int(id='iRngAffectsMult:AdjustmentOptions'), help='$AddRandomnessToMultiplierHelp'),
-          mcm.control.dropdown(text='$ScrapperPerkAffectsMultiplierText', options=['$OFF', '$ONSimple', '$ONDetailed'], source=mcm.helper.source.mod_setting.int(id='iScrapperAffectsMult:AdjustmentOptions'), help='$ScrapperPerkAffectsMultiplierHelp'),
+          mcm.control.dropdown(text='$IntelligenceAffectsMultiplierText', options=[str_off, str_on_simple, str_on_detailed], source=mcm.helper.source.mod_setting.int(id='iIntAffectsMult:AdjustmentOptions'), help='$IntelligenceAffectsMultiplierHelp'),
+          mcm.control.dropdown(text='$LuckAffectsMultiplierText', options=[str_off, str_on_simple, str_on_detailed], source=mcm.helper.source.mod_setting.int(id='iLckAffectsMult:AdjustmentOptions'), help='$LuckAffectsMultiplierHelp'),
+          mcm.control.dropdown(text='$AddRandomnessToMultiplierText', options=[str_off, str_on_simple, str_on_detailed], source=mcm.helper.source.mod_setting.int(id='iRngAffectsMult:AdjustmentOptions'), help='$AddRandomnessToMultiplierHelp'),
+          mcm.control.dropdown(text='$ScrapperPerkAffectsMultiplierText', options=[str_off, str_on_simple, str_on_detailed], source=mcm.helper.source.mod_setting.int(id='iScrapperAffectsMult:AdjustmentOptions'), help='$ScrapperPerkAffectsMultiplierHelp'),
           mcm.control.spacer(lines=1),
         ],
       },
@@ -123,27 +130,31 @@ local stat_adjust_step = 0.005;
           // recycler interface - behavior
           mcm.control.section(text='$Behavior'),
           mcm.control.switcher(text='$AutoRecyclingModeText', source=mcm.helper.source.mod_setting.bool(id='bAutoRecyclingMode:Behavior'), help='$AutoRecyclingModeHelp'),
-          mcm.control.switcher(text='$AllowJunkOnlyText', source=mcm.helper.source.mod_setting.bool(id='bAllowJunkOnly:Behavior'), help='$AllowJunkOnlyHelp'),
+          mcm.control.switcher(text='$EnableJunkFilterText', source=mcm.helper.source.mod_setting.bool(id='bEnableJunkFilter:Behavior'), help='$EnableJunkFilterHelp'),
           mcm.control.switcher(text='$AutoTransferJunkText', source=mcm.helper.source.mod_setting.bool(id='bAutoTransferJunk:Behavior'), help='$AutoTransferJunkHelp'),
+          mcm.control.dropdown(text='$IndentTransferLowWeightRatioItemsText', options=[str_off, '$WhenInPlayerOwnedSettlement', '$WhenNotInPlayerOwnedSettlement', '$Always'], source=mcm.helper.source.mod_setting.int(id='iTransferLowWeightRatioItems:Behavior'), help='$TransferLowWeightRatioItemsHelp'),
           mcm.control.switcher(text='$UseAlwaysAutoTransferListText', source=mcm.helper.source.mod_setting.bool(id='bUseAlwaysAutoTransferList:Behavior'), help='$UseAlwaysAutoTransferListHelp'),
           mcm.control.switcher(text='$UseNeverAutoTransferListText', source=mcm.helper.source.mod_setting.bool(id='bUseNeverAutoTransferList:Behavior'), help='$UseNeverAutoTransferListHelp'),
-          mcm.control.switcher(text='$AllowBehaviorOverridesText', source=mcm.helper.source.mod_setting.bool(id='bAllowBehaviorOverrides:Behavior'), group=mcm.helper.group.control(mod.group_id.behavior_override), help='$AllowBehaviorOverridesHelp'),
+          mcm.control.switcher(text='$EnableAutoTransferListEditingText', source=mcm.helper.source.mod_setting.bool(id='bEnableAutoTransferListEditing:Behavior'), group=mcm.helper.group.control(mod.group_id.edit_auto_transfer_list), help='$EnableAutoTransferListEditingHelp'),
+          mcm.control.switcher(text='$EnableBehaviorOverridesText', source=mcm.helper.source.mod_setting.bool(id='bEnableBehaviorOverrides:Behavior'), group=mcm.helper.group.control(mod.group_id.behavior_override), help='$EnableBehaviorOverridesHelp'),
           mcm.control.switcher(text='$ReturnItemsSilentlyText', source=mcm.helper.source.mod_setting.bool(id='bReturnItemsSilently:Behavior'), help='$ReturnItemsSilentlyHelp'),
+          mcm.control.spacer(lines=1),
+          mcm.control.text(text='$TransferLowWeightRatioItemsNote'),
           mcm.control.spacer(lines=1),
 
           // recycler interface - crafting
           mcm.control.section(text='$Crafting'),
-          mcm.control.dropdown(text='$CraftingStationText', options=['$Dynamic', '$SWElectronics', '$SWEngineering', '$SWManufacturing', '$SWUtility', '$AWKCRAdvEngineering', '$AWKCRElectronics', '$AWKCRUtility', '$VanillaChemistry'], source=mcm.helper.source.mod_setting.int(id='iCraftingStation:Crafting'), help='$CraftingStationHelp'),
+          mcm.control.dropdown(text='$CraftingStationText', options=['$Dynamic', '$VanillaChemistry', '$SWElectronics', '$SWEngineering', '$SWManufacturing', '$SWUtility', '$AWKCRAdvEngineering', '$AWKCRElectronics', '$AWKCRUtility', '$ECOUtility'], source=mcm.helper.source.mod_setting.int(id='iCraftingStation:Crafting'), help='$CraftingStationHelp'),
+          mcm.control.text(text='$CraftingStationNote'),
           mcm.control.spacer(lines=1),
 
           // recycler interface - hotkeys
-          // TODO - put in group control tieing BO controls to toggle above
           mcm.control.section(text='$Hotkeys'),
           mcm.control.stepper(text='$BehaviorOverrideForceAutoRecyclingModeText', options=['$HotkeyCtrlShift'], group=mcm.helper.group.condition.or(mod.group_id.behavior_override), help='$BehaviorOverrideForceAutoRecyclingModeHelp'),
           mcm.control.stepper(text='$BehaviorOverrideForceTransferJunkText', options=['$HotkeyShift'], group=mcm.helper.group.condition.or(mod.group_id.behavior_override), help='$BehaviorOverrideForceTransferJunkHelp'),
           mcm.control.stepper(text='$BehaviorOverrideForceRetainJunkText', options=['$HotkeyCtrl'], group=mcm.helper.group.condition.or(mod.group_id.behavior_override), help='$BehaviorOverrideForceRetainJunkHelp'),
-          mcm.control.stepper(text='$EditAlwaysAutoTransferListText', options=['$HotkeyAltShift'], help='$EditAlwaysAutoTransferListHelp'),
-          mcm.control.stepper(text='$EditNeverAutoTransferListText', options=['$HotkeyAltCtrl'], help='$EditNeverAutoTransferListHelp'),
+          mcm.control.stepper(text='$EditAlwaysAutoTransferListText', options=['$HotkeyAltShift'], group=mcm.helper.group.condition.or(mod.group_id.edit_auto_transfer_list), help='$EditAlwaysAutoTransferListHelp'),
+          mcm.control.stepper(text='$EditNeverAutoTransferListText', options=['$HotkeyAltCtrl'], group=mcm.helper.group.condition.or(mod.group_id.edit_auto_transfer_list), help='$EditNeverAutoTransferListHelp'),
         ],
       },
       {
@@ -217,21 +228,21 @@ local stat_adjust_step = 0.005;
 
           mcm.control.section(text='$Randomness', group=mcm.helper.group.condition.or([mod.group_id.rng_affects_mult_simple, mod.group_id.rng_affects_mult_detailed])),
 
-          mcm.control.slider(text=str_min, min=adjust_min, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMin:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_simple), help='$MultAdjustRandomMinHelp'),
-          mcm.control.slider(text=str_max, min=adjust_min, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMax:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_simple), help='$MultAdjustRandomMaxHelp'),
+          mcm.control.slider(text=str_min, min=random_adjust_min, max=random_adjust_max, step=random_adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMin:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_simple), help='$MultAdjustRandomMinHelp'),
+          mcm.control.slider(text=str_max, min=random_adjust_min, max=random_adjust_max, step=random_adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMax:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_simple), help='$MultAdjustRandomMaxHelp'),
 
           mcm.control.section(text=str_indent_comp_c, group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed)),
-          mcm.control.slider(text=str_indent_min, min=adjust_min, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMinC:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMinCHelp'),
-          mcm.control.slider(text=str_indent_max, min=adjust_min, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMaxC:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMaxCHelp'),
+          mcm.control.slider(text=str_indent_min, min=random_adjust_min, max=random_adjust_max, step=random_adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMinC:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMinCHelp'),
+          mcm.control.slider(text=str_indent_max, min=random_adjust_min, max=random_adjust_max, step=random_adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMaxC:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMaxCHelp'),
           mcm.control.section(text=str_indent_comp_u, group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed)),
-          mcm.control.slider(text=str_indent_min, min=adjust_min, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMinU:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMinUHelp'),
-          mcm.control.slider(text=str_indent_max, min=adjust_min, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMaxU:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMaxUHelp'),
+          mcm.control.slider(text=str_indent_min, min=random_adjust_min, max=random_adjust_max, step=random_adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMinU:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMinUHelp'),
+          mcm.control.slider(text=str_indent_max, min=random_adjust_min, max=random_adjust_max, step=random_adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMaxU:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMaxUHelp'),
           mcm.control.section(text=str_indent_comp_r, group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed)),
-          mcm.control.slider(text=str_indent_min, min=adjust_min, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMinR:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMinRHelp'),
-          mcm.control.slider(text=str_indent_max, min=adjust_min, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMaxR:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMaxRHelp'),
+          mcm.control.slider(text=str_indent_min, min=random_adjust_min, max=random_adjust_max, step=random_adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMinR:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMinRHelp'),
+          mcm.control.slider(text=str_indent_max, min=random_adjust_min, max=random_adjust_max, step=random_adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMaxR:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMaxRHelp'),
           mcm.control.section(text=str_indent_comp_s, group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed)),
-          mcm.control.slider(text=str_indent_min, min=adjust_min, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMinS:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMinSHelp'),
-          mcm.control.slider(text=str_indent_max, min=adjust_min, max=adjust_max, step=adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMaxS:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMaxSHelp'),
+          mcm.control.slider(text=str_indent_min, min=random_adjust_min, max=random_adjust_max, step=random_adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMinS:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMinSHelp'),
+          mcm.control.slider(text=str_indent_max, min=random_adjust_min, max=random_adjust_max, step=random_adjust_step, source=mcm.helper.source.mod_setting.float(id='fMultAdjustRandomMaxS:MultiplierAdjustments'), group=mcm.helper.group.condition.or(mod.group_id.rng_affects_mult_detailed), help='$MultAdjustRandomMaxSHelp'),
 
           mcm.control.spacer(lines=1, group=mcm.helper.group.condition.or([mod.group_id.rng_affects_mult_simple, mod.group_id.rng_affects_mult_detailed])),
 
@@ -351,6 +362,16 @@ local stat_adjust_step = 0.005;
       {
         [mcm.field.page_display_name]: '$Advanced',
         [mcm.field.content]: [
+          // advanced - multithreading
+          mcm.control.section(text='$Multithreading'),
+          mcm.control.slider(text='$ThreadLimitText', min=threads_min, max=threads_max, step=threads_step, source=mcm.helper.source.mod_setting.int(id='iThreadLimit:Advanced'), help='$ThreadLimitHelp'),
+          mcm.control.spacer(lines=1),
+
+          // advanced - methodology
+          mcm.control.section(text='$Methodology'),
+          mcm.control.switcher(text='$UseDirectMoveRecyclableItemListUpdateText', source=mcm.helper.source.mod_setting.bool(id='bUseDirectMoveRecyclableItemListUpdate:Advanced'), help='$UseDirectMoveRecyclableItemListUpdateHelp'),
+          mcm.control.spacer(lines=1),
+
           // advanced - reset settings to default
           mcm.control.section(text='$Settings'),
           mcm.control.button(text='$ResetSettingsToDefaultsText', action=mcm.helper.action.call_function(form=mod.quest_form, function_name='ResetToDefaults', script_name=mod.control_script), help='$ResetSettingsToDefaultsHelp'),
@@ -363,7 +384,7 @@ local stat_adjust_step = 0.005;
 
           // advanced - reset item lists
           mcm.control.section(text='$ItemLists'),
-          mcm.control.button(text='$ResetRecyclableItemListText', action=mcm.helper.action.call_function(form=mod.quest_form, function_name='ResetRecyclableItemList', script_name=mod.control_script), help='$ResetRecyclableItemListHelp'),
+          mcm.control.button(text='$ResetRecyclableItemsListsText', action=mcm.helper.action.call_function(form=mod.quest_form, function_name='ResetRecyclableItemsLists', script_name=mod.control_script), help='$ResetRecyclableItemsListsHelp'),
           mcm.control.button(text='$ResetAlwaysAutoTransferListText', action=mcm.helper.action.call_function(form=mod.quest_form, function_name='ResetAlwaysAutoTransferList', script_name=mod.control_script), help='$ResetAlwaysAutoTransferListHelp'),
           mcm.control.button(text='$ResetNeverAutoTransferListText', action=mcm.helper.action.call_function(form=mod.quest_form, function_name='ResetNeverAutoTransferList', script_name=mod.control_script), help='$ResetNeverAutoTransferListHelp'),
           mcm.control.spacer(lines=1),

@@ -34,6 +34,36 @@
             "options": {
                 "cwd": "${workspaceFolder}/MCM/Config/Portable Junk Recycler Mk 2",
             },
-        }
+            "dependsOn": ["Render Markdown to Nexus BBCode"],
+        },
+        {
+            "label": "Render Markdown to Nexus BBCode",
+            "type": "shell",
+            "command": "bash",
+            "args": ["-c", "../../Working/Scripts/markdown-to-nexusbbcode.sh README.md"],
+            "options": {
+                "cwd": "${workspaceFolder}/Docs/Portable Junk Recycler Mk 2",
+            },
+            "dependsOn": ["Render Markdown to Plaintext"],
+        },
+        {
+            "label": "Render Markdown to Plaintext",
+            "type": "shell",
+            "command": "bash",
+            "args": ["-c", "../../Working/Scripts/markdown-to-plaintext.sh README.md CHANGELOG.md"],
+            "options": {
+                "cwd": "${workspaceFolder}/Docs/Portable Junk Recycler Mk 2",
+            },
+            "dependsOn": ["Update Versions"],
+        },
+        {
+            "label": "Update Versions",
+            "type": "shell",
+            "command": "bash",
+            "args": ["-c", "./Working/Scripts/version-updater.sh"],
+            "options": {
+                "cwd": "${workspaceFolder}",
+            }
+        },
     ]
 }
