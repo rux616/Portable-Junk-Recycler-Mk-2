@@ -2222,6 +2222,7 @@ Function Uninstall()
         TransferLowWeightRatioItems = None
         UseAlwaysAutoTransferList = None
         UseNeverAutoTransferList = None
+        EnableAutoTransferListEditing = None
         EnableBehaviorOverrides = None
         ReturnItemsSilently = None
         ; multiplier adjustments - general
