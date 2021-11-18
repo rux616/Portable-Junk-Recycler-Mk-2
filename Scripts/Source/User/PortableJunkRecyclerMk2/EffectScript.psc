@@ -31,6 +31,8 @@ import PortableJunkRecyclerMk2:Base
 Group Miscellaneous
     Actor Property PlayerRef Auto Mandatory
     ThreadManager Property ThreadManager Auto Mandatory
+    Keyword Property KeywordObjectTypeLooseMod Auto Mandatory
+    Keyword Property KeywordUnscrappableObject Auto Mandatory
 EndGroup
 
 Group PortableJunkRecycler
@@ -475,6 +477,7 @@ EndFunction
 Function UpdateRecyclableItemListDirectMove()
     ; reduce the number of MiscObjects left in the player's inventory in an effort to reduce the number of items
     ; this function will need to iterate over
+
     ; known recyclable items
     If PortableRecyclerControl.RecyclableItemList.Size
         Self._DebugTrace("Moving currently known recyclable items from player to secondary temp container")
@@ -482,7 +485,10 @@ Function UpdateRecyclableItemListDirectMove()
     EndIf
     ; mods
     Self._DebugTrace("Moving mods from player to secondary temp container")
-    PlayerRef.RemoveItem(Game.GetFormFromFile(0x135C17, "Fallout4.esm"), -1, true, TempContainerSecondary)
+    PlayerRef.RemoveItem(KeywordObjectTypeLooseMod, -1, true, TempContainerSecondary)
+    ; unscrappable items
+    Self._DebugTrace("Moving unscrappable items from player to secondary temp container")
+    PlayerRef.RemoveItem(KeywordUnscrappableObject, -1, true, TempContainerSecondary)
     ; scrap items
     If PortableRecyclerControl.ScrapListAll.Size
         Self._DebugTrace("Moving scrap items from player to secondary temp container")
@@ -537,7 +543,10 @@ Function UpdateRecyclableItemListDirectMove()
     EndIf
     ; mods
     Self._DebugTrace("Moving mods back from secondary temp container to player")
-    PlayerRef.RemoveItem(Game.GetFormFromFile(0x135C17, "Fallout4.esm"), -1, true, TempContainerSecondary)
+    TempContainerSecondary.RemoveItem(KeywordUnscrappableObject, -1, true, PlayerRef)
+    ; unscrappable items
+    Self._DebugTrace("Moving unscrappable items back from secondary temp container to player")
+    TempContainerSecondary.RemoveItem(KeywordUnscrappableObject, -1, true, PlayerRef)
     ; scrap items
     If PortableRecyclerControl.ScrapListAll.Size
         Self._DebugTrace("Moving scrap items back from secondary temp container to player")
@@ -568,6 +577,7 @@ Function UpdateRecyclableItemListNoTouch()
 
     ; remove as many MiscObjects as possible from the inventory to reduce the number of items that this function
     ; needs to iterate over
+
     ; known recyclable items
     If PortableRecyclerControl.RecyclableItemList.Size
         Self._DebugTrace("Removing currently known recyclable items from the temp container")
@@ -575,7 +585,10 @@ Function UpdateRecyclableItemListNoTouch()
     EndIf
     ; mods
     Self._DebugTrace("Removing mods from the temp container")
-    TempContainerSecondary.RemoveItem(Game.GetFormFromFile(0x135C17, "Fallout4.esm"), -1, true, None)
+    TempContainerSecondary.RemoveItem(KeywordObjectTypeLooseMod, -1, true, None)
+    ; unscrappable items
+    Self._DebugTrace("Removing unscrappable items from the temp container")
+    TempContainerSecondary.RemoveItem(KeywordUnscrappableObject, -1, true, None)
     ; scrap items
     If PortableRecyclerControl.ScrapListAll.Size
         Self._DebugTrace("Removing scrap items from the temp container")
