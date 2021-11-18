@@ -29,6 +29,8 @@
 # PJRM2 Crafting Category Override - LKR Utility.esp
 # Portable Junk Recycler Mk 2.esp
 
+set -e
+
 source ".version"
 
 # update build number
