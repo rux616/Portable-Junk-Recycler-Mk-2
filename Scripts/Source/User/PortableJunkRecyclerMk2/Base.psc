@@ -60,12 +60,14 @@ EndStruct
 Struct SettingBool
     bool Value
     bool ValueDefault
+    bool ValuePrevious
     string McmId
 EndStruct
 
 Struct SettingFloat
     float Value
     float ValueDefault
+    float ValuePrevious
     string McmId
     float ValueMin
     float ValueMax
@@ -74,6 +76,7 @@ EndStruct
 Struct SettingInt
     int Value
     int ValueDefault
+    int ValuePrevious
     string McmId
     int ValueMin
     int ValueMax
@@ -105,6 +108,7 @@ Function ChangeSettingBool(SettingBool akSettingToChange, int aiChangeType, bool
     SettingChangeType availableChangeTypes = new SettingChangeType
 
     If aiChangeType == availableChangeTypes.ValueOnly || aiChangeType == availableChangeTypes.Both
+        akSettingToChange.ValuePrevious = akSettingToChange.Value
         akSettingToChange.Value = abNewValue
     EndIf
 
@@ -125,6 +129,7 @@ Function ChangeSettingFloat(SettingFloat akSettingToChange, int aiChangeType, fl
     EndIf
 
     If aiChangeType == availableChangeTypes.ValueOnly || aiChangeType == availableChangeTypes.Both
+        akSettingToChange.ValuePrevious = akSettingToChange.Value
         akSettingToChange.Value = afNewValue
     EndIf
 
@@ -145,6 +150,7 @@ Function ChangeSettingInt(SettingInt akSettingToChange, int aiChangeType, int ai
     EndIf
 
     If aiChangeType == availableChangeTypes.ValueOnly || aiChangeType == availableChangeTypes.Both
+        akSettingToChange.ValuePrevious = akSettingToChange.Value
         akSettingToChange.Value = aiNewValue
     EndIf
 

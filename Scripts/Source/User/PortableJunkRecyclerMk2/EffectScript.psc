@@ -72,9 +72,8 @@ EndGroup
 ; ---------
 
 string ModName = "Portable Junk Recycler Mk 2" const
-int MaxThreads = 16 const
-var[] Threads
 
+bool ProfilingActive = false
 ObjectReference TempContainerPrimary
 ObjectReference TempContainerSecondary
 bool AsyncSubprocessComplete = false
@@ -93,7 +92,7 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
     ElseIf ! PortableRecyclerControl.MutexRunning && ! PortableRecyclerControl.MutexBusy
         ; normal mode of operation: a recycler process isn't already running nor is the quest busy
         PortableRecyclerControl.MutexRunning = true
-        Debug.StartStackProfiling()
+        Self._DebugStartStackProfiling()
 
         ; record the states of the hotkeys immediately
         bool hotkeyRetain = PortableRecyclerControl.HotkeyForceRetainJunk
@@ -151,7 +150,7 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
         TempContainerSecondary = None
 
         ; enable the recycle process to be run again
-        Debug.StopStackProfiling()
+        Self._DebugStopStackProfiling()
         PortableRecyclerControl.MutexRunning = false
     ElseIf PortableRecyclerControl.MutexRunning && ! PortableRecyclerControl.MutexBusy
         ; another recycling process is already running, tell the user
@@ -172,14 +171,33 @@ EndEvent
 ; ---------
 
 ; add a bit of text to traces going into the papyrus user log
-Function _DebugTrace(string asMessage, int aiSeverity = 0) DebugOnly
-    string baseMessage = "EffectScript: " const
-    If aiSeverity == 0
-        Debug.TraceUser(ModName, baseMessage + asMessage)
-    ElseIf aiSeverity == 1
-        Debug.TraceUser(ModName, "WARNING: " + baseMessage + asMessage)
-    ElseIf aiSeverity == 2
-        Debug.TraceUser(ModName, "ERROR: " + baseMessage + asMessage)
+Function _DebugTrace(string asMessage, int aiSeverity = 0, bool abForce = false) DebugOnly
+    If ! PortableRecyclerControl.EnableLogging || PortableRecyclerControl.EnableLogging.Value || abForce
+        string baseMessage = "EffectScript: " const
+        If aiSeverity == 0
+            Debug.TraceUser(ModName, baseMessage + asMessage)
+        ElseIf aiSeverity == 1
+            Debug.TraceUser(ModName, "WARNING: " + baseMessage + asMessage)
+        ElseIf aiSeverity == 2
+            Debug.TraceUser(ModName, "ERROR: " + baseMessage + asMessage)
+        EndIf
+    EndIf
+EndFunction
+
+; start stack profiling
+Function _DebugStartStackProfiling() DebugOnly
+    If ! PortableRecyclerControl.EnableProfiling || PortableRecyclerControl.EnableProfiling.Value
+        Debug.StartStackProfiling()
+        ProfilingActive = true
+        Self._DebugTrace("Stack profiling started")
+    EndIf
+EndFunction
+
+; stop stack profiling
+Function _DebugStopStackProfiling() DebugOnly
+    If ProfilingActive
+        Debug.StopStackProfiling()
+        Self._DebugTrace("Stack profiling stopped")
     EndIf
 EndFunction
 
@@ -355,7 +373,7 @@ EndFunction
 
 ; function to do work asynchronously (via CallFunctionNoWait) while waiting for the container to open
 Function RecycleAsync(bool abUpdateRecyclableList, bool abTransferJunk, bool abTransferAllJunk)
-    Debug.StartStackProfiling()
+    Self._DebugStartStackProfiling()
 
     ; update the recyclable item list if needed
     If abUpdateRecyclableList
@@ -394,7 +412,7 @@ Function RecycleAsync(bool abUpdateRecyclableList, bool abTransferJunk, bool abT
     ; signal that the function is complete
     AsyncSubprocessComplete = true
 
-    Debug.StopStackProfiling()
+    Self._DebugStopStackProfiling()
 EndFunction
 
 ; handles editing an auto transfer list
@@ -453,7 +471,7 @@ EndFunction
 
 ; function to do work asynchronously (via CallFunctionNoWait) while waiting for the container to open
 Function EditAutoTransferListAsync(FormListWrapper akAutoTransferList, ObjectReference akContainer)
-    Debug.StartStackProfiling()
+    Self._DebugStartStackProfiling()
 
     ; update the FormList holding the recyclable items
     If PortableRecyclerControl.UseDirectMoveRecyclableItemListUpdate.Value
@@ -470,7 +488,7 @@ Function EditAutoTransferListAsync(FormListWrapper akAutoTransferList, ObjectRef
     ; signal that the function is complete
     AsyncSubprocessComplete = true
 
-    Debug.StopStackProfiling()
+    Self._DebugStopStackProfiling()
 EndFunction
 
 ; updates the FormList containing recyclable items

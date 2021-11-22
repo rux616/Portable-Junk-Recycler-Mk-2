@@ -199,8 +199,10 @@ Group Settings
     SettingFloat[] Property MultAdjustScrapperNotSettlementR Auto Hidden
     SettingFloat[] Property MultAdjustScrapperNotSettlementS Auto Hidden
 
-    ; advanced - multithreading
+    ; advanced - general options
     SettingInt Property ThreadLimit Auto Hidden
+    SettingBool Property EnableLogging Auto Hidden
+    SettingBool Property EnableProfiling Auto Hidden
 
     ; advanced - methodology
     SettingBool Property UseDirectMoveRecyclableItemListUpdate Auto Hidden
@@ -216,11 +218,12 @@ int Property iSaveFileMonitor Auto Hidden ; Do not mess with ever - this is used
 ; ---------
 
 string ModName = "Portable Junk Recycler Mk 2" const
-string ModVersion = "0.6.0-beta" const
+string ModVersion = "0.7.0-beta" const
 string FullScriptName = "PortableJunkRecyclerMk2:ControlScript" const
 int ScrapperPerkMaxRanksSupported = 5 const
 SettingChangeType AvailableChangeTypes
 int CurrentChangeType
+bool ProfilingActive = false
 
 ; DirectX scan codes: https://www.creationkit.com/fallout4/index.php?title=DirectX_Scan_Codes
 int LShift = 160 const
@@ -237,18 +240,18 @@ int RAlt = 165 const
 
 Event OnQuestInit()
     MutexBusy = true
-    Debug.StartStackProfiling()
     Debug.OpenUserLog(ModName)
+    Self._DebugStartStackProfiling()
 
     Self.Initialize(abQuestInit = true)
 
-    Debug.StopStackProfiling()
+    Self._DebugStopStackProfiling()
     MutexBusy = false
 EndEvent
 
 Event Actor.OnPlayerLoadGame(Actor akSender)
-    Debug.StartStackProfiling()
     Debug.OpenUserLog(ModName)
+    Self._DebugStartStackProfiling()
 
     ; immediately abort if there's already a thread waiting on mutex release
     If MutexWaiting
@@ -277,7 +280,7 @@ Event Actor.OnPlayerLoadGame(Actor akSender)
         Self._DebugTrace("OnPlayerLoadGame: Mutexes didn't release within time limit", 1)
     EndIf
 
-    Debug.StopStackProfiling()
+    Self._DebugStopStackProfiling()
     MutexWaiting = false
 EndEvent
 
@@ -320,25 +323,45 @@ EndEvent
 ; ---------
 
 ; add a bit of text to traces going into the papyrus user log
-Function _DebugTrace(string asMessage, int aiSeverity = 0) DebugOnly
-    string baseMessage = "ControlScript: " const
-    If aiSeverity == 0
-        Debug.TraceUser(ModName, baseMessage + asMessage)
-    ElseIf aiSeverity == 1
-        Debug.TraceUser(ModName, "WARNING: " + baseMessage + asMessage)
-    ElseIf aiSeverity == 2
-        Debug.TraceUser(ModName, "ERROR: " + baseMessage + asMessage)
+Function _DebugTrace(string asMessage, int aiSeverity = 0, bool abForce = false) DebugOnly
+    If ! EnableLogging || EnableLogging.Value || abForce
+        string baseMessage = "ControlScript: " const
+        If aiSeverity == 0
+            Debug.TraceUser(ModName, baseMessage + asMessage)
+        ElseIf aiSeverity == 1
+            Debug.TraceUser(ModName, "WARNING: " + baseMessage + asMessage)
+        ElseIf aiSeverity == 2
+            Debug.TraceUser(ModName, "ERROR: " + baseMessage + asMessage)
+        EndIf
+    EndIf
+EndFunction
+
+; start stack profiling
+Function _DebugStartStackProfiling() DebugOnly
+    If ! EnableProfiling || EnableProfiling.Value
+        Debug.StartStackProfiling()
+        ProfilingActive = true
+        Self._DebugTrace("Stack profiling started")
+    EndIf
+EndFunction
+
+; stop stack profiling
+Function _DebugStopStackProfiling() DebugOnly
+    If ProfilingActive
+        Debug.StopStackProfiling()
+        Self._DebugTrace("Stack profiling stopped")
     EndIf
 EndFunction
 
 ; consolidated init
 Function Initialize(bool abQuestInit = false)
-    Self._DebugTrace(ModName + " v" + ModVersion)
-    Self._DebugTrace("ThreadManager initialized: " + ThreadManager.Initialized)
+    Self.WriteLoggingStatus()
+    Self._DebugTrace(ModName + " v" + ModVersion, abForce = true)
+    Self._DebugTrace("ThreadManager initialized: " + ThreadManager.Initialized, abForce = true)
     If abQuestInit
-        Self._DebugTrace("Beginning onetime init process")
+        Self._DebugTrace("Beginning onetime init process", abForce = true)
     Else
-        Self._DebugTrace("Beginning runtime init process")
+        Self._DebugTrace("Beginning runtime init process", abForce = true)
     EndIf
     Self.CheckForCanary()
     Self.InitVariables(abForce = abQuestInit)
@@ -364,9 +387,9 @@ Function Initialize(bool abQuestInit = false)
         RegisterForRemoteEvent(PlayerRef, "OnPlayerLoadGame")
         RegisterForMenuOpenCloseEvent("PauseMenu")
         MessageInitialized.Show()
-        Self._DebugTrace("Finished onetime init process")
+        Self._DebugTrace("Finished onetime init process", abForce = true)
     Else
-        Self._DebugTrace("Finished runtime init process")
+        Self._DebugTrace("Finished runtime init process", abForce = true)
     EndIf
 EndFunction
 
@@ -382,15 +405,15 @@ EndFunction
 ; check to see if F4SE is installed
 Function CheckForF4SE()
     Debug.Trace(FullScriptName + ": Checking if F4SE is installed...")
-    Self._DebugTrace("Checking if F4SE is installed...")
+    Self._DebugTrace("Checking if F4SE is installed...", abForce = true)
     ScriptExtenderInstalled = F4SE.GetVersionRelease() as bool
     If ScriptExtenderInstalled
         Debug.Trace(FullScriptName + ": F4SE installed")
         Self._DebugTrace("F4SE v" + F4SE.GetVersion() + "." + F4SE.GetVersionMinor() + "." + F4SE.GetVersionBeta() + "." + \
-            F4SE.GetVersionRelease() + " installed (script version " + F4SE.GetScriptVersionRelease() + ")")
+            F4SE.GetVersionRelease() + " installed (script version " + F4SE.GetScriptVersionRelease() + ")", abForce = true)
     Else
         Debug.Trace(FullScriptName + ": F4SE not installed", 1)
-        Self._DebugTrace("F4SE not installed", 1)
+        Self._DebugTrace("F4SE not installed", 1, abForce = true)
         MessageF4SENotInstalled.Show()
     EndIf
 EndFunction
@@ -398,20 +421,20 @@ EndFunction
 ; check to see if MCM is installed; depends on F4SE
 Function CheckForMCM()
     Debug.Trace(FullScriptName + ": Checking if MCM is installed...")
-    Self._DebugTrace("Checking if MCM is installed...")
+    Self._DebugTrace("Checking if MCM is installed...", abForce = true)
     ModConfigMenuInstalled = MCM.IsInstalled() as bool
     If ModConfigMenuInstalled && ScriptExtenderInstalled
         Debug.Trace(FullScriptName + ": MCM installed")
-        Self._DebugTrace("MCM installed (version code " + MCM.GetVersionCode() + ")")
+        Self._DebugTrace("MCM installed (version code " + MCM.GetVersionCode() + ")", abForce = true)
         CurrentChangeType = AvailableChangeTypes.Both
     ElseIf ModConfigMenuInstalled && ! ScriptExtenderInstalled
         Debug.Trace(FullScriptName + ": MCM installed, but F4SE is not; disabling support")
-        Self._DebugTrace("MCM installed, but F4SE is not; disabling support")
+        Self._DebugTrace("MCM installed, but F4SE is not; disabling support", abForce = true)
         ModConfigMenuInstalled = false
         CurrentChangeType = AvailableChangeTypes.ValueOnly
     Else
         Debug.Trace(FullScriptName + ": MCM not installed")
-        Self._DebugTrace("MCM not installed")
+        Self._DebugTrace("MCM not installed", abForce = true)
         CurrentChangeType = AvailableChangeTypes.ValueOnly
         MessageMCMNotInstalled.Show()
     EndIf
@@ -729,10 +752,18 @@ Function InitSettings(bool abForce = false)
         index += 1
     EndWhile
 
-    ; advanced - multithreading
+    ; advanced - general options
     If abForce || ! ThreadLimit
         Self._DebugTrace("Initializing ThreadLimit")
         ThreadLimit = new SettingInt
+    EndIf
+    If abForce || ! EnableLogging
+        Self._DebugTrace("Initializing EnableLogging")
+        EnableLogging = new SettingBool
+    EndIf
+    If abForce || ! EnableProfiling
+        Self._DebugTrace("Initializing EnableProfiling")
+        EnableProfiling = new SettingBool
     EndIf
 
     ; advanced - methodology
@@ -1054,11 +1085,17 @@ Function InitSettingsSupplemental()
         index += 1
     EndWhile
 
-    ; advanced - multithreading
+    ; advanced - general options
     ThreadLimit.ValueDefault = ThreadManager.NumberOfWorkerThreads
     ThreadLimit.McmId = "iThreadLimit:Advanced"
     ThreadLimit.ValueMin = 1
     ThreadLimit.ValueMax = ThreadManager.NumberOfWorkerThreads
+
+    EnableLogging.ValueDefault = true
+    EnableLogging.McmId = "bEnableLogging:Advanced"
+
+    EnableProfiling.ValueDefault = false
+    EnableProfiling.McmId = "bEnableProfiling:Advanced"
 
     ; advanced - methodology
     UseDirectMoveRecyclableItemListUpdate.ValueDefault = false
@@ -1309,6 +1346,11 @@ var[] Function CollectMCMSettings()
         index += 1
     EndWhile
 
+    ; advanced - general options
+    ; ThreadLimit is handled manually to avoid breaking things
+    toReturn.Add(EnableLogging)
+    toReturn.Add(EnableProfiling)
+
     ; advanced - methodology
     toReturn.Add(UseDirectMoveRecyclableItemListUpdate)
 
@@ -1328,6 +1370,21 @@ Function PerformMCMSettingPostProcessing()
     MCM_RngAffectsMultDetailed = RngAffectsMult.Value > 1
     MCM_ScrapperAffectsMultSimple = ScrapperAffectsMult.Value == 1
     MCM_ScrapperAffectsMultDetailed = ScrapperAffectsMult.Value > 1
+
+    ; turn logging and profiling on/off
+    If EnableLogging.Value != EnableLogging.ValuePrevious
+        Self.WriteLoggingStatus()
+        ThreadManager.SetLogging(EnableLogging.Value)
+        ThreadManager.SetProfiling(EnableProfiling.Value)
+    EndIf
+EndFunction
+
+Function WriteLoggingStatus()
+    If ! EnableLogging || EnableLogging.Value
+        Self._DebugTrace("Logging enabled", abForce = true)
+    Else
+        Self._DebugTrace("Logging disabled", abForce = true)
+    EndIf
 EndFunction
 
 ; determine where the crafting recipe lives
@@ -1641,12 +1698,20 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             LoadSettingFromMCM(MultAdjustRandomMaxS, ModName)
             newValue = MultAdjustRandomMaxS.Value
 
-        ; advanced - multithreading
+        ; advanced - general options
         ElseIf asControlId == ThreadLimit.McmId
             oldValue = ThreadLimit.Value
             LoadSettingFromMCM(ThreadLimit, ModName)
             newValue = ThreadLimit.Value
             ThreadManager.SetThreadLimit(ThreadLimit.Value)
+        ElseIf asControlId == EnableLogging.McmId
+            oldValue = EnableLogging.Value
+            LoadSettingFromMCM(EnableLogging, ModName)
+            newValue = EnableLogging.Value
+        ElseIf asControlId == EnableProfiling.McmId
+            oldValue = EnableProfiling.Value
+            LoadSettingFromMCM(EnableProfiling, ModName)
+            newValue = EnableProfiling.Value
 
         ; advanced - methodology
         ElseIf asControlId == UseDirectMoveRecyclableItemListUpdate.McmId
@@ -1775,13 +1840,11 @@ EndFunction
 Function ResetToDefaults()
     If ! (MutexRunning || MutexBusy)
         MutexBusy = true
-        Debug.StartStackProfiling()
         Self._DebugTrace("Resetting settings to defaults")
         Self.InitSettings(abForce = true)
         Self.InitSettingsSupplemental()
         Self.InitSettingsDefaultValues()
         MCM.RefreshMenu()
-        Debug.StopStackProfiling()
         MutexBusy = false
         MessageSettingsReset.Show()
     ElseIf MutexRunning && ! MutexBusy
@@ -2280,8 +2343,10 @@ Function Uninstall()
         MultAdjustScrapperNotSettlementR = None
         DestroyArrayContents(MultAdjustScrapperNotSettlementS as var[])
         MultAdjustScrapperNotSettlementS = None
-        ; advanced - multithreading
+        ; advanced - general options
         ThreadLimit = None
+        EnableLogging = None
+        EnableProfiling = None
         ; advanced - methodology
         UseDirectMoveRecyclableItemListUpdate = None
 

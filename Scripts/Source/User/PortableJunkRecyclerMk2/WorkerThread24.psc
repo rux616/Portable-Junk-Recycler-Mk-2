@@ -18,14 +18,3 @@
 
 
 ScriptName PortableJunkRecyclerMk2:WorkerThread24 Extends PortableJunkRecyclerMk2:WorkerThreadBase
-
-Function _DebugTrace(string asMessage, int aiSeverity = 0) DebugOnly
-    string baseMessage = "WorkerThread 24: " const
-    If aiSeverity == 0
-        Debug.TraceUser(ModName, baseMessage + asMessage)
-    ElseIf aiSeverity == 1
-        Debug.TraceUser(ModName, "WARNING: " + baseMessage + asMessage)
-    ElseIf aiSeverity == 2
-        Debug.TraceUser(ModName, "ERROR: " + baseMessage + asMessage)
-    EndIf
-EndFunction

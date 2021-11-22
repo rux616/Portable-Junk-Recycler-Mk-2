@@ -39,6 +39,8 @@ int Property NumberOfWorkerThreads = 32 AutoReadOnly
 string ModName = "Portable Junk Recycler Mk 2" const
 var[] Threads
 int ThreadLimit
+bool EnableLogging = true
+bool EnableProfiling = false
 
 
 
@@ -81,6 +83,17 @@ Event OnInit()
     Threads[29] = (Self as Quest) as WorkerThread29
     Threads[30] = (Self as Quest) as WorkerThread30
     Threads[31] = (Self as Quest) as WorkerThread31
+    int index = 0
+    string designation
+    While index < NumberOfWorkerThreads
+        If index < 10
+            designation = "0" + index
+        Else
+            designation = index
+        EndIf
+        (Threads[index] as WorkerThreadBase).SetDesignation(designation)
+        index += 1
+    EndWhile
     ThreadLimit = NumberOfWorkerThreads
     Initialized = true
     Self._DebugTrace("Finished onetime init process")
@@ -92,14 +105,16 @@ EndEvent
 ; ------------------
 
 ; add a bit of text to traces going into the papyrus user log
-Function _DebugTrace(string asMessage, int aiSeverity = 0) DebugOnly
-    string baseMessage = "ThreadManager: " const
-    If aiSeverity == 0
-        Debug.TraceUser(ModName, baseMessage + asMessage)
-    ElseIf aiSeverity == 1
-        Debug.TraceUser(ModName, "WARNING: " + baseMessage + asMessage)
-    ElseIf aiSeverity == 2
-        Debug.TraceUser(ModName, "ERROR: " + baseMessage + asMessage)
+Function _DebugTrace(string asMessage, int aiSeverity = 0, bool abForce = false) DebugOnly
+    If EnableLogging || abForce
+        string baseMessage = "ThreadManager: " const
+        If aiSeverity == 0
+            Debug.TraceUser(ModName, baseMessage + asMessage)
+        ElseIf aiSeverity == 1
+            Debug.TraceUser(ModName, "WARNING: " + baseMessage + asMessage)
+        ElseIf aiSeverity == 2
+            Debug.TraceUser(ModName, "ERROR: " + baseMessage + asMessage)
+        EndIf
     EndIf
 EndFunction
 
@@ -143,6 +158,44 @@ Function SetThreadLimit(int aiMaxThreads)
     Self._DebugTrace("ThreadLimit set to " + ThreadLimit)
 EndFunction
 
+; turn logging on or off
+; true = on
+; false = off
+Function SetLogging(bool abEnableLogging)
+    EnableLogging = abEnableLogging
+
+    If EnableLogging
+        Self._DebugTrace("Logging enabled", abForce = true)
+    Else
+        Self._DebugTrace("Logging disabled", abForce = true)
+    EndIf
+
+    int index = 0
+    While index < NumberOfWorkerThreads
+        (Threads[index] as WorkerThreadBase).SetLogging(EnableLogging)
+        index += 1
+    EndWhile
+EndFunction
+
+; turn profiling on or off
+; true = on
+; false = off
+Function SetProfiling(bool abEnableProfiling)
+    EnableProfiling = abEnableProfiling
+
+    If EnableProfiling
+        Self._DebugTrace("Profiling enabled")
+    Else
+        Self._DebugTrace("Profiling disabled")
+    EndIf
+
+    int index = 0
+    While index < NumberOfWorkerThreads
+        (Threads[index] as WorkerThreadBase).SetProfiling(EnableProfiling)
+        index += 1
+    EndWhile
+EndFunction
+
 
 
 ; FUNCTIONS
@@ -166,8 +219,8 @@ int Function ThreadDispatcher(string asFunction, int aiNumItems, var[] akParams)
         akParams[0] = (index * numItemsPerThread) as int
         akParams[1] = ((index + 1) * numItemsPerThread) as int - 1
         (Threads[index] as ScriptObject).CallFunctionNoWait(asFunction, akParams)
-        Self._DebugTrace("Called WorkerThread " + index + " (" + asFunction + "): Index (Start) = " + akParams[0] + \
-            ", Index (End) = " + akParams[1])
+        Self._DebugTrace("Called WorkerThread " + (Threads[index] as WorkerThreadBase).GetDesignation() + " (" + asFunction + \
+            "): Index (Start) = " + akParams[0] + ", Index (End) = " + akParams[1])
         index += 1
     EndWhile
 
@@ -331,6 +384,13 @@ EndFunction
 
 ; prepares the mod for uninstallation
 Function Uninstall()
+    ; make sure that threads shut down fully
+    int index = 0
+    While index < NumberOfWorkerThreads
+        (Threads[index] as WorkerThreadBase).Uninstall()
+        index += 1
+    EndWhile
+
     ; destroy arrays
     DestroyArrayContents(Threads)
     Threads = None

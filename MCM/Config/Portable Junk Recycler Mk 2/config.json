@@ -12,7 +12,7 @@
       },
       {
          "html": true,
-         "text": "<p align=\"center\">v0.6.0-beta</p>",
+         "text": "<p align=\"center\">v0.7.0-beta</p>",
          "type": "text"
       },
       {
@@ -2518,7 +2518,7 @@
       {
          "content": [
             {
-               "text": "$Multithreading",
+               "text": "$GeneralOptions",
                "type": "section"
             },
             {
@@ -2531,6 +2531,24 @@
                   "min": 1,
                   "sourceType": "ModSettingInt",
                   "step": 1
+               }
+            },
+            {
+               "help": "$EnableLoggingHelp",
+               "id": "bEnableLogging:Advanced",
+               "text": "$EnableLoggingText",
+               "type": "switcher",
+               "valueOptions": {
+                  "sourceType": "ModSettingBool"
+               }
+            },
+            {
+               "help": "$EnableProfilingHelp",
+               "id": "bEnableProfiling:Advanced",
+               "text": "$EnableProfilingText",
+               "type": "switcher",
+               "valueOptions": {
+                  "sourceType": "ModSettingBool"
                }
             },
             {
@@ -2555,7 +2573,7 @@
                "type": "spacer"
             },
             {
-               "text": "$Settings",
+               "text": "$Resets",
                "type": "section"
             },
             {
@@ -2570,14 +2588,6 @@
                "type": "button"
             },
             {
-               "lines": 1,
-               "type": "spacer"
-            },
-            {
-               "text": "$Locks",
-               "type": "section"
-            },
-            {
                "action": {
                   "form": "Portable Junk Recycler Mk 2.esp|800",
                   "function": "ResetMutexes",
@@ -2587,14 +2597,6 @@
                "help": "$ResetLocksHelp",
                "text": "$ResetLocksText",
                "type": "button"
-            },
-            {
-               "lines": 1,
-               "type": "spacer"
-            },
-            {
-               "text": "$ItemLists",
-               "type": "section"
             },
             {
                "action": {

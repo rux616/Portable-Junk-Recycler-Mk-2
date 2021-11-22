@@ -33,8 +33,12 @@ string Property ModName = "Portable Junk Recycler Mk 2" AutoReadOnly Hidden
 
 ; VARIABLES
 ; ---------
+string WorkerDesignation
+
 bool Running = false
 var[] Results = None
+bool EnableLogging = true
+bool EnableProfiling = false
 
 
 
@@ -46,6 +50,43 @@ var[] Results = None
 ; false = not running
 bool Function IsRunning()
     Return Running
+EndFunction
+
+; turn logging on or off
+; true = on
+; false = off
+Function SetLogging(bool abEnableLogging)
+    EnableLogging = abEnableLogging
+
+    If EnableLogging
+        Self._DebugTrace("Logging enabled", abForce = true)
+    Else
+        Self._DebugTrace("Logging disabled", abForce = true)
+    EndIf
+EndFunction
+
+; turn profiling on or off
+; true = on
+; false = off
+Function SetProfiling(bool abEnableProfiling)
+    EnableProfiling = abEnableProfiling
+
+    If EnableProfiling
+        Self._DebugTrace("Profiling enabled")
+    Else
+        Self._DebugTrace("Profiling disabled")
+    EndIf
+EndFunction
+
+; set thread designation
+Function SetDesignation(string asDesignation)
+    WorkerDesignation = asDesignation
+    Self._DebugTrace("WorkerDesignation set")
+EndFunction
+
+; get thread designation
+string Function GetDesignation()
+    Return WorkerDesignation
 EndFunction
 
 ; returns any results that have been stored from a work function
@@ -62,14 +103,18 @@ EndFunction
 ; perform general housekeeping when a work function starts
 Function WorkerStart()
     Running = true
-    Debug.StartStackProfiling()
+    If EnableProfiling
+        Debug.StartStackProfiling()
+    EndIf
     Results = None
 EndFunction
 
 ; perform general housekeeping when a work function stops
 Function WorkerStop()
     Running = False
-    Debug.StopStackProfiling()
+    If EnableProfiling
+        Debug.StopStackProfiling()
+    EndIf
 EndFunction
 
 ; reset a thread
@@ -79,14 +124,16 @@ Function Reset()
 EndFunction
 
 ; add a bit of text to traces going into the papyrus user log
-Function _DebugTrace(string asMessage, int aiSeverity = 0) DebugOnly
-    string baseMessage = "WorkerThread Base: " const
-    If aiSeverity == 0
-        Debug.TraceUser(ModName, baseMessage + asMessage)
-    ElseIf aiSeverity == 1
-        Debug.TraceUser(ModName, "WARNING: " + baseMessage + asMessage)
-    ElseIf aiSeverity == 2
-        Debug.TraceUser(ModName, "ERROR: " + baseMessage + asMessage)
+Function _DebugTrace(string asMessage, int aiSeverity = 0, bool abForce = false) DebugOnly
+    If EnableLogging || abForce
+        string baseMessage = "WorkerThread " + WorkerDesignation + ": " const
+        If aiSeverity == 0
+            Debug.TraceUser(ModName, baseMessage + asMessage)
+        ElseIf aiSeverity == 1
+            Debug.TraceUser(ModName, "WARNING: " + baseMessage + asMessage)
+        ElseIf aiSeverity == 2
+            Debug.TraceUser(ModName, "ERROR: " + baseMessage + asMessage)
+        EndIf
     EndIf
 EndFunction
 
@@ -389,4 +436,9 @@ Function RecycleComponents(int aiIndex, int aiIndexEnd, var[] akComponentMap, Mu
     Self._DebugTrace("RecycleComponents finished")
 
     Self.WorkerStop()
+EndFunction
+
+Function Uninstall()
+    DestroyArrayContents(Results)
+    Results = None
 EndFunction
