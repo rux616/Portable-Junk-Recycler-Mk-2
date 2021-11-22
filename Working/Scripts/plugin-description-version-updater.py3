@@ -257,7 +257,7 @@ if __name__ == "__main__":
                 if first:
                     first = False
                 else:
-                    print("==========")
+                    print("------------------------------")
 
                 main(file, args.version, not args.dry_run, not args.no_backup)
             except Exception as e:
