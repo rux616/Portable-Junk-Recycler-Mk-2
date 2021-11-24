@@ -27,21 +27,21 @@ for file in "${@}"; do
     output_file="${input_file%%.*}.nexusbbcode"
     cp "${input_file}" "${temp_file}"
 
-    # convert '===' headers to [size=6][color=#rrggbb]...[/color][/size]
-    perl -0777pi -e 's{(.*)\n={3,}+}{[size=6][color=#6d9eeb]${1}[/color][/size]}g' "${temp_file}"
-    # convert '---' headers to [size=5][color=#rrggbb]...[/color][/size]
-    perl -0777pi -e 's{(.*)\n-{3,}+}{[size=5][color=#5a83c4]${1}[/color][/size]}g' "${temp_file}"
+    # convert '...\n===' headers to '[size=5][b]...[/b][/size]'
+    perl -0777pi -e 's{(.*)\n={3,}+}{[size=5][b]${1}[/b][/size]}g' "${temp_file}"
+    # convert '...\n---' headers to '[size=4][b][u]...:[/u][/b][/size]'
+    perl -0777pi -e 's{(.*)\n-{3,}+}{[size=4][b][u]${1}:[/u][/b][/size]}g' "${temp_file}"
     # remove anchor links
     sed -Ei 's|\[([^]]*)]\(#[^)]*\)|\1|g' "${temp_file}"
-    # convert **...** and __...__ to [b]...[/b]
-    sed -Ei -e 's|\*\*([^(\*\*)]+)\*\*|[b]\1[/b]|g' -e 's|__([^(__)]+)__|[b]\1[/b]|g' "${temp_file}"
-    # convert *...* and _..._ to [i]...[/i]
-    sed -Ei -e 's|\*([^\*]+)\*|[i]\1[/i]|g' -e 's|_([^_]+)_|[i]\1[/i]|g' "${temp_file}"
+    # convert '**...**' and '__...__' to '[b]...[/b]'
+    perl -pi -e 'no warnings qw(experimental::vlb) ; s{(?<=^|\W)\*\*(.+?)\*\*(?=\W)}{[b]${1}[/b]}g ; s{(?<=^|\W)__(.+?)__(?=\W)}{[b]${1}[/b]}g' "${temp_file}"
+    # convert '*...*' and '_..._' to '[i]...[/i]'
+    perl -pi -e 'no warnings qw(experimental::vlb) ; s{(?<=^|\W)\*(.+?)\*(?=\W)}{[u]${1}[/u]}g ; s{(?<=^|\W)_(.+?)_(?=\W)}{[u]${1}[/u]}g' "${temp_file}"
     # convert markdown URLs to BBCode URLs
     sed -Ei 's|\[([^]]*)]\(([^)]*)\)|[url=\2]\1[/url]|g' "${temp_file}"
-    # convert `...` to [font=Courier New][color=#rrggbb]...[/color][/font]
+    # convert '`...`' to '[font=Courier New][color=#rrggbb]...[/color][/font]'
     sed -Ei 's|`([^`]*)`|[font=Courier New][color=#b2b2b2]\1[/color][/font]|g' "${temp_file}"
-    # convert indented code to [font=Courier New][color=#rrggbb]...[/color][/font]
+    # convert indented code to '    [font=Courier New][color=#rrggbb]...[/color][/font]'
     perl -pi -e 's{^[ ]{4,}+(?!-|\* )(.*)$}{    [font=Courier New][color=#b2b2b2]${1}[/color][/font]}g' "${temp_file}"
 
     # if the contents of the temp and output files don't match, overwrite the output file with the temp file
