@@ -53,12 +53,12 @@ def main(filename, version, write_data=True, make_backup=True):
     # show status text
     if not write_data:
         print("[DRY RUN MODE]")
-    print("Loading '" + filename + "' into memory...")
+    print(f"Loading '{filename}' into memory...")
 
     # validate file extension
     extension = filename[-4:].lower()
     if extension not in (".esl", ".esm", ".esp"):
-        raise Exception("Invalid file extension: '" + extension + "'")
+        raise Exception(f"Invalid file extension: '{extension}'")
 
     # read plugin file into memory
     with open(filename, "rb") as fh:
@@ -96,10 +96,10 @@ def main(filename, version, write_data=True, make_backup=True):
         struct.unpack("4s", plugin_data[snam_offset : snam_offset + SIG_LENGTH])[0]
         != b"SNAM"
     ):
-        print("No SNAM record found. Will insert at offset " + str(snam_offset) + ".")
+        print(f"No SNAM record found. Will insert at offset {snam_offset}.")
         snam_needs_to_be_created = True
     else:
-        print("SNAM record found at offset " + str(snam_offset))
+        print(f"SNAM record found at offset {snam_offset}")
         snam_needs_to_be_created = False
 
     # read the SNAM record if it exists, otherwise just put some dummy data in place
@@ -110,7 +110,7 @@ def main(filename, version, write_data=True, make_backup=True):
             "H", plugin_data[snam_data_size_offset:snam_data_offset]
         )[0]
         description = struct.unpack(
-            str(snam_data_size) + "s",
+            f"{snam_data_size}s",
             plugin_data[snam_data_offset : snam_data_offset + snam_data_size],
         )[0].decode("latin1")[:-1]
         existing_snam_record_size = SIG_LENGTH + UINT16_LENGTH + snam_data_size
@@ -125,18 +125,13 @@ def main(filename, version, write_data=True, make_backup=True):
     if description == "":
         description = version
     elif re_result[1] == 0:
-        description = (
-            description
-            + "\r\n\r\n"
-            + ("" if version[0:1] == "v" else "Version: ")
-            + version
-        )
+        description = f"{description}\r\n\r\n{('' if version[0:1] == 'v' else 'Version: ')}{version}"
     else:
         description = re_result[0]
-    description = description[:511] + "\0"
+    description = f"{description[:511]}\0"
 
     # don't update the description if it's the same
-    if old_description + "\0" == description and not snam_needs_to_be_created:
+    if f"{old_description}\0" == description and not snam_needs_to_be_created:
         print("SNAM record update not needed.")
         return
 
@@ -157,16 +152,12 @@ def main(filename, version, write_data=True, make_backup=True):
     )
     if not snam_needs_to_be_created:
         print(
-            "SNAM record size updated: "
-            + str(snam_data_size)
-            + " bytes -> "
-            + str(len(description))
-            + " bytes"
+            f"SNAM record size updated: {snam_data_size} bytes -> {len(description)} bytes"
         )
-        print("SNAM record data updated: " + old_description + " -> " + description)
+        print(f"SNAM record data updated: {old_description} -> {description}")
     else:
-        print("SNAM record data size: " + str(len(description)) + " bytes")
-        print("SNAM record data: " + description)
+        print(f"SNAM record data size: {len(description)} bytes")
+        print(f"SNAM record data: {description}")
 
     # update the TES4 record size
     updated_tes4_data_size = (
@@ -179,11 +170,7 @@ def main(filename, version, write_data=True, make_backup=True):
         new_data=struct.pack("I", updated_tes4_data_size),
     )
     print(
-        "TES4 record size updated: "
-        + str(tes4_data_size)
-        + " bytes -> "
-        + str(updated_tes4_data_size)
-        + " bytes"
+        f"TES4 record size updated: {tes4_data_size} bytes -> {updated_tes4_data_size} bytes"
     )
 
     # write out the file if not doing a dry run
@@ -191,8 +178,8 @@ def main(filename, version, write_data=True, make_backup=True):
         # make a backup of the plugin if not disabled
         if make_backup:
             current_time = datetime.now()
-            backup = filename + ".backup." + current_time.strftime("%Y_%m_%d_%H_%M_%S")
-            print("Making backup of plugin at '" + backup + "'...")
+            backup = f"{filename}.backup.{current_time.strftime('%Y_%m_%d_%H_%M_%S')}"
+            print(f"Making backup of plugin at '{backup}'...")
             shutil.copy2(filename, backup)
 
         # write the plugin data back to the file
@@ -209,7 +196,7 @@ def main(filename, version, write_data=True, make_backup=True):
                 "Plugin data in memory does not match plugin data written to disk! This may mean that the plugin as written to disk was corrupted somehow. You should load it into xEdit and verify that all is as it should be."
             )
 
-    print("Finished updating '" + filename + "'")
+    print(f"Finished updating '{filename}'")
 
 
 if __name__ == "__main__":
