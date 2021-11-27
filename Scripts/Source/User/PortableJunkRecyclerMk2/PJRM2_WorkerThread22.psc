@@ -17,4 +17,4 @@
 
 
 
-ScriptName PortableJunkRecyclerMk2:WorkerThread22 Extends PortableJunkRecyclerMk2:WorkerThreadBase
+ScriptName PortableJunkRecyclerMk2:PJRM2_WorkerThread22 Extends PortableJunkRecyclerMk2:PJRM2_WorkerThread

@@ -17,108 +17,104 @@
 
 
 
-ScriptName PortableJunkRecyclerMk2:Base
-{ contains base structs and utility functions used by PortableJunkRecyclerMk2-namespaced scripts }
+ScriptName PortableJunkRecyclerMk2:PJRM2_Utility Hidden
+{ contains utility functions used by PortableJunkRecyclerMk2-namespaced scripts }
 
-
-
-; STRUCTS
-; -------
-
-Struct ComponentMap
-    Component ComponentPart
-    string ComponentPartName
-    MiscObject ScrapPart
-    string ScrapPartName
-    float Weight
-    int Rarity
-EndStruct
-
-Struct MultiplierSet
-    float MultC
-    float MultU
-    float MultR
-    float MultS
-    float RandomMin
-    float RandomMax
-    float RandomMinC
-    float RandomMaxC
-    float RandomMinU
-    float RandomMaxU
-    float RandomMinR
-    float RandomMaxR
-    float RandomMinS
-    float RandomMaxS
-EndStruct
-
-Struct SettingChangeType
-    int ValueOnly = 0
-    int McmOnly = 1
-    int Both = 2
-EndStruct
-
-Struct SettingBool
-    bool Value
-    bool ValueDefault
-    bool ValuePrevious
-    string McmId
-EndStruct
-
-Struct SettingFloat
-    float Value
-    float ValueDefault
-    float ValuePrevious
-    string McmId
-    float ValueMin
-    float ValueMax
-EndStruct
-
-Struct SettingInt
-    int Value
-    int ValueDefault
-    int ValuePrevious
-    string McmId
-    int ValueMin
-    int ValueMax
-EndStruct
-
-Struct FormListWrapper
-    FormList List
-    int Size
-EndStruct
-
-
-
-; FUNCTIONS
-; ---------
+; import data structures
+import PortableJunkRecyclerMk2:PJRM2_DataStructures
 
 ; generic interface to change settings
-Function ChangeSetting(var akSettingToChange, int aiChangeType, var avNewValue, string asMcmModName) global
-    If akSettingToChange is SettingBool
-        ChangeSettingBool(akSettingToChange as SettingBool, aiChangeType, avNewValue as bool, asMcmModName)
-    ElseIf akSettingToChange is SettingFloat
-        ChangeSettingFloat(akSettingToChange as SettingFloat, aiChangeType, avNewValue as float, asMcmModName)
+Function ChangeSetting(var akSettingToChange, int aiChangeType, var avNewValue, string asMcmModName) Global
+    SettingCallbackType availableCallbackTypes = new SettingCallbackType
+    SettingCallbackArgumentType availableCallbackArgumentTypes = new SettingCallbackArgumentType
+
+    var[] callbackInfo
+
+    ; go through and change settings, with consideration for each setting type
+    If akSettingToChange is SettingFloat
+        callbackInfo = ChangeSettingFloat(akSettingToChange as SettingFloat, aiChangeType, avNewValue as float, asMcmModName)
+    ElseIf akSettingToChange is SettingBool
+        callbackInfo = ChangeSettingBool(akSettingToChange as SettingBool, aiChangeType, avNewValue as bool, asMcmModName)
     ElseIf akSettingToChange is SettingInt
-        ChangeSettingInt(akSettingToChange as SettingInt, aiChangeType, avNewValue as int, asMcmModName)
+        callbackInfo = ChangeSettingInt(akSettingToChange as SettingInt, aiChangeType, avNewValue as int, asMcmModName)
+    ElseIf akSettingToChange is SettingString
+        callbackInfo = ChangeSettingString(akSettingToChange as SettingString, aiChangeType, avNewValue as string, asMcmModName)
+    EndIf
+
+    ; parse the returned callback info
+    int callbackType = callbackInfo[0] as int
+    Form callbackForm = callbackInfo[1] as Form
+    string callbackScript = callbackInfo[2] as string
+    string callbackFunction = callbackInfo[3] as string
+    int callbackArgumentType = callbackInfo[4] as int
+    var oldValue = callbackInfo[5]
+    var newValue = callbackInfo[6]
+    bool waitOnCallback = callbackInfo[7] as bool
+
+    var[] params = new var[0]
+
+    If callbackArgumentType == availableCallbackArgumentTypes.NoArguments
+        ; do nothing
+    ElseIf callbackArgumentType == availableCallbackArgumentTypes.NewValueOnly
+        params.Add(newValue)
+    ElseIf callbackArgumentType == availableCallbackArgumentTypes.OldValueOnly
+        params.Add(oldValue)
+    ElseIf callbackArgumentType == availableCallbackArgumentTypes.Both
+        params.Add(oldValue)
+        params.Add(newValue)
+    EndIf
+
+    If callbackType == availableCallbackTypes.NoCallback
+        ; do nothing
+    ElseIf callbackType == availableCallbackTypes.FunctionCallback
+        ScriptObject callbackScriptObject = callbackForm.CastAs(callbackScript)
+        If callbackScriptObject
+            If waitOnCallback
+                callbackScriptObject.CallFunction(callbackFunction, params)
+            Else
+                callbackScriptObject.CallFunctionNoWait(callbackFunction, params)
+            EndIf
+        EndIf
+    ElseIf callbackType == availableCallbackTypes.GlobalFunctionCallback
+        If waitOnCallback
+            Utility.CallGlobalFunction(callbackScript, callbackFunction, params)
+        Else
+            Utility.CallGlobalFunctionNoWait(callbackScript, callbackFunction, params)
+        EndIf
     EndIf
 EndFunction
 
 ; interface to change bool settings
-Function ChangeSettingBool(SettingBool akSettingToChange, int aiChangeType, bool abNewValue, string asMcmModName) global
+; you should probably use the generic interface
+var[] Function ChangeSettingBool(SettingBool akSettingToChange, int aiChangeType, bool abNewValue, string asMcmModName) Global
     SettingChangeType availableChangeTypes = new SettingChangeType
 
-    If aiChangeType == availableChangeTypes.ValueOnly || aiChangeType == availableChangeTypes.Both
-        akSettingToChange.ValuePrevious = akSettingToChange.Value
+    ; record the old value
+    bool oldValue = akSettingToChange.Value
+
+    If aiChangeType == availableChangeTypes.Both || aiChangeType == availableChangeTypes.ValueOnly
         akSettingToChange.Value = abNewValue
     EndIf
 
-    If aiChangeType == availableChangeTypes.McmOnly || aiChangeType == availableChangeTypes.Both
+    If aiChangeType == availableChangeTypes.Both || aiChangeType == availableChangeTypes.McmOnly
         MCM.SetModSettingBool(asMcmModName, akSettingToChange.McmId, abNewValue)
     EndIf
+
+    var[] toReturn = new var[0]
+    toReturn.Add(akSettingToChange.CallbackType)
+    toReturn.Add(akSettingToChange.CallbackForm)
+    toReturn.Add(akSettingToChange.CallbackScript)
+    toReturn.Add(akSettingToChange.CallbackFunction)
+    toReturn.Add(akSettingToChange.CallbackArgumentType)
+    toReturn.add(oldValue) ; old value
+    toReturn.Add(akSettingToChange.Value) ; new value
+    toReturn.Add(akSettingToChange.WaitOnCallback)
+    Return toReturn
 EndFunction
 
 ; interface to change float settings
-Function ChangeSettingFloat(SettingFloat akSettingToChange, int aiChangeType, float afNewValue, string asMcmModName) global
+; you should probably use the generic interface
+var[] Function ChangeSettingFloat(SettingFloat akSettingToChange, int aiChangeType, float afNewValue, string asMcmModName) Global
     SettingChangeType availableChangeTypes = new SettingChangeType
 
     ; clamp the requested change if too large or too small
@@ -128,18 +124,32 @@ Function ChangeSettingFloat(SettingFloat akSettingToChange, int aiChangeType, fl
         afNewValue = akSettingToChange.ValueMin
     EndIf
 
-    If aiChangeType == availableChangeTypes.ValueOnly || aiChangeType == availableChangeTypes.Both
-        akSettingToChange.ValuePrevious = akSettingToChange.Value
+    ; record the old value
+    float oldValue = akSettingToChange.Value
+
+    If aiChangeType == availableChangeTypes.Both || aiChangeType == availableChangeTypes.ValueOnly
         akSettingToChange.Value = afNewValue
     EndIf
 
-    If aiChangeType == availableChangeTypes.McmOnly || aiChangeType == availableChangeTypes.Both
+    If aiChangeType == availableChangeTypes.Both || aiChangeType == availableChangeTypes.McmOnly
         MCM.SetModSettingFloat(asMcmModName, akSettingToChange.McmId, afNewValue)
     EndIf
+
+    var[] toReturn = new var[0]
+    toReturn.Add(akSettingToChange.CallbackType)
+    toReturn.Add(akSettingToChange.CallbackForm)
+    toReturn.Add(akSettingToChange.CallbackScript)
+    toReturn.Add(akSettingToChange.CallbackFunction)
+    toReturn.Add(akSettingToChange.CallbackArgumentType)
+    toReturn.add(oldValue) ; old value
+    toReturn.Add(akSettingToChange.Value) ; new value
+    toReturn.Add(akSettingToChange.WaitOnCallback)
+    Return toReturn
 EndFunction
 
 ; interface to change int settings
-Function ChangeSettingInt(SettingInt akSettingToChange, int aiChangeType, int aiNewValue, string asMcmModName) global
+; you should probably use the generic interface
+var[] Function ChangeSettingInt(SettingInt akSettingToChange, int aiChangeType, int aiNewValue, string asMcmModName) Global
     SettingChangeType availableChangeTypes = new SettingChangeType
 
     ; clamp the requested change if too large or too small
@@ -149,51 +159,122 @@ Function ChangeSettingInt(SettingInt akSettingToChange, int aiChangeType, int ai
         aiNewValue = akSettingToChange.ValueMin
     EndIf
 
-    If aiChangeType == availableChangeTypes.ValueOnly || aiChangeType == availableChangeTypes.Both
-        akSettingToChange.ValuePrevious = akSettingToChange.Value
+    ; record the old value
+    int oldValue = akSettingToChange.Value
+
+    If aiChangeType == availableChangeTypes.Both || aiChangeType == availableChangeTypes.ValueOnly
         akSettingToChange.Value = aiNewValue
     EndIf
 
-    If aiChangeType == availableChangeTypes.McmOnly || aiChangeType == availableChangeTypes.Both
+    If aiChangeType == availableChangeTypes.Both || aiChangeType == availableChangeTypes.McmOnly
         MCM.SetModSettingInt(asMcmModName, akSettingToChange.McmId, aiNewValue)
     EndIf
+
+    var[] toReturn = new var[0]
+    toReturn.Add(akSettingToChange.CallbackType)
+    toReturn.Add(akSettingToChange.CallbackForm)
+    toReturn.Add(akSettingToChange.CallbackScript)
+    toReturn.Add(akSettingToChange.CallbackFunction)
+    toReturn.Add(akSettingToChange.CallbackArgumentType)
+    toReturn.add(oldValue) ; old value
+    toReturn.Add(akSettingToChange.Value) ; new value
+    toReturn.Add(akSettingToChange.WaitOnCallback)
+    Return toReturn
+EndFunction
+
+; interface to change string settings
+; you should probably use the generic interface
+var[] Function ChangeSettingString(SettingString akSettingToChange, int aiChangeType, string asNewValue, string asMcmModName) Global
+    SettingChangeType availableChangeTypes = new SettingChangeType
+
+    ; record the old value
+    string oldValue = akSettingToChange.Value
+
+    If aiChangeType == availableChangeTypes.Both || aiChangeType == availableChangeTypes.ValueOnly
+        akSettingToChange.Value = asNewValue
+    EndIf
+
+    If aiChangeType == availableChangeTypes.Both || aiChangeType == availableChangeTypes.McmOnly
+        MCM.SetModSettingBool(asMcmModName, akSettingToChange.McmId, asNewValue)
+    EndIf
+
+    var[] toReturn = new var[0]
+    toReturn.Add(akSettingToChange.CallbackType)
+    toReturn.Add(akSettingToChange.CallbackForm)
+    toReturn.Add(akSettingToChange.CallbackScript)
+    toReturn.Add(akSettingToChange.CallbackFunction)
+    toReturn.Add(akSettingToChange.CallbackArgumentType)
+    toReturn.add(oldValue) ; old value
+    toReturn.Add(akSettingToChange.Value) ; new value
+    toReturn.Add(akSettingToChange.WaitOnCallback)
+    Return toReturn
 EndFunction
 
 ; generic interface to load settings from the MCM
-Function LoadSettingFromMCM(var akSetting, string asMcmModName) global
+Function LoadSettingFromMCM(var akSetting, string asMcmModName) Global
     If akSetting is SettingBool
         LoadSettingBoolFromMCM(akSetting as SettingBool, asMcmModName)
     ElseIf akSetting is SettingFloat
         LoadSettingFloatFromMCM(akSetting as SettingFloat, asMcmModName)
     ElseIf akSetting is SettingInt
         LoadSettingIntFromMCM(akSetting as SettingInt, asMcmModName)
+    ElseIf akSetting is SettingString
+        LoadSettingStringFromMCM(akSetting as SettingString, asMcmModName)
     EndIf
 EndFunction
 
 ; interface to load bool settings from the MCM
-Function LoadSettingBoolFromMCM(SettingBool akSetting, string asMcmModName) global
+; you should probably use the generic interface
+Function LoadSettingBoolFromMCM(SettingBool akSetting, string asMcmModName) Global
     SettingChangeType availableChangeTypes = new SettingChangeType
     ChangeSetting(akSetting, availableChangeTypes.ValueOnly, MCM.GetModSettingBool(asMcmModName, akSetting.McmId), asMcmModName)
 EndFunction
 
 ; interface to load float settings from the MCM
-Function LoadSettingFloatFromMCM(SettingFloat akSetting, string asMcmModName) global
+; you should probably use the generic interface
+Function LoadSettingFloatFromMCM(SettingFloat akSetting, string asMcmModName) Global
     SettingChangeType availableChangeTypes = new SettingChangeType
     ChangeSetting(akSetting, availableChangeTypes.ValueOnly, MCM.GetModSettingFloat(asMcmModName, akSetting.McmId), asMcmModName)
 EndFunction
 
 ; interface to load int settings from the MCM
-Function LoadSettingIntFromMCM(SettingInt akSetting, string asMcmModName) global
+; you should probably use the generic interface
+Function LoadSettingIntFromMCM(SettingInt akSetting, string asMcmModName) Global
     SettingChangeType availableChangeTypes = new SettingChangeType
     ChangeSetting(akSetting, availableChangeTypes.ValueOnly, MCM.GetModSettingInt(asMcmModName, akSetting.McmId), asMcmModName)
 EndFunction
 
+; interface to load string settings from the MCM
+; you should probably use the generic interface
+Function LoadSettingStringFromMCM(SettingString akSetting, string asMcmModName) Global
+    SettingChangeType availableChangeTypes = new SettingChangeType
+    ChangeSetting(akSetting, availableChangeTypes.ValueOnly, MCM.GetModSettingBool(asMcmModName, akSetting.McmId), asMcmModName)
+EndFunction
+
 ; fully destroy the contents of an array
-Function DestroyArrayContents(var[] akArray) global
+Function DestroyArrayContents(var[] akArray) Global
     int index = akArray.Length - 1
     While index >= 0
         akArray[index] = None
         akArray.Remove(index)
         index -= 1
     EndWhile
+EndFunction
+
+; write text to the user log, opening it if necessary
+Function Log(string asLogName, string asScript, string asLogMessage, int aiSeverity = 0) DebugOnly Global
+    string asSeverity = ""
+    If aiSeverity == 0
+        ; do nothing
+    ElseIf aiSeverity == 1
+        asSeverity = "WARNING: "
+    ElseIf aiSeverity == 2
+        asSeverity = "ERROR: "
+    EndIf
+    asLogMessage = asSeverity + asScript + ": " + asLogMessage
+    If ! Debug.TraceUser(asLogName, asLogMessage)
+        ; if log wasn't open, open it, then send trace again
+        Debug.OpenUserLog(asLogName)
+        Debug.TraceUser(asLogName, asLogMessage)
+    EndIf
 EndFunction

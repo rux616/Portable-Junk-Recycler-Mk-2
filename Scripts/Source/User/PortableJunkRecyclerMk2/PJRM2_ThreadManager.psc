@@ -17,30 +17,38 @@
 
 
 
-ScriptName PortableJunkRecyclerMk2:ThreadManager Extends Quest
+ScriptName PortableJunkRecyclerMk2:PJRM2_ThreadManager Extends Quest
 { script that handles multithreading for the mod }
 
-; import the base global functions and structs
-import PortableJunkRecyclerMk2:Base
+; import data structures
+import PortableJunkRecyclerMk2:PJRM2_DataStructures
+; import utility functions
+import PortableJunkRecyclerMk2:PJRM2_Utility
 
 
 
 ; PROPERTIES
 ; ----------
 
-bool Property Initialized = false Auto
-int Property NumberOfWorkerThreads = 32 AutoReadOnly
+bool Property Initialized = false Auto Hidden
+int Property NumberOfWorkerThreads = 32 AutoReadOnly Hidden
+string Property FullScriptName = "PortableJunkRecyclerMk2:PJRM2_ThreadManager" AutoReadOnly Hidden
+bool Property DispatcherMutex = false Auto Hidden
 
 
 
 ; VARIABLES
 ; ---------
 
-string ModName = "Portable Junk Recycler Mk 2" const
-var[] Threads
-int ThreadLimit
-bool EnableLogging = true
+PJRM2_SettingManager SettingManager
+
+string ModName
+bool EnableLogging = false
 bool EnableProfiling = false
+int ThreadLimit
+
+bool ProfilingActive = false
+var[] Threads
 
 
 
@@ -48,41 +56,14 @@ bool EnableProfiling = false
 ; ------
 
 Event OnInit()
-    Debug.OpenUserLog(ModName)
-    Self._DebugTrace("Beginning onetime init process")
+    Quest Control = Self as Quest
+    SettingManager = Control as PJRM2_SettingManager
+    ModName = SettingManager.ModName
+    EnableLogging = SettingManager.EnableLogging
+    EnableProfiling = SettingManager.EnableProfiling
+    Self._StartStackProfiling()
+    Self._Log("Beginning onetime init process")
     Threads = new var[NumberOfWorkerThreads]
-    Threads[00] = (Self as Quest) as WorkerThread00
-    Threads[01] = (Self as Quest) as WorkerThread01
-    Threads[02] = (Self as Quest) as WorkerThread02
-    Threads[03] = (Self as Quest) as WorkerThread03
-    Threads[04] = (Self as Quest) as WorkerThread04
-    Threads[05] = (Self as Quest) as WorkerThread05
-    Threads[06] = (Self as Quest) as WorkerThread06
-    Threads[07] = (Self as Quest) as WorkerThread07
-    Threads[08] = (Self as Quest) as WorkerThread08
-    Threads[09] = (Self as Quest) as WorkerThread09
-    Threads[10] = (Self as Quest) as WorkerThread10
-    Threads[11] = (Self as Quest) as WorkerThread11
-    Threads[12] = (Self as Quest) as WorkerThread12
-    Threads[13] = (Self as Quest) as WorkerThread13
-    Threads[14] = (Self as Quest) as WorkerThread14
-    Threads[15] = (Self as Quest) as WorkerThread15
-    Threads[16] = (Self as Quest) as WorkerThread16
-    Threads[17] = (Self as Quest) as WorkerThread17
-    Threads[18] = (Self as Quest) as WorkerThread18
-    Threads[19] = (Self as Quest) as WorkerThread19
-    Threads[20] = (Self as Quest) as WorkerThread20
-    Threads[21] = (Self as Quest) as WorkerThread21
-    Threads[22] = (Self as Quest) as WorkerThread22
-    Threads[23] = (Self as Quest) as WorkerThread23
-    Threads[24] = (Self as Quest) as WorkerThread24
-    Threads[25] = (Self as Quest) as WorkerThread25
-    Threads[26] = (Self as Quest) as WorkerThread26
-    Threads[27] = (Self as Quest) as WorkerThread27
-    Threads[28] = (Self as Quest) as WorkerThread28
-    Threads[29] = (Self as Quest) as WorkerThread29
-    Threads[30] = (Self as Quest) as WorkerThread30
-    Threads[31] = (Self as Quest) as WorkerThread31
     int index = 0
     string designation
     While index < NumberOfWorkerThreads
@@ -91,12 +72,14 @@ Event OnInit()
         Else
             designation = index
         EndIf
-        (Threads[index] as WorkerThreadBase).SetDesignation(designation)
+        Threads[index] = Control.CastAs("PortableJunkRecyclerMk2:PJRM2_WorkerThread" + designation)
+        (Threads[index] as PJRM2_WorkerThread).Initialize(ModName, designation, EnableLogging, EnableProfiling)
         index += 1
     EndWhile
     ThreadLimit = NumberOfWorkerThreads
     Initialized = true
-    Self._DebugTrace("Finished onetime init process")
+    Self._Log("Finished onetime init process")
+    Self._StopStackProfiling()
 EndEvent
 
 
@@ -105,16 +88,27 @@ EndEvent
 ; ------------------
 
 ; add a bit of text to traces going into the papyrus user log
-Function _DebugTrace(string asMessage, int aiSeverity = 0, bool abForce = false) DebugOnly
+Function _Log(string asLogMessage, int aiSeverity = 0, bool abForce = false)
     If EnableLogging || abForce
-        string baseMessage = "ThreadManager: " const
-        If aiSeverity == 0
-            Debug.TraceUser(ModName, baseMessage + asMessage)
-        ElseIf aiSeverity == 1
-            Debug.TraceUser(ModName, "WARNING: " + baseMessage + asMessage)
-        ElseIf aiSeverity == 2
-            Debug.TraceUser(ModName, "ERROR: " + baseMessage + asMessage)
-        EndIf
+        Log(ModName, "ThreadManager", asLogMessage, aiSeverity)
+    EndIf
+EndFunction
+
+; start stack profiling
+Function _StartStackProfiling() DebugOnly
+    If EnableProfiling
+        Debug.StartStackProfiling()
+        ProfilingActive = true
+        Self._Log("Stack profiling started")
+    EndIf
+EndFunction
+
+; stop stack profiling
+Function _StopStackProfiling() DebugOnly
+    If ProfilingActive
+        Debug.StopStackProfiling()
+        ProfilingActive = false
+        Self._Log("Stack profiling stopped")
     EndIf
 EndFunction
 
@@ -133,7 +127,7 @@ Function WaitForThreads(var[] akThreads, int aiNumThreads)
             waitingOnThreads = false
             ; check every thread to see if it's still running; short-circuits if one is found running
             While ! waitingOnThreads && index < aiNumThreads
-                waitingOnThreads = waitingOnThreads || (akThreads[index] as WorkerThreadBase).IsRunning()
+                waitingOnThreads = waitingOnThreads || (akThreads[index] as PJRM2_WorkerThread).IsRunning()
                 index += 1
             EndWhile
             ; if any threads are still running, wait for 0.1s
@@ -155,45 +149,49 @@ Function SetThreadLimit(int aiMaxThreads)
         aiMaxThreads = upperLimit
     EndIf
     ThreadLimit = aiMaxThreads
-    Self._DebugTrace("ThreadLimit set to " + ThreadLimit)
+    Self._Log("ThreadLimit set to " + ThreadLimit)
 EndFunction
 
 ; turn logging on or off
 ; true = on
 ; false = off
 Function SetLogging(bool abEnableLogging)
-    EnableLogging = abEnableLogging
+    If EnableLogging != abEnableLogging
+        EnableLogging = abEnableLogging
 
-    If EnableLogging
-        Self._DebugTrace("Logging enabled", abForce = true)
-    Else
-        Self._DebugTrace("Logging disabled", abForce = true)
+        If EnableLogging
+            Self._Log("Logging enabled", abForce = true)
+        Else
+            Self._Log("Logging disabled", abForce = true)
+        EndIf
+
+        int index = 0
+        While index < NumberOfWorkerThreads
+            (Threads[index] as PJRM2_WorkerThread).SetLogging(EnableLogging)
+            index += 1
+        EndWhile
     EndIf
-
-    int index = 0
-    While index < NumberOfWorkerThreads
-        (Threads[index] as WorkerThreadBase).SetLogging(EnableLogging)
-        index += 1
-    EndWhile
 EndFunction
 
 ; turn profiling on or off
 ; true = on
 ; false = off
 Function SetProfiling(bool abEnableProfiling)
-    EnableProfiling = abEnableProfiling
+    If EnableProfiling != abEnableProfiling
+        EnableProfiling = abEnableProfiling
 
-    If EnableProfiling
-        Self._DebugTrace("Profiling enabled")
-    Else
-        Self._DebugTrace("Profiling disabled")
+        If EnableProfiling
+            Self._Log("Profiling enabled")
+        Else
+            Self._Log("Profiling disabled")
+        EndIf
+
+        int index = 0
+        While index < NumberOfWorkerThreads
+            (Threads[index] as PJRM2_WorkerThread).SetProfiling(EnableProfiling)
+            index += 1
+        EndWhile
     EndIf
-
-    int index = 0
-    While index < NumberOfWorkerThreads
-        (Threads[index] as WorkerThreadBase).SetProfiling(EnableProfiling)
-        index += 1
-    EndWhile
 EndFunction
 
 
@@ -204,29 +202,47 @@ EndFunction
 ; handles the actual multithreading of a specified function; designed for data parallelism
 ; akParams[0] and akParams[1] are reserved for the starting and ending indices respectively; everything else is not proscribed
 int Function ThreadDispatcher(string asFunction, int aiNumItems, var[] akParams)
+    ; if the mutex is set, park and wait
+    While DispatcherMutex
+        Utility.WaitMenuMode(0.1)
+    EndWhile
+
+    ; set mutex
+    DispatcherMutex = true
+
     ; set up multithreading parameters
     int numThreads = Math.Min(aiNumItems, ThreadLimit) as int
     float numItemsPerThread
     If numThreads > 0
         numItemsPerThread = aiNumItems as float / numThreads
     EndIf
-    Self._DebugTrace("ThreadDispatcher (" + asFunction + "): " + aiNumItems + " items, using " + numThreads + " threads for processing (" + \
-        numItemsPerThread + " items per thread)")
+    Self._Log("ThreadDispatcher (" + asFunction + "): " + aiNumItems + " items, using " + numThreads \
+        + " threads for processing (" + numItemsPerThread + " items per thread)")
 
     ; start multithreading
+    string threadIndex
     int index = 0
     While index < numThreads
         akParams[0] = (index * numItemsPerThread) as int
         akParams[1] = ((index + 1) * numItemsPerThread) as int - 1
         (Threads[index] as ScriptObject).CallFunctionNoWait(asFunction, akParams)
-        Self._DebugTrace("Called WorkerThread " + (Threads[index] as WorkerThreadBase).GetDesignation() + " (" + asFunction + \
-            "): Index (Start) = " + akParams[0] + ", Index (End) = " + akParams[1])
+        If index < 10
+            threadIndex = "0" + index
+        Else
+            threadIndex = index
+        EndIf
+        Self._Log("Dispatched WorkerThread" + threadIndex + " (" + asFunction + "): Index (Start) = " + akParams[0] \
+            + ", Index (End) = " + akParams[1])
         index += 1
     EndWhile
 
     ; wait for multithreading to finish
     Self.WaitForThreads(Threads, numThreads)
-    Self._DebugTrace("ThreadDispatcher (" + asFunction + "): Threads finished")
+    Self._Log("ThreadDispatcher (" + asFunction + "): Threads finished")
+
+    ; unset mutex
+    DispatcherMutex = false
+
     Return numThreads
 EndFunction
 
@@ -305,7 +321,7 @@ ComponentMap[] Function BuildComponentMap(FormListWrapper akComponentList, FormL
     ComponentMap[] tempResult
     While threadIndex < numThreadsUsed
         resultIndex = 0
-        tempResult = (Threads[threadIndex] as WorkerThreadBase).GetResults() as ComponentMap[]
+        tempResult = (Threads[threadIndex] as PJRM2_WorkerThread).GetResults() as ComponentMap[]
         While resultIndex < tempResult.Length
             toReturn[returnIndex] = tempResult[resultIndex]
             resultIndex += 1
@@ -376,7 +392,7 @@ bool Function RecycleComponents(ComponentMap[] akComponentMap, MultiplierSet akM
     bool toReturn = false
     int index = 0
     While index < numThreadsUsed
-        toReturn = (Threads[index] as WorkerThreadBase).GetResults()[0] as bool || toReturn
+        toReturn = (Threads[index] as PJRM2_WorkerThread).GetResults()[0] as bool || toReturn
         index += 1
     EndWhile
     Return toReturn
@@ -387,7 +403,7 @@ Function Uninstall()
     ; make sure that threads shut down fully
     int index = 0
     While index < NumberOfWorkerThreads
-        (Threads[index] as WorkerThreadBase).Uninstall()
+        (Threads[index] as PJRM2_WorkerThread).Uninstall()
         index += 1
     EndWhile
 

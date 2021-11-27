@@ -17,33 +17,47 @@
 
 
 
-ScriptName PortableJunkRecyclerMk2:WorkerThreadBase Extends Quest Hidden
+ScriptName PortableJunkRecyclerMk2:PJRM2_WorkerThread Extends Quest Hidden
 
-; import the base global functions and structs
-import PortableJunkRecyclerMk2:Base
-
-
-
-; PROPERTIES
-; ----------
-
-string Property ModName = "Portable Junk Recycler Mk 2" AutoReadOnly Hidden
+; import data structures
+import PortableJunkRecyclerMk2:PJRM2_DataStructures
+; import utility functions
+import PortableJunkRecyclerMk2:PJRM2_Utility
 
 
 
 ; VARIABLES
 ; ---------
-string WorkerDesignation
 
+string ModName
+string WorkerDesignation
+bool EnableLogging = false
+bool EnableProfiling = false
+
+bool ProfilingActive = false
 bool Running = false
 var[] Results = None
-bool EnableLogging = true
-bool EnableProfiling = false
+
 
 
 
 ; FUNCTIONS: UTILITY
 ; ------------------
+
+; add a bit of text to traces going into the papyrus user log
+Function _Log(string asLogMessage, int aiSeverity = 0, bool abForce = false) DebugOnly
+    If EnableLogging || abForce
+        Log(ModName, "WorkerThread " + WorkerDesignation, asLogMessage, aiSeverity)
+    EndIf
+EndFunction
+
+; convenience function to set initial values
+Function Initialize(string asModName, string abDesignation, bool abEnableLogging, bool abEnableProfiling)
+    ModName = asModName
+    WorkerDesignation = abDesignation
+    EnableLogging = abEnableLogging
+    EnableProfiling = abEnableProfiling
+EndFunction
 
 ; returns whether a thread is running
 ; true = running
@@ -56,12 +70,14 @@ EndFunction
 ; true = on
 ; false = off
 Function SetLogging(bool abEnableLogging)
-    EnableLogging = abEnableLogging
+    If EnableLogging != abEnableLogging
+        EnableLogging = abEnableLogging
 
-    If EnableLogging
-        Self._DebugTrace("Logging enabled", abForce = true)
-    Else
-        Self._DebugTrace("Logging disabled", abForce = true)
+        If EnableLogging
+            Self._Log("Logging enabled", abForce = true)
+        Else
+            Self._Log("Logging disabled", abForce = true)
+        EndIf
     EndIf
 EndFunction
 
@@ -69,19 +85,26 @@ EndFunction
 ; true = on
 ; false = off
 Function SetProfiling(bool abEnableProfiling)
-    EnableProfiling = abEnableProfiling
+    If EnableProfiling != abEnableProfiling
+        EnableProfiling = abEnableProfiling
 
-    If EnableProfiling
-        Self._DebugTrace("Profiling enabled")
-    Else
-        Self._DebugTrace("Profiling disabled")
+        If EnableProfiling
+            Self._Log("Profiling enabled")
+        Else
+            Self._Log("Profiling disabled")
+        EndIf
     EndIf
+EndFunction
+
+; set log name
+Function SetLogName(string asLogName)
+    ModName = asLogName
 EndFunction
 
 ; set thread designation
 Function SetDesignation(string asDesignation)
     WorkerDesignation = asDesignation
-    Self._DebugTrace("WorkerDesignation set")
+    Self._Log("WorkerDesignation set")
 EndFunction
 
 ; get thread designation
@@ -105,36 +128,24 @@ Function WorkerStart()
     Running = true
     If EnableProfiling
         Debug.StartStackProfiling()
+        ProfilingActive = true
     EndIf
     Results = None
 EndFunction
 
 ; perform general housekeeping when a work function stops
 Function WorkerStop()
-    Running = False
-    If EnableProfiling
+    If ProfilingActive
         Debug.StopStackProfiling()
+        ProfilingActive = false
     EndIf
+    Running = false
 EndFunction
 
 ; reset a thread
 Function Reset()
     Running = false
     Results = None
-EndFunction
-
-; add a bit of text to traces going into the papyrus user log
-Function _DebugTrace(string asMessage, int aiSeverity = 0, bool abForce = false) DebugOnly
-    If EnableLogging || abForce
-        string baseMessage = "WorkerThread " + WorkerDesignation + ": " const
-        If aiSeverity == 0
-            Debug.TraceUser(ModName, baseMessage + asMessage)
-        ElseIf aiSeverity == 1
-            Debug.TraceUser(ModName, "WARNING: " + baseMessage + asMessage)
-        ElseIf aiSeverity == 2
-            Debug.TraceUser(ModName, "ERROR: " + baseMessage + asMessage)
-        EndIf
-    EndIf
 EndFunction
 
 
@@ -147,12 +158,12 @@ Function AddArrayItemsToInventory(int aiIndex, int aiIndexEnd, var[] akItems, Ob
     Self.WorkerStart()
 
     Form[] items = akItems as Form[]
-    Self._DebugTrace("AddArrayItemsToInventory started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
+    Self._Log("AddArrayItemsToInventory started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
     While aiIndex <= aiIndexEnd
         akDestinationRef.AddItem(items[aiIndex], aiQuantity, true)
         aiIndex += 1
     EndWhile
-    Self._DebugTrace("AddArrayItemsToInventory finished")
+    Self._Log("AddArrayItemsToInventory finished")
 
     Self.WorkerStop()
 EndFunction
@@ -161,13 +172,13 @@ EndFunction
 Function AddItemsToList(int aiIndex, int aiIndexEnd, var[] akItems, FormList akFormList)
     Self.WorkerStart()
 
-    Self._DebugTrace("AddItemsToList started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
+    Self._Log("AddItemsToList started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
     Form[] items = akItems as Form[]
     While aiIndex <= aiIndexEnd
         akFormList.AddForm(items[aiIndex])
         aiIndex += 1
     EndWhile
-    Self._DebugTrace("AddItemsToList Finished")
+    Self._Log("AddItemsToList Finished")
 
     Self.WorkerStop()
 EndFunction
@@ -176,12 +187,12 @@ EndFunction
 Function AddListItemsToInventory(int aiIndex, int aiIndexEnd, FormList akFormList, ObjectReference akDestinationRef, int aiQuantity)
     Self.WorkerStart()
 
-    Self._DebugTrace("AddListItemsToInventory started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
+    Self._Log("AddListItemsToInventory started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
     While aiIndex <= aiIndexEnd
         akDestinationRef.AddItem(akFormList.GetAt(aiIndex), aiQuantity, true)
         aiIndex += 1
     EndWhile
-    Self._DebugTrace("AddListItemsToInventory finished")
+    Self._Log("AddListItemsToInventory finished")
 
     Self.WorkerStop()
 EndFunction
@@ -193,7 +204,7 @@ Function AddRecyclableItemsToList(int aiIndex, int aiIndexEnd, var[] akItems, Fo
         FormList NetWeightReductionList, var[] akComponentMap, var[] akComponents)
     Self.WorkerStart()
 
-    Self._DebugTrace("AddRecyclableItemsToList started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
+    Self._Log("AddRecyclableItemsToList started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
     MiscObject[] items = akItems as MiscObject[]
     ComponentMap[] cMap = akComponentMap as ComponentMap[]
     Component[] components = akComponents as Component[]
@@ -224,7 +235,7 @@ Function AddRecyclableItemsToList(int aiIndex, int aiIndexEnd, var[] akItems, Fo
                 ; when this happens as it's relatively expensive - has two delayed native function calls
                 Else
                     totalComponentWeight += neededComponents[index].object.GetScrapItem().GetWeight() * neededComponents[index].count
-                    Self._DebugTrace("Component not in component mappings: " + neededComponents[index].object, 1)
+                    Self._Log("Component not in component mappings: " + neededComponents[index].object, 1)
                 EndIf
                 index += 1
             EndWhile
@@ -241,7 +252,7 @@ Function AddRecyclableItemsToList(int aiIndex, int aiIndexEnd, var[] akItems, Fo
         neededComponents = None
         aiIndex += 1
     EndWhile
-    Self._DebugTrace("AddRecyclableItemsToList finished")
+    Self._Log("AddRecyclableItemsToList finished")
 
     Self.WorkerStop()
 EndFunction
@@ -250,7 +261,7 @@ EndFunction
 Function BuildComponentMap(int aiIndex, int aiIndexEnd, FormList akComponentList, FormList akMiscObjectList)
     Self.WorkerStart()
 
-    Self._DebugTrace("BuildComponentMap started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
+    Self._Log("BuildComponentMap started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
     ComponentMap[] toReturn = new ComponentMap[aiIndexEnd - aiIndex + 1]
     int returnIndex = 0
     While aiIndex <= aiIndexEnd
@@ -260,13 +271,13 @@ Function BuildComponentMap(int aiIndex, int aiIndexEnd, FormList akComponentList
         toReturn[returnIndex].ScrapPart = akMiscObjectList.GetAt(aiIndex) as MiscObject
         toReturn[returnIndex].ScrapPartName = toReturn[returnIndex].ScrapPart.GetName()
         toReturn[returnIndex].Weight = toReturn[returnIndex].ScrapPart.GetWeight()
-        Self._DebugTrace(toReturn[returnIndex].ComponentPart + " (" + toReturn[returnIndex].ComponentPartName + \
+        Self._Log(toReturn[returnIndex].ComponentPart + " (" + toReturn[returnIndex].ComponentPartName + \
             ") is mapped to " + toReturn[returnIndex].ScrapPart + " (" + toReturn[returnIndex].ScrapPartName + ")")
         aiIndex += 1
         returnIndex += 1
     EndWhile
     Results = toReturn as var[]
-    Self._DebugTrace("BuildComponentMap finished")
+    Self._Log("BuildComponentMap finished")
 
     Self.WorkerStop()
 EndFunction
@@ -275,18 +286,21 @@ EndFunction
 Function ChangeSettingsToDefaults(int aiIndex, int aiIndexEnd, var[] akSettings, int aiChangeType, string asModName)
     Self.WorkerStart()
 
-    Self._DebugTrace("ChangeSettingsToDefaults started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
+    Self._Log("ChangeSettingsToDefaults started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
     While aiIndex <= aiIndexEnd
+        ; if/else structure is in order of frequency of setting occurrence
         If akSettings[aiIndex] is SettingFloat
             ChangeSetting(akSettings[aiIndex], aiChangeType, (akSettings[aiIndex] as SettingFloat).ValueDefault, asModName)
         ElseIf akSettings[aiIndex] is SettingBool
             ChangeSetting(akSettings[aiIndex], aiChangeType, (akSettings[aiIndex] as SettingBool).ValueDefault, asModName)
         ElseIf akSettings[aiIndex] is SettingInt
             ChangeSetting(akSettings[aiIndex], aiChangeType, (akSettings[aiIndex] as SettingInt).ValueDefault, asModName)
+        ElseIf akSettings[aiIndex] is SettingString
+            ChangeSetting(akSettings[aiIndex], aiChangeType, (akSettings[aiIndex] as SettingString).ValueDefault, asModName)
         EndIf
         aiIndex += 1
     EndWhile
-    Self._DebugTrace("ChangeSettingsToDefaults finished")
+    Self._Log("ChangeSettingsToDefaults finished")
 
     Self.WorkerStop()
 EndFunction
@@ -296,7 +310,7 @@ Function LeaveOnlyXItems(int aiIndex, int aiIndexEnd, var[] akItems, ObjectRefer
         ObjectReference akDestinationRef, int aiQuantityToLeave, bool abSilent)
     Self.WorkerStart()
 
-    Self._DebugTrace("LeaveOnlyXItems started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
+    Self._Log("LeaveOnlyXItems started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
     Form[] items = akItems as Form[]
     int currentQuantity
     int quantityToMove
@@ -308,7 +322,7 @@ Function LeaveOnlyXItems(int aiIndex, int aiIndexEnd, var[] akItems, ObjectRefer
         EndIf
         aiIndex += 1
     EndWhile
-    Self._DebugTrace("LeaveOnlyXItems finished")
+    Self._Log("LeaveOnlyXItems finished")
 
     Self.WorkerStop()
 EndFunction
@@ -317,12 +331,12 @@ EndFunction
 Function LoadMCMSettings(int aiIndex, int aiIndexEnd, var[] akSettings, string asModName)
     Self.WorkerStart()
 
-    Self._DebugTrace("LoadMCMSettings started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
+    Self._Log("LoadMCMSettings started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
     While aiIndex <= aiIndexEnd
         LoadSettingFromMCM(akSettings[aiIndex], asModName)
         aiIndex += 1
     EndWhile
-    Self._DebugTrace("LoadMCMSettings finished")
+    Self._Log("LoadMCMSettings finished")
 
     Self.WorkerStop()
 EndFunction
@@ -335,7 +349,7 @@ Function RecycleComponents(int aiIndex, int aiIndexEnd, var[] akComponentMap, Mu
         int aiFractionalComponentHandling)
     Self.WorkerStart()
 
-    Self._DebugTrace("RecycleComponents started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
+    Self._Log("RecycleComponents started: Index (Start) = " + aiIndex + ", Index (End) = " + aiIndexEnd)
 
     Results = new var[1]
     Results[0] = false
@@ -378,15 +392,15 @@ Function RecycleComponents(int aiIndex, int aiIndexEnd, var[] akComponentMap, Mu
                 randomMax = akMultiplierSet.RandomMaxS
             EndIf
         Else
-            Self._DebugTrace("Unknown rarity: " + cMap[aiIndex], 2)
+            Self._Log("Unknown rarity: " + cMap[aiIndex], 2)
         EndIf
 
-        Self._DebugTrace(cMap[aiIndex].ComponentPart + " (" + cMap[aiIndex].ComponentPartName + "), " + \
+        Self._Log(cMap[aiIndex].ComponentPart + " (" + cMap[aiIndex].ComponentPartName + "), " + \
             cMap[aiIndex].ScrapPart + " (" + cMap[aiIndex].ScrapPartName + ")")
 
         ; get the quantity of a certain component
         componentQuantity = akContainerRef.GetComponentCount(cMap[aiIndex].ComponentPart)
-        Self._DebugTrace("Component quantity (Initial) = " + componentQuantity)
+        Self._Log("Component quantity (Initial) = " + componentQuantity)
 
         if componentQuantity > 0.0
             ; since there are components to work on, signal that recycling happened
@@ -396,8 +410,8 @@ Function RecycleComponents(int aiIndex, int aiIndexEnd, var[] akComponentMap, Mu
                 ; use randomized multiplier adjustment for each individual component
                 float randomMultAdjust = Utility.RandomFloat(randomMin, randomMax)
                 scrapMultiplier += randomMultAdjust
-                Self._DebugTrace("Adjustment (Random): " + randomMultAdjust)
-                Self._DebugTrace("Multiplier: " + scrapMultiplier)
+                Self._Log("Adjustment (Random): " + randomMultAdjust)
+                Self._Log("Multiplier: " + scrapMultiplier)
             EndIf
 
             ; remove all components of the type from the inventory
@@ -405,35 +419,35 @@ Function RecycleComponents(int aiIndex, int aiIndexEnd, var[] akComponentMap, Mu
 
             ; compute basic multiplied quantity
             componentQuantity *= scrapMultiplier
-            Self._DebugTrace("Component quantity (Multiplied) = " + componentQuantity)
+            Self._Log("Component quantity (Multiplied) = " + componentQuantity)
 
             ; give at least one component if the option is turned on and quantity <1
             If abReturnAtLeastOneComponent && componentQuantity < 1.0
                 componentQuantity = 1.0
             EndIf
-            Self._DebugTrace("Component quantity (ReturnAtLeastOneComponent) = " + componentQuantity)
+            Self._Log("Component quantity (ReturnAtLeastOneComponent) = " + componentQuantity)
 
             ; round the component quantity per settings
             If aiFractionalComponentHandling == 2           ; round down (floor)
                 componentQuantity = Math.Floor(componentQuantity)
-                Self._DebugTrace("Component quantity (Round Down [floor]) = " + componentQuantity)
+                Self._Log("Component quantity (Round Down [floor]) = " + componentQuantity)
             ElseIf aiFractionalComponentHandling == 1       ; round normally
                 componentQuantity = (componentQuantity + 0.5) as int
-                Self._DebugTrace("Component quantity (Round Normally) = " + componentQuantity)
+                Self._Log("Component quantity (Round Normally) = " + componentQuantity)
             ElseIf aiFractionalComponentHandling == 0       ; round up (ceiling)
                 componentQuantity = Math.Ceiling(componentQuantity)
-                Self._DebugTrace("Component quantity (Round Up [ceiling]) = " + componentQuantity)
+                Self._Log("Component quantity (Round Up [ceiling]) = " + componentQuantity)
             EndIf
 
             ; add the modified quantity of components back to the inventory
             akContainerRef.AddItem(cMap[aiIndex].ScrapPart, componentQuantity as int, true)
-            Self._DebugTrace("Component quantity (Final) = " + componentQuantity as int)
+            Self._Log("Component quantity (Final) = " + componentQuantity as int)
         EndIf
 
         aiIndex += 1
     EndWhile
 
-    Self._DebugTrace("RecycleComponents finished")
+    Self._Log("RecycleComponents finished")
 
     Self.WorkerStop()
 EndFunction
