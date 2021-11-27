@@ -68,34 +68,23 @@ def main(filename, version, write_data=True, make_backup=True):
     tes4_offset = 0
     tes4_data_size_offset = tes4_offset + SIG_LENGTH
     tes4_data_offset = tes4_data_size_offset + UINT32_LENGTH
-    tes4_data_size = struct.unpack(
-        "I", plugin_data[tes4_data_size_offset:tes4_data_offset]
-    )[0]
+    tes4_data_size = struct.unpack("I", plugin_data[tes4_data_size_offset:tes4_data_offset])[0]
 
     # do a limited verification of the file by seeing if it begins with b"TES4"
     if plugin_data[tes4_offset:tes4_data_size_offset] != b"TES4":
-        raise Exception(
-            "TES4 record not found where expected. Is this a valid plugin file?"
-        )
+        raise Exception("TES4 record not found where expected. Is this a valid plugin file?")
 
     # get info about the CNAM record
-    cnam_offset = plugin_data.find(
-        b"CNAM", tes4_data_offset, tes4_data_offset + tes4_data_size
-    )
+    cnam_offset = plugin_data.find(b"CNAM", tes4_data_offset, tes4_data_offset + tes4_data_size)
     if cnam_offset < 0:
         raise Exception("CNAM record not found: Possible malformed TES4 record")
     cnam_data_size_offset = cnam_offset + SIG_LENGTH
     cnam_data_offset = cnam_data_size_offset + UINT16_LENGTH
-    cnam_data_size = struct.unpack(
-        "H", plugin_data[cnam_data_size_offset:cnam_data_offset]
-    )[0]
+    cnam_data_size = struct.unpack("H", plugin_data[cnam_data_size_offset:cnam_data_offset])[0]
 
     # determine if SNAM record exists
     snam_offset = cnam_data_offset + cnam_data_size
-    if (
-        struct.unpack("4s", plugin_data[snam_offset : snam_offset + SIG_LENGTH])[0]
-        != b"SNAM"
-    ):
+    if struct.unpack("4s", plugin_data[snam_offset : snam_offset + SIG_LENGTH])[0] != b"SNAM":
         print(f"No SNAM record found. Will insert at offset {snam_offset}.")
         snam_needs_to_be_created = True
     else:
@@ -106,9 +95,7 @@ def main(filename, version, write_data=True, make_backup=True):
     if not snam_needs_to_be_created:
         snam_data_size_offset = snam_offset + SIG_LENGTH
         snam_data_offset = snam_data_size_offset + UINT16_LENGTH
-        snam_data_size = struct.unpack(
-            "H", plugin_data[snam_data_size_offset:snam_data_offset]
-        )[0]
+        snam_data_size = struct.unpack("H", plugin_data[snam_data_size_offset:snam_data_offset])[0]
         description = struct.unpack(
             f"{snam_data_size}s",
             plugin_data[snam_data_offset : snam_data_offset + snam_data_size],
@@ -125,7 +112,9 @@ def main(filename, version, write_data=True, make_backup=True):
     if description == "":
         description = version
     elif re_result[1] == 0:
-        description = f"{description}\r\n\r\n{('' if version[0:1] == 'v' else 'Version: ')}{version}"
+        description = (
+            f"{description}\r\n\r\n{('' if version[0:1] == 'v' else 'Version: ')}{version}"
+        )
     else:
         description = re_result[0]
     description = f"{description[:511]}\0"
@@ -137,9 +126,7 @@ def main(filename, version, write_data=True, make_backup=True):
 
     # construct SNAM record and save the record size
     snam_record = (
-        b"SNAM"
-        + struct.pack("H", len(description))
-        + bytes(description, encoding="latin1")
+        b"SNAM" + struct.pack("H", len(description)) + bytes(description, encoding="latin1")
     )
     snam_record_size = len(snam_record)
 
@@ -151,27 +138,21 @@ def main(filename, version, write_data=True, make_backup=True):
         new_data=snam_record,
     )
     if not snam_needs_to_be_created:
-        print(
-            f"SNAM record size updated: {snam_data_size} bytes -> {len(description)} bytes"
-        )
+        print(f"SNAM record size updated: {snam_data_size} bytes -> {len(description)} bytes")
         print(f"SNAM record data updated: {old_description} -> {description}")
     else:
         print(f"SNAM record data size: {len(description)} bytes")
         print(f"SNAM record data: {description}")
 
     # update the TES4 record size
-    updated_tes4_data_size = (
-        tes4_data_size + snam_record_size - existing_snam_record_size
-    )
+    updated_tes4_data_size = tes4_data_size + snam_record_size - existing_snam_record_size
     replace_data(
         data=plugin_data,
         start=tes4_data_size_offset,
         stop=tes4_data_offset,
         new_data=struct.pack("I", updated_tes4_data_size),
     )
-    print(
-        f"TES4 record size updated: {tes4_data_size} bytes -> {updated_tes4_data_size} bytes"
-    )
+    print(f"TES4 record size updated: {tes4_data_size} bytes -> {updated_tes4_data_size} bytes")
 
     # write out the file if not doing a dry run
     if write_data:
