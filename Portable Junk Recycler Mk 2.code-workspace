@@ -88,6 +88,10 @@
         "markdown-pdf.margin.left": "0px",
         "markdown-pdf.margin.right": "0px",
         "markdown-pdf.margin.top": "0px",
-        "trailing-spaces.trimOnSave": true
+        "trailing-spaces.trimOnSave": true,
+        "python.formatting.provider": "black",
+        "python.formatting.blackArgs": [
+            "--line-length 100"
+        ]
     }
 }

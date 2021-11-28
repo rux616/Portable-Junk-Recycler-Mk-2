@@ -91,9 +91,9 @@ else
     rm "${temp_file}"
 fi
 
-# Scripts/Source/User/PortableJunkRecyclerMk2/ControlScript.psc
+# Scripts/Source/User/PortableJunkRecyclerMk2/PJRM2_ControlManager.psc
 # string ModVersion = "..." const
-working_file="Scripts/Source/User/PortableJunkRecyclerMk2/ControlScript.psc"
+working_file="Scripts/Source/User/PortableJunkRecyclerMk2/PJRM2_ControlManager.psc"
 temp_file="${working_file}.tmp"
 ${make_backups} && cp "${working_file}" "${working_file}${backup_suffix}"
 sed -E "s|(string ModVersion = \")[^\"]*(\" const)|\1${version}\2|" "${working_file}" > "${temp_file}"
@@ -103,9 +103,9 @@ else
     rm "${temp_file}"
 fi
 
-# Scripts/Source/User/Portable Junk Recycler Mk 2.ppj
+# Scripts/Source/User/Portable Junk Recycler Mk 2 - Release.ppj
 # <Variable Name="ModVersion" Value="..."/>
-working_file="Scripts/Source/User/Portable Junk Recycler Mk 2.ppj"
+working_file="Scripts/Source/User/Portable Junk Recycler Mk 2 - Release.ppj"
 temp_file="${working_file}.tmp"
 ${make_backups} && cp "${working_file}" "${working_file}${backup_suffix}"
 sed -E "s|(<Variable Name=\"ModVersion\" Value=\")[^\"]*(\"/>)|\1${version}\2|" "${working_file}" > "${temp_file}"
