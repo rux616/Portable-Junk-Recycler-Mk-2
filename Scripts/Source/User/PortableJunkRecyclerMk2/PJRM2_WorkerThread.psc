@@ -96,11 +96,6 @@ Function SetProfiling(bool abEnableProfiling)
     EndIf
 EndFunction
 
-; set log name
-Function SetLogName(string asLogName)
-    ModName = asLogName
-EndFunction
-
 ; set thread designation
 Function SetDesignation(string asDesignation)
     WorkerDesignation = asDesignation
