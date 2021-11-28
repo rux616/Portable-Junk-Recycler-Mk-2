@@ -3,6 +3,7 @@ Portable Junk Recycler Mk 2
 
 Table of Contents:
 - [Portable Junk Recycler Mk 2](#portable-junk-recycler-mk-2)
+    - [v0.7.0-beta](#v070-beta)
     - [v0.6.0-beta](#v060-beta)
     - [v0.5.0-beta](#v050-beta)
     - [v0.4.0 beta](#v040-beta)
@@ -12,6 +13,13 @@ Table of Contents:
     - [v0.2.2 beta](#v022-beta)
     - [v0.2.1 beta](#v021-beta)
     - [v0.2.0 beta](#v020-beta)
+
+v0.7.0-beta
+-----------
+- Added MCM setting: 'Enable Script Logging' ('Advanced' page) - choose whether to enable script logging (only possible when "bEnableLogging=1" and "bEnableTracing=1" are also set in the "[Papyrus]" section of fallout4custom.ini, and the debug scripts are installed)
+- Added MCM setting: 'Enable Script Profiling' ('Advanced' page) - choose whether to enable script profiling (only possible when "bEnableProfiling=1" is also set in the "[Papyrus]" section of fallout4custom.ini, and the debug scripts are installed)
+- Performed some minor cleanup on documentation and text files
+- Major internal code refactor to pull out the settings from the control script
 
 v0.6.0-beta
 -----------
