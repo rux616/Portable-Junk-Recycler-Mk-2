@@ -39,7 +39,7 @@
          "action": {
             "form": "Portable Junk Recycler Mk 2.esp|800",
             "function": "ShowCurrentMultipliers",
-            "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+            "scriptName": "PortableJunkRecyclerMk2:PJRM2_ControlManager",
             "type": "CallFunction"
          },
          "help": "$ViewCurrentMultipliersHelp",
@@ -50,7 +50,7 @@
          "action": {
             "form": "Portable Junk Recycler Mk 2.esp|800",
             "function": "ShowNumberOfUsesLeft",
-            "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+            "scriptName": "PortableJunkRecyclerMk2:PJRM2_ControlManager",
             "type": "CallFunction"
          },
          "help": "$ViewNumberOfUsesRemainingHelp",
@@ -437,7 +437,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_GeneralMultAdjustSimple",
-                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+                  "scriptName": "PortableJunkRecyclerMk2:PJRM2_SettingManager",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -447,7 +447,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_GeneralMultAdjustDetailed",
-                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+                  "scriptName": "PortableJunkRecyclerMk2:PJRM2_SettingManager",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -683,7 +683,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_IntAffectsMultSimple",
-                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+                  "scriptName": "PortableJunkRecyclerMk2:PJRM2_SettingManager",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -693,7 +693,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_IntAffectsMultDetailed",
-                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+                  "scriptName": "PortableJunkRecyclerMk2:PJRM2_SettingManager",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -844,7 +844,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_LckAffectsMultSimple",
-                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+                  "scriptName": "PortableJunkRecyclerMk2:PJRM2_SettingManager",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -854,7 +854,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_LckAffectsMultDetailed",
-                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+                  "scriptName": "PortableJunkRecyclerMk2:PJRM2_SettingManager",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -1005,7 +1005,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_RngAffectsMultSimple",
-                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+                  "scriptName": "PortableJunkRecyclerMk2:PJRM2_SettingManager",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -1015,7 +1015,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_RngAffectsMultDetailed",
-                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+                  "scriptName": "PortableJunkRecyclerMk2:PJRM2_SettingManager",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -1251,7 +1251,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_ScrapperAffectsMultSimple",
-                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+                  "scriptName": "PortableJunkRecyclerMk2:PJRM2_SettingManager",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -1261,7 +1261,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_ScrapperAffectsMultDetailed",
-                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+                  "scriptName": "PortableJunkRecyclerMk2:PJRM2_SettingManager",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -1723,7 +1723,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_Scrapper3Available",
-                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+                  "scriptName": "PortableJunkRecyclerMk2:PJRM2_ControlManager",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -1995,7 +1995,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_Scrapper4Available",
-                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+                  "scriptName": "PortableJunkRecyclerMk2:PJRM2_ControlManager",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -2267,7 +2267,7 @@
                "type": "hiddenSwitcher",
                "valueOptions": {
                   "propertyName": "MCM_Scrapper5Available",
-                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+                  "scriptName": "PortableJunkRecyclerMk2:PJRM2_ControlManager",
                   "sourceForm": "Portable Junk Recycler Mk 2.esp|800",
                   "sourceType": "PropertyValueBool"
                }
@@ -2556,6 +2556,10 @@
                "type": "spacer"
             },
             {
+               "text": "$LoggingProfilingNote",
+               "type": "text"
+            },
+            {
                "text": "$Methodology",
                "type": "section"
             },
@@ -2580,7 +2584,7 @@
                "action": {
                   "form": "Portable Junk Recycler Mk 2.esp|800",
                   "function": "ResetToDefaults",
-                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+                  "scriptName": "PortableJunkRecyclerMk2:PJRM2_ControlManager",
                   "type": "CallFunction"
                },
                "help": "$ResetSettingsToDefaultsHelp",
@@ -2591,7 +2595,7 @@
                "action": {
                   "form": "Portable Junk Recycler Mk 2.esp|800",
                   "function": "ResetMutexes",
-                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+                  "scriptName": "PortableJunkRecyclerMk2:PJRM2_ControlManager",
                   "type": "CallFunction"
                },
                "help": "$ResetLocksHelp",
@@ -2602,7 +2606,7 @@
                "action": {
                   "form": "Portable Junk Recycler Mk 2.esp|800",
                   "function": "ResetRecyclableItemsLists",
-                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+                  "scriptName": "PortableJunkRecyclerMk2:PJRM2_ControlManager",
                   "type": "CallFunction"
                },
                "help": "$ResetRecyclableItemsListsHelp",
@@ -2613,7 +2617,7 @@
                "action": {
                   "form": "Portable Junk Recycler Mk 2.esp|800",
                   "function": "ResetAlwaysAutoTransferList",
-                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+                  "scriptName": "PortableJunkRecyclerMk2:PJRM2_ControlManager",
                   "type": "CallFunction"
                },
                "help": "$ResetAlwaysAutoTransferListHelp",
@@ -2624,7 +2628,7 @@
                "action": {
                   "form": "Portable Junk Recycler Mk 2.esp|800",
                   "function": "ResetNeverAutoTransferList",
-                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+                  "scriptName": "PortableJunkRecyclerMk2:PJRM2_ControlManager",
                   "type": "CallFunction"
                },
                "help": "$ResetNeverAutoTransferListHelp",
@@ -2649,7 +2653,7 @@
                "action": {
                   "form": "Portable Junk Recycler Mk 2.esp|800",
                   "function": "Uninstall",
-                  "scriptName": "PortableJunkRecyclerMk2:ControlScript",
+                  "scriptName": "PortableJunkRecyclerMk2:PJRM2_ControlManager",
                   "type": "CallFunction"
                },
                "groupCondition": {
