@@ -28,9 +28,8 @@ Function ChangeSetting(var akSettingToChange, int aiChangeType, var avNewValue, 
     SettingCallbackType availableCallbackTypes = new SettingCallbackType
     SettingCallbackArgumentType availableCallbackArgumentTypes = new SettingCallbackArgumentType
 
-    var[] callbackInfo
-
     ; go through and change settings, with consideration for each setting type
+    var[] callbackInfo
     If akSettingToChange is SettingFloat
         callbackInfo = ChangeSettingFloat(akSettingToChange as SettingFloat, aiChangeType, avNewValue as float, asMcmModName)
     ElseIf akSettingToChange is SettingBool
@@ -41,45 +40,47 @@ Function ChangeSetting(var akSettingToChange, int aiChangeType, var avNewValue, 
         callbackInfo = ChangeSettingString(akSettingToChange as SettingString, aiChangeType, avNewValue as string, asMcmModName)
     EndIf
 
-    ; parse the returned callback info
-    int callbackType = callbackInfo[0] as int
-    Form callbackForm = callbackInfo[1] as Form
-    string callbackScript = callbackInfo[2] as string
-    string callbackFunction = callbackInfo[3] as string
-    int callbackArgumentType = callbackInfo[4] as int
-    var oldValue = callbackInfo[5]
-    var newValue = callbackInfo[6]
-    bool waitOnCallback = callbackInfo[7] as bool
+    ; if setting has no callback associated with it, skip the rest
+    If callbackInfo[0] as int != availableCallbackTypes.NoCallback
+        ; parse the returned callback info
+        int callbackType = callbackInfo[0] as int
+        Form callbackForm = callbackInfo[1] as Form
+        string callbackScript = callbackInfo[2] as string
+        string callbackFunction = callbackInfo[3] as string
+        int callbackArgumentType = callbackInfo[4] as int
+        var oldValue = callbackInfo[5]
+        var newValue = callbackInfo[6]
+        bool waitOnCallback = callbackInfo[7] as bool
 
-    var[] params = new var[0]
-
-    If callbackArgumentType == availableCallbackArgumentTypes.NoArguments
-        ; do nothing
-    ElseIf callbackArgumentType == availableCallbackArgumentTypes.NewValueOnly
-        params.Add(newValue)
-    ElseIf callbackArgumentType == availableCallbackArgumentTypes.OldValueOnly
-        params.Add(oldValue)
-    ElseIf callbackArgumentType == availableCallbackArgumentTypes.Both
-        params.Add(oldValue)
-        params.Add(newValue)
-    EndIf
-
-    If callbackType == availableCallbackTypes.NoCallback
-        ; do nothing
-    ElseIf callbackType == availableCallbackTypes.FunctionCallback
-        ScriptObject callbackScriptObject = callbackForm.CastAs(callbackScript)
-        If callbackScriptObject
-            If waitOnCallback
-                callbackScriptObject.CallFunction(callbackFunction, params)
-            Else
-                callbackScriptObject.CallFunctionNoWait(callbackFunction, params)
-            EndIf
+        ; prepare parameters for callback function
+        var[] params = new var[0]
+        If callbackArgumentType == availableCallbackArgumentTypes.NoArguments
+            ; do nothing
+        ElseIf callbackArgumentType == availableCallbackArgumentTypes.NewValueOnly
+            params.Add(newValue)
+        ElseIf callbackArgumentType == availableCallbackArgumentTypes.OldValueOnly
+            params.Add(oldValue)
+        ElseIf callbackArgumentType == availableCallbackArgumentTypes.Both
+            params.Add(oldValue)
+            params.Add(newValue)
         EndIf
-    ElseIf callbackType == availableCallbackTypes.GlobalFunctionCallback
-        If waitOnCallback
-            Utility.CallGlobalFunction(callbackScript, callbackFunction, params)
-        Else
-            Utility.CallGlobalFunctionNoWait(callbackScript, callbackFunction, params)
+
+        ; execute callback
+        If callbackType == availableCallbackTypes.FunctionCallback
+            ScriptObject callbackScriptObject = callbackForm.CastAs(callbackScript)
+            If callbackScriptObject
+                If waitOnCallback
+                    callbackScriptObject.CallFunction(callbackFunction, params)
+                Else
+                    callbackScriptObject.CallFunctionNoWait(callbackFunction, params)
+                EndIf
+            EndIf
+        ElseIf callbackType == availableCallbackTypes.GlobalFunctionCallback
+            If waitOnCallback
+                Utility.CallGlobalFunction(callbackScript, callbackFunction, params)
+            Else
+                Utility.CallGlobalFunctionNoWait(callbackScript, callbackFunction, params)
+            EndIf
         EndIf
     EndIf
 EndFunction
@@ -100,15 +101,18 @@ var[] Function ChangeSettingBool(SettingBool akSettingToChange, int aiChangeType
         MCM.SetModSettingBool(asMcmModName, akSettingToChange.McmId, abNewValue)
     EndIf
 
+    ; collect callback info to return
     var[] toReturn = new var[0]
     toReturn.Add(akSettingToChange.CallbackType)
-    toReturn.Add(akSettingToChange.CallbackForm)
-    toReturn.Add(akSettingToChange.CallbackScript)
-    toReturn.Add(akSettingToChange.CallbackFunction)
-    toReturn.Add(akSettingToChange.CallbackArgumentType)
-    toReturn.add(oldValue) ; old value
-    toReturn.Add(akSettingToChange.Value) ; new value
-    toReturn.Add(akSettingToChange.WaitOnCallback)
+    If akSettingToChange.CallbackType
+        toReturn.Add(akSettingToChange.CallbackForm)
+        toReturn.Add(akSettingToChange.CallbackScript)
+        toReturn.Add(akSettingToChange.CallbackFunction)
+        toReturn.Add(akSettingToChange.CallbackArgumentType)
+        toReturn.add(oldValue) ; old value
+        toReturn.Add(akSettingToChange.Value) ; new value
+        toReturn.Add(akSettingToChange.WaitOnCallback)
+    EndIf
     Return toReturn
 EndFunction
 
@@ -135,15 +139,18 @@ var[] Function ChangeSettingFloat(SettingFloat akSettingToChange, int aiChangeTy
         MCM.SetModSettingFloat(asMcmModName, akSettingToChange.McmId, afNewValue)
     EndIf
 
+    ; collect callback info to return
     var[] toReturn = new var[0]
     toReturn.Add(akSettingToChange.CallbackType)
-    toReturn.Add(akSettingToChange.CallbackForm)
-    toReturn.Add(akSettingToChange.CallbackScript)
-    toReturn.Add(akSettingToChange.CallbackFunction)
-    toReturn.Add(akSettingToChange.CallbackArgumentType)
-    toReturn.add(oldValue) ; old value
-    toReturn.Add(akSettingToChange.Value) ; new value
-    toReturn.Add(akSettingToChange.WaitOnCallback)
+    If akSettingToChange.CallbackType
+        toReturn.Add(akSettingToChange.CallbackForm)
+        toReturn.Add(akSettingToChange.CallbackScript)
+        toReturn.Add(akSettingToChange.CallbackFunction)
+        toReturn.Add(akSettingToChange.CallbackArgumentType)
+        toReturn.add(oldValue) ; old value
+        toReturn.Add(akSettingToChange.Value) ; new value
+        toReturn.Add(akSettingToChange.WaitOnCallback)
+    EndIf
     Return toReturn
 EndFunction
 
@@ -170,15 +177,18 @@ var[] Function ChangeSettingInt(SettingInt akSettingToChange, int aiChangeType, 
         MCM.SetModSettingInt(asMcmModName, akSettingToChange.McmId, aiNewValue)
     EndIf
 
+    ; collect callback info to return
     var[] toReturn = new var[0]
     toReturn.Add(akSettingToChange.CallbackType)
-    toReturn.Add(akSettingToChange.CallbackForm)
-    toReturn.Add(akSettingToChange.CallbackScript)
-    toReturn.Add(akSettingToChange.CallbackFunction)
-    toReturn.Add(akSettingToChange.CallbackArgumentType)
-    toReturn.add(oldValue) ; old value
-    toReturn.Add(akSettingToChange.Value) ; new value
-    toReturn.Add(akSettingToChange.WaitOnCallback)
+    If akSettingToChange.CallbackType
+        toReturn.Add(akSettingToChange.CallbackForm)
+        toReturn.Add(akSettingToChange.CallbackScript)
+        toReturn.Add(akSettingToChange.CallbackFunction)
+        toReturn.Add(akSettingToChange.CallbackArgumentType)
+        toReturn.add(oldValue) ; old value
+        toReturn.Add(akSettingToChange.Value) ; new value
+        toReturn.Add(akSettingToChange.WaitOnCallback)
+    EndIf
     Return toReturn
 EndFunction
 
@@ -198,15 +208,18 @@ var[] Function ChangeSettingString(SettingString akSettingToChange, int aiChange
         MCM.SetModSettingBool(asMcmModName, akSettingToChange.McmId, asNewValue)
     EndIf
 
+    ; collect callback info to return
     var[] toReturn = new var[0]
     toReturn.Add(akSettingToChange.CallbackType)
-    toReturn.Add(akSettingToChange.CallbackForm)
-    toReturn.Add(akSettingToChange.CallbackScript)
-    toReturn.Add(akSettingToChange.CallbackFunction)
-    toReturn.Add(akSettingToChange.CallbackArgumentType)
-    toReturn.add(oldValue) ; old value
-    toReturn.Add(akSettingToChange.Value) ; new value
-    toReturn.Add(akSettingToChange.WaitOnCallback)
+    If akSettingToChange.CallbackType
+        toReturn.Add(akSettingToChange.CallbackForm)
+        toReturn.Add(akSettingToChange.CallbackScript)
+        toReturn.Add(akSettingToChange.CallbackFunction)
+        toReturn.Add(akSettingToChange.CallbackArgumentType)
+        toReturn.add(oldValue) ; old value
+        toReturn.Add(akSettingToChange.Value) ; new value
+        toReturn.Add(akSettingToChange.WaitOnCallback)
+    EndIf
     Return toReturn
 EndFunction
 
