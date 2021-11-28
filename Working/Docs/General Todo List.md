@@ -140,5 +140,11 @@
     * (result): it does not
 * [-] localize MCM strings file (Cn/De/En/Es/Esmx/Fr/It/Ja/Pl/Ptbr/Ru)
 * [-] localize plugin file (Cn/De/En/Es/Esmx/Fr/It/Ja/Pl/Ptbr/Ru)
+* [X] finish adding Enable{Logging,Profiling} to ControlScript
+    * [X] check logic around how OpenUserLog works
+* [X] think about potential race conditions with how setting callbacks now work
+* [ ] add text to README ('Copyright and Licensing' section) saying same thing that nexus mods 'mod permissions' page says
+* [ ] add troubleshooting section to README, include things like the mod log, how to turn on papyrus logging, etc.
+* [ ] remove base art assets from repo
 * version locations:
     * .version file
