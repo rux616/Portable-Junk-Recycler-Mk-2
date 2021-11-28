@@ -29,6 +29,8 @@ for file in "${@}"; do
 
     # remove anchor links
     sed -Ei 's|\[([^]]*)]\(#[^)]*\)|\1|g' "${temp_file}"
+    # remove any remaining '(TOC)' lines and an extra newline
+    perl -0777pi -e 's{\n\(TOC\)\n}{}g' "${temp_file}"
     # remove '**...**' and '__...__'
     perl -pi -e 'no warnings qw(experimental::vlb) ; s{(?<=^|\W)\*\*(.+?)\*\*(?=\W)}{${1}}g ; s{(?<=^|\W)__(.+?)__(?=\W)}{${1}}g' "${temp_file}"
     # strip markdown URLs
