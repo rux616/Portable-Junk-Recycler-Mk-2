@@ -1,8 +1,11 @@
 Portable Junk Recycler Mk 2
 ===========================
 
-Table of Contents:
+Table Of Contents
+-----------------
 - Portable Junk Recycler Mk 2
+    - Table Of Contents
+- Changelogs
     - v0.7.0-beta
     - v0.6.0-beta
     - v0.5.0-beta
@@ -13,6 +16,10 @@ Table of Contents:
     - v0.2.2 beta
     - v0.2.1 beta
     - v0.2.0 beta
+
+
+Changelogs
+==========
 
 v0.7.0-beta
 -----------

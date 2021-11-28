@@ -42,6 +42,8 @@ A fast, highly configurable device that will scrap junk items transferred into i
 
 I created this mod because while I really liked the original Portable Junk Recycler by Kentington, I wanted something that I could customize and additionally I wanted to see if I could fix the crash issue.
 
+([TOC](#table-of-contents))
+
 Features
 --------
 - Extremely customizable via the Mod Config Menu
@@ -60,14 +62,20 @@ Features
 - The mesh used for the device has physics, so it won't just hang in the air if you ever drop it from your inventory
 - [Canary](https://www.nexusmods.com/fallout4/mods/44949) save file monitor support
 
+([TOC](#table-of-contents))
+
 Requirements
 ------------
 - [Fallout 4 Script Extender (F4SE)](https://f4se.silverlock.org/)
 - [Mod Configuration Menu (MCM)](https://www.nexusmods.com/fallout4/mods/21497)
 
+([TOC](#table-of-contents))
+
 Installation
 ------------
 I **highly** recommend that you use a mod manager to install this mod, as there is a FOMOD installer included. I personally recommend Mod Organizer 2, but Vortex is fine too. If you must, however, this mod can be installed by unzipping it directly into the Data folder of your Fallout 4 installation.
+
+([TOC](#table-of-contents))
 
 Uninstallation
 --------------
@@ -85,6 +93,8 @@ To uninstall this mod, make sure that a recycling process is not underway, then 
 - Exit the game
 - Disable or remove this mod and its files
 
+([TOC](#table-of-contents))
+
 Crafting Materials Required
 ---------------------------
 - Enhanced Targeting Card x1
@@ -94,6 +104,8 @@ Crafting Materials Required
 - Screws x12
 - Sensor Module x1
 - Steel x20
+
+([TOC](#table-of-contents))
 
 Summary
 -------
@@ -111,6 +123,8 @@ Also by default, the Portable Junk Recycler Mk 2 will detect whether the [Standa
 
 This mod (plus all of its extra bits like images, build scripts, etc.) is also available at the [GitHub project](https://github.com/rux616/Portable-Junk-Recycler-Mk-2).
 
+([TOC](#table-of-contents))
+
 
 Mod Information
 ===============
@@ -127,6 +141,8 @@ By default, the mod comes with the "Behavior Override" option set to `OFF`; to e
 Editing the "Never/Always Automatically Transfer" lists is also `OFF` by default; to enable editing these lists, turn that option `ON`:
 - To edit the "Never Automatically Transfer" list, ensure that `[ALT]` and `[CTRL]` are both pressed when the recycler is activated.
 - To edit the "Always Automatically Transfer" list, ensure that `[ALT]` and `[SHIFT]` are both pressed when the recycler is activated.
+
+([TOC](#table-of-contents))
 
 Crafting
 --------
@@ -154,6 +170,8 @@ Note that one of the options is "Dynamic", which will automatically attempt to u
 - Utility Station (ECO)
 - Utility Workbench (AWKCR)
 - Chemistry Station (vanilla)
+
+([TOC](#table-of-contents))
 
 Scrap Return Formula
 --------------------
@@ -186,42 +204,62 @@ Additionally, the right hand side of the formula (`NumberOfComponentsToRecycle *
 
       NumberOfComponentsReturned = floor/round/ceiling( max( 1, NumberOfComponentsToRecycle * Multiplier ) )
 
+([TOC](#table-of-contents))
+
 Known Issues
 ------------
 - If the "Return Items Silently" option is set to `OFF` and you add scrap items (acid, bone, adhesive, ceramic, etc.) to the recycler, when the recycling process is complete, you may receive more than one notification for those scrap items that you added. I can't do anything about that without compromising the speed of the recycler (it could add almost an entire extra second to the processing time, at least), so if it is undesired behavior, you can set the "Return Items Silently" option to `ON` or you can set the "Enable Junk Filter" option to `ON` so that scrap items cannot be added to the container in the first place, or both. (Both of those options are `ON` by default.) Alternatively, you can simply choose not to add scrap items.
+
+([TOC](#table-of-contents))
 
 
 Interesting Configurations
 ==========================
 Given how customizable the Mk 2 is, there are _myriad_ ways in which to use it. Here are a few fun ones I've thought of. Note that some of these have the potential to boost the multiplier to ridiculous levels, and are not intended to be balanced. My goal is to give you, the player, ways in which to have fun and customize this mod to _your_ liking.
 
+([TOC](#table-of-contents))
+
 Brainiac
 --------
 You really value your character's intelligence. Set "Multiplier Adjustments > Intelligence" to give you a `0.2` multiplier adjustment per point.
+
+([TOC](#table-of-contents))
 
 Leprechaun
 ----------
 Luck is _really_ important to you. So much so that you set it to be the only multiplier adjustment you use (set "Settings > Adjustment Options > (everything not Luck)" to `OFF`), at `0.5` per point.
 
+([TOC](#table-of-contents))
+
 Loot Piñata
 -----------
 Set every multiplier adjustment to max. All junk items now explode in showers of components (figuratively).
+
+([TOC](#table-of-contents))
 
 Magnum Opus Wabbajack Modlist
 -----------------------------
 If you use Wabbajack to install the Magnum Opus modlist by Lively, you can set the Portable Junk Recycler Mk 2 to mimic the way the Scrapper perk works by setting "Multiplier Adjustments > Scrapper: Rank 1 > In Player-Owned Settlements" to `0.2`, setting "Multiplier Adjustments > Scrapper: Rank 2 > In Player-Owned Settlements" also to `0.2`, and by setting "Multiplier Adjustments > Scrapper: Rank 3 > In Player-Owned Settlements" to `0.5`.
 
+([TOC](#table-of-contents))
+
 No Scrapper, No Scrap
 ---------------------
 Configures the Mk 2 so that you don't get any components unless you have at least 1 rank in the Scrapper perk. Set the Base Multiplier to `0.0`, make sure that "Settings > Adjustment Options > (everything not Scrapper)" is set to `OFF` if it can be, then set "Multiplier Adjustments > Scrapper: Rank X" to `1.0`/`1.1`/`1.2`/etc. for Scrapper rank 1/2/3/etc.
+
+([TOC](#table-of-contents))
 
 Punishing Field Use
 -------------------
 Heavily incentivize the use of settlements. "Multiplier Adjustments > General > Everywhere Else" should be set to `-0.9`.
 
+([TOC](#table-of-contents))
+
 The Gambler
 -----------
 Set "Settings > Adjustment Options > Randomness" to `ON (Simple)` and set the minimum to `-1.0`, and the maximum to `1.0`. Set every other multiplier option to `OFF`.
+
+([TOC](#table-of-contents))
 
 
 Technical Details
@@ -244,11 +282,15 @@ Plugin FormID Layout
 
 **Note:** "xxx" is the load order position of the mod.
 
+([TOC](#table-of-contents))
+
 Limited Uses
 ------------
 In "Limited Use" mode, the number of uses left isn't tracked specifically per device, but rather by tracking how many times a recycling process has occurred. This was a design decision made because of how ingestible items work in the game and due to the events and timing of said events surrounding their use. Therefore it doesn't matter whether several Mk 2's are crafted and used, the number of uses will tick up until it reaches the configured threshold and the item simply won't be returned to you after that recycling process finishes.
 
 **Note:** The number of uses is not incremented when there is no junk to break down.
+
+([TOC](#table-of-contents))
 
 Scrap Categories
 ----------------
@@ -297,6 +339,8 @@ The "Special" category is intended for modders to add components that might not 
 If changing any FormList associated with any of the scrap categories, make sure that the contents of the lists match in length and have the corresponding Component and MiscObject forms at the same position in the list. For example, in the "PJRM22_ComponentsC" `[FLST:FExxx810]` list, the first entry is "c_Bone" `[Fallout4.esm:CMPO:xx01FA98]`, which matches the first entry in the "PJRM2_ScrapC" `[FLST:FExxx814]` list, "c_Bone_scrap" `[Fallout4.esm:MISC:xx0AEC5D]`.
 
 These lists are reread every time a game is loaded.
+
+([TOC](#table-of-contents))
 
 Settings Layout in MCM
 ----------------------
@@ -496,6 +540,8 @@ Settings Layout in MCM
     - Use "Direct Move" Method To Update Recyclable Item List [Default = `OFF`, Possible Values = `OFF`/`ON`]
 
 
+([TOC](#table-of-contents))
+
 Copyright and Licenses
 ======================
 Copyright 2021 Dan Cassidy
@@ -503,6 +549,8 @@ Copyright 2021 Dan Cassidy
 All code in this mod is licensed under the GPL 3.0 or later to the extent that it can be covered by said license.
 
 All documentation and textures created by me are CC-BY-SA licensed.
+
+([TOC](#table-of-contents))
 
 
 Credits and Thanks
@@ -522,6 +570,8 @@ Credits and Thanks
 - **Joel Day**: For the [Papyrus extension](https://marketplace.visualstudio.com/items?itemName=joelday.papyrus-lang-vscode) for Visual Studio Code
 - **Dank Rafft**: For the [Equipment and Crafting Overhaul (ECO)](https://www.nexusmods.com/fallout4/mods/55503) mod
 
+([TOC](#table-of-contents))
+
 
 Contact
 =======
@@ -531,3 +581,5 @@ If you need to contact me personally, I can be reached through one of the follow
 - **Nexus Mods**: [rux616](https://www.nexusmods.com/users/124191) (Send a message via the "CONTACT" button.)
 - **Email**: rux616-at-pm-dot-me (replace `-at-` with `@` and `-dot-` with `.`)
 - **Discord**: rux616#0950 (I tend to hang out on the [Nexus Mods](https://discord.gg/nexusmods) and [Wabbajack](https://discord.gg/wabbajack) servers, amongst others.)
+
+([TOC](#table-of-contents))

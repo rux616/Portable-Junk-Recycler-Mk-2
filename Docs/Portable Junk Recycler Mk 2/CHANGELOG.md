@@ -1,8 +1,11 @@
 Portable Junk Recycler Mk 2
 ===========================
 
-Table of Contents:
+Table Of Contents
+-----------------
 - [Portable Junk Recycler Mk 2](#portable-junk-recycler-mk-2)
+    - [Table Of Contents](#table-of-contents)
+- [Changelogs](#changelogs)
     - [v0.7.0-beta](#v070-beta)
     - [v0.6.0-beta](#v060-beta)
     - [v0.5.0-beta](#v050-beta)
@@ -14,12 +17,18 @@ Table of Contents:
     - [v0.2.1 beta](#v021-beta)
     - [v0.2.0 beta](#v020-beta)
 
+
+Changelogs
+==========
+
 v0.7.0-beta
 -----------
 - Added MCM setting: 'Enable Script Logging' ('Advanced' page) - choose whether to enable script logging (only possible when "bEnableLogging=1" and "bEnableTracing=1" are also set in the "[Papyrus]" section of fallout4custom.ini, and the debug scripts are installed)
 - Added MCM setting: 'Enable Script Profiling' ('Advanced' page) - choose whether to enable script profiling (only possible when "bEnableProfiling=1" is also set in the "[Papyrus]" section of fallout4custom.ini, and the debug scripts are installed)
 - Performed some minor cleanup on documentation and text files
 - Major internal code refactor to pull out the settings from the control script
+
+([TOC](#table-of-contents))
 
 v0.6.0-beta
 -----------
@@ -34,6 +43,8 @@ v0.6.0-beta
 - Fixed filtering of items into the Mk 2 inventory
 - Sped up updating of recyclable items list by adding async processing while the script is waiting to open the container
 - Slightly altered the main mod menu page to consolidate informational buttons
+
+([TOC](#table-of-contents))
 
 v0.5.0-beta
 -----------
@@ -53,6 +64,8 @@ v0.5.0-beta
 - Changed MCM button: 'Uninstall' ('Advanced' page) - cannot be triggered when there is a recycling process running or the control script is busy
 - Removed MCM button: 'Reset Behavior Overrides' ('Advanced' page) - no longer needed
 - Adopted the GPL 3.0 license (with the "or later" option) for the source code of the mod
+
+([TOC](#table-of-contents))
 
 v0.4.0 beta
 -----------
@@ -76,11 +89,15 @@ v0.4.0 beta
     - Sensor Module x1
     - Steel x20
 
+([TOC](#table-of-contents))
+
 v0.3.1 beta
 -----------
 - Added warning message if MCM not detected
 - Fixed things breaking if the player loaded an auto-save that was created after activating the recycler device in the inventory. It seems that when the papyrus VM would unfreeze after loading the save, it had forgotten about the properties of the script. To work around it, the forms are loaded into local variables manually.
 - Altered crafting recipe a bit
+
+([TOC](#table-of-contents))
 
 v0.3.0 beta
 -----------
@@ -91,19 +108,29 @@ v0.3.0 beta
 - Added new setting: Return Items Silently (determines if the player gets notification messages about items being returned from the recycler)
 - Added warning message if F4SE not detected
 
+([TOC](#table-of-contents))
+
 v0.2.3 beta
 -----------
 - Added more logging to scripts
 - Fixed freeze when aiming at things that could be activated when recycling process was ready to return items to player (F4SE is now required)
 
+([TOC](#table-of-contents))
+
 v0.2.2 beta
 -----------
 - fixed multipliers not applying to all components in a multi-component item
+
+([TOC](#table-of-contents))
 
 v0.2.1 beta
 -----------
 - fixed unintentional resource loop
 
+([TOC](#table-of-contents))
+
 v0.2.0 beta
 -----------
 - initial beta release
+
+([TOC](#table-of-contents))
