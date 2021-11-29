@@ -1,4 +1,5 @@
-/Build
 /meta.ini
-*.pex
+*.ba2
 *.backup.*
+*.pex
+*.zip
