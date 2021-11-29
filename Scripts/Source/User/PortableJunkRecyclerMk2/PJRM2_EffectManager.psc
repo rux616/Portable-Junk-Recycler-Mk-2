@@ -87,7 +87,6 @@ bool AsyncSubprocessComplete = false
 
 
 
-
 ; EVENTS
 ; ------
 
