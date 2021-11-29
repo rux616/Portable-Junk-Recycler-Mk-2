@@ -25,6 +25,7 @@ v0.7.0-beta
 -----------
 - Added MCM setting: 'Enable Script Logging' ('Advanced' page) - choose whether to enable script logging (only possible when "bEnableLogging=1" and "bEnableTracing=1" are also set in the "[Papyrus]" section of fallout4custom.ini, and the debug scripts are installed)
 - Added MCM setting: 'Enable Script Profiling' ('Advanced' page) - choose whether to enable script profiling (only possible when "bEnableProfiling=1" is also set in the "[Papyrus]" section of fallout4custom.ini, and the debug scripts are installed)
+- Added "Troubleshooting Info" section to readme
 - Performed some minor cleanup on documentation and text files
 - Major internal code refactor to pull out the settings from the control script
 
