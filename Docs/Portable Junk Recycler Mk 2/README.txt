@@ -7,12 +7,12 @@ Table Of Contents
 - Portable Junk Recycler Mk 2
     - Table Of Contents
 - Overview
+    - Summary
     - Features
     - Requirements
     - Installation
     - Uninstallation
     - Crafting Materials Required
-    - Summary
 - Mod Information
     - Hotkeys
     - Crafting
@@ -43,9 +43,26 @@ Table Of Contents
 
 Overview
 ========
+
+Summary
+-------
 A highly configurable device that will scrap junk items transferred into its inventory, returning the component parts.
 
 I created this mod because while I really liked the original Portable Junk Recycler by Kentington, I wanted something that I could customize and additionally I wanted to see if I could fix the crash issue.
+
+By default the Mk 2 functions like the original, that is, you use it, exit the Pip-boy, move the junk objects you want to be recycled into the container that then opens, close said container, and then you get a bunch of components back. However it has the following bonuses by default:
+
+- You get a 1% bonus to the number of components returned for each point of Intelligence
+- You get a 1% bonus to the number of components returned for each point of Luck
+- You get a 10% bonus to the number of components returned per Scrapper perk rank, but _only_ in player-owned settlements
+
+You can heavily customize all these options and more via the MCM.
+
+This mod REQUIRES both F4SE and MCM and will not work without them. I had to do this in order to prevent the freezing bug found in the original. Sorry, console players, you're out of luck. This mod also supports the Canary (https://www.nexusmods.com/fallout4/mods/44949) mod to alert in the event of save game corruption.
+
+Also by default, the Portable Junk Recycler Mk 2 will detect whether the Standalone Workbenches (https://www.nexusmods.com/fallout4/mods/41832), ECO (https://www.nexusmods.com/fallout4/mods/55503), or AWKCR (https://www.nexusmods.com/fallout4/mods/6091) mods are installed and will dynamically set itself to be crafted at the respective "Utility" workbenches, or at the vanilla "Chemistry Station" if none are installed. If more than one of the preceding mods are installed, the Standalone Workbenches Utility Workbench takes priority, followed by the ECO Utility Station, then the AWKCR Utility Workbench. The device can be found under the "UTILITY" category (or one of the other categories based on whether any of the category changer addon plugins are active or not).
+
+This mod (plus all of its extra bits like images, build scripts, etc.) is also available at the GitHub project (https://github.com/rux616/Portable-Junk-Recycler-Mk-2).
 
 Features
 --------
@@ -98,22 +115,6 @@ Crafting Materials Required
 - Screws x12
 - Sensor Module x1
 - Steel x20
-
-Summary
--------
-By default the Mk 2 functions like the original, that is, you use it, exit the Pip-boy, move the junk objects you want to be recycled into the container that then opens, close said container, and then you get a bunch of components back. However it has the following bonuses by default:
-
-- You get a 1% bonus to the number of components returned for each point of Intelligence
-- You get a 1% bonus to the number of components returned for each point of Luck
-- You get a 10% bonus to the number of components returned per Scrapper perk rank, but _only_ in player-owned settlements
-
-You can heavily customize all these options and more via the MCM.
-
-This mod REQUIRES both F4SE and MCM and will not work without them. I had to do this in order to prevent the freezing bug found in the original. Sorry, console players, you're out of luck. This mod also supports the Canary (https://www.nexusmods.com/fallout4/mods/44949) mod to alert in the event of save game corruption.
-
-Also by default, the Portable Junk Recycler Mk 2 will detect whether the Standalone Workbenches (https://www.nexusmods.com/fallout4/mods/41832), ECO (https://www.nexusmods.com/fallout4/mods/55503), or AWKCR (https://www.nexusmods.com/fallout4/mods/6091) mods are installed and will dynamically set itself to be crafted at the respective "Utility" workbenches, or at the vanilla "Chemistry Station" if none are installed. If more than one of the preceding mods are installed, the Standalone Workbenches Utility Workbench takes priority, followed by the ECO Utility Station, then the AWKCR Utility Workbench. The device can be found under the "UTILITY" category (or one of the other categories based on whether any of the category changer addon plugins are active or not).
-
-This mod (plus all of its extra bits like images, build scripts, etc.) is also available at the GitHub project (https://github.com/rux616/Portable-Junk-Recycler-Mk-2).
 
 
 Mod Information
@@ -528,9 +529,9 @@ Copyright and Licenses
 ======================
 Copyright 2021 Dan Cassidy
 
-All my code in this mod is licensed under the GPL 3.0 or later.
+All my code in this mod is licensed under the GPL 3.0 (https://www.gnu.org/licenses/gpl-3.0.en.html) or later.
 
-Everything else created by me is CC-BY-SA licensed.
+Everything else in this mod created by me is CC-BY-SA (https://creativecommons.org/licenses/by-sa/4.0/legalcode) licensed.
 
 
 Credits and Thanks
