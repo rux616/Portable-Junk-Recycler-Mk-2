@@ -7,12 +7,12 @@ Table Of Contents
 - Portable Junk Recycler Mk 2
     - Table Of Contents
 - Overview
+    - Summary
     - Features
     - Requirements
     - Installation
     - Uninstallation
     - Crafting Materials Required
-    - Summary
 - Mod Information
     - Hotkeys
     - Crafting
@@ -31,21 +31,42 @@ Table Of Contents
     - Limited Uses
     - Scrap Categories
     - Settings Layout in MCM
-- Copyrights and Licenses
+- Troubleshooting Info
+    - Installing Debug Scripts
+    - Enable Debug Logging (Fallout 4)
+    - Enable Debug Logging (Portable Junk Recycler Mk 2)
+    - Log Location
+- Copyright and Licenses
 - Credits and Thanks
 - Contact
 
 
 Overview
 ========
-A fast, highly configurable device that will scrap junk items transferred into its inventory, returning the component parts.
+
+Summary
+-------
+A highly configurable device that will scrap junk items transferred into its inventory, returning the component parts.
 
 I created this mod because while I really liked the original Portable Junk Recycler by Kentington, I wanted something that I could customize and additionally I wanted to see if I could fix the crash issue.
+
+By default the Mk 2 functions like the original, that is, you use it, exit the Pip-boy, move the junk objects you want to be recycled into the container that then opens, close said container, and then you get a bunch of components back. However it has the following bonuses by default:
+
+- You get a 1% bonus to the number of components returned for each point of Intelligence
+- You get a 1% bonus to the number of components returned for each point of Luck
+- You get a 10% bonus to the number of components returned per Scrapper perk rank, but _only_ in player-owned settlements
+
+You can heavily customize all these options and more via the MCM.
+
+This mod REQUIRES both F4SE and MCM and will not work without them. I had to do this in order to prevent the freezing bug found in the original. Sorry, console players, you're out of luck. This mod also supports the Canary (https://www.nexusmods.com/fallout4/mods/44949) mod to alert in the event of save game corruption.
+
+Also by default, the Portable Junk Recycler Mk 2 will detect whether the Standalone Workbenches (https://www.nexusmods.com/fallout4/mods/41832), ECO (https://www.nexusmods.com/fallout4/mods/55503), or AWKCR (https://www.nexusmods.com/fallout4/mods/6091) mods are installed and will dynamically set itself to be crafted at the respective "Utility" workbenches, or at the vanilla "Chemistry Station" if none are installed. If more than one of the preceding mods are installed, the Standalone Workbenches Utility Workbench takes priority, followed by the ECO Utility Station, then the AWKCR Utility Workbench. The device can be found under the "UTILITY" category (or one of the other categories based on whether any of the category changer addon plugins are active or not).
+
+This mod (plus all of its extra bits like images, build scripts, etc.) is also available at the GitHub project (https://github.com/rux616/Portable-Junk-Recycler-Mk-2).
 
 Features
 --------
 - Extremely customizable via the Mod Config Menu
-- Fast
 - Can automatically move junk items to the recycler inventory
 - Can be set to only automatically move items that when recycled, will save weight
 - Configurable "Always Automatically Transfer" and "Never Automatically Transfer" lists
@@ -67,7 +88,7 @@ Requirements
 
 Installation
 ------------
-I *highly* recommend that you use a mod manager to install this mod, as there is a FOMOD installer included. I personally recommend Mod Organizer 2, but Vortex is fine too. If you must, however, this mod can be installed by unzipping it directly into the Data folder of your Fallout 4 installation.
+I highly recommend that you use a mod manager to install this mod, as there is a FOMOD installer included. I personally recommend Mod Organizer 2, but Vortex is fine too. If you must, however, this mod can be installed by unzipping it directly into the Data folder of your Fallout 4 installation.
 
 Uninstallation
 --------------
@@ -94,22 +115,6 @@ Crafting Materials Required
 - Screws x12
 - Sensor Module x1
 - Steel x20
-
-Summary
--------
-By default the Mk 2 functions like the original, that is, you use it, exit the Pip-boy, move the junk objects you want to be recycled into the container that then opens, close said container, and then you get a bunch of components back. However it has the following bonuses by default:
-
-- You get a 1% bonus to the number of components returned for each point of Intelligence
-- You get a 1% bonus to the number of components returned for each point of Luck
-- You get a 10% bonus to the number of components returned per Scrapper perk rank, but _only_ in player-owned settlements
-
-You can heavily customize all these options and more via the MCM.
-
-This mod *REQUIRES* both F4SE and MCM and will not work without them. I had to do this in order to prevent the freezing bug found in the original. Sorry, console players, you're out of luck. This mod also supports the Canary (https://www.nexusmods.com/fallout4/mods/44949) mod to alert in the event of save game corruption.
-
-Also by default, the Portable Junk Recycler Mk 2 will detect whether the Standalone Workbenches (https://www.nexusmods.com/fallout4/mods/41832), ECO (https://www.nexusmods.com/fallout4/mods/55503), or AWKCR (https://www.nexusmods.com/fallout4/mods/6091) mods are installed and will dynamically set itself to be crafted at the respective "Utility" workbenches, or at the vanilla "Chemistry Station" if none are installed. If more than one of the preceding mods are installed, the Standalone Workbenches Utility Workbench takes priority, followed by the ECO Utility Station, then the AWKCR Utility Workbench. The device can be found under the "UTILITY" category (or one of the other categories based on whether any of the category changer addon plugins are active or not).
-
-This mod (plus all of its extra bits like images, build scripts, etc.) is also available at the GitHub project (https://github.com/rux616/Portable-Junk-Recycler-Mk-2).
 
 
 Mod Information
@@ -169,22 +174,22 @@ Overall, it is a simple formula:
 - Intelligence Multiplier Adjustment [Default Per Point = `0.01`, Min = `0.0`, Max = `1.0`]
 - Luck Multiplier Adjustment [Default Per Point = `0.01`, Min = `0.0`, Max = `1.0`]
 - Random Multiplier Adjustment [Default Minimum = `-0.1`, Default Maximum = `0.1`, Min = `-6.0`, Max = `6.0`]
-- Scrapper Perk Multiplier Adjustment [Default = `(variable)`, Min = `-2.0`, Max = `2.0`]
+- Scrapper Perk Multiplier Adjustment [Default = `(depends on rank)`, Min = `-2.0`, Max = `2.0`]
 
-The General Multiplier Adjustment and the Scrapper Perk Multiplier Adjustment both have additional configurability for what multiplier to apply whether the player is in a player-owned settlement or not.
+The General Multiplier Adjustment and the Scrapper Perk Multiplier Adjustment both have additional configurability with regard to what multiplier to apply dependent upon whether the player is in a player-owned settlement or not.
 
 Additionally, the right hand side of the formula (`NumberOfComponentsToRecycle * Multiplier`) can be modified in a couple different ways before the final value of `NumberOfComponentsReturned` is reached:
 - If the "Always Return At Least One Component" option is `ON` and `NumberOfComponentsToRecycle` is not 0, then `NumberOfComponentsReturned` will always be at least 1, even if the formula would normally have rounded things to 0. In effect, changes the formula to be
 
-    NumberOfComponentsReturned = max(1, NumberOfComponentsToRecycle * Multiplier)
+    NumberOfComponentsReturned = max( 1, NumberOfComponentsToRecycle * Multiplier )
 
-- The "Fractional Component Handling" option specifies whether to round down (floor), normally, or up (ceiling), so a value of 5.1 would be rounded to 5.0, 5.0, or 6.0 respectively. In effect, changes the formula to be
+- The "Fractional Component Handling" option specifies whether to round down (floor), normally, or up (ceiling), so a value of 5.1 would be rounded to 5.0, 5.0, or 6.0, respectively. In effect, changes the formula to be
 
-    NumberOfComponentsReturned = floor/round/ceiling(NumberOfComponentsToRecycle * Multiplier)
+    NumberOfComponentsReturned = floor/round/ceiling( NumberOfComponentsToRecycle * Multiplier )
 
 - If combined, the effective formula is
 
-    NumberOfComponentsReturned = floor/round/ceiling( max(1, NumberOfComponentsToRecycle * Multiplier) )
+    NumberOfComponentsReturned = floor/round/ceiling( max( 1, NumberOfComponentsToRecycle * Multiplier ) )
 
 Known Issues
 ------------
@@ -193,7 +198,7 @@ Known Issues
 
 Interesting Configurations
 ==========================
-With how customizable this device is, there are _many_ ways in which to use it, so here are a few fun ones I've thought of. Note that some of these have the potential to boost the multiplier to ridiculous levels, and are not intended to be balanced. My goal is to give you, the player, ways in which to have fun and customize this mod to _your_ liking.
+Given how customizable the Mk 2 is, there are _myriad_ ways in which to use it. Here are a few fun ones I've thought of. Note that some of these have the potential to boost the multiplier to ridiculous levels, and are not intended to be balanced. My goal is to give you, the player, ways in which to have fun and customize this mod to _your_ liking.
 
 Brainiac
 --------
@@ -209,11 +214,11 @@ Set every multiplier adjustment to max. All junk items now explode in showers of
 
 Magnum Opus Wabbajack Modlist
 -----------------------------
-If you use Wabbajack to install the Magnum Opus modlist by Lively, you can set the Portable Junk Recycler Mk 2 to mimic the way the Scrapper perk works by setting "Multiplier Adjustments > Scrapper: Rank 1 > In Player-Owned Settlements" to `0.2`, setting "Multiplier Adjustments > Scrapper: Rank 1 > In Player-Owned Settlements" also to `0.2`, and by setting "Multiplier Adjustments > Scrapper: Rank 1 > In Player-Owned Settlements" to `0.5`.
+If you use Wabbajack to install the Magnum Opus modlist by Lively, you can set the Portable Junk Recycler Mk 2 to mimic the way the Scrapper perk works by setting "Multiplier Adjustments > Scrapper: Rank 1 > In Player-Owned Settlements" to `0.2`, setting "Multiplier Adjustments > Scrapper: Rank 2 > In Player-Owned Settlements" also to `0.2`, and by setting "Multiplier Adjustments > Scrapper: Rank 3 > In Player-Owned Settlements" to `0.5`.
 
 No Scrapper, No Scrap
 ---------------------
-Configures the Mk 2 so that you don't get any components unless you have at least 1 rank in the Scrapper perk. Set the Base Multiplier to `0.0`, make sure that "Settings > Adjustment Options > (everything not Scrapper)" is set to `OFF` if it can be, then set "Multiplier Adjustments > Scrapper: Rank X" to `1.0`/`1.1`/`1.2`/etc. for the proceeding Scrapper ranks.
+Configures the Mk 2 so that you don't get any components unless you have at least 1 rank in the Scrapper perk. Set the Base Multiplier to `0.0`, make sure that "Settings > Adjustment Options > (everything not Scrapper)" is set to `OFF` if it can be, then set "Multiplier Adjustments > Scrapper: Rank X" to `1.0`/`1.1`/`1.2`/etc. for Scrapper rank 1/2/3/etc.
 
 Punishing Field Use
 -------------------
@@ -242,13 +247,13 @@ General FormIDs:
 - `FExxx86*` Constructable Object
 - `FExxx9**` Message
 
-Note: 'xxx' is the load order position of the mod.
+Note: "xxx" is the load order position of the mod.
 
 Limited Uses
 ------------
 In "Limited Use" mode, the number of uses left isn't tracked specifically per device, but rather by tracking how many times a recycling process has occurred. This was a design decision made because of how ingestible items work in the game and due to the events and timing of said events surrounding their use. Therefore it doesn't matter whether several Mk 2's are crafted and used, the number of uses will tick up until it reaches the configured threshold and the item simply won't be returned to you after that recycling process finishes.
 
-Note that the number of uses is not incremented when there is no junk to break down.
+Note: The number of uses is not incremented when there is no junk to break down.
 
 Scrap Categories
 ----------------
@@ -306,7 +311,7 @@ Settings:
     - Always Return At Least One Component [Default = `ON`, Possible Values = `OFF`/`ON`]
     - Fractional Component Handling [Default = `Round Down`, Possible Values = `Round Up`/`Round Normally`/`Round Down`]
     - Has Limited Uses [Default = `OFF`, Possible Values = `OFF`/`ON`]
-     - Number Of Uses [Default = `50`, Minimum = `1`, Maximum = `200`, Step = `1`]
+        - Number Of Uses [Default = `50`, Minimum = `1`, Maximum = `200`, Step = `1`]
 - Adjustment Options
     - General Adjustments [Default = `Simple`, Possible Values = `Simple`/`Detailed`]
     - Intelligence Affects Multiplier [Default = `ON (Simple)`, Possible Values = `OFF`/`ON (Simple)`/`ON (Detailed)`]
@@ -319,7 +324,7 @@ Recycler Interface:
     - Automatic Recycling Mode [Default = `OFF`, Possible Values = `OFF`/`ON`]
     - Enable Junk Filter [Default = `ON`, Possible Values = `OFF`/`ON`]
     - Automatically Transfer Junk [Default = `ON`, Possible Values = `OFF`/`ON`]
-     - Only Transfer Low Component Weight Ratio Items [Default = `OFF`, Possible Values = `OFF`/`In Player-Owned Settlements`/`Not In Player-Owned Settlements`/`Everywhere`]
+        - Only Transfer Low Component Weight Ratio Items [Default = `OFF`, Possible Values = `OFF`/`In Player-Owned Settlements`/`Not In Player-Owned Settlements`/`Everywhere`]
     - Enable "Always Automatically Transfer" List [Default = `ON`, Possible Values = `OFF`/`ON`]
     - Enable "Never Automatically Transfer" List [Default = `ON`, Possible Values = `OFF`/`ON`]
     - Enable Automatic Transfer List Editing [Default = `OFF`, Possible Values = `OFF`/`ON`]
@@ -341,16 +346,16 @@ Multiplier Adjustments:
     - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - (If "Settings > Adjustment Options > General Adjustments" is set to `Detailed`)
     - Components: Common
-     - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+        - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Uncommon
-     - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+        - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Rare
-     - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+        - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Special
-     - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+        - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
 - (If "Settings > Adjustment Options > Intelligence Affects Multiplier" is not set to `OFF`)
 - Intelligence
@@ -358,26 +363,26 @@ Multiplier Adjustments:
     - Adjustment Per Point Of Intelligence [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
     - (If "Settings > Adjustment Options > Intelligence Affects Multiplier" is set to `ON (Detailed)`)
     - Components: Common
-     - Adjustment Per Point Of Intelligence [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
+        - Adjustment Per Point Of Intelligence [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
     - Components: Uncommon
-     - Adjustment Per Point Of Intelligence [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
+        - Adjustment Per Point Of Intelligence [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
     - Components: Rare
-     - Adjustment Per Point Of Intelligence [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
+        - Adjustment Per Point Of Intelligence [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
     - Components: Special
-     - Adjustment Per Point Of Intelligence [Default = `0.0`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
+        - Adjustment Per Point Of Intelligence [Default = `0.0`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
 - (If "Settings > Adjustment Options > Luck Affects Multiplier" is not set to `OFF`)
 - Luck
     - (If "Settings > Adjustment Options > Luck Affects Multiplier" is set to `ON (Simple)`)
     - Adjustment Per Point Of Luck [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
     - (If "Settings > Adjustment Options > Luck Affects Multiplier" is set to `ON (Detailed)`)
     - Components: Common
-     - Adjustment Per Point Of Luck [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
+        - Adjustment Per Point Of Luck [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
     - Components: Uncommon
-     - Adjustment Per Point Of Luck [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
+        - Adjustment Per Point Of Luck [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
     - Components: Rare
-     - Adjustment Per Point Of Luck [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
+        - Adjustment Per Point Of Luck [Default = `0.01`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
     - Components: Special
-     - Adjustment Per Point Of Luck [Default = `0.0`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
+        - Adjustment Per Point Of Luck [Default = `0.0`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.005`]
 - (If "Settings > Adjustment Options > Add Randomness To Multiplier" is not set to `OFF`)
 - Randomness
     - (If "Settings > Adjustment Options > Add Randomness To Multiplier" is set to `ON (Simple)`)
@@ -385,88 +390,88 @@ Multiplier Adjustments:
     - Maximum [Default = `0.1`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
     - (If "Settings > Adjustment Options > Add Randomness To Multiplier" is set to `ON (Detailed)`)
     - Components: Common
-     - Minimum [Default = `-0.1`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
+        - Minimum [Default = `-0.1`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
         - Maximum [Default = `0.1`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
     - Components: Uncommon
-     - Minimum [Default = `-0.1`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
+        - Minimum [Default = `-0.1`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
         - Maximum [Default = `0.1`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
     - Components: Rare
-     - Minimum [Default = `-0.1`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
+        - Minimum [Default = `-0.1`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
         - Maximum [Default = `0.1`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
     - Components: Special
-     - Minimum [Default = `0.0`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
+        - Minimum [Default = `0.0`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
         - Maximum [Default = `0.1`, Minimum = `-6.0`, Maximum = `6.0`, Step = `0.01`]
 - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is not set to `OFF`)
 - Scrapper: Rank 1
     - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to `ON (Simple)`)
     - In Player-Owned Settlements [Default = `0.1`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
-    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to "ON (Detailed)")
+    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to `ON (Detailed)`)
     - Components: Common
-     - In Player-Owned Settlements [Default = `0.1`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+        - In Player-Owned Settlements [Default = `0.1`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Uncommon
-     - In Player-Owned Settlements [Default = `0.1`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+        - In Player-Owned Settlements [Default = `0.1`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Rare
-     - In Player-Owned Settlements [Default = `0.1`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+        - In Player-Owned Settlements [Default = `0.1`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Special
-     - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+        - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
 - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is not set to `OFF`)
 - Scrapper: Rank 2
     - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to `ON (Simple)`)
     - In Player-Owned Settlements [Default = `0.2`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
-    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to "ON (Detailed)")
+    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to `ON (Detailed)`)
     - Components: Common
-     - In Player-Owned Settlements [Default = `0.2`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+        - In Player-Owned Settlements [Default = `0.2`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Uncommon
-     - In Player-Owned Settlements [Default = `0.2`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+        - In Player-Owned Settlements [Default = `0.2`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Rare
-     - In Player-Owned Settlements [Default = `0.2`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+        - In Player-Owned Settlements [Default = `0.2`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Special
-     - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+        - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
 - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is not set to `OFF` and Scrapper Rank 3 perk exists)
 - Scrapper: Rank 3
-    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to "ON (Simple)")
+    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to `ON (Simple)`)
     - In Player-Owned Settlements [Default = `0.3`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
-    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to "ON (Detailed)")
+    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to `ON (Detailed)`)
     - Components: Common
-     - In Player-Owned Settlements [Default = `0.3`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+        - In Player-Owned Settlements [Default = `0.3`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Uncommon
-     - In Player-Owned Settlements [Default = `0.3`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+        - In Player-Owned Settlements [Default = `0.3`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Rare
-     - In Player-Owned Settlements [Default = `0.3`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+        - In Player-Owned Settlements [Default = `0.3`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Special
-     - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+        - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
 - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is not set to `OFF` and Scrapper Rank 4 perk exists)
 - Scrapper: Rank 4
-    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to "ON (Simple)")
+    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to `ON (Simple)`)
     - In Player-Owned Settlements [Default = `0.4`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
-    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to "ON (Detailed)")
+    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to `ON (Detailed)`)
     - Components: Common
-     - In Player-Owned Settlements [Default = `0.4`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+        - In Player-Owned Settlements [Default = `0.4`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Uncommon
-     - In Player-Owned Settlements [Default = `0.4`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+        - In Player-Owned Settlements [Default = `0.4`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Rare
-     - In Player-Owned Settlements [Default = `0.4`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+        - In Player-Owned Settlements [Default = `0.4`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Special
-     - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+        - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
 - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is not set to `OFF` and Scrapper Rank 5 perk exists)
 - Scrapper: Rank 5
@@ -475,32 +480,58 @@ Multiplier Adjustments:
     - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to `ON (Detailed)`)
     - Components: Common
-     - In Player-Owned Settlements [Default = `0.5`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+        - In Player-Owned Settlements [Default = `0.5`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Uncommon
-     - In Player-Owned Settlements [Default = `0.5`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+        - In Player-Owned Settlements [Default = `0.5`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Rare
-     - In Player-Owned Settlements [Default = `0.5`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+        - In Player-Owned Settlements [Default = `0.5`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Components: Special
-     - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
+        - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
 
 Advanced:
-- Multithreading
+- General Options
     - Max Number Of Threads To Use [Default = `32`, Minimum = `1`, Maximum = `32`, Step = `1`]
+    - Enable Script Logging [Default = `OFF`, Possible Values = `OFF`/`ON`]
+    - Enable Script Profiling [Default = `OFF`, Possible Values = `OFF`/`ON`]
 - Methodology
     - Use "Direct Move" Method To Update Recyclable Item List [Default = `OFF`, Possible Values = `OFF`/`ON`]
 
 
-Copyrights and Licenses
-=======================
-Copyright 2021 by Dan Cassidy.
+Troubleshooting Info
+====================
 
-All code in this mod is licensed under the GPL 3.0 or later to the extent that it can be covered by said license.
+Installing Debug Scripts
+------------------------
+When installing the mod via a FOMOD-capable mod manager like Mod Organizer 2 or Vortex, you will get a screen that allows you to choose some installation options. One of those option categories is "Scripts", under which the option "Debug Scripts" will install scripts that have some debugging capabilities built in (or more technically, left in), such as logging and profiling (tracking how fast various function calls inside a script are).
 
-All documentation and textures created by me are CC-BY-SA licensed.
+Enable Debug Logging (Fallout 4)
+------------------------------------------
+Note: If you are using Mod Organizer 2, use the built-in INI editor via the "Tools" menu > "Tool Plugins" sub-menu > "INI Editor" option.
+
+By default, Fallout 4 has its debug logging capabilities disabled. To enable them, follow the instructions on the Enable Debug Logging (https://www.creationkit.com/fallout4/index.php?title=Enable_Debug_Logging) page on the Creation Kit wiki. (Note that there's a typo on the page in the paths: "Fallout 4" should not have the space, and should be "Fallout4" instead.)
+
+Enable Debug Logging (Portable Junk Recycler Mk 2)
+--------------------------------------------------
+Also by default, the logging and profiling capabilities of the mod are disabled. To enable them, go into the Mod Config menu, then to the Portable Junk Recycler Mk 2 mod, then to the "Advanced" page. The "Enable Script Logging" and "Enable Script Profiling" options are what you are looking for.
+
+Log Location
+------------
+The most recent log generated by this mod will be at `%HOMEPATH%\Documents\My Games\Fallout4\Logs\Script\User\Portable Junk Recycler Mk 2.0.log`.
+
+Profile logs will be in `%HOMEPATH%\Documents\My Games\Fallout4\Logs\Script\Profiling\`.
+
+
+Copyright and Licenses
+======================
+Copyright 2021 Dan Cassidy
+
+All my code in this mod is licensed under the GPL 3.0 (https://www.gnu.org/licenses/gpl-3.0.en.html) or later.
+
+Everything else in this mod created by me is CC-BY-SA (https://creativecommons.org/licenses/by-sa/4.0/legalcode) licensed.
 
 
 Credits and Thanks
@@ -526,6 +557,6 @@ Contact
 If you find a bug or have a question about the mod, please post it on the mod page at Nexus Mods (https://www.nexusmods.com/fallout4/mods/54138), or in the GitHub project (https://github.com/rux616/Portable-Junk-Recycler-Mk-2).
 
 If you need to contact me personally, I can be reached through one of the following means:
-- A message via my Nexus Mods user profile page (https://www.nexusmods.com/fallout4/users/124191)
-- My email (replace `-at-` with `@` and `-dot-` with `.`): rux616-at-pm-dot-me
-- I also tend to hang out on various Discord servers (e.g. the ones for Nexus Mods (https://discord.gg/nexusmods) and Wabbajack (https://discord.gg/wabbajack))
+- Nexus Mods: rux616 (https://www.nexusmods.com/users/124191) (Send a message via the "CONTACT" button.)
+- Email: rux616-at-pm-dot-me (replace `-at-` with `@` and `-dot-` with `.`)
+- Discord: rux616#0950 (I tend to hang out on the Nexus Mods (https://discord.gg/nexusmods) and Wabbajack (https://discord.gg/wabbajack) servers, amongst others.)

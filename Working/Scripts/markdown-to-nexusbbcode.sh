@@ -17,44 +17,41 @@
 
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-[[ $# -lt 1 ]] && { printf 'need file to run on\n'; exit 1; }
+[[ $# -lt 1 ]] && { printf 'need file(s) to run on\n'; exit 1; }
 
 set -e
 for file in "${@}"; do
     # set up file variables
     input_file="${file}"
     temp_file="$(mktemp -p . "${input_file}.XXXXXXXXXX.tmp")"
-    temp_file2="$(mktemp -p . "${input_file}.XXXXXXXXXX.tmp2")"
     output_file="${input_file%%.*}.nexusbbcode"
+    cp "${input_file}" "${temp_file}"
 
-    # convert \n to \f for ease of use with sed
-    tr '\n' '\f' < "${input_file}" > "${temp_file}"
-
-    # convert '===' headers to [size=6]...[/size]
-    sed -Ei 's|([^\f]*)\f={3,}\f|[size=6]\1[/size]\f|g' "${temp_file}"
-    # convert '---' headers to [size=5]...[/size]
-    sed -Ei 's|([^\f]*)\f-{3,}\f|[size=5]\1[/size]\f|g' "${temp_file}"
+    # convert '...\n===' headers to '[size=5][b]...[/b][/size]'
+    perl -0777pi -e 's{(.*)\n={3,}+}{[size=5][b]${1}[/b][/size]}g' "${temp_file}"
+    # convert '...\n---' headers to '[size=4][b][u]...:[/u][/b][/size]'
+    perl -0777pi -e 's{(.*)\n-{3,}+}{[size=4][b][u]${1}:[/u][/b][/size]}g' "${temp_file}"
     # remove anchor links
     sed -Ei 's|\[([^]]*)]\(#[^)]*\)|\1|g' "${temp_file}"
-    # convert **...** and __...__ to [b]...[/b]
-    sed -Ei -e 's|\*\*([^(\*\*)\f]+)\*\*|[b]\1[/b]|g' -e 's|__([^(__)\f]+)__|[b]\1[/b]|g' "${temp_file}"
-    # convert *...* and _..._ to [i]...[/i]
-    sed -Ei -e 's|\*([^\*\f]+)\*|[i]\1[/i]|g' -e 's|_([^_\f]+)_|[i]\1[/i]|g' "${temp_file}"
+    # remove any remaining '(TOC)' lines and an extra newline
+    perl -0777pi -e 's{\n\(TOC\)\n}{}g' "${temp_file}"
+    # remove '<details><summary>...</summary>' and '</details>' and extra newline on each
+    perl -0777pi -e 's{\n<details>.*?</summary>\n}{}g; s{\n</details>\n}{}g' "${temp_file}"
+    # convert '**...**' and '__...__' to '[b]...[/b]'
+    perl -pi -e 'no warnings qw(experimental::vlb) ; s{(?<=^|\W)\*\*(.+?)\*\*(?=\W)}{[b]${1}[/b]}g ; s{(?<=^|\W)__(.+?)__(?=\W)}{[b]${1}[/b]}g' "${temp_file}"
+    # convert '*...*' and '_..._' to '[i]...[/i]'
+    perl -pi -e 'no warnings qw(experimental::vlb) ; s{(?<=^|\W)\*(.+?)\*(?=\W)}{[u]${1}[/u]}g ; s{(?<=^|\W)_(.+?)_(?=\W)}{[u]${1}[/u]}g' "${temp_file}"
     # convert markdown URLs to BBCode URLs
     sed -Ei 's|\[([^]]*)]\(([^)]*)\)|[url=\2]\1[/url]|g' "${temp_file}"
-    # convert `...` to [font=Courier New][color=#rrggbb]...[/color][/font]
-    sed -Ei 's|`([^`]*)`|[font=Courier New][color=#6d9eeb]\1[/color][/font]|g' "${temp_file}"
-    # convert indented code to [font=Courier New][color=#rrggbb]...[/color][/font]
-    sed -Ei 's|\f[ ]{4,}([^-][^\f]*)\f|\f    [font=Courier New][color=#6d9eeb]\1[/color][/font]\f|g' "${temp_file}"
+    # convert '`...`' to '[font=Courier New][color=#rrggbb]...[/color][/font]'
+    sed -Ei 's|`([^`]*)`|[font=Courier New][color=#b2b2b2]\1[/color][/font]|g' "${temp_file}"
+    # convert indented code to '    [font=Courier New][color=#rrggbb]...[/color][/font]'
+    perl -pi -e 's{^[ ]{4,}+(?!-|\* )(.*)$}{    [font=Courier New][color=#b2b2b2]${1}[/color][/font]}g' "${temp_file}"
 
-    # convert \f back to \n
-    tr '\f' '\n' < "${temp_file}" > "${temp_file2}"
-
-    # if the contents of the files don't match, overwrite the current output file
-    if [[ $(sha512sum "${output_file}" | cut -d ' ' -f 1) != $(sha512sum "${temp_file2}" | cut -d ' ' -f 1) ]]; then
-        mv "${temp_file2}" "${output_file}"
+    # if the contents of the temp and output files don't match, overwrite the output file with the temp file
+    if [[ $(sha512sum "${output_file}" | cut -d ' ' -f 1) != $(sha512sum "${temp_file}" | cut -d ' ' -f 1) ]]; then
+        mv "${temp_file}" "${output_file}"
     else
-        rm "${temp_file2}"
+        rm "${temp_file}"
     fi
-    rm "${temp_file}"
 done

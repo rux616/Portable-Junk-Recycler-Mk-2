@@ -56,10 +56,11 @@ local threads_step = 1;
   local mod = {
     name: 'Portable Junk Recycler Mk 2',
     localized_name: '$PortableJunkRecyclerMk2',
-    version: '0.6.0-beta',
+    version: '0.7.0-beta',
     plugin_name: mod.name + '.esp',
     quest_form: mod.plugin_name + '|800',
-    control_script: 'PortableJunkRecyclerMk2:ControlScript',
+    control_script: 'PortableJunkRecyclerMk2:PJRM2_ControlManager',
+    setting_script: 'PortableJunkRecyclerMk2:PJRM2_SettingManager',
     min_mcm_version: 2,
 
     group_id: {
@@ -161,8 +162,8 @@ local threads_step = 1;
         [mcm.field.page_display_name]: '$MultiplierAdjustments',
         [mcm.field.content]: [
           // multiplier adjustments - general
-          mcm.control.hidden_switcher(source=mcm.helper.source.property_value.bool(source_form=mod.quest_form, property_name='MCM_GeneralMultAdjustSimple', script_name=mod.control_script), group=mcm.helper.group.control(mod.group_id.general_mult_adjust_simple)),
-          mcm.control.hidden_switcher(source=mcm.helper.source.property_value.bool(source_form=mod.quest_form, property_name='MCM_GeneralMultAdjustDetailed', script_name=mod.control_script), group=mcm.helper.group.control(mod.group_id.general_mult_adjust_detailed)),
+          mcm.control.hidden_switcher(source=mcm.helper.source.property_value.bool(source_form=mod.quest_form, property_name='MCM_GeneralMultAdjustSimple', script_name=mod.setting_script), group=mcm.helper.group.control(mod.group_id.general_mult_adjust_simple)),
+          mcm.control.hidden_switcher(source=mcm.helper.source.property_value.bool(source_form=mod.quest_form, property_name='MCM_GeneralMultAdjustDetailed', script_name=mod.setting_script), group=mcm.helper.group.control(mod.group_id.general_mult_adjust_detailed)),
 
           mcm.control.section(text='$General', group=mcm.helper.group.condition.or([mod.group_id.general_mult_adjust_simple, mod.group_id.general_mult_adjust_detailed])),
 
@@ -185,8 +186,8 @@ local threads_step = 1;
           mcm.control.spacer(lines=1, group=mcm.helper.group.condition.or([mod.group_id.general_mult_adjust_simple, mod.group_id.general_mult_adjust_detailed])),
 
           // multiplier adjustments - intelligence
-          mcm.control.hidden_switcher(source=mcm.helper.source.property_value.bool(source_form=mod.quest_form, property_name='MCM_IntAffectsMultSimple', script_name=mod.control_script), group=mcm.helper.group.control(mod.group_id.int_affects_mult_simple)),
-          mcm.control.hidden_switcher(source=mcm.helper.source.property_value.bool(source_form=mod.quest_form, property_name='MCM_IntAffectsMultDetailed', script_name=mod.control_script), group=mcm.helper.group.control(mod.group_id.int_affects_mult_detailed)),
+          mcm.control.hidden_switcher(source=mcm.helper.source.property_value.bool(source_form=mod.quest_form, property_name='MCM_IntAffectsMultSimple', script_name=mod.setting_script), group=mcm.helper.group.control(mod.group_id.int_affects_mult_simple)),
+          mcm.control.hidden_switcher(source=mcm.helper.source.property_value.bool(source_form=mod.quest_form, property_name='MCM_IntAffectsMultDetailed', script_name=mod.setting_script), group=mcm.helper.group.control(mod.group_id.int_affects_mult_detailed)),
 
           mcm.control.section(text=str_int, group=mcm.helper.group.condition.or([mod.group_id.int_affects_mult_simple, mod.group_id.int_affects_mult_detailed])),
 
@@ -204,8 +205,8 @@ local threads_step = 1;
           mcm.control.spacer(lines=1, group=mcm.helper.group.condition.or([mod.group_id.int_affects_mult_simple, mod.group_id.int_affects_mult_detailed])),
 
           // multiplier adjustments - luck
-          mcm.control.hidden_switcher(source=mcm.helper.source.property_value.bool(source_form=mod.quest_form, property_name='MCM_LckAffectsMultSimple', script_name=mod.control_script), group=mcm.helper.group.control(mod.group_id.lck_affects_mult_simple)),
-          mcm.control.hidden_switcher(source=mcm.helper.source.property_value.bool(source_form=mod.quest_form, property_name='MCM_LckAffectsMultDetailed', script_name=mod.control_script), group=mcm.helper.group.control(mod.group_id.lck_affects_mult_detailed)),
+          mcm.control.hidden_switcher(source=mcm.helper.source.property_value.bool(source_form=mod.quest_form, property_name='MCM_LckAffectsMultSimple', script_name=mod.setting_script), group=mcm.helper.group.control(mod.group_id.lck_affects_mult_simple)),
+          mcm.control.hidden_switcher(source=mcm.helper.source.property_value.bool(source_form=mod.quest_form, property_name='MCM_LckAffectsMultDetailed', script_name=mod.setting_script), group=mcm.helper.group.control(mod.group_id.lck_affects_mult_detailed)),
 
           mcm.control.section(text=str_lck, group=mcm.helper.group.condition.or([mod.group_id.lck_affects_mult_simple, mod.group_id.lck_affects_mult_detailed])),
 
@@ -223,8 +224,8 @@ local threads_step = 1;
           mcm.control.spacer(lines=1, group=mcm.helper.group.condition.or([mod.group_id.lck_affects_mult_simple, mod.group_id.lck_affects_mult_detailed])),
 
           // multiplier adjustments - randomness
-          mcm.control.hidden_switcher(source=mcm.helper.source.property_value.bool(source_form=mod.quest_form, property_name='MCM_RngAffectsMultSimple', script_name=mod.control_script), group=mcm.helper.group.control(mod.group_id.rng_affects_mult_simple)),
-          mcm.control.hidden_switcher(source=mcm.helper.source.property_value.bool(source_form=mod.quest_form, property_name='MCM_RngAffectsMultDetailed', script_name=mod.control_script), group=mcm.helper.group.control(mod.group_id.rng_affects_mult_detailed)),
+          mcm.control.hidden_switcher(source=mcm.helper.source.property_value.bool(source_form=mod.quest_form, property_name='MCM_RngAffectsMultSimple', script_name=mod.setting_script), group=mcm.helper.group.control(mod.group_id.rng_affects_mult_simple)),
+          mcm.control.hidden_switcher(source=mcm.helper.source.property_value.bool(source_form=mod.quest_form, property_name='MCM_RngAffectsMultDetailed', script_name=mod.setting_script), group=mcm.helper.group.control(mod.group_id.rng_affects_mult_detailed)),
 
           mcm.control.section(text='$Randomness', group=mcm.helper.group.condition.or([mod.group_id.rng_affects_mult_simple, mod.group_id.rng_affects_mult_detailed])),
 
@@ -247,8 +248,8 @@ local threads_step = 1;
           mcm.control.spacer(lines=1, group=mcm.helper.group.condition.or([mod.group_id.rng_affects_mult_simple, mod.group_id.rng_affects_mult_detailed])),
 
           // multiplier adjustments - scrapper 1
-          mcm.control.hidden_switcher(source=mcm.helper.source.property_value.bool(source_form=mod.quest_form, property_name='MCM_ScrapperAffectsMultSimple', script_name=mod.control_script), group=mcm.helper.group.control(mod.group_id.scrapper_affects_mult_simple)),
-          mcm.control.hidden_switcher(source=mcm.helper.source.property_value.bool(source_form=mod.quest_form, property_name='MCM_ScrapperAffectsMultDetailed', script_name=mod.control_script), group=mcm.helper.group.control(mod.group_id.scrapper_affects_mult_detailed)),
+          mcm.control.hidden_switcher(source=mcm.helper.source.property_value.bool(source_form=mod.quest_form, property_name='MCM_ScrapperAffectsMultSimple', script_name=mod.setting_script), group=mcm.helper.group.control(mod.group_id.scrapper_affects_mult_simple)),
+          mcm.control.hidden_switcher(source=mcm.helper.source.property_value.bool(source_form=mod.quest_form, property_name='MCM_ScrapperAffectsMultDetailed', script_name=mod.setting_script), group=mcm.helper.group.control(mod.group_id.scrapper_affects_mult_detailed)),
 
           mcm.control.section(text='$ScrapperRank1', group=mcm.helper.group.condition.or([mod.group_id.scrapper_affects_mult_simple, mod.group_id.scrapper_affects_mult_detailed])),
 
@@ -362,28 +363,23 @@ local threads_step = 1;
       {
         [mcm.field.page_display_name]: '$Advanced',
         [mcm.field.content]: [
-          // advanced - multithreading
-          mcm.control.section(text='$Multithreading'),
+          // advanced - general options
+          mcm.control.section(text='$GeneralOptions'),
           mcm.control.slider(text='$ThreadLimitText', min=threads_min, max=threads_max, step=threads_step, source=mcm.helper.source.mod_setting.int(id='iThreadLimit:Advanced'), help='$ThreadLimitHelp'),
+          mcm.control.switcher(text='$EnableLoggingText', source=mcm.helper.source.mod_setting.bool(id='bEnableLogging:Advanced'), help='$EnableLoggingHelp'),
+          mcm.control.switcher(text='$EnableProfilingText', source=mcm.helper.source.mod_setting.bool(id='bEnableProfiling:Advanced'), help='$EnableProfilingHelp'),
           mcm.control.spacer(lines=1),
+          mcm.control.text(text='$LoggingProfilingNote'),
 
           // advanced - methodology
           mcm.control.section(text='$Methodology'),
           mcm.control.switcher(text='$UseDirectMoveRecyclableItemListUpdateText', source=mcm.helper.source.mod_setting.bool(id='bUseDirectMoveRecyclableItemListUpdate:Advanced'), help='$UseDirectMoveRecyclableItemListUpdateHelp'),
           mcm.control.spacer(lines=1),
 
-          // advanced - reset settings to default
-          mcm.control.section(text='$Settings'),
+          // advanced - resets
+          mcm.control.section(text='$Resets'),
           mcm.control.button(text='$ResetSettingsToDefaultsText', action=mcm.helper.action.call_function(form=mod.quest_form, function_name='ResetToDefaults', script_name=mod.control_script), help='$ResetSettingsToDefaultsHelp'),
-          mcm.control.spacer(lines=1),
-
-          // advanced - reset mutexes
-          mcm.control.section(text='$Locks'),
           mcm.control.button(text='$ResetLocksText', action=mcm.helper.action.call_function(form=mod.quest_form, function_name='ResetMutexes', script_name=mod.control_script), help='$ResetLocksHelp'),
-          mcm.control.spacer(lines=1),
-
-          // advanced - reset item lists
-          mcm.control.section(text='$ItemLists'),
           mcm.control.button(text='$ResetRecyclableItemsListsText', action=mcm.helper.action.call_function(form=mod.quest_form, function_name='ResetRecyclableItemsLists', script_name=mod.control_script), help='$ResetRecyclableItemsListsHelp'),
           mcm.control.button(text='$ResetAlwaysAutoTransferListText', action=mcm.helper.action.call_function(form=mod.quest_form, function_name='ResetAlwaysAutoTransferList', script_name=mod.control_script), help='$ResetAlwaysAutoTransferListHelp'),
           mcm.control.button(text='$ResetNeverAutoTransferListText', action=mcm.helper.action.call_function(form=mod.quest_form, function_name='ResetNeverAutoTransferList', script_name=mod.control_script), help='$ResetNeverAutoTransferListHelp'),

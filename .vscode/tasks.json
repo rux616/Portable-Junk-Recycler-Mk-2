@@ -4,16 +4,26 @@
     "tasks": [
         {
             "type": "pyro",
-            "projectFile": "Scripts\\Source\\User\\Portable Junk Recycler Mk 2.ppj",
-            "gamePath": "D:\\LAN Party Games\\Steam\\steamapps\\common\\Fallout 4",
+            "projectFile": "Scripts\\Source\\User\\Portable Junk Recycler Mk 2 - Release.ppj",
+            "gamePath": "D:\\Games\\SteamLibrary\\steamapps\\common\\Fallout 4",
             "problemMatcher": [
                 "$PapyrusCompiler"
             ],
-            "label": "pyro: Compile Project (Portable Junk Recycler Mk 2)",
+            "label": "pyro: Compile Project (Portable Junk Recycler Mk 2 - Release)",
             "group": {
                 "kind": "build",
                 "isDefault": true,
             },
+            "dependsOn": ["pyro: Compile Project (Portable Junk Recycler Mk 2 - Debug)"],
+        },
+        {
+            "type": "pyro",
+            "projectFile": "Scripts\\Source\\User\\Portable Junk Recycler Mk 2 - Debug.ppj",
+            "gamePath": "D:\\Games\\SteamLibrary\\steamapps\\common\\Fallout 4",
+            "problemMatcher": [
+                "$PapyrusCompiler"
+            ],
+            "label": "pyro: Compile Project (Portable Junk Recycler Mk 2 - Debug)",
             "dependsOn": ["Render JSON"],
         },
         {

@@ -30,6 +30,7 @@
             "formid",
             "Grospolina",
             "holotape",
+            "HOMEPATH",
             "jsonnet",
             "Kentington",
             "keybind",
@@ -81,6 +82,7 @@
             "MD022": false,
             "MD025": false,
             "MD032": false,
+            "MD033": false,
         },
         "markdown.extension.list.indentationSize": "inherit",
         "markdown-pdf.displayHeaderFooter": false,
@@ -88,6 +90,11 @@
         "markdown-pdf.margin.left": "0px",
         "markdown-pdf.margin.right": "0px",
         "markdown-pdf.margin.top": "0px",
-        "trailing-spaces.trimOnSave": true
+        "trailing-spaces.trimOnSave": true,
+        "python.formatting.provider": "black",
+        "python.formatting.blackArgs": [
+            "--line-length 100"
+        ],
+        "markdown.extension.italic.indicator": "_"
     }
 }

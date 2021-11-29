@@ -7,12 +7,12 @@ Table Of Contents
 - [Portable Junk Recycler Mk 2](#portable-junk-recycler-mk-2)
     - [Table Of Contents](#table-of-contents)
 - [Overview](#overview)
+    - [Summary](#summary)
     - [Features](#features)
     - [Requirements](#requirements)
     - [Installation](#installation)
     - [Uninstallation](#uninstallation)
     - [Crafting Materials Required](#crafting-materials-required)
-    - [Summary](#summary)
 - [Mod Information](#mod-information)
     - [Hotkeys](#hotkeys)
     - [Crafting](#crafting)
@@ -31,21 +31,44 @@ Table Of Contents
     - [Limited Uses](#limited-uses)
     - [Scrap Categories](#scrap-categories)
     - [Settings Layout in MCM](#settings-layout-in-mcm)
-- [Copyrights and Licenses](#copyrights-and-licenses)
+- [Troubleshooting Info](#troubleshooting-info)
+    - [Installing Debug Scripts](#installing-debug-scripts)
+    - [Enable Debug Logging (Fallout 4)](#enable-debug-logging-fallout-4)
+    - [Enable Debug Logging (Portable Junk Recycler Mk 2)](#enable-debug-logging-portable-junk-recycler-mk-2)
+    - [Log Location](#log-location)
+- [Copyright and Licenses](#copyright-and-licenses)
 - [Credits and Thanks](#credits-and-thanks)
 - [Contact](#contact)
 
 
 Overview
 ========
-A fast, highly configurable device that will scrap junk items transferred into its inventory, returning the component parts.
+
+Summary
+-------
+A highly configurable device that will scrap junk items transferred into its inventory, returning the component parts.
 
 I created this mod because while I really liked the original Portable Junk Recycler by Kentington, I wanted something that I could customize and additionally I wanted to see if I could fix the crash issue.
+
+By default the Mk 2 functions like the original, that is, you use it, exit the Pip-boy, move the junk objects you want to be recycled into the container that then opens, close said container, and then you get a bunch of components back. However it has the following bonuses by default:
+
+- You get a 1% bonus to the number of components returned for each point of Intelligence
+- You get a 1% bonus to the number of components returned for each point of Luck
+- You get a 10% bonus to the number of components returned per Scrapper perk rank, but _only_ in player-owned settlements
+
+You can heavily customize all these options and more via the MCM.
+
+This mod **REQUIRES** both F4SE and MCM and will not work without them. I had to do this in order to prevent the freezing bug found in the original. Sorry, console players, you're out of luck. This mod also supports the [Canary](https://www.nexusmods.com/fallout4/mods/44949) mod to alert in the event of save game corruption.
+
+Also by default, the Portable Junk Recycler Mk 2 will detect whether the [Standalone Workbenches](https://www.nexusmods.com/fallout4/mods/41832), [ECO](https://www.nexusmods.com/fallout4/mods/55503), or [AWKCR](https://www.nexusmods.com/fallout4/mods/6091) mods are installed and will dynamically set itself to be crafted at the respective "Utility" workbenches, or at the vanilla "Chemistry Station" if none are installed. If more than one of the preceding mods are installed, the Standalone Workbenches Utility Workbench takes priority, followed by the ECO Utility Station, then the AWKCR Utility Workbench. The device can be found under the "UTILITY" category (or one of the other categories based on whether any of the category changer addon plugins are active or not).
+
+This mod (plus all of its extra bits like images, build scripts, etc.) is also available at the [GitHub project](https://github.com/rux616/Portable-Junk-Recycler-Mk-2).
+
+([TOC](#table-of-contents))
 
 Features
 --------
 - Extremely customizable via the Mod Config Menu
-- Fast
 - Can automatically move junk items to the recycler inventory
 - Can be set to only automatically move items that when recycled, will save weight
 - Configurable "Always Automatically Transfer" and "Never Automatically Transfer" lists
@@ -60,14 +83,20 @@ Features
 - The mesh used for the device has physics, so it won't just hang in the air if you ever drop it from your inventory
 - [Canary](https://www.nexusmods.com/fallout4/mods/44949) save file monitor support
 
+([TOC](#table-of-contents))
+
 Requirements
 ------------
 - [Fallout 4 Script Extender (F4SE)](https://f4se.silverlock.org/)
 - [Mod Configuration Menu (MCM)](https://www.nexusmods.com/fallout4/mods/21497)
 
+([TOC](#table-of-contents))
+
 Installation
 ------------
 I **highly** recommend that you use a mod manager to install this mod, as there is a FOMOD installer included. I personally recommend Mod Organizer 2, but Vortex is fine too. If you must, however, this mod can be installed by unzipping it directly into the Data folder of your Fallout 4 installation.
+
+([TOC](#table-of-contents))
 
 Uninstallation
 --------------
@@ -85,6 +114,8 @@ To uninstall this mod, make sure that a recycling process is not underway, then 
 - Exit the game
 - Disable or remove this mod and its files
 
+([TOC](#table-of-contents))
+
 Crafting Materials Required
 ---------------------------
 - Enhanced Targeting Card x1
@@ -95,21 +126,7 @@ Crafting Materials Required
 - Sensor Module x1
 - Steel x20
 
-Summary
--------
-By default the Mk 2 functions like the original, that is, you use it, exit the Pip-boy, move the junk objects you want to be recycled into the container that then opens, close said container, and then you get a bunch of components back. However it has the following bonuses by default:
-
-- You get a 1% bonus to the number of components returned for each point of Intelligence
-- You get a 1% bonus to the number of components returned for each point of Luck
-- You get a 10% bonus to the number of components returned per Scrapper perk rank, but _only_ in player-owned settlements
-
-You can heavily customize all these options and more via the MCM.
-
-This mod **REQUIRES** both F4SE and MCM and will not work without them. I had to do this in order to prevent the freezing bug found in the original. Sorry, console players, you're out of luck. This mod also supports the [Canary](https://www.nexusmods.com/fallout4/mods/44949) mod to alert in the event of save game corruption.
-
-Also by default, the Portable Junk Recycler Mk 2 will detect whether the [Standalone Workbenches](https://www.nexusmods.com/fallout4/mods/41832), [ECO](https://www.nexusmods.com/fallout4/mods/55503), or [AWKCR](https://www.nexusmods.com/fallout4/mods/6091) mods are installed and will dynamically set itself to be crafted at the respective "Utility" workbenches, or at the vanilla "Chemistry Station" if none are installed. If more than one of the preceding mods are installed, the Standalone Workbenches Utility Workbench takes priority, followed by the ECO Utility Station, then the AWKCR Utility Workbench. The device can be found under the "UTILITY" category (or one of the other categories based on whether any of the category changer addon plugins are active or not).
-
-This mod (plus all of its extra bits like images, build scripts, etc.) is also available at the [GitHub project](https://github.com/rux616/Portable-Junk-Recycler-Mk-2).
+([TOC](#table-of-contents))
 
 
 Mod Information
@@ -128,25 +145,27 @@ Editing the "Never/Always Automatically Transfer" lists is also `OFF` by default
 - To edit the "Never Automatically Transfer" list, ensure that `[ALT]` and `[CTRL]` are both pressed when the recycler is activated.
 - To edit the "Always Automatically Transfer" list, ensure that `[ALT]` and `[SHIFT]` are both pressed when the recycler is activated.
 
+([TOC](#table-of-contents))
+
 Crafting
 --------
 The Mk 2 can be crafted at a number of different workbenches from different mods depending on user preference. Currently supported workbenches are as follows:
 
-From Standalone Workbenches:
+**From Standalone Workbenches:**
 - Electronics Workbench
 - Engineering Workbench
 - Manufacturing Workbench
 - Utility Workbench
 
-From AWKCR:
+**From AWKCR:**
 - Adv. Engineering Workbench
 - Electronics Workstation
 - Utility Workbench
 
-From ECO:
+**From ECO:**
 - Utility Station
 
-From vanilla:
+**From vanilla:**
 - Chemistry Station
 
 Note that one of the options is "Dynamic", which will automatically attempt to use the following workbenches with decreasing priority:
@@ -154,6 +173,8 @@ Note that one of the options is "Dynamic", which will automatically attempt to u
 - Utility Station (ECO)
 - Utility Workbench (AWKCR)
 - Chemistry Station (vanilla)
+
+([TOC](#table-of-contents))
 
 Scrap Return Formula
 --------------------
@@ -169,59 +190,79 @@ Overall, it is a simple formula:
 - Intelligence Multiplier Adjustment [Default Per Point = `0.01`, Min = `0.0`, Max = `1.0`]
 - Luck Multiplier Adjustment [Default Per Point = `0.01`, Min = `0.0`, Max = `1.0`]
 - Random Multiplier Adjustment [Default Minimum = `-0.1`, Default Maximum = `0.1`, Min = `-6.0`, Max = `6.0`]
-- Scrapper Perk Multiplier Adjustment [Default = `(variable)`, Min = `-2.0`, Max = `2.0`]
+- Scrapper Perk Multiplier Adjustment [Default = `(depends on rank)`, Min = `-2.0`, Max = `2.0`]
 
-The General Multiplier Adjustment and the Scrapper Perk Multiplier Adjustment both have additional configurability for what multiplier to apply whether the player is in a player-owned settlement or not.
+The General Multiplier Adjustment and the Scrapper Perk Multiplier Adjustment both have additional configurability with regard to what multiplier to apply dependent upon whether the player is in a player-owned settlement or not.
 
 Additionally, the right hand side of the formula (`NumberOfComponentsToRecycle * Multiplier`) can be modified in a couple different ways before the final value of `NumberOfComponentsReturned` is reached:
 - If the "Always Return At Least One Component" option is `ON` and `NumberOfComponentsToRecycle` is not 0, then `NumberOfComponentsReturned` will always be at least 1, even if the formula would normally have rounded things to 0. In effect, changes the formula to be
 
-      NumberOfComponentsReturned = max(1, NumberOfComponentsToRecycle * Multiplier)
+      NumberOfComponentsReturned = max( 1, NumberOfComponentsToRecycle * Multiplier )
 
-- The "Fractional Component Handling" option specifies whether to round down (floor), normally, or up (ceiling), so a value of 5.1 would be rounded to 5.0, 5.0, or 6.0 respectively. In effect, changes the formula to be
+- The "Fractional Component Handling" option specifies whether to round down (floor), normally, or up (ceiling), so a value of 5.1 would be rounded to 5.0, 5.0, or 6.0, respectively. In effect, changes the formula to be
 
-      NumberOfComponentsReturned = floor/round/ceiling(NumberOfComponentsToRecycle * Multiplier)
+      NumberOfComponentsReturned = floor/round/ceiling( NumberOfComponentsToRecycle * Multiplier )
 
 - If combined, the effective formula is
 
-      NumberOfComponentsReturned = floor/round/ceiling( max(1, NumberOfComponentsToRecycle * Multiplier) )
+      NumberOfComponentsReturned = floor/round/ceiling( max( 1, NumberOfComponentsToRecycle * Multiplier ) )
+
+([TOC](#table-of-contents))
 
 Known Issues
 ------------
 - If the "Return Items Silently" option is set to `OFF` and you add scrap items (acid, bone, adhesive, ceramic, etc.) to the recycler, when the recycling process is complete, you may receive more than one notification for those scrap items that you added. I can't do anything about that without compromising the speed of the recycler (it could add almost an entire extra second to the processing time, at least), so if it is undesired behavior, you can set the "Return Items Silently" option to `ON` or you can set the "Enable Junk Filter" option to `ON` so that scrap items cannot be added to the container in the first place, or both. (Both of those options are `ON` by default.) Alternatively, you can simply choose not to add scrap items.
 
+([TOC](#table-of-contents))
+
 
 Interesting Configurations
 ==========================
-With how customizable this device is, there are _many_ ways in which to use it, so here are a few fun ones I've thought of. Note that some of these have the potential to boost the multiplier to ridiculous levels, and are not intended to be balanced. My goal is to give you, the player, ways in which to have fun and customize this mod to _your_ liking.
+Given how customizable the Mk 2 is, there are _myriad_ ways in which to use it. Here are a few fun ones I've thought of. Note that some of these have the potential to boost the multiplier to ridiculous levels, and are not intended to be balanced. My goal is to give you, the player, ways in which to have fun and customize this mod to _your_ liking.
+
+([TOC](#table-of-contents))
 
 Brainiac
 --------
 You really value your character's intelligence. Set "Multiplier Adjustments > Intelligence" to give you a `0.2` multiplier adjustment per point.
 
+([TOC](#table-of-contents))
+
 Leprechaun
 ----------
 Luck is _really_ important to you. So much so that you set it to be the only multiplier adjustment you use (set "Settings > Adjustment Options > (everything not Luck)" to `OFF`), at `0.5` per point.
+
+([TOC](#table-of-contents))
 
 Loot Piñata
 -----------
 Set every multiplier adjustment to max. All junk items now explode in showers of components (figuratively).
 
+([TOC](#table-of-contents))
+
 Magnum Opus Wabbajack Modlist
 -----------------------------
-If you use Wabbajack to install the Magnum Opus modlist by Lively, you can set the Portable Junk Recycler Mk 2 to mimic the way the Scrapper perk works by setting "Multiplier Adjustments > Scrapper: Rank 1 > In Player-Owned Settlements" to `0.2`, setting "Multiplier Adjustments > Scrapper: Rank 1 > In Player-Owned Settlements" also to `0.2`, and by setting "Multiplier Adjustments > Scrapper: Rank 1 > In Player-Owned Settlements" to `0.5`.
+If you use Wabbajack to install the Magnum Opus modlist by Lively, you can set the Portable Junk Recycler Mk 2 to mimic the way the Scrapper perk works by setting "Multiplier Adjustments > Scrapper: Rank 1 > In Player-Owned Settlements" to `0.2`, setting "Multiplier Adjustments > Scrapper: Rank 2 > In Player-Owned Settlements" also to `0.2`, and by setting "Multiplier Adjustments > Scrapper: Rank 3 > In Player-Owned Settlements" to `0.5`.
+
+([TOC](#table-of-contents))
 
 No Scrapper, No Scrap
 ---------------------
-Configures the Mk 2 so that you don't get any components unless you have at least 1 rank in the Scrapper perk. Set the Base Multiplier to `0.0`, make sure that "Settings > Adjustment Options > (everything not Scrapper)" is set to `OFF` if it can be, then set "Multiplier Adjustments > Scrapper: Rank X" to `1.0`/`1.1`/`1.2`/etc. for the proceeding Scrapper ranks.
+Configures the Mk 2 so that you don't get any components unless you have at least 1 rank in the Scrapper perk. Set the Base Multiplier to `0.0`, make sure that "Settings > Adjustment Options > (everything not Scrapper)" is set to `OFF` if it can be, then set "Multiplier Adjustments > Scrapper: Rank X" to `1.0`/`1.1`/`1.2`/etc. for Scrapper rank 1/2/3/etc.
+
+([TOC](#table-of-contents))
 
 Punishing Field Use
 -------------------
 Heavily incentivize the use of settlements. "Multiplier Adjustments > General > Everywhere Else" should be set to `-0.9`.
 
+([TOC](#table-of-contents))
+
 The Gambler
 -----------
 Set "Settings > Adjustment Options > Randomness" to `ON (Simple)` and set the minimum to `-1.0`, and the maximum to `1.0`. Set every other multiplier option to `OFF`.
+
+([TOC](#table-of-contents))
 
 
 Technical Details
@@ -229,10 +270,10 @@ Technical Details
 
 Plugin FormID Layout
 --------------------
-Recycler Item FormID:
+**Recycler Item FormID:**
 - `FExxx840`
 
-General FormIDs:
+**General FormIDs:**
 - `FExxx80*` Quest
 - `FExxx81*` FormID List
 - `FExxx82*` Magic Effect
@@ -242,17 +283,21 @@ General FormIDs:
 - `FExxx86*` Constructable Object
 - `FExxx9**` Message
 
-Note: 'xxx' is the load order position of the mod.
+**Note:** "xxx" is the load order position of the mod.
+
+([TOC](#table-of-contents))
 
 Limited Uses
 ------------
 In "Limited Use" mode, the number of uses left isn't tracked specifically per device, but rather by tracking how many times a recycling process has occurred. This was a design decision made because of how ingestible items work in the game and due to the events and timing of said events surrounding their use. Therefore it doesn't matter whether several Mk 2's are crafted and used, the number of uses will tick up until it reaches the configured threshold and the item simply won't be returned to you after that recycling process finishes.
 
-Note that the number of uses is not incremented when there is no junk to break down.
+**Note:** The number of uses is not incremented when there is no junk to break down.
+
+([TOC](#table-of-contents))
 
 Scrap Categories
 ----------------
-Common:
+**Common:**
 - Bone
 - Ceramic
 - Cloth
@@ -263,7 +308,7 @@ Common:
 - Steel
 - Wood
 
-Uncommon:
+**Uncommon:**
 - Adhesive
 - Aluminum
 - Copper
@@ -278,7 +323,7 @@ Uncommon:
 - Silver
 - Springs
 
-Rare:
+**Rare:**
 - Acid
 - Ballistic Fiber
 - Antiseptic
@@ -289,7 +334,7 @@ Rare:
 - Gold
 - Nuclear Material
 
-Special:
+**Special:**
 - (None)
 
 The "Special" category is intended for modders to add components that might not fit into other categories.
@@ -298,9 +343,13 @@ If changing any FormList associated with any of the scrap categories, make sure 
 
 These lists are reread every time a game is loaded.
 
+([TOC](#table-of-contents))
+
 Settings Layout in MCM
 ----------------------
-Settings:
+<details><summary>Click to show layout</summary>
+
+**Settings:**
 - General Options
     - Base Multiplier [Default = `1.0`, Minimum = `0.0`, Maximum = `2.0`, Step = `0.01`]
     - Always Return At Least One Component [Default = `ON`, Possible Values = `OFF`/`ON`]
@@ -314,7 +363,7 @@ Settings:
     - Add Randomness To Multiplier [Default = `OFF`, Possible Values = `OFF`/`ON (Simple)`/`ON (Detailed)`]
     - Scrapper Perk Affects Multiplier [Default = `ON (Simple)`, Possible Values = `OFF`/`ON (Simple)`/`ON (Detailed)`]
 
-Recycler Interface:
+**Recycler Interface:**
 - Behavior
     - Automatic Recycling Mode [Default = `OFF`, Possible Values = `OFF`/`ON`]
     - Enable Junk Filter [Default = `ON`, Possible Values = `OFF`/`ON`]
@@ -334,7 +383,7 @@ Recycler Interface:
     - Modifier: Edit "Always Automatically Transfer" List [Default = `Alt-Shift`, Possible Values = `(locked)`]
     - Modifier: Edit "Never Automatically Transfer" List [Default = `Alt-Ctrl`, Possible Values = `(locked)`]
 
-Multiplier Adjustments:
+**Multiplier Adjustments:**
 - General
     - (If "Settings > Adjustment Options > General Adjustments" is set to `Simple`)
     - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
@@ -401,7 +450,7 @@ Multiplier Adjustments:
     - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to `ON (Simple)`)
     - In Player-Owned Settlements [Default = `0.1`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
-    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to "ON (Detailed)")
+    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to `ON (Detailed)`)
     - Components: Common
         - In Player-Owned Settlements [Default = `0.1`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
@@ -419,7 +468,7 @@ Multiplier Adjustments:
     - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to `ON (Simple)`)
     - In Player-Owned Settlements [Default = `0.2`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
-    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to "ON (Detailed)")
+    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to `ON (Detailed)`)
     - Components: Common
         - In Player-Owned Settlements [Default = `0.2`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
@@ -434,10 +483,10 @@ Multiplier Adjustments:
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
 - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is not set to `OFF` and Scrapper Rank 3 perk exists)
 - Scrapper: Rank 3
-    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to "ON (Simple)")
+    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to `ON (Simple)`)
     - In Player-Owned Settlements [Default = `0.3`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
-    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to "ON (Detailed)")
+    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to `ON (Detailed)`)
     - Components: Common
         - In Player-Owned Settlements [Default = `0.3`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
@@ -452,10 +501,10 @@ Multiplier Adjustments:
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
 - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is not set to `OFF` and Scrapper Rank 4 perk exists)
 - Scrapper: Rank 4
-    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to "ON (Simple)")
+    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to `ON (Simple)`)
     - In Player-Owned Settlements [Default = `0.4`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
     - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
-    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to "ON (Detailed)")
+    - (If "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" is set to `ON (Detailed)`)
     - Components: Common
         - In Player-Owned Settlements [Default = `0.4`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
@@ -487,38 +536,80 @@ Multiplier Adjustments:
         - In Player-Owned Settlements [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
         - Everywhere Else [Default = `0.0`, Minimum = `-2.0`, Maximum = `2.0`, Step = `0.01`]
 
-Advanced:
-- Multithreading
+**Advanced:**
+- General Options
     - Max Number Of Threads To Use [Default = `32`, Minimum = `1`, Maximum = `32`, Step = `1`]
+    - Enable Script Logging [Default = `OFF`, Possible Values = `OFF`/`ON`]
+    - Enable Script Profiling [Default = `OFF`, Possible Values = `OFF`/`ON`]
 - Methodology
     - Use "Direct Move" Method To Update Recyclable Item List [Default = `OFF`, Possible Values = `OFF`/`ON`]
 
+</details>
 
-Copyrights and Licenses
-=======================
-Copyright 2021 by Dan Cassidy.
+([TOC](#table-of-contents))
 
-All code in this mod is licensed under the GPL 3.0 or later to the extent that it can be covered by said license.
 
-All documentation and textures created by me are CC-BY-SA licensed.
+Troubleshooting Info
+====================
+
+Installing Debug Scripts
+------------------------
+When installing the mod via a FOMOD-capable mod manager like Mod Organizer 2 or Vortex, you will get a screen that allows you to choose some installation options. One of those option categories is "Scripts", under which the option "Debug Scripts" will install scripts that have some debugging capabilities built in (or more technically, left in), such as logging and profiling (tracking how fast various function calls inside a script are).
+
+([TOC](#table-of-contents))
+
+Enable Debug Logging (Fallout 4)
+------------------------------------------
+**Note:** If you are using Mod Organizer 2, use the built-in INI editor via the "Tools" menu > "Tool Plugins" sub-menu > "INI Editor" option.
+
+By default, Fallout 4 has its debug logging capabilities disabled. To enable them, follow the instructions on the [Enable Debug Logging](https://www.creationkit.com/fallout4/index.php?title=Enable_Debug_Logging) page on the Creation Kit wiki. (Note that there's a typo on the page in the paths: "Fallout 4" should not have the space, and should be "Fallout4" instead.)
+
+([TOC](#table-of-contents))
+
+Enable Debug Logging (Portable Junk Recycler Mk 2)
+--------------------------------------------------
+Also by default, the logging and profiling capabilities of the mod are disabled. To enable them, go into the Mod Config menu, then to the Portable Junk Recycler Mk 2 mod, then to the "Advanced" page. The "Enable Script Logging" and "Enable Script Profiling" options are what you are looking for.
+
+([TOC](#table-of-contents))
+
+Log Location
+------------
+The most recent log generated by this mod will be at `%HOMEPATH%\Documents\My Games\Fallout4\Logs\Script\User\Portable Junk Recycler Mk 2.0.log`.
+
+Profile logs will be in `%HOMEPATH%\Documents\My Games\Fallout4\Logs\Script\Profiling\`.
+
+([TOC](#table-of-contents))
+
+
+Copyright and Licenses
+======================
+Copyright 2021 Dan Cassidy
+
+All my code in this mod is licensed under the [GPL 3.0](https://www.gnu.org/licenses/gpl-3.0.en.html) or later.
+
+Everything else in this mod created by me is [CC-BY-SA](https://creativecommons.org/licenses/by-sa/4.0/legalcode) licensed.
+
+([TOC](#table-of-contents))
 
 
 Credits and Thanks
 ==================
-- Bethesda: For the base low res texture and the meshes used; also for Fallout 4
-- SavrenX: For the textures from the [SavrenX HD Settlement and Clutters](https://www.nexusmods.com/fallout4/mods/40485) mod
-- pra: For some feature ideas based on their [Scrapping Machine](https://www.nexusmods.com/fallout4/mods/35793) mod
-- Kentington: For the OG [Portable Junk Recycler](https://www.nexusmods.com/fallout4/mods/14110) mod
-- DieFeM: For the [code inspiration](https://forums.nexusmods.com/index.php?/topic/7090211-removing-the-notifications-from-removeallitems-used-on-player/page-4#entry64900091) to relatively quickly transfer items from one container to another while bypassing the ObjectReference.RemoveAllItems() function to avoid the freeze associated with it
-- Lively: For allowing me to post the beta of this mod on his Discord server to get some play testing done, and for the [Lively's Keyword Resource](https://www.nexusmods.com/fallout4/mods/51510) mod
-- kinggath: For the [Canary](https://www.nexusmods.com/fallout4/mods/44949) save file monitoring mod
-- Whisper: For the [Standalone Workbenches](https://www.nexusmods.com/fallout4/mods/41832) mod
-- Gambit77, Valdacil, Thirdstorm: For the [AWKCR](https://www.nexusmods.com/fallout4/mods/6091) mod
-- F4SE team: For [F4SE](https://f4se.silverlock.org/), without which this mod would not exist
-- fireundubh: For [pyro](https://github.com/fireundubh/pyro), which made developing the scripts for this mod so much easier
-- Neanka, reg2k, shadowslasher410: For the [Mod Configuration Menu](https://www.nexusmods.com/fallout4/mods/21497/)
-- Joel Day: For the [Papyrus extension](https://marketplace.visualstudio.com/items?itemName=joelday.papyrus-lang-vscode) for Visual Studio Code
-- Dank Rafft: For the [Equipment and Crafting Overhaul (ECO)](https://www.nexusmods.com/fallout4/mods/55503) mod
+- **Bethesda**: For the base low res texture and the meshes used; also for Fallout 4
+- **SavrenX**: For the textures from the [SavrenX HD Settlement and Clutters](https://www.nexusmods.com/fallout4/mods/40485) mod
+- **pra**: For some feature ideas based on their [Scrapping Machine](https://www.nexusmods.com/fallout4/mods/35793) mod
+- **Kentington**: For the OG [Portable Junk Recycler](https://www.nexusmods.com/fallout4/mods/14110) mod
+- **DieFeM**: For the [code inspiration](https://forums.nexusmods.com/index.php?/topic/7090211-removing-the-notifications-from-removeallitems-used-on-player/page-4#entry64900091) to relatively quickly transfer items from one container to another while bypassing the ObjectReference.RemoveAllItems() function to avoid the freeze associated with it
+- **Lively**: For allowing me to post the beta of this mod on his Discord server to get some play testing done, and for the [Lively's Keyword Resource](https://www.nexusmods.com/fallout4/mods/51510) mod
+- **kinggath**: For the [Canary](https://www.nexusmods.com/fallout4/mods/44949) save file monitoring mod
+- **Whisper**: For the [Standalone Workbenches](https://www.nexusmods.com/fallout4/mods/41832) mod
+- **Gambit77, Valdacil, Thirdstorm**: For the [AWKCR](https://www.nexusmods.com/fallout4/mods/6091) mod
+- **F4SE team**: For [F4SE](https://f4se.silverlock.org/), without which this mod would not exist
+- **fireundubh**: For [pyro](https://github.com/fireundubh/pyro), which made developing the scripts for this mod so much easier
+- **Neanka, reg2k, shadowslasher410**: For the [Mod Configuration Menu](https://www.nexusmods.com/fallout4/mods/21497/)
+- **Joel Day**: For the [Papyrus extension](https://marketplace.visualstudio.com/items?itemName=joelday.papyrus-lang-vscode) for Visual Studio Code
+- **Dank Rafft**: For the [Equipment and Crafting Overhaul (ECO)](https://www.nexusmods.com/fallout4/mods/55503) mod
+
+([TOC](#table-of-contents))
 
 
 Contact
@@ -526,6 +617,8 @@ Contact
 If you find a bug or have a question about the mod, please post it on the [mod page at Nexus Mods](https://www.nexusmods.com/fallout4/mods/54138), or in the [GitHub project](https://github.com/rux616/Portable-Junk-Recycler-Mk-2).
 
 If you need to contact me personally, I can be reached through one of the following means:
-- A message via my [Nexus Mods user profile page](https://www.nexusmods.com/fallout4/users/124191)
-- My email (replace `-at-` with `@` and `-dot-` with `.`): rux616-at-pm-dot-me
-- I also tend to hang out on various Discord servers (e.g. the ones for [Nexus Mods](https://discord.gg/nexusmods) and [Wabbajack](https://discord.gg/wabbajack))
+- **Nexus Mods**: [rux616](https://www.nexusmods.com/users/124191) (Send a message via the "CONTACT" button.)
+- **Email**: rux616-at-pm-dot-me (replace `-at-` with `@` and `-dot-` with `.`)
+- **Discord**: rux616#0950 (I tend to hang out on the [Nexus Mods](https://discord.gg/nexusmods) and [Wabbajack](https://discord.gg/wabbajack) servers, amongst others.)
+
+([TOC](#table-of-contents))

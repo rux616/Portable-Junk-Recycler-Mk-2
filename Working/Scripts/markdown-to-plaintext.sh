@@ -17,38 +17,33 @@
 
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-[[ $# -lt 1 ]] && { printf 'need file to run on\n'; exit 1; }
+[[ $# -lt 1 ]] && { printf 'need file(s) to run on\n'; exit 1; }
 
 set -e
 for file in "${@}"; do
     # set up file variables
     input_file="${file}"
     temp_file="$(mktemp -p . "${input_file}.XXXXXXXXXX.tmp")"
-    temp_file2="$(mktemp -p . "${input_file}.XXXXXXXXXX.tmp2")"
     output_file="${input_file%%.*}.txt"
-
-    # convert \n to \f for ease of use with sed
-    tr '\n' '\f' < "${input_file}" > "${temp_file}"
+    cp "${input_file}" "${temp_file}"
 
     # remove anchor links
     sed -Ei 's|\[([^]]*)]\(#[^)]*\)|\1|g' "${temp_file}"
-    # convert **...** to *...*
-    sed -Ei 's|\*\*([^(\*\*)\f]+)\*\*|*\1*|g' "${temp_file}"
-    # convert __...__ to _..._
-    sed -Ei 's|__([^(__)\f]+)__|_\1_|g' "${temp_file}"
+    # remove any remaining '(TOC)' lines and an extra newline
+    perl -0777pi -e 's{\n\(TOC\)\n}{}g' "${temp_file}"
+    # remove '<details><summary>...</summary>' and '</details>' and extra newline on each
+    perl -0777pi -e 's{\n<details>.*?</summary>\n}{}g; s{\n</details>\n}{}g' "${temp_file}"
+    # remove '**...**' and '__...__'
+    perl -pi -e 'no warnings qw(experimental::vlb) ; s{(?<=^|\W)\*\*(.+?)\*\*(?=\W)}{${1}}g ; s{(?<=^|\W)__(.+?)__(?=\W)}{${1}}g' "${temp_file}"
     # strip markdown URLs
     sed -Ei 's|\[([^]]*)]\(([^)]*)\)|\1 (\2)|g' "${temp_file}"
     # convert indented code to have 4 space indentations
-    sed -Ei 's|\f[ ]{4,}([^-][^\f]*)\f|\f    \1\f|g' "${temp_file}"
+    perl -pi -e 's{^[ ]{4,}+(?!-|\* )(.*)$}{    ${1}}g' "${temp_file}"
 
-    # convert \f back to \n
-    tr '\f' '\n' < "${temp_file}" > "${temp_file2}"
-
-    # if the contents of the files don't match, overwrite the current output file
-    if [[ $(sha512sum "${output_file}" | cut -d ' ' -f 1) != $(sha512sum "${temp_file2}" | cut -d ' ' -f 1) ]]; then
-        mv "${temp_file2}" "${output_file}"
+    # if the contents of the temp and output files don't match, overwrite the output file with the temp file
+    if [[ $(sha512sum "${output_file}" | cut -d ' ' -f 1) != $(sha512sum "${temp_file}" | cut -d ' ' -f 1) ]]; then
+        mv "${temp_file}" "${output_file}"
     else
-        rm "${temp_file2}"
+        rm "${temp_file}"
     fi
-    rm "${temp_file}"
 done
