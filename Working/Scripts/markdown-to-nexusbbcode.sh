@@ -35,6 +35,8 @@ for file in "${@}"; do
     sed -Ei 's|\[([^]]*)]\(#[^)]*\)|\1|g' "${temp_file}"
     # remove any remaining '(TOC)' lines and an extra newline
     perl -0777pi -e 's{\n\(TOC\)\n}{}g' "${temp_file}"
+    # remove '<details><summary>...</summary>' and '</details>' and extra newline on each
+    perl -0777pi -e 's{\n<details>.*?</summary>\n}{}g; s{\n</details>\n}{}g' "${temp_file}"
     # convert '**...**' and '__...__' to '[b]...[/b]'
     perl -pi -e 'no warnings qw(experimental::vlb) ; s{(?<=^|\W)\*\*(.+?)\*\*(?=\W)}{[b]${1}[/b]}g ; s{(?<=^|\W)__(.+?)__(?=\W)}{[b]${1}[/b]}g' "${temp_file}"
     # convert '*...*' and '_..._' to '[i]...[/i]'
