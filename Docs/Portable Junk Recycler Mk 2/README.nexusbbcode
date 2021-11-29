@@ -40,13 +40,12 @@ by rux616
 
 
 [size=5][b]Overview[/b][/size]
-A fast, highly configurable device that will scrap junk items transferred into its inventory, returning the component parts.
+A highly configurable device that will scrap junk items transferred into its inventory, returning the component parts.
 
 I created this mod because while I really liked the original Portable Junk Recycler by Kentington, I wanted something that I could customize and additionally I wanted to see if I could fix the crash issue.
 
 [size=4][b][u]Features:[/u][/b][/size]
 - Extremely customizable via the Mod Config Menu
-- Fast
 - Can automatically move junk items to the recycler inventory
 - Can be set to only automatically move items that when recycled, will save weight
 - Configurable "Always Automatically Transfer" and "Never Automatically Transfer" lists
