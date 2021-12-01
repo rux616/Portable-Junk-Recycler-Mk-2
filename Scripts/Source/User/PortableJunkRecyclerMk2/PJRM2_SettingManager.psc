@@ -564,8 +564,8 @@ SettingBool UseDirectMoveRecyclableItemListUpdate_Var
 
 PJRM2_ControlManager ControlManager
 PJRM2_ThreadManager ThreadManager
-bool EnableLoggingDefault = true const
-bool EnableProfilingDefault = true const
+bool EnableLoggingDefault = false const
+bool EnableProfilingDefault = false const
 
 SettingChangeType AvailableChangeTypes
 
@@ -580,10 +580,10 @@ Event OnInit()
     ControlManager = (Self as Quest) as PJRM2_ControlManager
     ThreadManager = (Self as Quest) as PJRM2_ThreadManager
 
-    ; logging is enabled by default
+    ; set up default logging
     EnableLogging_Var = new SettingBool
     EnableLogging_Var.Value = EnableLoggingDefault
-    ; profiling is not enabled by default
+    ; set up default profiling
     EnableProfiling_Var = new SettingBool
     EnableProfiling_Var.Value = EnableProfilingDefault
     ; mark script pre-initialization as complete
@@ -1911,8 +1911,8 @@ Function OnMCMSettingChange(string asModName, string asControlId)
         EndIf
 
         If oldValue as int != defaultValue
-            Self._Log("MCM control ID '" + asControlId + "' was changed. Old value = " + oldValue + \
-                ", new value = " + newValue)
+            Self._Log("MCM control ID '" + asControlId + "' was changed. Old value = " + oldValue \
+                + ", new value = " + newValue)
         Else
             Self._Log("Unknown control ID: " + asControlId, 2)
         EndIf
@@ -1931,36 +1931,36 @@ Function MultAdjustRandomSanityCheck()
     Self._Log("Running sanity checks on MultAdjustRandom{Min,Max}* properties")
     float tempValue
     If MultAdjustRandomMin_Var.Value > MultAdjustRandomMax_Var.Value
-        Self._Log("Fixing invalid combination: MultAdjustRandomMin_Var=" + MultAdjustRandomMin_Var.Value + \
-            "; MultAdjustRandomMax_Var=" + MultAdjustRandomMax_Var.Value)
+        Self._Log("Fixing invalid combination: MultAdjustRandomMin_Var=" + MultAdjustRandomMin_Var.Value \
+            + "; MultAdjustRandomMax_Var=" + MultAdjustRandomMax_Var.Value)
         tempValue = MultAdjustRandomMin_Var.Value
         ChangeSetting(MultAdjustRandomMin_Var, AvailableChangeTypes.Both, MultAdjustRandomMax_Var.Value, ModName)
         ChangeSetting(MultAdjustRandomMax_Var, AvailableChangeTypes.Both, tempValue, ModName)
     EndIf
     If MultAdjustRandomMinC_Var.Value > MultAdjustRandomMaxC_Var.Value
-        Self._Log("Fixing invalid combination: MultAdjustRandomMinC_Var=" + MultAdjustRandomMinC_Var.Value + \
-            "; MultAdjustRandomMaxC_Var=" + MultAdjustRandomMaxC_Var.Value)
+        Self._Log("Fixing invalid combination: MultAdjustRandomMinC_Var=" + MultAdjustRandomMinC_Var.Value \
+            + "; MultAdjustRandomMaxC_Var=" + MultAdjustRandomMaxC_Var.Value)
         tempValue = MultAdjustRandomMinC_Var.Value
         ChangeSetting(MultAdjustRandomMinC_Var, AvailableChangeTypes.Both, MultAdjustRandomMaxC_Var.Value, ModName)
         ChangeSetting(MultAdjustRandomMaxC_Var, AvailableChangeTypes.Both, tempValue, ModName)
     EndIf
     If MultAdjustRandomMinU_Var.Value > MultAdjustRandomMaxU_Var.Value
-        Self._Log("Fixing invalid combination: MultAdjustRandomMinU_Var=" + MultAdjustRandomMinU_Var.Value + \
-            "; MultAdjustRandomMaxU_Var=" + MultAdjustRandomMaxU_Var.Value)
+        Self._Log("Fixing invalid combination: MultAdjustRandomMinU_Var=" + MultAdjustRandomMinU_Var.Value \
+            + "; MultAdjustRandomMaxU_Var=" + MultAdjustRandomMaxU_Var.Value)
         tempValue = MultAdjustRandomMinU_Var.Value
         ChangeSetting(MultAdjustRandomMinU_Var, AvailableChangeTypes.Both, MultAdjustRandomMaxU_Var.Value, ModName)
         ChangeSetting(MultAdjustRandomMaxU_Var, AvailableChangeTypes.Both, tempValue, ModName)
     EndIf
     If MultAdjustRandomMinR_Var.Value > MultAdjustRandomMaxR_Var.Value
-        Self._Log("Fixing invalid combination: MultAdjustRandomMinR_Var=" + MultAdjustRandomMinR_Var.Value + \
-            "; MultAdjustRandomMaxR_Var=" + MultAdjustRandomMaxR_Var.Value)
+        Self._Log("Fixing invalid combination: MultAdjustRandomMinR_Var=" + MultAdjustRandomMinR_Var.Value \
+            + "; MultAdjustRandomMaxR_Var=" + MultAdjustRandomMaxR_Var.Value)
         tempValue = MultAdjustRandomMinR_Var.Value
         ChangeSetting(MultAdjustRandomMinR_Var, AvailableChangeTypes.Both, MultAdjustRandomMaxR_Var.Value, ModName)
         ChangeSetting(MultAdjustRandomMaxR_Var, AvailableChangeTypes.Both, tempValue, ModName)
     EndIf
     If MultAdjustRandomMinS_Var.Value > MultAdjustRandomMaxS_Var.Value
-        Self._Log("Fixing invalid combination: MultAdjustRandomMinS_Var=" + MultAdjustRandomMinS_Var.Value + \
-            "; MultAdjustRandomMaxS_Var=" + MultAdjustRandomMaxS_Var.Value)
+        Self._Log("Fixing invalid combination: MultAdjustRandomMinS_Var=" + MultAdjustRandomMinS_Var.Value \
+            + "; MultAdjustRandomMaxS_Var=" + MultAdjustRandomMaxS_Var.Value)
         tempValue = MultAdjustRandomMinS_Var.Value
         ChangeSetting(MultAdjustRandomMinS_Var, AvailableChangeTypes.Both, MultAdjustRandomMaxS_Var.Value, ModName)
         ChangeSetting(MultAdjustRandomMaxS_Var, AvailableChangeTypes.Both, tempValue, ModName)

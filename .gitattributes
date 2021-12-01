@@ -2,5 +2,5 @@
 *.jsonnet eol=lf
 *.libsonnet eol=lf
 *.md eol=lf
-*.py eol=lf
+*.py3 eol=lf
 *.sh eol=lf
