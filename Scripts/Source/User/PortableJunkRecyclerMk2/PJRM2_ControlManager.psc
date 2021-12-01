@@ -131,7 +131,7 @@ int Property iSaveFileMonitor Auto Hidden ; Do not mess with ever - this is used
 
 PJRM2_SettingManager SettingManager
 PJRM2_ThreadManager ThreadManager
-string ModVersion = "0.7.0-beta" const
+string ModVersion = "1.0.0" const
 SettingChangeType AvailableChangeTypes
 string ModName
 bool EnableLogging = false

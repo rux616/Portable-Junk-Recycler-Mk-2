@@ -6,6 +6,7 @@ Table Of Contents
 - [Portable Junk Recycler Mk 2](#portable-junk-recycler-mk-2)
     - [Table Of Contents](#table-of-contents)
 - [Changelogs](#changelogs)
+    - [v1.0.0](#v100)
     - [v0.7.0-beta](#v070-beta)
     - [v0.6.0-beta](#v060-beta)
     - [v0.5.0-beta](#v050-beta)
@@ -20,6 +21,10 @@ Table Of Contents
 
 Changelogs
 ==========
+
+v1.0.0
+------
+- Initial release
 
 v0.7.0-beta
 -----------
