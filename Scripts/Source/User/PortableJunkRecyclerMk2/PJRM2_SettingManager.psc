@@ -564,8 +564,8 @@ SettingBool UseDirectMoveRecyclableItemListUpdate_Var
 
 PJRM2_ControlManager ControlManager
 PJRM2_ThreadManager ThreadManager
-bool EnableLoggingDefault = true const
-bool EnableProfilingDefault = true const
+bool EnableLoggingDefault = false const
+bool EnableProfilingDefault = false const
 
 SettingChangeType AvailableChangeTypes
 
