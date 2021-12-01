@@ -266,8 +266,8 @@ Function BuildComponentMap(int aiIndex, int aiIndexEnd, FormList akComponentList
         toReturn[returnIndex].ScrapPart = akMiscObjectList.GetAt(aiIndex) as MiscObject
         toReturn[returnIndex].ScrapPartName = toReturn[returnIndex].ScrapPart.GetName()
         toReturn[returnIndex].Weight = toReturn[returnIndex].ScrapPart.GetWeight()
-        Self._Log(toReturn[returnIndex].ComponentPart + " (" + toReturn[returnIndex].ComponentPartName + \
-            ") is mapped to " + toReturn[returnIndex].ScrapPart + " (" + toReturn[returnIndex].ScrapPartName + ")")
+        Self._Log(toReturn[returnIndex].ComponentPart + " (" + toReturn[returnIndex].ComponentPartName \
+            + ") is mapped to " + toReturn[returnIndex].ScrapPart + " (" + toReturn[returnIndex].ScrapPartName + ")")
         aiIndex += 1
         returnIndex += 1
     EndWhile
@@ -390,8 +390,8 @@ Function RecycleComponents(int aiIndex, int aiIndexEnd, var[] akComponentMap, Mu
             Self._Log("Unknown rarity: " + cMap[aiIndex], 2)
         EndIf
 
-        Self._Log(cMap[aiIndex].ComponentPart + " (" + cMap[aiIndex].ComponentPartName + "), " + \
-            cMap[aiIndex].ScrapPart + " (" + cMap[aiIndex].ScrapPartName + ")")
+        Self._Log(cMap[aiIndex].ComponentPart + " (" + cMap[aiIndex].ComponentPartName + "), " \
+            + cMap[aiIndex].ScrapPart + " (" + cMap[aiIndex].ScrapPartName + ")")
 
         ; get the quantity of a certain component
         componentQuantity = akContainerRef.GetComponentCount(cMap[aiIndex].ComponentPart)

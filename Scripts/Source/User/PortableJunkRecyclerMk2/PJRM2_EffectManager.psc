@@ -114,8 +114,8 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
         bool hotkeyRetain = ControlManager.HotkeyForceRetainJunk
         bool hotkeyTransfer = ControlManager.HotkeyForceTransferJunk
         bool hotkeyEdit = ControlManager.HotkeyEditAutoTransferLists
-        Self._Log("Hotkeys: hotkeyRetain = " + hotkeyRetain + ", hotkeyTransfer = " + hotkeyTransfer + \
-            ", hotkeyEdit = " + hotkeyEdit)
+        Self._Log("Hotkeys: hotkeyRetain = " + hotkeyRetain + ", hotkeyTransfer = " + hotkeyTransfer \
+            + ", hotkeyEdit = " + hotkeyEdit)
 
         ; establish some convenience variables
         bool editNeverTransferList = hotkeyEdit && hotkeyRetain && SettingManager.EnableAutoTransferListEditing
@@ -265,8 +265,8 @@ Function Recycle(bool abForceRetainJunk, bool abForceTransferJunk)
 
     ; get the set of multipliers that will be applied to this recycling run
     MultiplierSet multipliers = ControlManager.GetMultipliers(playerAtOwnedWorkshop)
-    Self._Log("Multipliers: C=" + multipliers.MultC + "; U=" + multipliers.MultU + "; R=" + multipliers.MultR + \
-        "; S=" + multipliers.MultS)
+    Self._Log("Multipliers: C=" + multipliers.MultC + "; U=" + multipliers.MultU + "; R=" + multipliers.MultR \
+        + "; S=" + multipliers.MultS)
 
     ; prepare parameters and call asynchronous subprocess
     var[] params = new var[3]
@@ -348,20 +348,20 @@ Function Recycle(bool abForceRetainJunk, bool abForceTransferJunk)
     If SettingManager.HasLimitedUses
         ; if things were actually recycled, increment the number of times used
         ControlManager.NumberOfTimesUsed += itemsRecycled as int
-        Self._Log("Number of times used incremented by " + itemsRecycled as int + " to " + \
-            ControlManager.NumberOfTimesUsed)
+        Self._Log("Number of times used incremented by " + itemsRecycled as int + " to " \
+            + ControlManager.NumberOfTimesUsed)
         If ! itemsRecycled
             ; if nothing was recycled, re-add the recycler item and show a message saying nothing was recycled
             Self._Log("Nothing recycled; adding item back to player's inventory")
             PlayerRef.AddItem(PortableRecyclerItem as Form, 1, true)
-            MessageFinishedNothingUsesLeft.Show(Math.Max(1.0, SettingManager.NumberOfUses - \
-                ControlManager.NumberOfTimesUsed))
+            MessageFinishedNothingUsesLeft.Show(Math.Max(1.0, SettingManager.NumberOfUses \
+                - ControlManager.NumberOfTimesUsed))
         ElseIf ControlManager.NumberOfTimesUsed < SettingManager.NumberOfUses
             ; re-add the portable recycler item if there are uses left
             Self._Log("Items recycled and max usage limit not reached; adding item back to player's inventory")
             PlayerRef.AddItem(PortableRecyclerItem as Form, 1, true)
-            MessageFinishedUsesLeft.Show(SettingManager.NumberOfUses - \
-                ControlManager.NumberOfTimesUsed)
+            MessageFinishedUsesLeft.Show(SettingManager.NumberOfUses \
+                - ControlManager.NumberOfTimesUsed)
         Else
             ; if the recycler item use limit is reached, reset the number of times used, but don't re-add the item
             Self._Log("Items recycled but max usage limit reached; NOT adding recycler back to player's inventory")
@@ -557,10 +557,10 @@ Function UpdateRecyclableItemListDirectMove()
     playerInventory = None
 
     ; log any size changes
-    Self._Log("Recyclable item list: old size = " + oldSize + ", new size = " + \
-        ControlManager.RecyclableItemList.Size)
-    Self._Log("Low weight ratio item list: old size = " + oldSize2 + ", new size = " + \
-        ControlManager.LowWeightRatioItemList.Size)
+    Self._Log("Recyclable item list: old size = " + oldSize + ", new size = " \
+        + ControlManager.RecyclableItemList.Size)
+    Self._Log("Low weight ratio item list: old size = " + oldSize2 + ", new size = " \
+        + ControlManager.LowWeightRatioItemList.Size)
 
     ; move any items that were moved to the secondary temp container back to the player
     ; known recyclable items
@@ -645,10 +645,10 @@ Function UpdateRecyclableItemListNoTouch()
     TempContainerSecondary.RemoveAllItems()
 
     ; log any size changes
-    Self._Log("Recyclable item list: old size = " + oldSize + ", new size = " + \
-        ControlManager.RecyclableItemList.Size)
-    Self._Log("Low weight ratio item list: old size = " + oldSize2 + ", new size = " + \
-        ControlManager.LowWeightRatioItemList.Size)
+    Self._Log("Recyclable item list: old size = " + oldSize + ", new size = " \
+        + ControlManager.RecyclableItemList.Size)
+    Self._Log("Low weight ratio item list: old size = " + oldSize2 + ", new size = " \
+        + ControlManager.LowWeightRatioItemList.Size)
 EndFunction
 
 ; remove all items from the origin container to the destination container

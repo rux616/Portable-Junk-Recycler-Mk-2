@@ -336,8 +336,8 @@ Function CheckForF4SE()
     ScriptExtenderInstalled = F4SE.GetVersionRelease() as bool
     If ScriptExtenderInstalled
         Debug.Trace(FullScriptName + ": F4SE installed")
-        Self._Log("F4SE v" + F4SE.GetVersion() + "." + F4SE.GetVersionMinor() + "." + F4SE.GetVersionBeta() + "." + \
-            F4SE.GetVersionRelease() + " installed (script version " + F4SE.GetScriptVersionRelease() + ")", abForce = true)
+        Self._Log("F4SE v" + F4SE.GetVersion() + "." + F4SE.GetVersionMinor() + "." + F4SE.GetVersionBeta() + "." \
+            + F4SE.GetVersionRelease() + " installed (script version " + F4SE.GetScriptVersionRelease() + ")", abForce = true)
     Else
         Debug.Trace(FullScriptName + ": F4SE not installed", 1)
         Self._Log("F4SE not installed", 1, abForce = true)
@@ -773,22 +773,22 @@ MultiplierSet Function GetMultipliers(bool abPlayerAtOwnedWorkshop)
                     toReturn.MultU += SettingManager.MultAdjustScrapperSettlement[playerScrapperPerkIndex]
                     toReturn.MultR += SettingManager.MultAdjustScrapperSettlement[playerScrapperPerkIndex]
                     toReturn.MultS += SettingManager.MultAdjustScrapperSettlement[playerScrapperPerkIndex]
-                    Self._Log("Adjustment (Scrapper: owned settlement): " + \
-                        SettingManager.MultAdjustScrapperSettlement[playerScrapperPerkIndex])
+                    Self._Log("Adjustment (Scrapper: owned settlement): " \
+                        + SettingManager.MultAdjustScrapperSettlement[playerScrapperPerkIndex])
                 Else
                     ; detailed
                     toReturn.MultC += SettingManager.MultAdjustScrapperSettlementC[playerScrapperPerkIndex]
-                    Self._Log("AdjustmentC (Scrapper: owned settlement): " + \
-                        SettingManager.MultAdjustScrapperSettlementC[playerScrapperPerkIndex])
+                    Self._Log("AdjustmentC (Scrapper: owned settlement): " \
+                        + SettingManager.MultAdjustScrapperSettlementC[playerScrapperPerkIndex])
                     toReturn.MultU += SettingManager.MultAdjustScrapperSettlementU[playerScrapperPerkIndex]
-                    Self._Log("AdjustmentU (Scrapper: owned settlement): " + \
-                        SettingManager.MultAdjustScrapperSettlementU[playerScrapperPerkIndex])
+                    Self._Log("AdjustmentU (Scrapper: owned settlement): " \
+                        + SettingManager.MultAdjustScrapperSettlementU[playerScrapperPerkIndex])
                     toReturn.MultR += SettingManager.MultAdjustScrapperSettlementR[playerScrapperPerkIndex]
-                    Self._Log("AdjustmentR (Scrapper: owned settlement): " + \
-                        SettingManager.MultAdjustScrapperSettlementR[playerScrapperPerkIndex])
+                    Self._Log("AdjustmentR (Scrapper: owned settlement): " \
+                        + SettingManager.MultAdjustScrapperSettlementR[playerScrapperPerkIndex])
                     toReturn.MultS += SettingManager.MultAdjustScrapperSettlementS[playerScrapperPerkIndex]
-                    Self._Log("AdjustmentS (Scrapper: owned settlement): " + \
-                        SettingManager.MultAdjustScrapperSettlementS[playerScrapperPerkIndex])
+                    Self._Log("AdjustmentS (Scrapper: owned settlement): " \
+                        + SettingManager.MultAdjustScrapperSettlementS[playerScrapperPerkIndex])
                 EndIf
             Else
                 If SettingManager.ScrapperAffectsMult == 1
@@ -797,22 +797,22 @@ MultiplierSet Function GetMultipliers(bool abPlayerAtOwnedWorkshop)
                     toReturn.MultU += SettingManager.MultAdjustScrapperNotSettlement[playerScrapperPerkIndex]
                     toReturn.MultR += SettingManager.MultAdjustScrapperNotSettlement[playerScrapperPerkIndex]
                     toReturn.MultS += SettingManager.MultAdjustScrapperNotSettlement[playerScrapperPerkIndex]
-                    Self._Log("Adjustment (Scrapper: not owned settlement): " + \
-                        SettingManager.MultAdjustScrapperNotSettlement[playerScrapperPerkIndex])
+                    Self._Log("Adjustment (Scrapper: not owned settlement): " \
+                        + SettingManager.MultAdjustScrapperNotSettlement[playerScrapperPerkIndex])
                 Else
                     ; detailed
                     toReturn.MultC += SettingManager.MultAdjustScrapperNotSettlementC[playerScrapperPerkIndex]
-                    Self._Log("AdjustmentC (Scrapper: not owned settlement): " + \
-                        SettingManager.MultAdjustScrapperNotSettlementC[playerScrapperPerkIndex])
+                    Self._Log("AdjustmentC (Scrapper: not owned settlement): " \
+                        + SettingManager.MultAdjustScrapperNotSettlementC[playerScrapperPerkIndex])
                     toReturn.MultU += SettingManager.MultAdjustScrapperNotSettlementU[playerScrapperPerkIndex]
-                    Self._Log("AdjustmentU (Scrapper: not owned settlement): " + \
-                        SettingManager.MultAdjustScrapperNotSettlementU[playerScrapperPerkIndex])
+                    Self._Log("AdjustmentU (Scrapper: not owned settlement): " \
+                        + SettingManager.MultAdjustScrapperNotSettlementU[playerScrapperPerkIndex])
                     toReturn.MultR += SettingManager.MultAdjustScrapperNotSettlementR[playerScrapperPerkIndex]
-                    Self._Log("AdjustmentR (Scrapper: not owned settlement): " + \
-                        SettingManager.MultAdjustScrapperNotSettlementR[playerScrapperPerkIndex])
+                    Self._Log("AdjustmentR (Scrapper: not owned settlement): " \
+                        + SettingManager.MultAdjustScrapperNotSettlementR[playerScrapperPerkIndex])
                     toReturn.MultS += SettingManager.MultAdjustScrapperNotSettlementS[playerScrapperPerkIndex]
-                    Self._Log("AdjustmentS (Scrapper: not owned settlement): " + \
-                        SettingManager.MultAdjustScrapperNotSettlementS[playerScrapperPerkIndex])
+                    Self._Log("AdjustmentS (Scrapper: not owned settlement): " \
+                        + SettingManager.MultAdjustScrapperNotSettlementS[playerScrapperPerkIndex])
                 EndIf
             EndIf
         EndIf
