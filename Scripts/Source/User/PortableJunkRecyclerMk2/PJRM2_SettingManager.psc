@@ -1535,10 +1535,19 @@ EndFunction
 ; determine where the crafting recipe lives
 Function CallbackCraftingStation()
     Self._Log("Callback for CraftingStation triggered")
-    string pluginNameSW = "StandaloneWorkbenches.esp" const
+    string pluginNameSWesl = "StandaloneWorkbenches.esl" const
+    string pluginNameSWesp = "StandaloneWorkbenches.esp" const
     string pluginNameECO = "ECO.esp" const
     string pluginNameAWKCR = "ArmorKeywords.esm" const
-    bool isSWInstalled = Game.IsPluginInstalled(pluginNameSW)
+    string pluginNameSW
+    bool isSWInstalled
+    If Game.IsPluginInstalled(pluginNameSWesl)
+        isSWInstalled = true
+        pluginNameSW = pluginNameSWesl
+    ElseIf Game.IsPluginInstalled(pluginNameSWesp)
+        isSWInstalled = true
+        pluginNameSW = pluginNameSWesp
+    EndIf
     bool isECOInstalled = Game.IsPluginInstalled(pluginNameECO)
     bool isAWKCRInstalled = Game.IsPluginInstalled(pluginNameAWKCR)
 
