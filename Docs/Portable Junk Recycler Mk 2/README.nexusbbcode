@@ -21,7 +21,9 @@ by rux616
     - Leprechaun
     - Loot Piñata
     - Magnum Opus Wabbajack Modlist
+    - No Bonuses
     - No Scrapper, No Scrap
+    - OG Portable Junk Recycler
     - Punishing Field Use
     - The Gambler
 - Technical Details
@@ -44,7 +46,9 @@ by rux616
 [size=4][b][u]Summary:[/u][/b][/size]
 A highly configurable device that will scrap junk items transferred into its inventory, returning the component parts.
 
-I created this mod because while I really liked the original Portable Junk Recycler by Kentington, I wanted something that I could customize and additionally I wanted to see if I could fix the crash issue.
+I created this mod because while I really liked the original [url=https://www.nexusmods.com/fallout4/mods/14110]Portable Junk Recycler by Kentington[/url], I wanted something that I could customize and additionally I wanted to see if I could fix the crash issue.
+
+[b]Note:[/b] Sadly, armor and weapon scrapping is not possible through scripting yet. Anything that is [u]not[/u] a junk item (like armor, weapons, chems, etc.) will simply get returned if they are put in the device inventory.
 
 By default the Mk 2 functions like the original, that is, you use it, exit the Pip-boy, move the junk objects you want to be recycled into the container that then opens, close said container, and then you get a bunch of components back. However it has the following bonuses by default:
 
@@ -183,28 +187,69 @@ Additionally, the right hand side of the formula ([font=Courier New][color=#b2b2
 
 
 [size=5][b]Interesting Configurations[/b][/size]
-Given how customizable the Mk 2 is, there are [u]myriad[/u] ways in which to use it. Here are a few fun ones I've thought of. Note that some of these have the potential to boost the multiplier to ridiculous levels, and are not intended to be balanced. My goal is to give you, the player, ways in which to have fun and customize this mod to [u]your[/u] liking.
+Given how customizable the Mk 2 is, there are [u]myriad[/u] ways in which to configure it. Here are a few I've thought of. Note that some of these have the potential to boost the multiplier to ridiculous levels, and I can't recommend them as balanced. That being said, my goal is to give you, the player, ways in which to have fun and customize this mod to [u]your[/u] liking.
 
 [size=4][b][u]Brainiac:[/u][/b][/size]
-You really value your character's intelligence. Set "Multiplier Adjustments > Intelligence" to give you a [font=Courier New][color=#b2b2b2]0.2[/color][/font] multiplier adjustment per point.
+Ur smrt. Liek rly smrt.
+
+- Set "Multiplier Adjustments > Intelligence > Adjustment Per Point Of Intelligence" to [font=Courier New][color=#b2b2b2]0.2[/color][/font].
 
 [size=4][b][u]Leprechaun:[/u][/b][/size]
-Luck is [u]really[/u] important to you. So much so that you set it to be the only multiplier adjustment you use (set "Settings > Adjustment Options > (everything not Luck)" to [font=Courier New][color=#b2b2b2]OFF[/color][/font]), at [font=Courier New][color=#b2b2b2]0.5[/color][/font] per point.
+Luck is [u]really[/u] important to you. So much so that you set it to be the only multiplier adjustment you use.
+
+- Set "Settings > Adjustment Options > (everything not Luck)" to [font=Courier New][color=#b2b2b2]OFF[/color][/font] if it can be
+- Set "Settings > Multiplier Adjustments > Adjustment Per Point Of Luck" to [font=Courier New][color=#b2b2b2]0.5[/color][/font]
 
 [size=4][b][u]Loot Piñata:[/u][/b][/size]
-Set every multiplier adjustment to max. All junk items now explode in showers of components (figuratively).
+All junk items now explode in showers of components (figuratively).
+
+- Set "Multiplier Adjustments > (everything)" to max
 
 [size=4][b][u]Magnum Opus Wabbajack Modlist:[/u][/b][/size]
-If you use Wabbajack to install the Magnum Opus modlist by Lively, you can set the Portable Junk Recycler Mk 2 to mimic the way the Scrapper perk works by setting "Multiplier Adjustments > Scrapper: Rank 1 > In Player-Owned Settlements" to [font=Courier New][color=#b2b2b2]0.2[/color][/font], setting "Multiplier Adjustments > Scrapper: Rank 2 > In Player-Owned Settlements" also to [font=Courier New][color=#b2b2b2]0.2[/color][/font], and by setting "Multiplier Adjustments > Scrapper: Rank 3 > In Player-Owned Settlements" to [font=Courier New][color=#b2b2b2]0.5[/color][/font].
+If you use Wabbajack to install the Magnum Opus modlist by Lively, you can set the Portable Junk Recycler Mk 2 to mimic the way the Scrapper perk works.
+
+- Set "Multiplier Adjustments > Scrapper: Rank 1 > In Player-Owned Settlements" to [font=Courier New][color=#b2b2b2]0.2[/color][/font]
+- Set "Multiplier Adjustments > Scrapper: Rank 2 > In Player-Owned Settlements" to [font=Courier New][color=#b2b2b2]0.2[/color][/font]
+- Set "Multiplier Adjustments > Scrapper: Rank 3 > In Player-Owned Settlements" to [font=Courier New][color=#b2b2b2]0.5[/color][/font]
+
+[size=4][b][u]No Bonuses:[/u][/b][/size]
+You just want to junk items on the go, no muss, no fuss, don't care about bonuses.
+
+- Set "Settings > Adjustment Options > Intelligence Affects Multiplier" to [font=Courier New][color=#b2b2b2]OFF[/color][/font]
+- Set "Settings > Adjustment Options > Luck Affects Multiplier" to [font=Courier New][color=#b2b2b2]OFF[/color][/font]
+- Set "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" to [font=Courier New][color=#b2b2b2]OFF[/color][/font]
 
 [size=4][b][u]No Scrapper, No Scrap:[/u][/b][/size]
-Configures the Mk 2 so that you don't get any components unless you have at least 1 rank in the Scrapper perk. Set the Base Multiplier to [font=Courier New][color=#b2b2b2]0.0[/color][/font], make sure that "Settings > Adjustment Options > (everything not Scrapper)" is set to [font=Courier New][color=#b2b2b2]OFF[/color][/font] if it can be, then set "Multiplier Adjustments > Scrapper: Rank X" to [font=Courier New][color=#b2b2b2]1.0[/color][/font]/[font=Courier New][color=#b2b2b2]1.1[/color][/font]/[font=Courier New][color=#b2b2b2]1.2[/color][/font]/etc. for Scrapper rank 1/2/3/etc.
+Configures the Mk 2 so that you don't get any components unless you have at least 1 rank in the Scrapper perk.
+
+- Set "Settings > General Options > Base Multiplier" to [font=Courier New][color=#b2b2b2]0.0[/color][/font]
+- Set "Settings > Adjustment Options > (everything not Scrapper)" to [font=Courier New][color=#b2b2b2]OFF[/color][/font] if it can be
+- Set "Multiplier Adjustments > Scrapper: Rank X" to [font=Courier New][color=#b2b2b2]1.0[/color][/font]/[font=Courier New][color=#b2b2b2]1.1[/color][/font]/[font=Courier New][color=#b2b2b2]1.2[/color][/font]/etc. for Scrapper rank 1/2/3/etc.
+
+[size=4][b][u]OG Portable Junk Recycler:[/u][/b][/size]
+You want to experience the original Portable Junk Recycler once again (minus the crashy bits), complete with everything that entails, including no automatic movement of junk items.
+
+- Set "Settings > Adjustment Options > Intelligence Affects Multiplier" to [font=Courier New][color=#b2b2b2]OFF[/color][/font]
+- Set "Settings > Adjustment Options > Luck Affects Multiplier" to [font=Courier New][color=#b2b2b2]OFF[/color][/font]
+- Set "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" to [font=Courier New][color=#b2b2b2]OFF[/color][/font]
+- Set "Recycler Interface > Behavior > Enable Junk Filter" to [font=Courier New][color=#b2b2b2]OFF[/color][/font]
+- Set "Recycler Interface > Behavior > Automatically Transfer Junk" to [font=Courier New][color=#b2b2b2]OFF[/color][/font]
+- Set "Recycler Interface > Behavior > Enable "Always Automatically Transfer" List" to [font=Courier New][color=#b2b2b2]OFF[/color][/font]
+- Set "Recycler Interface > Behavior > Enable "Never Automatically Transfer" List" to [font=Courier New][color=#b2b2b2]OFF[/color][/font]
+- Set "Recycler Interface > Behavior > Return Items Silently" to [font=Courier New][color=#b2b2b2]OFF[/color][/font]
 
 [size=4][b][u]Punishing Field Use:[/u][/b][/size]
-Heavily incentivize the use of settlements. "Multiplier Adjustments > General > Everywhere Else" should be set to [font=Courier New][color=#b2b2b2]-0.9[/color][/font].
+Heavily incentivize the use of settlements.
+
+- Set "Multiplier Adjustments > General > Everywhere Else"  to [font=Courier New][color=#b2b2b2]-0.9[/color][/font].
 
 [size=4][b][u]The Gambler:[/u][/b][/size]
-Set "Settings > Adjustment Options > Randomness" to [font=Courier New][color=#b2b2b2]ON (Simple)[/color][/font] and set the minimum to [font=Courier New][color=#b2b2b2]-1.0[/color][/font], and the maximum to [font=Courier New][color=#b2b2b2]1.0[/color][/font]. Set every other multiplier option to [font=Courier New][color=#b2b2b2]OFF[/color][/font].
+Submit yourself to the will of RNGesus.
+
+- Set "Settings > Adjustment Options > Randomness" to [font=Courier New][color=#b2b2b2]ON (Simple)[/color][/font]
+- Set "Settings > Adjustment Options > (everything not Randomness)" to [font=Courier New][color=#b2b2b2]OFF[/color][/font] if it can be.
+- Set "Multiplier Adjustments > Randomness > Minimum" to [font=Courier New][color=#b2b2b2]-1.0[/color][/font]
+- Set "Multiplier Adjustments > Randomness > Maximum" to [font=Courier New][color=#b2b2b2]1.0[/color][/font]
 
 
 [size=5][b]Technical Details[/b][/size]
@@ -503,19 +548,19 @@ Everything else in this mod created by me is [url=https://creativecommons.org/li
 
 [size=5][b]Credits and Thanks[/b][/size]
 - [b]Bethesda[/b]: For the base low res texture and the meshes used; also for Fallout 4
-- [b]SavrenX[/b]: For the textures from the [url=https://www.nexusmods.com/fallout4/mods/40485]SavrenX HD Settlement and Clutters[/url] mod
-- [b]pra[/b]: For some feature ideas based on their [url=https://www.nexusmods.com/fallout4/mods/35793]Scrapping Machine[/url] mod
-- [b]Kentington[/b]: For the OG [url=https://www.nexusmods.com/fallout4/mods/14110]Portable Junk Recycler[/url] mod
-- [b]DieFeM[/b]: For the [url=https://forums.nexusmods.com/index.php?/topic/7090211-removing-the-notifications-from-removeallitems-used-on-player/page-4#entry64900091]code inspiration[/url] to relatively quickly transfer items from one container to another while bypassing the ObjectReference.RemoveAllItems() function to avoid the freeze associated with it
-- [b]Lively[/b]: For allowing me to post the beta of this mod on his Discord server to get some play testing done, and for the [url=https://www.nexusmods.com/fallout4/mods/51510]Lively's Keyword Resource[/url] mod
-- [b]kinggath[/b]: For the [url=https://www.nexusmods.com/fallout4/mods/44949]Canary[/url] save file monitoring mod
-- [b]Whisper[/b]: For the [url=https://www.nexusmods.com/fallout4/mods/41832]Standalone Workbenches[/url] mod
-- [b]Gambit77, Valdacil, Thirdstorm[/b]: For the [url=https://www.nexusmods.com/fallout4/mods/6091]AWKCR[/url] mod
+- [b]SavrenX[/b]: For the textures from [url=https://www.nexusmods.com/fallout4/mods/40485]SavrenX HD Settlement and Clutters[/url]
+- [b]pra[/b]: For some feature ideas based on [url=https://www.nexusmods.com/fallout4/mods/35793]Scrapping Machine[/url]
+- [b]Kentington[/b]: For the OG [url=https://www.nexusmods.com/fallout4/mods/14110]Portable Junk Recycler[/url]
+- [b]DieFeM[/b]: For the [url=https://forums.nexusmods.com/index.php?/topic/7090211-removing-the-notifications-from-removeallitems-used-on-player/page-4#entry64900091]code inspiration[/url] to relatively quickly transfer items from one container to another while bypassing the ObjectReference.RemoveAllItems() function to avoid the crash associated with it
+- [b]Lively[/b]: For allowing me to post the beta of this mod on his Discord server to get some play testing done, and for [url=https://www.nexusmods.com/fallout4/mods/51510]Lively's Keyword Resource[/url]
+- [b]kinggath[/b]: For save file monitoring via [url=https://www.nexusmods.com/fallout4/mods/44949]Canary[/url]
+- [b]Whisper[/b]: For [url=https://www.nexusmods.com/fallout4/mods/41832]Standalone Workbenches[/url]
+- [b]Gambit77, Valdacil, Thirdstorm[/b]: For [url=https://www.nexusmods.com/fallout4/mods/6091]AWKCR[/url]
 - [b]F4SE team[/b]: For [url=https://f4se.silverlock.org/]F4SE[/url], without which this mod would not exist
 - [b]fireundubh[/b]: For [url=https://github.com/fireundubh/pyro]pyro[/url], which made developing the scripts for this mod so much easier
 - [b]Neanka, reg2k, shadowslasher410[/b]: For the [url=https://www.nexusmods.com/fallout4/mods/21497/]Mod Configuration Menu[/url]
-- [b]Joel Day[/b]: For the [url=https://marketplace.visualstudio.com/items?itemName=joelday.papyrus-lang-vscode]Papyrus extension[/url] for Visual Studio Code
-- [b]Dank Rafft[/b]: For the [url=https://www.nexusmods.com/fallout4/mods/55503]Equipment and Crafting Overhaul (ECO)[/url] mod
+- [b]Joel Day[/b]: For the VS Code [url=https://marketplace.visualstudio.com/items?itemName=joelday.papyrus-lang-vscode]Papyrus extension[/url]
+- [b]Dank Rafft[/b]: For [url=https://www.nexusmods.com/fallout4/mods/55503]Equipment and Crafting Overhaul (ECO)[/url]
 
 
 [size=5][b]Contact[/b][/size]
