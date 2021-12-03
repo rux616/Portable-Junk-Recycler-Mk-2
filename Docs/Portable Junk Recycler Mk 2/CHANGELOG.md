@@ -6,6 +6,7 @@ Table Of Contents
 - [Portable Junk Recycler Mk 2](#portable-junk-recycler-mk-2)
     - [Table Of Contents](#table-of-contents)
 - [Changelogs](#changelogs)
+    - [v1.0.1](#v101)
     - [v1.0.0](#v100)
     - [v0.7.0-beta](#v070-beta)
     - [v0.6.0-beta](#v060-beta)
@@ -21,6 +22,13 @@ Table Of Contents
 
 Changelogs
 ==========
+
+v1.0.1
+------
+- Fixed Standalone Workbench detection (now detects it as both StandaloneWorkbenches.esp and StandaloneWorkbenches.esl)
+- Updated documentation
+- Added "OG Portable Junk Recycler" and "No Bonuses" to the list of Interesting Configurations
+- Removed some unnecessary options from the Interesting Configuration INI files.
 
 v1.0.0
 ------

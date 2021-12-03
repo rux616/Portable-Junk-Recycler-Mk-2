@@ -23,7 +23,9 @@ Table Of Contents
     - Leprechaun
     - Loot Piñata
     - Magnum Opus Wabbajack Modlist
+    - No Bonuses
     - No Scrapper, No Scrap
+    - OG Portable Junk Recycler
     - Punishing Field Use
     - The Gambler
 - Technical Details
@@ -48,7 +50,9 @@ Summary
 -------
 A highly configurable device that will scrap junk items transferred into its inventory, returning the component parts.
 
-I created this mod because while I really liked the original Portable Junk Recycler by Kentington, I wanted something that I could customize and additionally I wanted to see if I could fix the crash issue.
+I created this mod because while I really liked the original Portable Junk Recycler by Kentington (https://www.nexusmods.com/fallout4/mods/14110), I wanted something that I could customize and additionally I wanted to see if I could fix the crash issue.
+
+Note: Sadly, armor and weapon scrapping is not possible through scripting yet. Anything that is _not_ a junk item (like armor, weapons, chems, etc.) will simply get returned if they are put in the device inventory.
 
 By default the Mk 2 functions like the original, that is, you use it, exit the Pip-boy, move the junk objects you want to be recycled into the container that then opens, close said container, and then you get a bunch of components back. However it has the following bonuses by default:
 
@@ -198,35 +202,78 @@ Known Issues
 
 Interesting Configurations
 ==========================
-Given how customizable the Mk 2 is, there are _myriad_ ways in which to use it. Here are a few fun ones I've thought of. Note that some of these have the potential to boost the multiplier to ridiculous levels, and are not intended to be balanced. My goal is to give you, the player, ways in which to have fun and customize this mod to _your_ liking.
+Given how customizable the Mk 2 is, there are _myriad_ ways in which to configure it. Here are a few I've thought of. Note that some of these have the potential to boost the multiplier to ridiculous levels, and I can't recommend them as balanced. That being said, my goal is to give you, the player, ways in which to have fun and customize this mod to _your_ liking.
 
 Brainiac
 --------
-You really value your character's intelligence. Set "Multiplier Adjustments > Intelligence" to give you a `0.2` multiplier adjustment per point.
+Ur smrt. Liek rly smrt.
+
+- Set "Multiplier Adjustments > Intelligence > Adjustment Per Point Of Intelligence" to `0.2`.
 
 Leprechaun
 ----------
-Luck is _really_ important to you. So much so that you set it to be the only multiplier adjustment you use (set "Settings > Adjustment Options > (everything not Luck)" to `OFF`), at `0.5` per point.
+Luck is _really_ important to you. So much so that you set it to be the only multiplier adjustment you use.
+
+- Set "Settings > Adjustment Options > (everything not Luck)" to `OFF` if it can be
+- Set "Settings > Multiplier Adjustments > Adjustment Per Point Of Luck" to `0.5`
 
 Loot Piñata
 -----------
-Set every multiplier adjustment to max. All junk items now explode in showers of components (figuratively).
+All junk items now explode in showers of components (figuratively).
+
+- Set "Multiplier Adjustments > (everything)" to max
 
 Magnum Opus Wabbajack Modlist
 -----------------------------
-If you use Wabbajack to install the Magnum Opus modlist by Lively, you can set the Portable Junk Recycler Mk 2 to mimic the way the Scrapper perk works by setting "Multiplier Adjustments > Scrapper: Rank 1 > In Player-Owned Settlements" to `0.2`, setting "Multiplier Adjustments > Scrapper: Rank 2 > In Player-Owned Settlements" also to `0.2`, and by setting "Multiplier Adjustments > Scrapper: Rank 3 > In Player-Owned Settlements" to `0.5`.
+If you use Wabbajack to install the Magnum Opus modlist by Lively, you can set the Portable Junk Recycler Mk 2 to mimic the way the Scrapper perk works.
+
+- Set "Multiplier Adjustments > Scrapper: Rank 1 > In Player-Owned Settlements" to `0.2`
+- Set "Multiplier Adjustments > Scrapper: Rank 2 > In Player-Owned Settlements" to `0.2`
+- Set "Multiplier Adjustments > Scrapper: Rank 3 > In Player-Owned Settlements" to `0.5`
+
+No Bonuses
+----------
+You just want to junk items on the go, no muss, no fuss, don't care about bonuses.
+
+- Set "Settings > Adjustment Options > Intelligence Affects Multiplier" to `OFF`
+- Set "Settings > Adjustment Options > Luck Affects Multiplier" to `OFF`
+- Set "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" to `OFF`
 
 No Scrapper, No Scrap
 ---------------------
-Configures the Mk 2 so that you don't get any components unless you have at least 1 rank in the Scrapper perk. Set the Base Multiplier to `0.0`, make sure that "Settings > Adjustment Options > (everything not Scrapper)" is set to `OFF` if it can be, then set "Multiplier Adjustments > Scrapper: Rank X" to `1.0`/`1.1`/`1.2`/etc. for Scrapper rank 1/2/3/etc.
+Configures the Mk 2 so that you don't get any components unless you have at least 1 rank in the Scrapper perk.
+
+- Set "Settings > General Options > Base Multiplier" to `0.0`
+- Set "Settings > Adjustment Options > (everything not Scrapper)" to `OFF` if it can be
+- Set "Multiplier Adjustments > Scrapper: Rank X" to `1.0`/`1.1`/`1.2`/etc. for Scrapper rank 1/2/3/etc.
+
+OG Portable Junk Recycler
+-------------------------
+You want to experience the original Portable Junk Recycler once again (minus the crashy bits), complete with everything that entails, including no automatic movement of junk items.
+
+- Set "Settings > Adjustment Options > Intelligence Affects Multiplier" to `OFF`
+- Set "Settings > Adjustment Options > Luck Affects Multiplier" to `OFF`
+- Set "Settings > Adjustment Options > Scrapper Perk Affects Multiplier" to `OFF`
+- Set "Recycler Interface > Behavior > Enable Junk Filter" to `OFF`
+- Set "Recycler Interface > Behavior > Automatically Transfer Junk" to `OFF`
+- Set "Recycler Interface > Behavior > Enable "Always Automatically Transfer" List" to `OFF`
+- Set "Recycler Interface > Behavior > Enable "Never Automatically Transfer" List" to `OFF`
+- Set "Recycler Interface > Behavior > Return Items Silently" to `OFF`
 
 Punishing Field Use
 -------------------
-Heavily incentivize the use of settlements. "Multiplier Adjustments > General > Everywhere Else" should be set to `-0.9`.
+Heavily incentivize the use of settlements.
+
+- Set "Multiplier Adjustments > General > Everywhere Else"  to `-0.9`.
 
 The Gambler
 -----------
-Set "Settings > Adjustment Options > Randomness" to `ON (Simple)` and set the minimum to `-1.0`, and the maximum to `1.0`. Set every other multiplier option to `OFF`.
+Submit yourself to the will of RNGesus.
+
+- Set "Settings > Adjustment Options > Randomness" to `ON (Simple)`
+- Set "Settings > Adjustment Options > (everything not Randomness)" to `OFF` if it can be.
+- Set "Multiplier Adjustments > Randomness > Minimum" to `-1.0`
+- Set "Multiplier Adjustments > Randomness > Maximum" to `1.0`
 
 
 Technical Details
@@ -537,19 +584,19 @@ Everything else in this mod created by me is CC-BY-SA (https://creativecommons.o
 Credits and Thanks
 ==================
 - Bethesda: For the base low res texture and the meshes used; also for Fallout 4
-- SavrenX: For the textures from the SavrenX HD Settlement and Clutters (https://www.nexusmods.com/fallout4/mods/40485) mod
-- pra: For some feature ideas based on their Scrapping Machine (https://www.nexusmods.com/fallout4/mods/35793) mod
-- Kentington: For the OG Portable Junk Recycler (https://www.nexusmods.com/fallout4/mods/14110) mod
-- DieFeM: For the code inspiration (https://forums.nexusmods.com/index.php?/topic/7090211-removing-the-notifications-from-removeallitems-used-on-player/page-4#entry64900091) to relatively quickly transfer items from one container to another while bypassing the ObjectReference.RemoveAllItems() function to avoid the freeze associated with it
-- Lively: For allowing me to post the beta of this mod on his Discord server to get some play testing done, and for the Lively's Keyword Resource (https://www.nexusmods.com/fallout4/mods/51510) mod
-- kinggath: For the Canary (https://www.nexusmods.com/fallout4/mods/44949) save file monitoring mod
-- Whisper: For the Standalone Workbenches (https://www.nexusmods.com/fallout4/mods/41832) mod
-- Gambit77, Valdacil, Thirdstorm: For the AWKCR (https://www.nexusmods.com/fallout4/mods/6091) mod
+- SavrenX: For the textures from SavrenX HD Settlement and Clutters (https://www.nexusmods.com/fallout4/mods/40485)
+- pra: For some feature ideas based on Scrapping Machine (https://www.nexusmods.com/fallout4/mods/35793)
+- Kentington: For the OG Portable Junk Recycler (https://www.nexusmods.com/fallout4/mods/14110)
+- DieFeM: For the code inspiration (https://forums.nexusmods.com/index.php?/topic/7090211-removing-the-notifications-from-removeallitems-used-on-player/page-4#entry64900091) to relatively quickly transfer items from one container to another while bypassing the ObjectReference.RemoveAllItems() function to avoid the crash associated with it
+- Lively: For allowing me to post the beta of this mod on his Discord server to get some play testing done, and for Lively's Keyword Resource (https://www.nexusmods.com/fallout4/mods/51510)
+- kinggath: For save file monitoring via Canary (https://www.nexusmods.com/fallout4/mods/44949)
+- Whisper: For Standalone Workbenches (https://www.nexusmods.com/fallout4/mods/41832)
+- Gambit77, Valdacil, Thirdstorm: For AWKCR (https://www.nexusmods.com/fallout4/mods/6091)
 - F4SE team: For F4SE (https://f4se.silverlock.org/), without which this mod would not exist
 - fireundubh: For pyro (https://github.com/fireundubh/pyro), which made developing the scripts for this mod so much easier
 - Neanka, reg2k, shadowslasher410: For the Mod Configuration Menu (https://www.nexusmods.com/fallout4/mods/21497/)
-- Joel Day: For the Papyrus extension (https://marketplace.visualstudio.com/items?itemName=joelday.papyrus-lang-vscode) for Visual Studio Code
-- Dank Rafft: For the Equipment and Crafting Overhaul (ECO) (https://www.nexusmods.com/fallout4/mods/55503) mod
+- Joel Day: For the VS Code Papyrus extension (https://marketplace.visualstudio.com/items?itemName=joelday.papyrus-lang-vscode)
+- Dank Rafft: For Equipment and Crafting Overhaul (ECO) (https://www.nexusmods.com/fallout4/mods/55503)
 
 
 Contact
