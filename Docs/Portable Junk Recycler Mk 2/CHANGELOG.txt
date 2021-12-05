@@ -6,6 +6,7 @@ Table Of Contents
 - Portable Junk Recycler Mk 2
     - Table Of Contents
 - Changelogs
+    - v1.0.2
     - v1.0.1
     - v1.0.0
     - v0.7.0-beta
@@ -22,6 +23,10 @@ Table Of Contents
 
 Changelogs
 ==========
+
+v1.0.2
+------
+- Changed function that adds items to the recyclable item list to move non-recyclable items to a different temporary container instead of removing them outright in order to not have the item think it was dropped. Thanks to Fawzay (https://www.nexusmods.com/users/3463655) on Nexus Mods for reporting this (https://forums.nexusmods.com/index.php?showtopic=10434043/#entry102560068).
 
 v1.0.1
 ------

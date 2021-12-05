@@ -83,6 +83,7 @@ bool EnableProfiling = false
 bool ProfilingActive = false
 ObjectReference TempContainerPrimary
 ObjectReference TempContainerSecondary
+ObjectReference TempContainerTertiary
 bool AsyncSubprocessComplete = false
 
 
@@ -132,6 +133,8 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
         Self._Log("Primary temp container " + TempContainerPrimary + " created (filtered: " + useFilteredContainer + ")")
         TempContainerSecondary = PlayerRef.PlaceAtMe(PortableRecyclerContainer as Form, abForcePersist = true)
         Self._Log("Secondary temp container " + TempContainerSecondary + " created")
+        TempContainerTertiary = PlayerRef.PlaceAtMe(PortableRecyclerContainer as Form, abForcePersist = true)
+        Self._Log("Tertiary temp container " + TempContainerTertiary + " created")
 
         ObjectReference editListContainer = None
 
@@ -164,6 +167,9 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
         Self._Log("Removing secondary temp container " + TempContainerSecondary)
         TempContainerSecondary.Delete()
         TempContainerSecondary = None
+        Self._Log("Removing tertiary temp container " + TempContainerTertiary)
+        TempContainerTertiary.Delete()
+        TempContainerTertiary = None
 
         ; enable the recycle process to be run again
         Self._StopStackProfiling()
@@ -608,18 +614,18 @@ Function UpdateRecyclableItemListNoTouch()
     ; known recyclable items
     If ControlManager.RecyclableItemList.Size
         Self._Log("Removing currently known recyclable items from the temp container")
-        TempContainerSecondary.RemoveItem(ControlManager.RecyclableItemList.List, -1, true, None)
+        TempContainerSecondary.RemoveItem(ControlManager.RecyclableItemList.List, -1, true, TempContainerTertiary)
     EndIf
     ; mods
     Self._Log("Removing mods from the temp container")
-    TempContainerSecondary.RemoveItem(KeywordObjectTypeLooseMod, -1, true, None)
+    TempContainerSecondary.RemoveItem(KeywordObjectTypeLooseMod, -1, true, TempContainerTertiary)
     ; unscrappable items
     Self._Log("Removing unscrappable items from the temp container")
-    TempContainerSecondary.RemoveItem(KeywordUnscrappableObject, -1, true, None)
+    TempContainerSecondary.RemoveItem(KeywordUnscrappableObject, -1, true, TempContainerTertiary)
     ; scrap items
     If ControlManager.ScrapListAll.Size
         Self._Log("Removing scrap items from the temp container")
-        TempContainerSecondary.RemoveItem(ControlManager.ScrapListAll.List, -1, true, None)
+        TempContainerSecondary.RemoveItem(ControlManager.ScrapListAll.List, -1, true, TempContainerTertiary)
     EndIf
 
     ; give the game a moment to update the container's inventory data structure, otherwise the returned array

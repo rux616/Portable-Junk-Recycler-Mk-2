@@ -6,6 +6,7 @@ Table Of Contents
 - [Portable Junk Recycler Mk 2](#portable-junk-recycler-mk-2)
     - [Table Of Contents](#table-of-contents)
 - [Changelogs](#changelogs)
+    - [v1.0.2](#v102)
     - [v1.0.1](#v101)
     - [v1.0.0](#v100)
     - [v0.7.0-beta](#v070-beta)
@@ -23,6 +24,12 @@ Table Of Contents
 Changelogs
 ==========
 
+v1.0.2
+------
+- Changed function that adds items to the recyclable item list to move non-recyclable items to a different temporary container instead of removing them outright in order to not have the item think it was dropped. Thanks to [Fawzay](https://www.nexusmods.com/users/3463655) on Nexus Mods for [reporting this](https://forums.nexusmods.com/index.php?showtopic=10434043/#entry102560068).
+
+([TOC](#table-of-contents))
+
 v1.0.1
 ------
 - Fixed Standalone Workbench detection (now detects it as both StandaloneWorkbenches.esp and StandaloneWorkbenches.esl)
@@ -30,9 +37,13 @@ v1.0.1
 - Added "OG Portable Junk Recycler" and "No Bonuses" to the list of Interesting Configurations
 - Removed some unnecessary options from the Interesting Configuration INI files.
 
+([TOC](#table-of-contents))
+
 v1.0.0
 ------
 - Initial release
+
+([TOC](#table-of-contents))
 
 v0.7.0-beta
 -----------
