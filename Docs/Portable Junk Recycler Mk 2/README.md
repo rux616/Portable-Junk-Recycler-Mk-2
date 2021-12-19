@@ -11,6 +11,7 @@ Table Of Contents
     - [Features](#features)
     - [Requirements](#requirements)
     - [Installation](#installation)
+    - [Load Order](#load-order)
     - [Uninstallation](#uninstallation)
     - [Crafting Materials Required](#crafting-materials-required)
 - [Mod Information](#mod-information)
@@ -102,6 +103,12 @@ I **highly** recommend that you use a mod manager to install this mod, as there 
 
 ([TOC](#table-of-contents))
 
+Load Order
+----------
+The plugins in this mod touch nothing directly and so can go pretty much anywhere in your load order as long as masters are respected.
+
+([TOC](#table-of-contents))
+
 Uninstallation
 --------------
 Note that uninstallation is technically unsupported because this mod uses scripts which will embed data in your save. That being said, if you still want to uninstall, here is a process which attempts to minimize complications.
@@ -161,13 +168,13 @@ The Mk 2 can be crafted at a number of different workbenches from different mods
 - Manufacturing Workbench
 - Utility Workbench
 
+**From ECO:**
+- Utility Station
+
 **From AWKCR:**
 - Adv. Engineering Workbench
 - Electronics Workstation
 - Utility Workbench
-
-**From ECO:**
-- Utility Station
 
 **From vanilla:**
 - Chemistry Station
@@ -188,7 +195,7 @@ Overall, it is a simple formula:
 
     NumberOfComponentsReturned = NumberOfComponentsToRecycle * Multiplier
 
-`Multiplier` is composed of the following:
+`Multiplier` is the sum of the following:
 - Base Multiplier [Default = `1.0`, Min = `0.0`, Max = `2.0`]
 - General Multiplier Adjustment [Default = `0.0`, Min = `-2.0`, Max = `2.0`]
 - Intelligence Multiplier Adjustment [Default Per Point = `0.01`, Min = `0.0`, Max = `1.0`]
@@ -216,6 +223,7 @@ Additionally, the right hand side of the formula (`NumberOfComponentsToRecycle *
 Known Issues
 ------------
 - If the "Return Items Silently" option is set to `OFF` and you add scrap items (acid, bone, adhesive, ceramic, etc.) to the recycler, when the recycling process is complete, you may receive more than one notification for those scrap items that you added. I can't do anything about that without compromising the speed of the recycler (it could add almost an entire extra second to the processing time, at least), so if it is undesired behavior, you can set the "Return Items Silently" option to `ON` or you can set the "Enable Junk Filter" option to `ON` so that scrap items cannot be added to the container in the first place, or both. (Both of those options are `ON` by default.) Alternatively, you can simply choose not to add scrap items.
+- Uncommonly, when activating the device it will simply be consumed and not actually do anything. This is not a bug in the mod, and is caused because events are being blocked. In my experience, that's usually due to a certain flag not getting unset by Workshop Plus. The usual fix for this is to go to an owned settlement, go into workshop mode and stay there for a moment (10-15 seconds ought to do it), then leave workshop mode. To give yourself the item back, open the console and type `player.additem FExxx840`, where 'xxx' is the mod index in your load order.
 
 ([TOC](#table-of-contents))
 
@@ -390,7 +398,7 @@ Scrap Categories
 
 The "Special" category is intended for modders to add components that might not fit into other categories.
 
-If changing any FormList associated with any of the scrap categories, make sure that the contents of the lists match in length and have the corresponding Component and MiscObject forms at the same position in the list. For example, in the "PJRM22_ComponentsC" `[FLST:FExxx810]` list, the first entry is "c_Bone" `[Fallout4.esm:CMPO:xx01FA98]`, which matches the first entry in the "PJRM2_ScrapC" `[FLST:FExxx814]` list, "c_Bone_scrap" `[Fallout4.esm:MISC:xx0AEC5D]`.
+If changing any FormList associated with any of the scrap categories, make sure that the contents of the lists match in length and have the corresponding Component and MiscObject forms at the same position in the list. For example, in the "PJRM2_ComponentsC" `[FLST:FExxx810]` list, the first entry is "c_Bone" `[Fallout4.esm:CMPO:xx01FA98]`, which matches the first entry in the "PJRM2_ScrapC" `[FLST:FExxx814]` list, "c_Bone_scrap" `[Fallout4.esm:MISC:xx0AEC5D]`.
 
 These lists are reread every time a game is loaded.
 
@@ -649,7 +657,7 @@ Credits and Thanks
 - **SavrenX**: For the textures from [SavrenX HD Settlement and Clutters](https://www.nexusmods.com/fallout4/mods/40485)
 - **pra**: For some feature ideas based on [Scrapping Machine](https://www.nexusmods.com/fallout4/mods/35793)
 - **Kentington**: For the OG [Portable Junk Recycler](https://www.nexusmods.com/fallout4/mods/14110)
-- **DieFeM**: For the [code inspiration](https://forums.nexusmods.com/index.php?/topic/7090211-removing-the-notifications-from-removeallitems-used-on-player/page-4#entry64900091) to relatively quickly transfer items from one container to another while bypassing the ObjectReference.RemoveAllItems() function to avoid the crash associated with it
+- **DieFeM**: For the [code inspiration](https://forums.nexusmods.com/index.php?/topic/7090211-removing-the-notifications-from-removeallitems-used-on-player/page-4#entry64900091) to relatively quickly transfer items from one container to another while bypassing the `ObjectReference.RemoveAllItems()` function to avoid the crash associated with it
 - **Lively**: For allowing me to post the beta of this mod on his Discord server to get some play testing done, and for [Lively's Keyword Resource](https://www.nexusmods.com/fallout4/mods/51510)
 - **kinggath**: For save file monitoring via [Canary](https://www.nexusmods.com/fallout4/mods/44949)
 - **Whisper**: For [Standalone Workbenches](https://www.nexusmods.com/fallout4/mods/41832)

@@ -6,6 +6,7 @@ Table Of Contents
 - [Portable Junk Recycler Mk 2](#portable-junk-recycler-mk-2)
     - [Table Of Contents](#table-of-contents)
 - [Changelogs](#changelogs)
+    - [v1.0.3](#v103)
     - [v1.0.2](#v102)
     - [v1.0.1](#v101)
     - [v1.0.0](#v100)
@@ -23,6 +24,14 @@ Table Of Contents
 
 Changelogs
 ==========
+
+v1.0.3
+------
+- Added the `Workbench_General` keyword to the temp containers used in this mod to address an issue with the [Salvage Beacons](https://www.nexusmods.com/fallout4/mods/18757) mod causing the eponymous item to mistakenly trigger
+- Fixed some typos in the documentation
+- Updated the build scripts
+
+([TOC](#table-of-contents))
 
 v1.0.2
 ------

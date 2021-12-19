@@ -9,6 +9,7 @@ by rux616
     - Features
     - Requirements
     - Installation
+    - Load Order
     - Uninstallation
     - Crafting Materials Required
 - Mod Information
@@ -87,6 +88,9 @@ This mod (plus all of its extra bits like images, build scripts, etc.) is also a
 [size=4][b][u]Installation:[/u][/b][/size]
 I [b]highly[/b] recommend that you use a mod manager to install this mod, as there is a FOMOD installer included. I personally recommend Mod Organizer 2, but Vortex is fine too. If you must, however, this mod can be installed by unzipping it directly into the Data folder of your Fallout 4 installation.
 
+[size=4][b][u]Load Order:[/u][/b][/size]
+The plugins in this mod touch nothing directly and so can go pretty much anywhere in your load order as long as masters are respected.
+
 [size=4][b][u]Uninstallation:[/u][/b][/size]
 Note that uninstallation is technically unsupported because this mod uses scripts which will embed data in your save. That being said, if you still want to uninstall, here is a process which attempts to minimize complications.
 
@@ -135,13 +139,13 @@ The Mk 2 can be crafted at a number of different workbenches from different mods
 - Manufacturing Workbench
 - Utility Workbench
 
+[b]From ECO:[/b]
+- Utility Station
+
 [b]From AWKCR:[/b]
 - Adv. Engineering Workbench
 - Electronics Workstation
 - Utility Workbench
-
-[b]From ECO:[/b]
-- Utility Station
 
 [b]From vanilla:[/b]
 - Chemistry Station
@@ -159,7 +163,7 @@ Overall, it is a simple formula:
 
     [font=Courier New][color=#b2b2b2]NumberOfComponentsReturned = NumberOfComponentsToRecycle * Multiplier[/color][/font]
 
-[font=Courier New][color=#b2b2b2]Multiplier[/color][/font] is composed of the following:
+[font=Courier New][color=#b2b2b2]Multiplier[/color][/font] is the sum of the following:
 - Base Multiplier [Default = [font=Courier New][color=#b2b2b2]1.0[/color][/font], Min = [font=Courier New][color=#b2b2b2]0.0[/color][/font], Max = [font=Courier New][color=#b2b2b2]2.0[/color][/font]]
 - General Multiplier Adjustment [Default = [font=Courier New][color=#b2b2b2]0.0[/color][/font], Min = [font=Courier New][color=#b2b2b2]-2.0[/color][/font], Max = [font=Courier New][color=#b2b2b2]2.0[/color][/font]]
 - Intelligence Multiplier Adjustment [Default Per Point = [font=Courier New][color=#b2b2b2]0.01[/color][/font], Min = [font=Courier New][color=#b2b2b2]0.0[/color][/font], Max = [font=Courier New][color=#b2b2b2]1.0[/color][/font]]
@@ -184,6 +188,7 @@ Additionally, the right hand side of the formula ([font=Courier New][color=#b2b2
 
 [size=4][b][u]Known Issues:[/u][/b][/size]
 - If the "Return Items Silently" option is set to [font=Courier New][color=#b2b2b2]OFF[/color][/font] and you add scrap items (acid, bone, adhesive, ceramic, etc.) to the recycler, when the recycling process is complete, you may receive more than one notification for those scrap items that you added. I can't do anything about that without compromising the speed of the recycler (it could add almost an entire extra second to the processing time, at least), so if it is undesired behavior, you can set the "Return Items Silently" option to [font=Courier New][color=#b2b2b2]ON[/color][/font] or you can set the "Enable Junk Filter" option to [font=Courier New][color=#b2b2b2]ON[/color][/font] so that scrap items cannot be added to the container in the first place, or both. (Both of those options are [font=Courier New][color=#b2b2b2]ON[/color][/font] by default.) Alternatively, you can simply choose not to add scrap items.
+- Uncommonly, when activating the device it will simply be consumed and not actually do anything. This is not a bug in the mod, and is caused because events are being blocked. In my experience, that's usually due to a certain flag not getting unset by Workshop Plus. The usual fix for this is to go to an owned settlement, go into workshop mode and stay there for a moment (10-15 seconds ought to do it), then leave workshop mode. To give yourself the item back, open the console and type [font=Courier New][color=#b2b2b2]player.additem FExxx840[/color][/font], where 'xxx' is the mod index in your load order.
 
 
 [size=5][b]Interesting Configurations[/b][/size]
@@ -318,7 +323,7 @@ In "Limited Use" mode, the number of uses left isn't tracked specifically per de
 
 The "Special" category is intended for modders to add components that might not fit into other categories.
 
-If changing any FormList associated with any of the scrap categories, make sure that the contents of the lists match in length and have the corresponding Component and MiscObject forms at the same position in the list. For example, in the "PJRM22_ComponentsC" [font=Courier New][color=#b2b2b2][FLST:FExxx810][/color][/font] list, the first entry is "c_Bone" [font=Courier New][color=#b2b2b2][Fallout4.esm:CMPO:xx01FA98][/color][/font], which matches the first entry in the "PJRM2_ScrapC" [font=Courier New][color=#b2b2b2][FLST:FExxx814][/color][/font] list, "c_Bone_scrap" [font=Courier New][color=#b2b2b2][Fallout4.esm:MISC:xx0AEC5D][/color][/font].
+If changing any FormList associated with any of the scrap categories, make sure that the contents of the lists match in length and have the corresponding Component and MiscObject forms at the same position in the list. For example, in the "PJRM2_ComponentsC" [font=Courier New][color=#b2b2b2][FLST:FExxx810][/color][/font] list, the first entry is "c_Bone" [font=Courier New][color=#b2b2b2][Fallout4.esm:CMPO:xx01FA98][/color][/font], which matches the first entry in the "PJRM2_ScrapC" [font=Courier New][color=#b2b2b2][FLST:FExxx814][/color][/font] list, "c_Bone_scrap" [font=Courier New][color=#b2b2b2][Fallout4.esm:MISC:xx0AEC5D][/color][/font].
 
 These lists are reread every time a game is loaded.
 
@@ -551,7 +556,7 @@ Everything else in this mod created by me is [url=https://creativecommons.org/li
 - [b]SavrenX[/b]: For the textures from [url=https://www.nexusmods.com/fallout4/mods/40485]SavrenX HD Settlement and Clutters[/url]
 - [b]pra[/b]: For some feature ideas based on [url=https://www.nexusmods.com/fallout4/mods/35793]Scrapping Machine[/url]
 - [b]Kentington[/b]: For the OG [url=https://www.nexusmods.com/fallout4/mods/14110]Portable Junk Recycler[/url]
-- [b]DieFeM[/b]: For the [url=https://forums.nexusmods.com/index.php?/topic/7090211-removing-the-notifications-from-removeallitems-used-on-player/page-4#entry64900091]code inspiration[/url] to relatively quickly transfer items from one container to another while bypassing the ObjectReference.RemoveAllItems() function to avoid the crash associated with it
+- [b]DieFeM[/b]: For the [url=https://forums.nexusmods.com/index.php?/topic/7090211-removing-the-notifications-from-removeallitems-used-on-player/page-4#entry64900091]code inspiration[/url] to relatively quickly transfer items from one container to another while bypassing the [font=Courier New][color=#b2b2b2]ObjectReference.RemoveAllItems()[/color][/font] function to avoid the crash associated with it
 - [b]Lively[/b]: For allowing me to post the beta of this mod on his Discord server to get some play testing done, and for [url=https://www.nexusmods.com/fallout4/mods/51510]Lively's Keyword Resource[/url]
 - [b]kinggath[/b]: For save file monitoring via [url=https://www.nexusmods.com/fallout4/mods/44949]Canary[/url]
 - [b]Whisper[/b]: For [url=https://www.nexusmods.com/fallout4/mods/41832]Standalone Workbenches[/url]
