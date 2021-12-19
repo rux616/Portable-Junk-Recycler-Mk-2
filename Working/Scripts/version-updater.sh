@@ -38,7 +38,7 @@ build_number+=1
 sed -Ei "s|(declare -i build_number=')[^']*(')|\1${build_number}\2|" ".version"
 
 # check whether to include the build number
-if ${include_build_number}; then
+if ${include_build_in_version}; then
     build_number_text=${build_number}
 else
     build_number_text=''
@@ -55,8 +55,9 @@ else
     prerelease_classification=''
 fi
 
-# build the version string
+# build the version strings
 version="${version_major}.${version_minor}.${version_patch}${prerelease_classification:+-${prerelease_classification}${prerelease_version:+.${prerelease_version}}}${build_number_text:++${build_number_text}}"
+version_with_build="${version_major}.${version_minor}.${version_patch}${prerelease_classification:+-${prerelease_classification}${prerelease_version:+.${prerelease_version}}}+${build_number}"
 
 # make the file changes
 
@@ -105,10 +106,15 @@ fi
 
 # Scripts/Source/User/Portable Junk Recycler Mk 2 - Release.ppj
 # <Variable Name="ModVersion" Value="..."/>
+# <Variable Name="ModVersionWithBuild" Value="..."/>
 working_file="Scripts/Source/User/Portable Junk Recycler Mk 2 - Release.ppj"
 temp_file="${working_file}.tmp"
 ${make_backups} && cp "${working_file}" "${working_file}${backup_suffix}"
-sed -E "s|(<Variable Name=\"ModVersion\" Value=\")[^\"]*(\"/>)|\1${version}\2|" "${working_file}" > "${temp_file}"
+sed -E \
+    -e "s|(<Variable Name=\"ModVersion\" Value=\")[^\"]*(\"/>)|\1${version}\2|" \
+    -e "s|(<Variable Name=\"ModVersionWithBuild\" Value=\")[^\"]*(\"/>)|\1${version_with_build}\2|" \
+    "${working_file}" \
+    >"${temp_file}"
 if [[ $(sha512sum "${working_file}" | cut -d ' ' -f 1) != $(sha512sum "${temp_file}" | cut -d ' ' -f 1) ]]; then
     mv "${temp_file}" "${working_file}"
 else
@@ -116,4 +122,4 @@ else
 fi
 
 # *.esp
-"./Working/Scripts/plugin-description-version-updater.py3" "$(${make_backups} || printf -- '-n')" "${version}" {"PJRM2 Crafting Category Override - AWKCR Devices","PJRM2 Crafting Category Override - AWKCR Other","PJRM2 Crafting Category Override - AWKCR Tools","PJRM2 Crafting Category Override - LKR Devices","PJRM2 Crafting Category Override - LKR Utility","Portable Junk Recycler Mk 2"}.esp
+"./Working/Scripts/plugin-description-version-updater.py" "$(${make_backups} || printf -- '-n')" "${version}" {"PJRM2 Crafting Category Override - AWKCR Devices","PJRM2 Crafting Category Override - AWKCR Other","PJRM2 Crafting Category Override - AWKCR Tools","PJRM2 Crafting Category Override - LKR Devices","PJRM2 Crafting Category Override - LKR Utility","Portable Junk Recycler Mk 2"}.esp
