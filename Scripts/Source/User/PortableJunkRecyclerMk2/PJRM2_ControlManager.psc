@@ -66,6 +66,8 @@ Group Messages
     Message Property MessageNeverAutoTransferListReset Auto Mandatory
     Message Property MessageNeverAutoTransferListResetFailBusy Auto Mandatory
     Message Property MessageNeverAutoTransferListResetFailRunning Auto Mandatory
+    Message Property MessageIntentionalMoveQueryContainer Auto Mandatory
+    Message Property MessageIntentionalMoveQueryWorld Auto Mandatory
     Message Property MessageUninstalled Auto Mandatory
     Message Property MessageUninstallFailBusy Auto Mandatory
     Message Property MessageUninstallFailRunning Auto Mandatory
@@ -73,6 +75,7 @@ EndGroup
 
 Group Other
     Actor Property PlayerRef Auto Mandatory
+    Potion Property PortableRecyclerItem Auto Mandatory
     WorkshopParentScript Property WorkshopParent Auto Mandatory
     { the workshop parent script
       enables this script to determine whether its in a player-owned settlement or not }
@@ -91,6 +94,7 @@ Group RuntimeState
     bool Property MutexBusy Auto Hidden
     bool Property MutexRunning Auto Hidden
     bool Property MutexWaiting Auto Hidden
+    bool Property MutexItemRemoved Auto Hidden
 
     int Property NumberOfTimesUsed Auto Hidden
 
@@ -131,7 +135,7 @@ int Property iSaveFileMonitor Auto Hidden ; Do not mess with ever - this is used
 
 PJRM2_SettingManager SettingManager
 PJRM2_ThreadManager ThreadManager
-string ModVersion = "1.0.3" const
+string ModVersion = "1.1.0" const
 SettingChangeType AvailableChangeTypes
 string ModName
 bool EnableLogging = false
@@ -231,6 +235,70 @@ Event OnKeyUp(int aiKeyCode, float afTime)
     EndIf
 EndEvent
 
+Event ObjectReference.OnItemRemoved(ObjectReference akSourceContainer, Form akBaseItem, int aiItemCount, \
+        ObjectReference akItemReference, ObjectReference akDestContainer)
+    Self._Log("OnItemRemoved event fired")
+
+    If ! MutexItemRemoved
+        MutexItemRemoved = true
+
+        ; wait a few frames for inventory update
+        Utility.WaitMenuMode(0.045)
+
+        If PlayerRef.GetItemCount(akBaseItem)
+            ; if there are devices still in player inventory, ignore the event
+            Self._Log("Player has at least one device left in their inventory; false alarm")
+        Else
+            Self._Log("Last Mk 2 removed from player inventory")
+            int inventoryRemovalProtectionState = SettingManager.InventoryRemovalProtection
+            bool moveItem = false
+            If inventoryRemovalProtectionState == 0
+                ; off
+                Self._Log("Inventory removal protection: Off")
+            ElseIf inventoryRemovalProtectionState == 1
+                ; ask
+                Self._Log("Inventory removal protection: Ask")
+                If akDestContainer
+                    ; if akDestContainer is not None, item was moved into a container
+                    moveItem = MessageIntentionalMoveQueryContainer.Show()
+                Else
+                    ; else item was dropped into the world
+                    moveItem = MessageIntentionalMoveQueryWorld.Show()
+                EndIf
+            ElseIf inventoryRemovalProtectionState == 2
+                ; auto
+                Self._Log("Inventory removal protection: Automatic")
+                moveItem = true
+            Else
+                ; unknown
+                Self._Log("Inventory removal protection: Unknown (" + inventoryRemovalProtectionState + ")")
+            EndIf
+
+            ; if it has been determined that the item should be moved back, do so
+            If moveItem
+                If akDestContainer && ! akItemReference
+                    ; device was transferred into a container
+                    Self._Log("Device was moved to container: " + akDestContainer)
+                    akDestContainer.RemoveItem(akBaseItem, 1, true)
+                    akSourceContainer.AddItem(akBaseItem, 1, true)
+                ElseIf ! akDestContainer && akItemReference
+                    ; device was dropped from player inventory into the world
+                    Self._Log("Device was dropped: " + akItemReference + " (Qty: " + aiItemCount + ")")
+                    akSourceContainer.AddItem(akItemReference, 1, true)
+                Else
+                    ; unknown state: akDestContainer and akItemReference are both None or not None
+                    ; shouldn't be reachable but detecting just in case
+                    Self._Log("OnItemRemoved: Device in an unknown state!", 1)
+                EndIf
+            EndIf
+        EndIf
+
+        MutexItemRemoved = false
+    Else
+        Self._Log("MutexItemRemoved already engaged")
+    EndIf
+EndEvent
+
 
 
 ; FUNCTIONS
@@ -320,13 +388,13 @@ Function Initialize(bool abQuestInit = false)
         RegisterForKey(LShift)
         RegisterForKey(RShift)
     EndIf
+    RegisterForRemoteEvent(PlayerRef, "OnPlayerLoadGame")
+    RegisterForRemoteEvent(PlayerRef, "OnItemRemoved")
+    AddInventoryEventFilter(PortableRecyclerItem)
     If abQuestInit
-        RegisterForRemoteEvent(PlayerRef, "OnPlayerLoadGame")
         MessageInitialized.Show()
-        Self._Log("Finished onetime init process")
-    Else
-        Self._Log("Finished runtime init process")
     EndIf
+    Self._Log("Finished runtime init process")
 EndFunction
 
 ; check to see if F4SE is installed
@@ -613,6 +681,25 @@ Function ResetNeverAutoTransferList()
     EndIf
 EndFunction
 
+; device activated via hotkey
+Function HotkeyDeviceActivation()
+    Self._Log("Hotkey device activation triggered")
+    If PlayerRef.GetItemCount(PortableRecyclerItem)
+        Self._Log("Player has a device in their inventory")
+        PlayerRef.EquipItem(PortableRecyclerItem, false, true)
+    Else
+        Self._Log("Player does not have a device in their inventory")
+    EndIf
+EndFunction
+
+; device activated via hotkey (global function)
+; exists because MCM can't yet distinguish between different scripts attached to forms when using
+; the 'CallFunction' hotkey type
+Function HotkeyDeviceActivationGlobal() Global
+    (Game.GetFormFromFile(0x800, "Portable Junk Recycler Mk 2.esp") as \
+        PortableJunkRecyclerMk2:PJRM2_ControlManager).HotkeyDeviceActivation()
+EndFunction
+
 ; Canary support
 ; https://www.nexusmods.com/fallout4/mods/44949
 Function CheckForCanary()
@@ -894,11 +981,14 @@ Function Uninstall()
         MessageNeverAutoTransferListReset = None
         MessageNeverAutoTransferListResetFailBusy = None
         MessageNeverAutoTransferListResetFailRunning = None
+        MessageIntentionalMoveQueryContainer = None
+        MessageIntentionalMoveQueryWorld = None
         MessageUninstallFailRunning = None
         MessageUninstallFailBusy = None
 
         ; group Other
         PlayerRef = None
+        PortableRecyclerItem = None
         WorkshopParent = None
         RecyclableItemList.List.Revert()
         RecyclableItemList = None

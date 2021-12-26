@@ -130,6 +130,11 @@ Group Settings
             Return ReturnItemsSilently_Var.Value
         EndFunction
     EndProperty
+    int Property InventoryRemovalProtection Hidden
+        int Function Get()
+            Return InventoryRemovalProtection_Var.Value
+        EndFunction
+    EndProperty
 
     ; recycler interface - crafting
     int Property CraftingStation Hidden
@@ -495,6 +500,7 @@ SettingBool UseNeverAutoTransferList_Var
 SettingBool EnableAutoTransferListEditing_Var
 SettingBool EnableBehaviorOverrides_Var
 SettingBool ReturnItemsSilently_Var
+SettingInt InventoryRemovalProtection_Var
 
 ; recycler interface - crafting
 SettingInt CraftingStation_Var
@@ -733,6 +739,10 @@ Function InitSettings(bool abForce = false)
     If abForce || ! ReturnItemsSilently_Var
         Self._Log("Initializing ReturnItemsSilently_Var")
         ReturnItemsSilently_Var = new SettingBool
+    EndIf
+    If abForce || ! InventoryRemovalProtection_Var
+        Self._Log("Initializing InventoryRemovalProtection_Var")
+        InventoryRemovalProtection_Var = new SettingInt
     EndIf
 
     ; recycler interface - crafting
@@ -1094,6 +1104,11 @@ Function InitSettingsSupplemental()
     ReturnItemsSilently_Var.ValueDefault = true
     ReturnItemsSilently_Var.McmId = "bReturnItemsSilently:Behavior"
 
+    InventoryRemovalProtection_Var.ValueDefault = 0
+    InventoryRemovalProtection_Var.McmId = "iInventoryRemovalProtection:Behavior"
+    InventoryRemovalProtection_Var.ValueMin = 0
+    InventoryRemovalProtection_Var.ValueMax = 2
+
     ; recycler interface - crafting
     CraftingStation_Var.ValueDefault = 0
     CraftingStation_Var.McmId = "iCraftingStation:Crafting"
@@ -1406,6 +1421,7 @@ var[] Function CollectMCMSettings()
     toReturn.Add(EnableAutoTransferListEditing_Var)
     toReturn.Add(EnableBehaviorOverrides_Var)
     toReturn.Add(ReturnItemsSilently_Var)
+    toReturn.Add(InventoryRemovalProtection_Var)
 
     ; recycler interface - crafting
     toReturn.Add(CraftingStation_Var)
@@ -1710,6 +1726,10 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             oldValue = ReturnItemsSilently_Var.Value
             LoadSettingFromMCM(ReturnItemsSilently_Var, ModName)
             newValue = ReturnItemsSilently_Var.Value
+        ElseIf asControlId == InventoryRemovalProtection_Var.McmId
+            oldValue = InventoryRemovalProtection_Var.Value
+            LoadSettingFromMCM(InventoryRemovalProtection_Var, ModName)
+            newValue = InventoryRemovalProtection_Var.Value
 
         ; recycler interface - crafting
         ElseIf asControlId == CraftingStation_Var.McmId
@@ -2012,6 +2032,7 @@ Function Uninstall()
     EnableAutoTransferListEditing_Var = None
     EnableBehaviorOverrides_Var = None
     ReturnItemsSilently_Var = None
+    InventoryRemovalProtection_Var = None
     ; multiplier adjustments - general
     MultAdjustGeneralSettlement_Var = None
     MultAdjustGeneralSettlementC_Var = None
