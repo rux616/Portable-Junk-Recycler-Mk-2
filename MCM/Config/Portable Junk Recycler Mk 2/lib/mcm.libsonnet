@@ -94,6 +94,7 @@
       params: 'params',
       plugin_requirements: 'pluginRequirements',
       property_name: 'propertyName',
+      script: 'script',
       script_name: 'scriptName',
       source_form: 'sourceForm',
       source_type: 'sourceType',
@@ -211,13 +212,14 @@
           [if params != null then base.field.params else null]: params,
         },
       },
+      // script_name isn't yet supported by the CallFunction type
       call_function(form, function_name, params=null, script_name=null): function_base(base.type.action.call_function, function_name, params) + {
         [base.field.action]+: {
           [base.field.form]: form,
           [if script_name != null then base.field.script_name else null]: script_name,
         },
       },
-      call_global_function(script, function_name, params=null): function_base(base.type.action.call_function, function_name, params) + {
+      call_global_function(script, function_name, params=null): function_base(base.type.action.call_global_function, function_name, params) + {
         [base.field.action]+: {
           [base.field.script]: script,
         },
