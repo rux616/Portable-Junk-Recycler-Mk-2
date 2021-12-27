@@ -146,5 +146,9 @@
 * [X] remove base art assets from repo
 * [X] add text to README ('Copyright and Licensing' section) saying same thing that nexus mods 'mod permissions' page says
 * [X] add troubleshooting section to README, include things like the mod log, how to turn on papyrus logging, etc.
+* [X] add an option for the device to be sticky to the player inventory: OFF (don't do it - default), ASK (ask if the player wanted to move it), AUTOMATIC (automatically move it back to the player inventory)
+    * [X] figure out setting name (InventoryRemovalProtection)
+    * use a remote event `OnItemRemoved()` to get events for when a device is removed from the player
+* [X] add MCM hotkey to activate directly
 * version locations:
     * .version file

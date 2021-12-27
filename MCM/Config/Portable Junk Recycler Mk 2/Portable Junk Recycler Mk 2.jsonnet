@@ -56,7 +56,7 @@ local threads_step = 1;
   local mod = {
     name: 'Portable Junk Recycler Mk 2',
     localized_name: '$PortableJunkRecyclerMk2',
-    version: '1.0.3',
+    version: '1.1.0',
     plugin_name: mod.name + '.esp',
     quest_form: mod.plugin_name + '|800',
     control_script: 'PortableJunkRecyclerMk2:PJRM2_ControlManager',
@@ -139,6 +139,7 @@ local threads_step = 1;
           mcm.control.switcher(text='$EnableAutoTransferListEditingText', source=mcm.helper.source.mod_setting.bool(id='bEnableAutoTransferListEditing:Behavior'), group=mcm.helper.group.control(mod.group_id.edit_auto_transfer_list), help='$EnableAutoTransferListEditingHelp'),
           mcm.control.switcher(text='$EnableBehaviorOverridesText', source=mcm.helper.source.mod_setting.bool(id='bEnableBehaviorOverrides:Behavior'), group=mcm.helper.group.control(mod.group_id.behavior_override), help='$EnableBehaviorOverridesHelp'),
           mcm.control.switcher(text='$ReturnItemsSilentlyText', source=mcm.helper.source.mod_setting.bool(id='bReturnItemsSilently:Behavior'), help='$ReturnItemsSilentlyHelp'),
+          mcm.control.dropdown(text='$InventoryRemovalProtectionText', options=[str_off, '$Ask', '$Automatic'], source=mcm.helper.source.mod_setting.int(id='iInventoryRemovalProtection:Behavior'), help='$InventoryRemovalProtectionHelp'),
           mcm.control.spacer(lines=1),
           mcm.control.text(text='$TransferLowWeightRatioItemsNote'),
           mcm.control.spacer(lines=1),
@@ -151,6 +152,7 @@ local threads_step = 1;
 
           // recycler interface - hotkeys
           mcm.control.section(text='$Hotkeys'),
+          mcm.control.hotkey(text='$ActivateDeviceText', id='HotkeyDeviceActivation', help='$ActivateDeviceHelp'),
           mcm.control.stepper(text='$BehaviorOverrideForceAutoRecyclingModeText', options=['$HotkeyCtrlShift'], group=mcm.helper.group.condition.or(mod.group_id.behavior_override), help='$BehaviorOverrideForceAutoRecyclingModeHelp'),
           mcm.control.stepper(text='$BehaviorOverrideForceTransferJunkText', options=['$HotkeyShift'], group=mcm.helper.group.condition.or(mod.group_id.behavior_override), help='$BehaviorOverrideForceTransferJunkHelp'),
           mcm.control.stepper(text='$BehaviorOverrideForceRetainJunkText', options=['$HotkeyCtrl'], group=mcm.helper.group.condition.or(mod.group_id.behavior_override), help='$BehaviorOverrideForceRetainJunkHelp'),
@@ -391,6 +393,14 @@ local threads_step = 1;
           mcm.control.button(text='$UninstallModText', action=mcm.helper.action.call_function(form=mod.quest_form, function_name='Uninstall', script_name=mod.control_script), group=mcm.helper.group.condition.or(mod.group_id.uninstall_safeguard), help='$UninstallModHelp'),
         ],
       },
+    ],
+  },
+
+  'keybinds.json': {
+    [mcm.field.mod_name]: mod.name,
+    [mcm.field.keybinds]: [
+      // mcm.keybind(id='HotkeyDeviceActivation', desc='$ActivateDeviceText', action=mcm.helper.action.call_function(form=mod.quest_form, function_name='HotkeyDeviceActivation', script_name=mod.control_script)),
+      mcm.keybind(id='HotkeyDeviceActivation', desc='$ActivateDeviceText', action=mcm.helper.action.call_global_function(script=mod.control_script, function_name='HotkeyDeviceActivationGlobal')),
     ],
   },
 }

@@ -80,12 +80,14 @@ Features
 - Has a fully automatic mode (just activate the device and it processes junk items in your inventory)
 - Dynamically supports crafting the device at the "Utility Workbench" from Standalone Workbenches, the "Utility Station" from ECO, or the "Utility Workbench" from AWKCR (order of priority is Standalone Workbenches > ECO > AWKCR), can also be crafted at a number of other workbenches
 - Additional plugins included to change the crafting category of the Mk 2
+- Can be activated via an MCM hotkey
 - Can be configured to only have a limited number uses
 - Sane defaults, so even if not customized, it will work well out of the box
 - Customized low- and high-res textures
 - Doesn't require any DLC
 - Dynamic support of up to 5 ranks of the Scrapper perk (if you have some mod that adds them)
 - The mesh used for the device has physics, so it won't just hang in the air if you ever drop it from your inventory
+- Can be configured to move Mk 2 device back to the player's inventory if the last one gets removed, optionally asking first
 - [Canary](https://www.nexusmods.com/fallout4/mods/44949) save file monitor support
 
 ([TOC](#table-of-contents))
@@ -433,9 +435,11 @@ Settings Layout in MCM
     - Enable Automatic Transfer List Editing [Default = `OFF`, Possible Values = `OFF`/`ON`]
     - Enable Behavior Overrides [Default = `OFF`, Possible Values = `OFF`/`ON`]
     - Return Items Silently [Default = `ON`, Possible Values = `OFF`/`ON`]
+    - Inventory Removal Protection [Default = `OFF`, Possible Values = `OFF`/`Ask First`/`Automatic`]
 - Crafting
     - Crafting Station [Default = `Dynamic`, Possible Values = `Dynamic`/`Chemistry Station (Vanilla)`/`Electronics Workbench (SW)`/`Engineering Workbench (SW)`/`Manufacturing Workbench (SW)`/`Utility Workbench (SW)`/`Adv. Engineering Workbench AWKCR)`/`Electronics Workstation (AWKCR)`/`Utility Workbench (AWKCR)`/`Utility Station (ECO)`]
 - Hotkeys
+    - Activate Portable Junk Recycler Mk 2 [Default = `None`]
     - Behavior Override: Force Automatic Recycling Mode [Default = `Ctrl-Shift`, Possible Values = `(locked)`]
     - Behavior Override: Force Transfer Junk [Default = `Shift`, Possible Values = `(locked)`]
     - Behavior Override: Force Retain Junk [Default = `Ctrl`, Possible Values = `(locked)`]

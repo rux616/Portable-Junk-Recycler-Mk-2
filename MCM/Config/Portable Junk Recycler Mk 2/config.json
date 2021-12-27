@@ -12,7 +12,7 @@
       },
       {
          "html": true,
-         "text": "<p align=\"center\">v1.0.3</p>",
+         "text": "<p align=\"center\">v1.1.0</p>",
          "type": "text"
       },
       {
@@ -304,6 +304,20 @@
                }
             },
             {
+               "help": "$InventoryRemovalProtectionHelp",
+               "id": "iInventoryRemovalProtection:Behavior",
+               "text": "$InventoryRemovalProtectionText",
+               "type": "dropdown",
+               "valueOptions": {
+                  "options": [
+                     "$OFF",
+                     "$Ask",
+                     "$Automatic"
+                  ],
+                  "sourceType": "ModSettingInt"
+               }
+            },
+            {
                "lines": 1,
                "type": "spacer"
             },
@@ -351,6 +365,12 @@
             {
                "text": "$Hotkeys",
                "type": "section"
+            },
+            {
+               "help": "$ActivateDeviceHelp",
+               "id": "HotkeyDeviceActivation",
+               "text": "$ActivateDeviceText",
+               "type": "hotkey"
             },
             {
                "groupCondition": {

@@ -1,0 +1,14 @@
+{
+   "keybinds": [
+      {
+         "action": {
+            "function": "HotkeyDeviceActivationGlobal",
+            "script": "PortableJunkRecyclerMk2:PJRM2_ControlManager",
+            "type": "CallGlobalFunction"
+         },
+         "desc": "$ActivateDeviceText",
+         "id": "HotkeyDeviceActivation"
+      }
+   ],
+   "modName": "Portable Junk Recycler Mk 2"
+}
