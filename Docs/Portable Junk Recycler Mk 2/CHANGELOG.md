@@ -6,6 +6,7 @@ Table Of Contents
 - [Portable Junk Recycler Mk 2](#portable-junk-recycler-mk-2)
     - [Table Of Contents](#table-of-contents)
 - [Changelogs](#changelogs)
+    - [v1.1.0](#v110)
     - [v1.0.3](#v103)
     - [v1.0.2](#v102)
     - [v1.0.1](#v101)
@@ -24,6 +25,15 @@ Table Of Contents
 
 Changelogs
 ==========
+
+v1.1.0
+------
+- Added MCM setting: 'Inventory Removal Protection' ('Recycler Interface' page) - choose whether to enable inventory removal protection, which will move the device back into the player's inventory if it's the last one and gets removed, optionally asking first
+- Added MCM hotkey: 'Activate Portable Junk Recycler Mk 2' ('Recycler Interface' page) - press this hotkey with a Mk 2 in your inventory to activate it
+- Fixed a bug in the MCM Jsonnet library
+- Fixed an issue where .py files would get converted back to CRLF line endings upon pushing to GitHub
+
+([TOC](#table-of-contents))
 
 v1.0.3
 ------

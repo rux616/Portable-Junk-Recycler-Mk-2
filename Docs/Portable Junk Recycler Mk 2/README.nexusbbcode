@@ -73,12 +73,14 @@ This mod (plus all of its extra bits like images, build scripts, etc.) is also a
 - Has a fully automatic mode (just activate the device and it processes junk items in your inventory)
 - Dynamically supports crafting the device at the "Utility Workbench" from Standalone Workbenches, the "Utility Station" from ECO, or the "Utility Workbench" from AWKCR (order of priority is Standalone Workbenches > ECO > AWKCR), can also be crafted at a number of other workbenches
 - Additional plugins included to change the crafting category of the Mk 2
+- Can be activated via an MCM hotkey
 - Can be configured to only have a limited number uses
 - Sane defaults, so even if not customized, it will work well out of the box
 - Customized low- and high-res textures
 - Doesn't require any DLC
 - Dynamic support of up to 5 ranks of the Scrapper perk (if you have some mod that adds them)
 - The mesh used for the device has physics, so it won't just hang in the air if you ever drop it from your inventory
+- Can be configured to move Mk 2 device back to the player's inventory if the last one gets removed, optionally asking first
 - [url=https://www.nexusmods.com/fallout4/mods/44949]Canary[/url] save file monitor support
 
 [size=4][b][u]Requirements:[/u][/b][/size]
@@ -353,9 +355,11 @@ These lists are reread every time a game is loaded.
     - Enable Automatic Transfer List Editing [Default = [font=Courier New][color=#b2b2b2]OFF[/color][/font], Possible Values = [font=Courier New][color=#b2b2b2]OFF[/color][/font]/[font=Courier New][color=#b2b2b2]ON[/color][/font]]
     - Enable Behavior Overrides [Default = [font=Courier New][color=#b2b2b2]OFF[/color][/font], Possible Values = [font=Courier New][color=#b2b2b2]OFF[/color][/font]/[font=Courier New][color=#b2b2b2]ON[/color][/font]]
     - Return Items Silently [Default = [font=Courier New][color=#b2b2b2]ON[/color][/font], Possible Values = [font=Courier New][color=#b2b2b2]OFF[/color][/font]/[font=Courier New][color=#b2b2b2]ON[/color][/font]]
+    - Inventory Removal Protection [Default = [font=Courier New][color=#b2b2b2]OFF[/color][/font], Possible Values = [font=Courier New][color=#b2b2b2]OFF[/color][/font]/[font=Courier New][color=#b2b2b2]Ask First[/color][/font]/[font=Courier New][color=#b2b2b2]Automatic[/color][/font]]
 - Crafting
     - Crafting Station [Default = [font=Courier New][color=#b2b2b2]Dynamic[/color][/font], Possible Values = [font=Courier New][color=#b2b2b2]Dynamic[/color][/font]/[font=Courier New][color=#b2b2b2]Chemistry Station (Vanilla)[/color][/font]/[font=Courier New][color=#b2b2b2]Electronics Workbench (SW)[/color][/font]/[font=Courier New][color=#b2b2b2]Engineering Workbench (SW)[/color][/font]/[font=Courier New][color=#b2b2b2]Manufacturing Workbench (SW)[/color][/font]/[font=Courier New][color=#b2b2b2]Utility Workbench (SW)[/color][/font]/[font=Courier New][color=#b2b2b2]Adv. Engineering Workbench AWKCR)[/color][/font]/[font=Courier New][color=#b2b2b2]Electronics Workstation (AWKCR)[/color][/font]/[font=Courier New][color=#b2b2b2]Utility Workbench (AWKCR)[/color][/font]/[font=Courier New][color=#b2b2b2]Utility Station (ECO)[/color][/font]]
 - Hotkeys
+    - Activate Portable Junk Recycler Mk 2 [Default = [font=Courier New][color=#b2b2b2]None[/color][/font]]
     - Behavior Override: Force Automatic Recycling Mode [Default = [font=Courier New][color=#b2b2b2]Ctrl-Shift[/color][/font], Possible Values = [font=Courier New][color=#b2b2b2](locked)[/color][/font]]
     - Behavior Override: Force Transfer Junk [Default = [font=Courier New][color=#b2b2b2]Shift[/color][/font], Possible Values = [font=Courier New][color=#b2b2b2](locked)[/color][/font]]
     - Behavior Override: Force Retain Junk [Default = [font=Courier New][color=#b2b2b2]Ctrl[/color][/font], Possible Values = [font=Courier New][color=#b2b2b2](locked)[/color][/font]]
