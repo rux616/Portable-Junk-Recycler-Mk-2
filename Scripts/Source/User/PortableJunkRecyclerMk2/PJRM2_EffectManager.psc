@@ -234,8 +234,8 @@ Function Recycle(bool abForceRetainJunk, bool abForceTransferJunk)
     ;   - the ForceTransferJunk hotkey IS pressed
     ;   - the ForceRetainJunk hotkey IS NOT pressed && the AutoTransferJunk option is ON
     ;   - the ForceRetainJunk hotkey IS NOT pressed && the AutoRecycleMode option is ON
-    bool transferJunk = abForceTransferJunk || (! abForceRetainJunk && SettingManager.AutoTransferJunk) || \
-        (! abForceRetainJunk && SettingManager.AutoRecyclingMode)
+    bool transferJunk = abForceTransferJunk || (! abForceRetainJunk && SettingManager.AutoTransferJunk) \
+        || (! abForceRetainJunk && SettingManager.AutoRecyclingMode)
     Self._Log("Transfer junk: " + transferJunk)
 
     ; all junk will be automatically transferred under the following conditions (otherwise just low component weight ratio items):
@@ -243,10 +243,10 @@ Function Recycle(bool abForceRetainJunk, bool abForceTransferJunk)
     ;   - the ForceTransferJunk hotkey IS pressed && the ForceRetainJunk hotkey IS NOT pressed
     ;   - the player IS in a player-owned settlement && the TransferLowWeightRatioItems option is set to 'not in player-owned settlements'
     ;   - the player IS NOT in a player-owned settlement && the TransferLowWeightRatioItems option is set to 'in player-owned settlements'
-    bool transferAllJunk = ! SettingManager.TransferLowWeightRatioItems || \
-        (abForceTransferJunk && ! abForceRetainJunk) || \
-        (playerAtOwnedWorkshop && SettingManager.TransferLowWeightRatioItems == 2) || \
-        (! playerAtOwnedWorkshop && SettingManager.TransferLowWeightRatioItems == 1)
+    bool transferAllJunk = ! SettingManager.TransferLowWeightRatioItems \
+        || (abForceTransferJunk && ! abForceRetainJunk) \
+        || (playerAtOwnedWorkshop && SettingManager.TransferLowWeightRatioItems == 2) \
+        || (! playerAtOwnedWorkshop && SettingManager.TransferLowWeightRatioItems == 1)
     Self._Log("Transfer ALL junk: " + transferAllJunk)
 
     ; the recyclable item FormList will be updated under the following conditions:
@@ -265,8 +265,8 @@ Function Recycle(bool abForceRetainJunk, bool abForceTransferJunk)
     ;   - the AutoRecyclingMode option is OFF && the ForceRetainJunk hotkey IS NOT pressed
     ;   - the ForceRetainJunk hotkey IS pressed && the ForceTransferJunk hotkey IS NOT pressed
     ;   - the ForceRetainJunk hotkey IS NOT pressed && the ForceTransferJunk hotkey IS pressed
-    bool openContainer = (! SettingManager.AutoRecyclingMode && ! abForceRetainJunk) || \
-        (abForceRetainJunk && ! abForceTransferJunk) || (! abForceRetainJunk && abForceTransferJunk)
+    bool openContainer = (! SettingManager.AutoRecyclingMode && ! abForceRetainJunk) \
+        || (abForceRetainJunk && ! abForceTransferJunk) || (! abForceRetainJunk && abForceTransferJunk)
     Self._Log("Open container: " + openContainer)
 
     ; get the set of multipliers that will be applied to this recycling run
