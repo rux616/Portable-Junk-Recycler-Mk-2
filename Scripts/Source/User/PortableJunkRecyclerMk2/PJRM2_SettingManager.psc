@@ -1566,57 +1566,64 @@ Function CallbackCraftingStation()
     EndIf
     bool isECOInstalled = Game.IsPluginInstalled(pluginNameECO)
     bool isAWKCRInstalled = Game.IsPluginInstalled(pluginNameAWKCR)
+    Keyword craftingStationKeyword = none
 
     ; handle 'dynamic' workbenches first
     If (CraftingStation_Var.Value == 5 || CraftingStation_Var.Value == 0) && isSWInstalled
         ; Standalone Workbenches - Utility Workbench (Keyword FExxx81C - wSW_UtilityWorkbench_CraftingKey)
         Self._Log("Crafting station: Standalone Workbenches - Utility Workbench")
-        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x81C, pluginNameSW) as Keyword)
+        craftingStationKeyword = Game.GetFormFromFile(0x81C, pluginNameSW) as Keyword
     ElseIf (CraftingStation_Var.Value == 9 || CraftingStation_Var.Value == 0) && isECOInstalled
         ; Equipment and Crafting Overhaul - Utility Station (Keyword xx02788D - Dank_Workbench_TypeUtility)
         Self._Log("Crafting station: Equipment and Crafting Overhaul - Utility Station")
-        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x02788D, pluginNameECO) as Keyword)
+        craftingStationKeyword = Game.GetFormFromFile(0x02788D, pluginNameECO) as Keyword
     ElseIf (CraftingStation_Var.Value == 8 || CraftingStation_Var.Value == 0) && isAWKCRInstalled
         ; AWKCR - Utility Workbench (Keyword xx001765 - AEC_ck_UtilityCraftingKey)
         Self._Log("Crafting station: AWKCR - Utility Workbench")
-        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x001765, pluginNameAWKCR) as Keyword)
+        craftingStationKeyword = Game.GetFormFromFile(0x001765, pluginNameAWKCR) as Keyword
 
     ; handle other manual workbench choices
     ElseIf CraftingStation_Var.Value == 2 && isSWInstalled
         ; Standalone Workbenches - Electronics Workbench (Keyword FExxx80D - wSW_ElectronicsWorkbench_CraftingKey)
         Self._Log("Crafting station: Standalone Workbenches - Electronics Workbench")
-        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x80D, pluginNameSW) as Keyword)
+        craftingStationKeyword = Game.GetFormFromFile(0x80D, pluginNameSW) as Keyword
     ElseIf CraftingStation_Var.Value == 3 && isSWInstalled
         ; Standalone Workbenches - Engineering Workbench (Keyword FExxx810 - wSW_EngineeringWorkbench_CraftingKey)
         Self._Log("Crafting station: Standalone Workbenches - Engineering Workbench")
-        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x810, pluginNameSW) as Keyword)
+        craftingStationKeyword = Game.GetFormFromFile(0x810, pluginNameSW) as Keyword
     ElseIf CraftingStation_Var.Value == 4 && isSWInstalled
         ; Standalone Workbenches - Manufacturing Workbench (Keyword FExxx822 - wSW_ManufacturingWorkbench_CraftingKey)
         Self._Log("Crafting station: Standalone Workbenches - Manufacturing Workbench")
-        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x822, pluginNameSW) as Keyword)
+        craftingStationKeyword = Game.GetFormFromFile(0x822, pluginNameSW) as Keyword
     ElseIf CraftingStation_Var.Value == 6 && isAWKCRInstalled
         ; AWKCR - Advanced Engineering Workbench (Keyword xx00195A - AEC_ck_AdvancedEngineeringCraftingKey)
         Self._Log("Crafting station: AWKCR - Advanced Engineering Workbench")
-        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x00195A, pluginNameAWKCR) as Keyword)
+        craftingStationKeyword = Game.GetFormFromFile(0x00195A, pluginNameAWKCR) as Keyword
     ElseIf CraftingStation_Var.Value == 7 && isAWKCRInstalled
         ; AWKCR - Electronics Workstation (Keyword xx001764 - AEC_ck_ElectronicsCraftingKey)
         Self._Log("Crafting station: AWKCR - Electronics Workstation")
-        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x001764, pluginNameAWKCR) as Keyword)
+        craftingStationKeyword = Game.GetFormFromFile(0x001764, pluginNameAWKCR) as Keyword
+    EndIf
 
-    ; handle everything else, like missing mods, etc
-    Else ; CraftingStation.Value == 1
+    ; handle everything else, like missing mods, missing keywords, etc
+    If !craftingStationKeyword
         ; Vanilla - Chemistry Station (Keyword xx102158 - WorkbenchChemlab)
-        If CraftingStation_Var.Value >= 2 && CraftingStation_Var.Value <= 5
-            Self._Log("Crafting station: Standalone Workbenches workbench specified but mod not detected; falling back to vanilla")
+        If CraftingStation_Var.Value == 0 && (isSWInstalled || isECOInstalled || isAWKCRInstalled)
+            Self._Log("Crafting station: Dynamic workbench specified and supported mod found, but keyword not detected; falling back to vanilla")
+        ElseIf CraftingStation_Var.Value >= 2 && CraftingStation_Var.Value <= 5
+            Self._Log("Crafting station: Standalone Workbenches workbench specified but mod or keyword not detected; falling back to vanilla")
         ElseIF CraftingStation_Var.Value >= 6 && CraftingStation_Var.Value <= 8
-            Self._Log("Crafting station: AWKCR workbench specified but mod not detected; falling back to vanilla")
+            Self._Log("Crafting station: AWKCR workbench specified but mod or keyword not detected; falling back to vanilla")
         ElseIf CraftingStation_Var.Value == 9
-            Self._Log("Crafting station: ECO workbench specified but mod not detected; falling back to vanilla")
+            Self._Log("Crafting station: ECO workbench specified but mod or keyword not detected; falling back to vanilla")
         Else
             Self._Log("Crafting station: Vanilla - Chemistry Station")
         EndIf
-        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(Game.GetFormFromFile(0x102158, "Fallout4.esm") as Keyword)
+        craftingStationKeyword = Game.GetFormFromFile(0x102158, "Fallout4.esm") as Keyword
     EndIf
+
+    ; actually set the keyword
+    PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(craftingStationKeyword)
 EndFunction
 
 Function CallbackEnableLogging(bool abOldValue, bool abNewValue)

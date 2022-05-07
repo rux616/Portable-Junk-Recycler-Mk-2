@@ -19,10 +19,9 @@
         <Variable Name="CompilePath" Value="@ModPath\Scripts"/>
         <Variable Name="ScriptsPathMCM" Value="@ModPath\..\Mod Configuration Menu\Scripts\Source"/>
         <Variable Name="ScriptsPathF4SE" Value="@ModPath\..\F4SE Scripts\Scripts\Source"/>
-        <Variable Name="ScriptsPathVanilla" Value="@ModPath\..\[NoDelete] Vanilla Scripts Source\Scripts\Source"/>
+        <Variable Name="ScriptsPathVanilla" Value="@ModPath\..\[NoDelete] [DEV] Vanilla Scripts Source\Scripts\Source"/>
     </Variables>
     <Imports>
-        <Import>.</Import>
         <Import>@ScriptsPathMCM\User</Import>
         <Import>@ScriptsPathF4SE\User</Import>
         <Import>@ScriptsPathVanilla\Base</Import>

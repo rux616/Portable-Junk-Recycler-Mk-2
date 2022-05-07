@@ -6,6 +6,7 @@ Table Of Contents
 - [Portable Junk Recycler Mk 2](#portable-junk-recycler-mk-2)
     - [Table Of Contents](#table-of-contents)
 - [Changelogs](#changelogs)
+    - [v1.1.1](#v111)
     - [v1.1.0](#v110)
     - [v1.0.3](#v103)
     - [v1.0.2](#v102)
@@ -25,6 +26,13 @@ Table Of Contents
 
 Changelogs
 ==========
+
+v1.1.1
+------
+- Fixed an issue with the 'Crafting Station' setting ('Recycler Interface' page) where if a mod was detected but the keyword that was being looked for didn't exist in the mod (such as in old versions of AWKCR), the recipe would simply disappear
+- Updated documentation
+
+([TOC](#table-of-contents))
 
 v1.1.0
 ------
