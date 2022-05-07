@@ -9,12 +9,14 @@
             "problemMatcher": [
                 "$PapyrusCompiler"
             ],
-            "label": "pyro: Compile Project (Portable Junk Recycler Mk 2 - Release)",
+            "label": "pyro: Compile Project (Release)",
             "group": {
                 "kind": "build",
                 "isDefault": true,
             },
-            "dependsOn": ["pyro: Compile Project (Portable Junk Recycler Mk 2 - Debug)"],
+            "dependsOn": [
+                "pyro: Compile Project (Debug)"
+            ],
         },
         {
             "type": "pyro",
@@ -23,57 +25,93 @@
             "problemMatcher": [
                 "$PapyrusCompiler"
             ],
-            "label": "pyro: Compile Project (Portable Junk Recycler Mk 2 - Debug)",
-            "dependsOn": ["Render JSON"],
+            "label": "pyro: Compile Project (Debug)",
+            "dependsOn": [
+                "Render JSON"
+            ],
         },
         {
             "label": "Render JSON",
             "type": "shell",
             "command": "jsonnet",
-            "args": ["-m", ".", "Portable Junk Recycler Mk 2.jsonnet"],
+            "args": [
+                "-m",
+                ".",
+                "Portable Junk Recycler Mk 2.jsonnet"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}/MCM/Config/Portable Junk Recycler Mk 2",
             },
-            "dependsOn": ["Format Jsonnet"],
+            "dependsOn": [
+                "Format Jsonnet"
+            ],
         },
         {
             "label": "Format Jsonnet",
             "type": "shell",
             "command": "jsonnetfmt",
-            "args": ["-i", "Portable Junk Recycler Mk 2.jsonnet"],
+            "args": [
+                "-i",
+                "Portable Junk Recycler Mk 2.jsonnet"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}/MCM/Config/Portable Junk Recycler Mk 2",
             },
-            "dependsOn": ["Render Markdown to Nexus BBCode"],
+            "dependsOn": [
+                "Render Markdown to Nexus BBCode"
+            ],
         },
         {
             "label": "Render Markdown to Nexus BBCode",
             "type": "shell",
             "command": "bash",
-            "args": ["-c", "../../Working/Scripts/markdown-to-nexusbbcode.sh README.md"],
+            "args": [
+                "-c",
+                "../../Working/Scripts/markdown-to-nexusbbcode.sh README.md"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}/Docs/Portable Junk Recycler Mk 2",
             },
-            "dependsOn": ["Render Markdown to Plaintext"],
+            "dependsOn": [
+                "Render Markdown to Plaintext"
+            ],
         },
         {
             "label": "Render Markdown to Plaintext",
             "type": "shell",
             "command": "bash",
-            "args": ["-c", "../../Working/Scripts/markdown-to-plaintext.sh README.md CHANGELOG.md"],
+            "args": [
+                "-c",
+                "../../Working/Scripts/markdown-to-plaintext.sh README.md CHANGELOG.md"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}/Docs/Portable Junk Recycler Mk 2",
             },
-            "dependsOn": ["Update Versions"],
+            "dependsOn": [
+                "Update Versions"
+            ],
         },
         {
             "label": "Update Versions",
             "type": "shell",
             "command": "bash",
-            "args": ["-c", "./Working/Scripts/version-updater.sh"],
+            "args": [
+                "-c",
+                "./Working/Scripts/version-updater.sh"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}",
             }
+        },
+        {
+            "label": "Remove compiled Papyrus scripts",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "windows": {
+                "command": "Get-ChildItem -Path '.' -Filter '*.pex' -Recurse | Remove-Item"
+            },
         },
     ]
 }

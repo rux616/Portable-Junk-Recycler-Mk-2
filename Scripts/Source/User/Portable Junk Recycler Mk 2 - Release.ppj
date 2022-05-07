@@ -18,17 +18,16 @@
         <Variable Name="ModNameShort" Value="PJRM2"/>
         <Variable Name="ModNameRelease" Value="Portable_Junk_Recycler_Mk_2"/>
         <Variable Name="ModResourceName" Value="PortableJunkRecyclerMk2"/>
-        <Variable Name="ModVersion" Value="1.1.0"/>
-        <Variable Name="ModVersionWithBuild" Value="1.1.0+302"/>
+        <Variable Name="ModVersion" Value="1.1.1"/>
+        <Variable Name="ModVersionWithBuild" Value="1.1.1+320"/>
         <Variable Name="ModPath" Value="..\..\.."/>
         <Variable Name="BuildPath" Value="@ModPath\Build"/>
         <Variable Name="CompilePath" Value="@BuildPath\Scripts"/>
         <Variable Name="ScriptsPathMCM" Value="@ModPath\..\Mod Configuration Menu\Scripts\Source"/>
         <Variable Name="ScriptsPathF4SE" Value="@ModPath\..\F4SE Scripts\Scripts\Source"/>
-        <Variable Name="ScriptsPathVanilla" Value="@ModPath\..\[NoDelete] Vanilla Scripts Source\Scripts\Source"/>
+        <Variable Name="ScriptsPathVanilla" Value="@ModPath\..\[NoDelete] [DEV] Vanilla Scripts Source\Scripts\Source"/>
     </Variables>
     <Imports>
-        <Import>.</Import>
         <Import>@ScriptsPathMCM\User</Import>
         <Import>@ScriptsPathF4SE\User</Import>
         <Import>@ScriptsPathVanilla\Base</Import>
