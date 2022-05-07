@@ -65,7 +65,7 @@ You can heavily customize all these options and more via the MCM.
 
 This mod **REQUIRES** both F4SE and MCM and will not work without them. I had to do this in order to prevent the freezing bug found in the original. Sorry, console players, you're out of luck. This mod also supports the [Canary](https://www.nexusmods.com/fallout4/mods/44949) mod to alert in the event of save game corruption.
 
-Also by default, the Portable Junk Recycler Mk 2 will detect whether the [Standalone Workbenches](https://www.nexusmods.com/fallout4/mods/41832), [ECO](https://www.nexusmods.com/fallout4/mods/55503), or [AWKCR](https://www.nexusmods.com/fallout4/mods/6091) mods are installed and will dynamically set itself to be crafted at the respective "Utility" workbenches, or at the vanilla "Chemistry Station" if none are installed. If more than one of the preceding mods are installed, the Standalone Workbenches Utility Workbench takes priority, followed by the ECO Utility Station, then the AWKCR Utility Workbench. The device can be found under the "UTILITY" category (or one of the other categories based on whether any of the category changer addon plugins are active or not).
+Also by default, the Portable Junk Recycler Mk 2 will detect whether the [Standalone Workbenches](https://www.nexusmods.com/fallout4/mods/41832), [ECO](https://www.nexusmods.com/fallout4/mods/55503), or [AWKCR v5.0+](https://www.nexusmods.com/fallout4/mods/6091) mods are installed and will dynamically set itself to be crafted at the respective "Utility" workbenches, or at the vanilla "Chemistry Station" if none are installed. If more than one of the preceding mods are installed, the Standalone Workbenches Utility Workbench takes priority, followed by the ECO Utility Station, then the AWKCR Utility Workbench. The device can be found under the "UTILITY" category (or one of the other categories based on whether any of the category changer addon plugins are active or not).
 
 This mod (plus all of its extra bits like images, build scripts, etc.) is also available at the [GitHub project](https://github.com/rux616/Portable-Junk-Recycler-Mk-2).
 
@@ -147,7 +147,7 @@ Mod Information
 
 Hotkeys
 -------
-All hotkeys in this mod work as modifiers, meaning that in order for the effect of the hotkey to take place, said hotkey(s) need to be pressed at the time the Portable Junk Recycler Mk 2 is activated.
+All hotkeys in this mod work as modifiers, except for the "Activate Portable Junk Recycler Mk 2" hotkey. This means that in order for the effect of the hotkey to take place, said hotkey(s) need to be pressed at the time the Portable Junk Recycler Mk 2 is activated.
 
 By default, the mod comes with the "Behavior Override" option set to `OFF`; to enabled overriding the behavior of the Portable Junk Recycler Mk 2, turn that option `ON`:
 - If both `[CTRL]` and `[SHIFT]` are pressed when the recycler is activated, the recycler inventory will not open and instead, all recyclable junk items, except for those items on the "Never Automatically Transfer" list (unless the use of that list is turned `OFF`) and maybe those items in the Low Weight Ratio list, depending on how your options are set, will be broken down and their component parts returned. This is identical in functionality to having the "Automatic Recycling Mode" option set to `ON`.
@@ -181,10 +181,10 @@ The Mk 2 can be crafted at a number of different workbenches from different mods
 **From vanilla:**
 - Chemistry Station
 
-Note that one of the options is "Dynamic", which will automatically attempt to use the following workbenches with decreasing priority:
+Note that the default option is "Dynamic", which will automatically attempt to use the following workbenches with decreasing priority:
 - Utility Workbench (Standalone Workbenches)
 - Utility Station (ECO)
-- Utility Workbench (AWKCR)
+- Utility Workbench (AWKCR v5.0+)
 - Chemistry Station (vanilla)
 
 ([TOC](#table-of-contents))
