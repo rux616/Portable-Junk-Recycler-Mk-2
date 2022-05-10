@@ -569,7 +569,7 @@ Enable Debug Logging (Fallout 4)
 ------------------------------------------
 Note: If you are using Mod Organizer 2, use the built-in INI editor via the "Tools" menu > "Tool Plugins" sub-menu > "INI Editor" option.
 
-By default, Fallout 4 has its debug logging capabilities disabled. To enable them, follow the instructions on the Enable Debug Logging (https://www.creationkit.com/fallout4/index.php?title=Enable_Debug_Logging) page on the Creation Kit wiki. (Note that there's a typo on the page in the paths: "Fallout 4" should not have the space, and should be "Fallout4" instead.)
+By default, Fallout 4 has its debug logging capabilities disabled. To enable them, follow the instructions on the Enable Debug Logging (https://falloutck.uesp.net/wiki/Enable_Debug_Logging) page on the Creation Kit wiki.
 
 Enable Debug Logging (Portable Junk Recycler Mk 2)
 --------------------------------------------------
