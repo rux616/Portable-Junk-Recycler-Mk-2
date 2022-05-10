@@ -536,7 +536,7 @@ When installing the mod via a FOMOD-capable mod manager like Mod Organizer 2 or 
 [size=4][b][u]Enable Debug Logging (Fallout 4):[/u][/b][/size]
 [b]Note:[/b] If you are using Mod Organizer 2, use the built-in INI editor via the "Tools" menu > "Tool Plugins" sub-menu > "INI Editor" option.
 
-By default, Fallout 4 has its debug logging capabilities disabled. To enable them, follow the instructions on the [url=https://www.creationkit.com/fallout4/index.php?title=Enable_Debug_Logging]Enable Debug Logging[/url] page on the Creation Kit wiki. (Note that there's a typo on the page in the paths: "Fallout 4" should not have the space, and should be "Fallout4" instead.)
+By default, Fallout 4 has its debug logging capabilities disabled. To enable them, follow the instructions on the [url=https://falloutck.uesp.net/wiki/Enable_Debug_Logging]Enable Debug Logging[/url] page on the Creation Kit wiki.
 
 [size=4][b][u]Enable Debug Logging (Portable Junk Recycler Mk 2):[/u][/b][/size]
 Also by default, the logging and profiling capabilities of the mod are disabled. To enable them, go into the Mod Config menu, then to the Portable Junk Recycler Mk 2 mod, then to the "Advanced" page. The "Enable Script Logging" and "Enable Script Profiling" options are what you are looking for.
