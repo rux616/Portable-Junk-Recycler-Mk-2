@@ -434,6 +434,7 @@ Settings Layout in MCM
     - Enable "Never Automatically Transfer" List [Default = `ON`, Possible Values = `OFF`/`ON`]
     - Enable Automatic Transfer List Editing [Default = `OFF`, Possible Values = `OFF`/`ON`]
     - Enable Behavior Overrides [Default = `OFF`, Possible Values = `OFF`/`ON`]
+    - Modifier Hotkey Read Delay [Default = `0.3`, Minimum = `0.0`, Maximum = `1.0`, Step = `0.1`]
     - Return Items Silently [Default = `ON`, Possible Values = `OFF`/`ON`]
     - Inventory Removal Protection [Default = `OFF`, Possible Values = `OFF`/`Ask First`/`Automatic`]
 - Crafting

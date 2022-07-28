@@ -6,6 +6,7 @@ Table Of Contents
 - [Portable Junk Recycler Mk 2](#portable-junk-recycler-mk-2)
     - [Table Of Contents](#table-of-contents)
 - [Changelogs](#changelogs)
+    - [v1.1.3](#v113)
     - [v1.1.2](#v112)
     - [v1.1.1](#v111)
     - [v1.1.0](#v110)
@@ -27,6 +28,15 @@ Table Of Contents
 
 Changelogs
 ==========
+
+v1.1.3
+------
+- Added MCM setting: 'Modifier Hotkey Read Delay' ('Recycler Interface' page) - adds a small delay to compensate for the fact that you can't use the behavior modifier hotkeys in combination with the device usage hotkey
+- Fixed opposite message being displayed on always/never automatically move list; thanks to [haljit00](https://www.nexusmods.com/users/31060055) on Nexus Mods for [reporting this](https://forums.nexusmods.com/index.php?showtopic=10434043/#entry112467333)
+- Fixed incorrect log message indicating that the ALT key was down instead of up
+- Refined the inventory removal protection option so that it doesn't fire on device use now
+
+([TOC](#table-of-contents))
 
 v1.1.2
 ------
