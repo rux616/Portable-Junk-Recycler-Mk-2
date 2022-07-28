@@ -111,7 +111,13 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
         ControlManager.MutexRunning = true
         Self._StartStackProfiling()
 
-        ; record the states of the hotkeys immediately
+        ; record the states of the hotkeys, optionally waiting a moment first
+        ; the delay affords time to activate the hotkeys in the case where the device is triggered via the MCM usage hotkey
+        float hotkeyReadDelay = SettingManager.ModifierReadDelay
+        If (SettingManager.EnableAutoTransferListEditing || SettingManager.EnableBehaviorOverrides) && hotkeyReadDelay > 0.0
+            Self._Log("Waiting " + hotkeyReadDelay + " seconds before reading hotkeys")
+            Utility.WaitMenuMode(hotkeyReadDelay)
+        EndIf
         bool hotkeyRetain = ControlManager.HotkeyForceRetainJunk
         bool hotkeyTransfer = ControlManager.HotkeyForceTransferJunk
         bool hotkeyEdit = ControlManager.HotkeyEditAutoTransferLists

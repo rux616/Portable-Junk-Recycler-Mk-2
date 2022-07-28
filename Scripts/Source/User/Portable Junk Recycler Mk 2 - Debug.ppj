@@ -23,7 +23,7 @@
     </Variables>
     <Imports>
         <Import>@ScriptsPathMCM\User</Import>
-        <Import>@ScriptsPathF4SE\User</Import>
+        <Import>@ScriptsPathF4SE</Import>
         <Import>@ScriptsPathVanilla\Base</Import>
     </Imports>
     <Folders>

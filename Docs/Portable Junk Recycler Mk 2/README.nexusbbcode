@@ -354,6 +354,7 @@ These lists are reread every time a game is loaded.
     - Enable "Never Automatically Transfer" List [Default = [font=Courier New][color=#b2b2b2]ON[/color][/font], Possible Values = [font=Courier New][color=#b2b2b2]OFF[/color][/font]/[font=Courier New][color=#b2b2b2]ON[/color][/font]]
     - Enable Automatic Transfer List Editing [Default = [font=Courier New][color=#b2b2b2]OFF[/color][/font], Possible Values = [font=Courier New][color=#b2b2b2]OFF[/color][/font]/[font=Courier New][color=#b2b2b2]ON[/color][/font]]
     - Enable Behavior Overrides [Default = [font=Courier New][color=#b2b2b2]OFF[/color][/font], Possible Values = [font=Courier New][color=#b2b2b2]OFF[/color][/font]/[font=Courier New][color=#b2b2b2]ON[/color][/font]]
+    - Modifier Hotkey Read Delay [Default = [font=Courier New][color=#b2b2b2]0.3[/color][/font], Minimum = [font=Courier New][color=#b2b2b2]0.0[/color][/font], Maximum = [font=Courier New][color=#b2b2b2]1.0[/color][/font], Step = [font=Courier New][color=#b2b2b2]0.1[/color][/font]]
     - Return Items Silently [Default = [font=Courier New][color=#b2b2b2]ON[/color][/font], Possible Values = [font=Courier New][color=#b2b2b2]OFF[/color][/font]/[font=Courier New][color=#b2b2b2]ON[/color][/font]]
     - Inventory Removal Protection [Default = [font=Courier New][color=#b2b2b2]OFF[/color][/font], Possible Values = [font=Courier New][color=#b2b2b2]OFF[/color][/font]/[font=Courier New][color=#b2b2b2]Ask First[/color][/font]/[font=Courier New][color=#b2b2b2]Automatic[/color][/font]]
 - Crafting

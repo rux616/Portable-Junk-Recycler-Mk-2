@@ -48,6 +48,9 @@ local stat_adjust_step = 0.005;
 local random_adjust_min = -6.0;
 local random_adjust_max = 6.0;
 local random_adjust_step = 0.01;
+local delay_min = 0.0;
+local delay_max = 1.0;
+local delay_step = 0.1;
 local threads_min = 1;
 local threads_max = 32;
 local threads_step = 1;
@@ -56,7 +59,7 @@ local threads_step = 1;
   local mod = {
     name: 'Portable Junk Recycler Mk 2',
     localized_name: '$PortableJunkRecyclerMk2',
-    version: '1.1.2',
+    version: '1.1.3',
     plugin_name: mod.name + '.esp',
     quest_form: mod.plugin_name + '|800',
     control_script: 'PortableJunkRecyclerMk2:PJRM2_ControlManager',
@@ -138,6 +141,7 @@ local threads_step = 1;
           mcm.control.switcher(text='$UseNeverAutoTransferListText', source=mcm.helper.source.mod_setting.bool(id='bUseNeverAutoTransferList:Behavior'), help='$UseNeverAutoTransferListHelp'),
           mcm.control.switcher(text='$EnableAutoTransferListEditingText', source=mcm.helper.source.mod_setting.bool(id='bEnableAutoTransferListEditing:Behavior'), group=mcm.helper.group.control(mod.group_id.edit_auto_transfer_list), help='$EnableAutoTransferListEditingHelp'),
           mcm.control.switcher(text='$EnableBehaviorOverridesText', source=mcm.helper.source.mod_setting.bool(id='bEnableBehaviorOverrides:Behavior'), group=mcm.helper.group.control(mod.group_id.behavior_override), help='$EnableBehaviorOverridesHelp'),
+          mcm.control.slider(text='$ModifierReadDelayText', min=delay_min, max=delay_max, step=delay_step, source=mcm.helper.source.mod_setting.float(id='fModifierReadDelay:Behavior'), help='$ModifierReadDelayHelp'),
           mcm.control.switcher(text='$ReturnItemsSilentlyText', source=mcm.helper.source.mod_setting.bool(id='bReturnItemsSilently:Behavior'), help='$ReturnItemsSilentlyHelp'),
           mcm.control.dropdown(text='$InventoryRemovalProtectionText', options=[str_off, '$Ask', '$Automatic'], source=mcm.helper.source.mod_setting.int(id='iInventoryRemovalProtection:Behavior'), help='$InventoryRemovalProtectionHelp'),
           mcm.control.spacer(lines=1),

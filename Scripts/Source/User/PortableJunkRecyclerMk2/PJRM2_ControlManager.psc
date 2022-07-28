@@ -135,7 +135,7 @@ int Property iSaveFileMonitor Auto Hidden ; Do not mess with ever - this is used
 
 PJRM2_SettingManager SettingManager
 PJRM2_ThreadManager ThreadManager
-string ModVersion = "1.1.2" const
+string ModVersion = "1.1.3" const
 SettingChangeType AvailableChangeTypes
 string ModName
 bool EnableLogging = false
@@ -224,7 +224,7 @@ EndEvent
 
 Event OnKeyUp(int aiKeyCode, float afTime)
     If aiKeyCode == LAlt || aiKeyCode == RAlt
-        Self._Log("OnKeyDown: Alt (" + aiKeyCode + ")")
+        Self._Log("OnKeyUp: Alt (" + aiKeyCode + ")")
         HotkeyEditAutoTransferLists = false
     ElseIf aiKeyCode == LCtrl || aiKeyCode == RCtrl
         Self._Log("OnKeyUp: Ctrl (" + aiKeyCode + ")")
@@ -247,7 +247,10 @@ Event ObjectReference.OnItemRemoved(ObjectReference akSourceContainer, Form akBa
 
         If PlayerRef.GetItemCount(akBaseItem)
             ; if there are devices still in player inventory, ignore the event
-            Self._Log("Player has at least one device left in their inventory; false alarm")
+            Self._Log("Player still has at least one device left in their inventory; ignoring event")
+        ElseIf ! akDestContainer && ! akItemReference
+            ; the item was used, ignore the event
+            Self._Log("Player used the device; ignoring event")
         Else
             Self._Log("Last Mk 2 removed from player inventory")
             int inventoryRemovalProtectionState = SettingManager.InventoryRemovalProtection
@@ -286,9 +289,10 @@ Event ObjectReference.OnItemRemoved(ObjectReference akSourceContainer, Form akBa
                     Self._Log("Device was dropped: " + akItemReference + " (Qty: " + aiItemCount + ")")
                     akSourceContainer.AddItem(akItemReference, 1, true)
                 Else
-                    ; unknown state: akDestContainer and akItemReference are both None or not None
+                    ; unknown state: akDestContainer and akItemReference are both not None
                     ; shouldn't be reachable but detecting just in case
-                    Self._Log("OnItemRemoved: Device in an unknown state!", 1)
+                    Self._Log("OnItemRemoved: Device in an unknown state! (akDestContainer: " + akDestContainer \
+                        + ", akItemReference: " + akItemReference + ")", 1)
                 EndIf
             EndIf
         EndIf

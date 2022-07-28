@@ -125,6 +125,11 @@ Group Settings
             Return EnableBehaviorOverrides_Var.Value
         EndFunction
     EndProperty
+    float Property ModifierReadDelay Hidden
+        float Function Get()
+            Return ModifierReadDelay_Var.Value
+        EndFunction
+    EndProperty
     bool Property ReturnItemsSilently Hidden
         bool Function Get()
             Return ReturnItemsSilently_Var.Value
@@ -499,6 +504,7 @@ SettingBool UseAlwaysAutoTransferList_Var
 SettingBool UseNeverAutoTransferList_Var
 SettingBool EnableAutoTransferListEditing_Var
 SettingBool EnableBehaviorOverrides_Var
+SettingFloat ModifierReadDelay_Var
 SettingBool ReturnItemsSilently_Var
 SettingInt InventoryRemovalProtection_Var
 
@@ -735,6 +741,10 @@ Function InitSettings(bool abForce = false)
     If abForce || ! EnableBehaviorOverrides_Var
         Self._Log("Initializing EnableBehaviorOverrides_Var")
         EnableBehaviorOverrides_Var = new SettingBool
+    EndIf
+    if abForce || ! ModifierReadDelay_Var
+        Self._Log("Initializing ModifierReadDelay_Var")
+        ModifierReadDelay_Var = new SettingFloat
     EndIf
     If abForce || ! ReturnItemsSilently_Var
         Self._Log("Initializing ReturnItemsSilently_Var")
@@ -1101,6 +1111,11 @@ Function InitSettingsSupplemental()
     EnableBehaviorOverrides_Var.ValueDefault = false
     EnableBehaviorOverrides_Var.McmId = "bEnableBehaviorOverrides:Behavior"
 
+    ModifierReadDelay_Var.ValueDefault = 0.3
+    ModifierReadDelay_Var.McmId = "fModifierReadDelay:Behavior"
+    ModifierReadDelay_Var.ValueMin = 0.0
+    ModifierReadDelay_Var.ValueMax = 1.0
+
     ReturnItemsSilently_Var.ValueDefault = true
     ReturnItemsSilently_Var.McmId = "bReturnItemsSilently:Behavior"
 
@@ -1420,6 +1435,7 @@ var[] Function CollectMCMSettings()
     toReturn.Add(UseNeverAutoTransferList_Var)
     toReturn.Add(EnableAutoTransferListEditing_Var)
     toReturn.Add(EnableBehaviorOverrides_Var)
+    toReturn.Add(ModifierReadDelay)
     toReturn.Add(ReturnItemsSilently_Var)
     toReturn.Add(InventoryRemovalProtection_Var)
 
@@ -1729,6 +1745,10 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             oldValue = EnableBehaviorOverrides_Var.Value
             LoadSettingFromMCM(EnableBehaviorOverrides_Var, ModName)
             newValue = EnableBehaviorOverrides_Var.Value
+        ElseIf asControlId == ModifierReadDelay_Var.McmId
+            oldValue = ModifierReadDelay_Var.Value
+            LoadSettingFromMCM(ModifierReadDelay_Var, ModName)
+            newValue = ModifierReadDelay_Var.Value
         ElseIf asControlId == ReturnItemsSilently_Var.McmId
             oldValue = ReturnItemsSilently_Var.Value
             LoadSettingFromMCM(ReturnItemsSilently_Var, ModName)
@@ -2038,6 +2058,7 @@ Function Uninstall()
     UseNeverAutoTransferList_Var = None
     EnableAutoTransferListEditing_Var = None
     EnableBehaviorOverrides_Var = None
+    ModifierReadDelay_Var = None
     ReturnItemsSilently_Var = None
     InventoryRemovalProtection_Var = None
     ; multiplier adjustments - general
