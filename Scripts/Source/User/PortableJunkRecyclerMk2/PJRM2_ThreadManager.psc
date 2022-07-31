@@ -410,7 +410,4 @@ Function Uninstall()
     ; destroy arrays
     DestroyArrayContents(Threads)
     Threads = None
-
-    ; stop the quest
-    Stop()
 EndFunction
