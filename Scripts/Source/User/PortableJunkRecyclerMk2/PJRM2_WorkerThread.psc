@@ -448,6 +448,10 @@ Function RecycleComponents(int aiIndex, int aiIndexEnd, var[] akComponentMap, Mu
 EndFunction
 
 Function Uninstall()
+    Self._Log("Uninstallation sequence initialized!", 1, true)
+
     DestroyArrayContents(Results)
     Results = None
+
+    Self._Log("Uninstallation sequence complete!", 1, abForce = true)
 EndFunction

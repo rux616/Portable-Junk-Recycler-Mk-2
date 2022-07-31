@@ -135,7 +135,7 @@ int Property iSaveFileMonitor Auto Hidden ; Do not mess with ever - this is used
 
 PJRM2_SettingManager SettingManager
 PJRM2_ThreadManager ThreadManager
-string ModVersion = "1.1.3" const
+string ModVersion = "1.2.0" const
 SettingChangeType AvailableChangeTypes
 string ModName
 bool EnableLogging = false
@@ -939,7 +939,7 @@ Function Uninstall()
         SettingManager.Uninstall()
 
         ; remove recycler devices in inventory, if any
-        PlayerRef.RemoveItem(Game.GetFormFromFile(0x840, SettingManager.ModName + ".esp"), -1, true)
+        PlayerRef.RemoveItem(PortableRecyclerItem, -1, true)
 
         ; properties
         ; group Components

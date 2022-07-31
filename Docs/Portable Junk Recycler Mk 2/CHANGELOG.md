@@ -6,6 +6,7 @@ Table Of Contents
 - [Portable Junk Recycler Mk 2](#portable-junk-recycler-mk-2)
     - [Table Of Contents](#table-of-contents)
 - [Changelogs](#changelogs)
+    - [v1.2.0](#v120)
     - [v1.1.3](#v113)
     - [v1.1.2](#v112)
     - [v1.1.1](#v111)
@@ -28,6 +29,13 @@ Table Of Contents
 
 Changelogs
 ==========
+
+v1.2.0
+------
+- Added MCM setting: 'Use Simple Crafting Recipe' ('Recycler Interface' page) - when set to 'ON', changes the recipe to craft the device to one that only requires standard components; thanks to [IgorVoltage](https://www.nexusmods.com/fallout4/users/5093759) on Nexus Mods for the [suggestion](https://forums.nexusmods.com/index.php?showtopic=10434043/#entry111224563)
+- Slightly refined uninstall functions
+
+([TOC](#table-of-contents))
 
 v1.1.3
 ------

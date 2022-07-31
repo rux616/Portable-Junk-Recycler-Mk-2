@@ -142,6 +142,11 @@ Group Settings
     EndProperty
 
     ; recycler interface - crafting
+    bool Property UseSimpleCraftingRecipe Hidden
+        bool Function Get()
+            Return UseSimpleCraftingRecipe_Var.Value
+        EndFunction
+    EndProperty
     int Property CraftingStation Hidden
         int Function Get()
             Return CraftingStation_Var.Value
@@ -472,6 +477,8 @@ Group Other
     string Property ModName = "Portable Junk Recycler Mk 2" AutoReadOnly
     string Property FullScriptName = "PortableJunkRecyclerMk2:PJRM2_SettingManager" AutoReadOnly
     ConstructibleObject Property PortableJunkRecyclerConstructibleObject Auto Mandatory
+    ConstructibleObject Property PortableJunkRecyclerConstructibleObjectSimple Auto Mandatory
+    Keyword Property NullWorkbenchKeyword Auto Mandatory
     bool Property PreInitialized = false Auto
     bool Property Initialized = false Auto
 EndGroup
@@ -509,6 +516,7 @@ SettingBool ReturnItemsSilently_Var
 SettingInt InventoryRemovalProtection_Var
 
 ; recycler interface - crafting
+SettingBool UseSimpleCraftingRecipe_Var
 SettingInt CraftingStation_Var
 
 ; multiplier adjustments - general
@@ -615,7 +623,7 @@ EndEvent
 ; ---------
 
 ; add a bit of text to traces going into the papyrus user log
-Function _Log(string asMessage, int aiSeverity = 0, bool abForce = false)
+Function _Log(string asMessage, int aiSeverity = 0, bool abForce = false) DebugOnly
     If EnableLogging_Var.Value || abForce
         Log(ModName, "SettingManager", asMessage, aiSeverity)
     EndIf
@@ -645,6 +653,9 @@ Function Initialize(bool abQuestInit = false)
     Self.InitSettings(abForce = abQuestInit)
     Self.InitSettingsSupplemental()
     Self.LoadAllSettingsFromMCM()
+    ; manually run the Crafting Station callback to resolve any weirdness that may have occurred
+    ; due to multithreaded loading of the MCM settings
+    Self.CallbackCraftingStation()
     Self.RegisterForMCMEvents()
     If abQuestInit
         RegisterForMenuOpenCloseEvent("PauseMenu")
@@ -756,6 +767,10 @@ Function InitSettings(bool abForce = false)
     EndIf
 
     ; recycler interface - crafting
+    if abForce || ! UseSimpleCraftingRecipe_Var
+        Self._Log("Initializing UseSimpleCraftingRecipe_Var")
+        UseSimpleCraftingRecipe_Var = new SettingBool
+    EndIf
     if abForce || ! CraftingStation_Var
         Self._Log("Initializing CraftingStation_Var")
         CraftingStation_Var = new SettingInt
@@ -1125,6 +1140,13 @@ Function InitSettingsSupplemental()
     InventoryRemovalProtection_Var.ValueMax = 2
 
     ; recycler interface - crafting
+    UseSimpleCraftingRecipe_Var.ValueDefault = false
+    UseSimpleCraftingRecipe_Var.McmId = "bUseSimpleCraftingRecipe:Crafting"
+    UseSimpleCraftingRecipe_Var.CallbackType = availableCallbackTypes.FunctionCallback
+    UseSimpleCraftingRecipe_Var.CallbackForm = Self
+    UseSimpleCraftingRecipe_Var.CallbackScript = FullScriptName
+    UseSimpleCraftingRecipe_Var.CallbackFunction = "CallbackUseSimpleCraftingRecipe"
+
     CraftingStation_Var.ValueDefault = 0
     CraftingStation_Var.McmId = "iCraftingStation:Crafting"
     CraftingStation_Var.ValueMin = 0
@@ -1440,6 +1462,7 @@ var[] Function CollectMCMSettings()
     toReturn.Add(InventoryRemovalProtection_Var)
 
     ; recycler interface - crafting
+    toReturn.Add(UseSimpleCraftingRecipe_Var)
     toReturn.Add(CraftingStation_Var)
 
     ; multiplier adjustments - general
@@ -1564,6 +1587,29 @@ Function CallbackScrapperAffectsMult()
     MCM.RefreshMenu()
 EndFunction
 
+Function CallbackUseSimpleCraftingRecipe()
+    Self._Log("Callback for UseSimpleCraftingRecipe triggered")
+    ; grab and log the current recipe workbench keywords
+    Keyword complexRecipeCurrentWorkbench = PortableJunkRecyclerConstructibleObject.GetWorkbenchKeyword()
+    Self._Log("CallbackUseSimpleCraftingRecipe: complexRecipeCurrentKeyword: " + complexRecipeCurrentWorkbench)
+    Keyword simpleRecipeCurrentWorkbench = PortableJunkRecyclerConstructibleObjectSimple.GetWorkbenchKeyword()
+    Self._Log("CallbackUseSimpleCraftingRecipe: simpleRecipeCurrentKeyword: " + simpleRecipeCurrentWorkbench)
+
+    ; if the respective {complex,simple}RecipeCurrentWorkbench == NullWorkbenchKeyword,
+    ; then this happened during script initialization and should be ignored
+    If UseSimpleCraftingRecipe_Var.Value && complexRecipeCurrentWorkbench != NullWorkbenchKeyword
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(NullWorkbenchKeyword)
+        Self._Log("CallbackUseSimpleCraftingRecipe: complex recipe set to workbench keyword: " + NullWorkbenchKeyword)
+        PortableJunkRecyclerConstructibleObjectSimple.SetWorkbenchKeyword(complexRecipeCurrentWorkbench)
+        Self._Log("CallbackUseSimpleCraftingRecipe: simple recipe set to workbench keyword: " + complexRecipeCurrentWorkbench)
+    ElseIf !UseSimpleCraftingRecipe_Var.Value && simpleRecipeCurrentWorkbench != NullWorkbenchKeyword
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(simpleRecipeCurrentWorkbench)
+        Self._Log("CallbackUseSimpleCraftingRecipe: complex recipe set to workbench keyword: " + simpleRecipeCurrentWorkbench)
+        PortableJunkRecyclerConstructibleObjectSimple.SetWorkbenchKeyword(NullWorkbenchKeyword)
+        Self._Log("CallbackUseSimpleCraftingRecipe: simple recipe set to workbench keyword: " + NullWorkbenchKeyword)
+    EndIf
+EndFunction
+
 ; determine where the crafting recipe lives
 Function CallbackCraftingStation()
     Self._Log("Callback for CraftingStation triggered")
@@ -1587,59 +1633,67 @@ Function CallbackCraftingStation()
     ; handle 'dynamic' workbenches first
     If (CraftingStation_Var.Value == 5 || CraftingStation_Var.Value == 0) && isSWInstalled
         ; Standalone Workbenches - Utility Workbench (Keyword FExxx81C - wSW_UtilityWorkbench_CraftingKey)
-        Self._Log("Crafting station: Standalone Workbenches - Utility Workbench")
         craftingStationKeyword = Game.GetFormFromFile(0x81C, pluginNameSW) as Keyword
+        Self._Log("CallbackCraftingStation: Standalone Workbenches - Utility Workbench " + craftingStationKeyword)
     ElseIf (CraftingStation_Var.Value == 9 || CraftingStation_Var.Value == 0) && isECOInstalled
         ; Equipment and Crafting Overhaul - Utility Station (Keyword xx02788D - Dank_Workbench_TypeUtility)
-        Self._Log("Crafting station: Equipment and Crafting Overhaul - Utility Station")
         craftingStationKeyword = Game.GetFormFromFile(0x02788D, pluginNameECO) as Keyword
+        Self._Log("CallbackCraftingStation: Equipment and Crafting Overhaul - Utility Station " + craftingStationKeyword)
     ElseIf (CraftingStation_Var.Value == 8 || CraftingStation_Var.Value == 0) && isAWKCRInstalled
         ; AWKCR - Utility Workbench (Keyword xx001765 - AEC_ck_UtilityCraftingKey)
-        Self._Log("Crafting station: AWKCR - Utility Workbench")
         craftingStationKeyword = Game.GetFormFromFile(0x001765, pluginNameAWKCR) as Keyword
+        Self._Log("CallbackCraftingStation: AWKCR - Utility Workbench " + craftingStationKeyword)
 
     ; handle other manual workbench choices
     ElseIf CraftingStation_Var.Value == 2 && isSWInstalled
         ; Standalone Workbenches - Electronics Workbench (Keyword FExxx80D - wSW_ElectronicsWorkbench_CraftingKey)
-        Self._Log("Crafting station: Standalone Workbenches - Electronics Workbench")
         craftingStationKeyword = Game.GetFormFromFile(0x80D, pluginNameSW) as Keyword
+        Self._Log("CallbackCraftingStation: Standalone Workbenches - Electronics Workbench " + craftingStationKeyword)
     ElseIf CraftingStation_Var.Value == 3 && isSWInstalled
         ; Standalone Workbenches - Engineering Workbench (Keyword FExxx810 - wSW_EngineeringWorkbench_CraftingKey)
-        Self._Log("Crafting station: Standalone Workbenches - Engineering Workbench")
         craftingStationKeyword = Game.GetFormFromFile(0x810, pluginNameSW) as Keyword
+        Self._Log("CallbackCraftingStation: Standalone Workbenches - Engineering Workbench " + craftingStationKeyword)
     ElseIf CraftingStation_Var.Value == 4 && isSWInstalled
         ; Standalone Workbenches - Manufacturing Workbench (Keyword FExxx822 - wSW_ManufacturingWorkbench_CraftingKey)
-        Self._Log("Crafting station: Standalone Workbenches - Manufacturing Workbench")
         craftingStationKeyword = Game.GetFormFromFile(0x822, pluginNameSW) as Keyword
+        Self._Log("CallbackCraftingStation: Standalone Workbenches - Manufacturing Workbench " + craftingStationKeyword)
     ElseIf CraftingStation_Var.Value == 6 && isAWKCRInstalled
         ; AWKCR - Advanced Engineering Workbench (Keyword xx00195A - AEC_ck_AdvancedEngineeringCraftingKey)
-        Self._Log("Crafting station: AWKCR - Advanced Engineering Workbench")
         craftingStationKeyword = Game.GetFormFromFile(0x00195A, pluginNameAWKCR) as Keyword
+        Self._Log("CallbackCraftingStation: AWKCR - Advanced Engineering Workbench " + craftingStationKeyword)
     ElseIf CraftingStation_Var.Value == 7 && isAWKCRInstalled
         ; AWKCR - Electronics Workstation (Keyword xx001764 - AEC_ck_ElectronicsCraftingKey)
-        Self._Log("Crafting station: AWKCR - Electronics Workstation")
         craftingStationKeyword = Game.GetFormFromFile(0x001764, pluginNameAWKCR) as Keyword
+        Self._Log("CallbackCraftingStation: AWKCR - Electronics Workstation " + craftingStationKeyword)
     EndIf
 
     ; handle everything else, like missing mods, missing keywords, etc
     If !craftingStationKeyword
         ; Vanilla - Chemistry Station (Keyword xx102158 - WorkbenchChemlab)
-        If CraftingStation_Var.Value == 0 && (isSWInstalled || isECOInstalled || isAWKCRInstalled)
-            Self._Log("Crafting station: Dynamic workbench specified and supported mod found, but keyword not detected; falling back to vanilla")
-        ElseIf CraftingStation_Var.Value >= 2 && CraftingStation_Var.Value <= 5
-            Self._Log("Crafting station: Standalone Workbenches workbench specified but mod or keyword not detected; falling back to vanilla")
-        ElseIF CraftingStation_Var.Value >= 6 && CraftingStation_Var.Value <= 8
-            Self._Log("Crafting station: AWKCR workbench specified but mod or keyword not detected; falling back to vanilla")
-        ElseIf CraftingStation_Var.Value == 9
-            Self._Log("Crafting station: ECO workbench specified but mod or keyword not detected; falling back to vanilla")
-        Else
-            Self._Log("Crafting station: Vanilla - Chemistry Station")
-        EndIf
         craftingStationKeyword = Game.GetFormFromFile(0x102158, "Fallout4.esm") as Keyword
+        If CraftingStation_Var.Value == 0 && (isSWInstalled || isECOInstalled || isAWKCRInstalled)
+            Self._Log("CallbackCraftingStation: Dynamic workbench specified and supported mod found, but keyword not detected; falling back to vanilla " + craftingStationKeyword)
+        ElseIf CraftingStation_Var.Value >= 2 && CraftingStation_Var.Value <= 5
+            Self._Log("CallbackCraftingStation: Standalone Workbenches workbench specified but mod or keyword not detected; falling back to vanilla " + craftingStationKeyword)
+        ElseIF CraftingStation_Var.Value >= 6 && CraftingStation_Var.Value <= 8
+            Self._Log("CallbackCraftingStation: AWKCR workbench specified but mod or keyword not detected; falling back to vanilla " + craftingStationKeyword)
+        ElseIf CraftingStation_Var.Value == 9
+            Self._Log("CallbackCraftingStation: ECO workbench specified but mod or keyword not detected; falling back to vanilla " + craftingStationKeyword)
+        Else
+            Self._Log("CallbackCraftingStation: Vanilla - Chemistry Station " + craftingStationKeyword)
+        EndIf
     EndIf
 
     ; actually set the keyword
-    PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(craftingStationKeyword)
+    if UseSimpleCraftingRecipe_Var.Value
+        Self._Log("CallbackCraftingStation: Using simple recipe")
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(NullWorkbenchKeyword)
+        PortableJunkRecyclerConstructibleObjectSimple.SetWorkbenchKeyword(craftingStationKeyword)
+    Else
+        Self._Log("CallbackCraftingStation: Using complex recipe")
+        PortableJunkRecyclerConstructibleObject.SetWorkbenchKeyword(craftingStationKeyword)
+        PortableJunkRecyclerConstructibleObjectSimple.SetWorkbenchKeyword(NullWorkbenchKeyword)
+    EndIf
 EndFunction
 
 Function CallbackEnableLogging(bool abOldValue, bool abNewValue)
@@ -1759,6 +1813,10 @@ Function OnMCMSettingChange(string asModName, string asControlId)
             newValue = InventoryRemovalProtection_Var.Value
 
         ; recycler interface - crafting
+        ElseIf asControlId == UseSimpleCraftingRecipe_Var.McmId
+            oldValue = UseSimpleCraftingRecipe_Var.Value
+            LoadSettingFromMCM(UseSimpleCraftingRecipe_Var, ModName)
+            newValue = UseSimpleCraftingRecipe_Var.Value
         ElseIf asControlId == CraftingStation_Var.McmId
             oldValue = CraftingStation_Var.Value
             LoadSettingFromMCM(CraftingStation_Var, ModName)
@@ -2061,6 +2119,9 @@ Function Uninstall()
     ModifierReadDelay_Var = None
     ReturnItemsSilently_Var = None
     InventoryRemovalProtection_Var = None
+    ; recycler interface - crafting
+    UseSimpleCraftingRecipe_Var = None
+    CraftingStation_Var = None
     ; multiplier adjustments - general
     MultAdjustGeneralSettlement_Var = None
     MultAdjustGeneralSettlementC_Var = None

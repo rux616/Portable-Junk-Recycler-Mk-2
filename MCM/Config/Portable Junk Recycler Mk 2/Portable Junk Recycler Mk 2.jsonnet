@@ -59,7 +59,7 @@ local threads_step = 1;
   local mod = {
     name: 'Portable Junk Recycler Mk 2',
     localized_name: '$PortableJunkRecyclerMk2',
-    version: '1.1.3',
+    version: '1.2.0',
     plugin_name: mod.name + '.esp',
     quest_form: mod.plugin_name + '|800',
     control_script: 'PortableJunkRecyclerMk2:PJRM2_ControlManager',
@@ -150,6 +150,7 @@ local threads_step = 1;
 
           // recycler interface - crafting
           mcm.control.section(text='$Crafting'),
+          mcm.control.switcher(text='$UseSimpleCraftingRecipeText', source=mcm.helper.source.mod_setting.int(id='bUseSimpleCraftingRecipe:Crafting'), help='$UseSimpleCraftingRecipeHelp'),
           mcm.control.dropdown(text='$CraftingStationText', options=['$Dynamic', '$VanillaChemistry', '$SWElectronics', '$SWEngineering', '$SWManufacturing', '$SWUtility', '$AWKCRAdvEngineering', '$AWKCRElectronics', '$AWKCRUtility', '$ECOUtility'], source=mcm.helper.source.mod_setting.int(id='iCraftingStation:Crafting'), help='$CraftingStationHelp'),
           mcm.control.text(text='$CraftingStationNote'),
           mcm.control.spacer(lines=1),
