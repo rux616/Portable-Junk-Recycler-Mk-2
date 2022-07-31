@@ -400,6 +400,8 @@ EndFunction
 
 ; prepares the mod for uninstallation
 Function Uninstall()
+    Self._Log("Uninstallation sequence initialized!", 1, true)
+
     ; make sure that threads shut down fully
     int index = 0
     While index < NumberOfWorkerThreads
@@ -410,4 +412,6 @@ Function Uninstall()
     ; destroy arrays
     DestroyArrayContents(Threads)
     Threads = None
+
+    Self._Log("Uninstallation sequence complete!", 1, abForce = true)
 EndFunction

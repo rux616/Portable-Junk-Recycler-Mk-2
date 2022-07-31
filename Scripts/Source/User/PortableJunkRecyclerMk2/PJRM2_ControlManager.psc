@@ -919,7 +919,7 @@ MultiplierSet Function GetMultipliers(bool abPlayerAtOwnedWorkshop)
 EndFunction
 
 ; prep for uninstall of mod
-Function Uninstall(bool abSilent = false, bool abRemoveDevice = true)
+Function Uninstall()
     If ! MutexRunning && ! MutexBusy
         MutexBusy = true
         Self._Log("Uninstallation sequence initialized!", 1, abForce = true)
@@ -939,9 +939,7 @@ Function Uninstall(bool abSilent = false, bool abRemoveDevice = true)
         SettingManager.Uninstall()
 
         ; remove recycler devices in inventory, if any
-        If abRemoveDevice
-            PlayerRef.RemoveItem(PortableRecyclerItem, -1, true)
-        EndIf
+        PlayerRef.RemoveItem(PortableRecyclerItem, -1, true)
 
         ; properties
         ; group Components
@@ -1026,13 +1024,9 @@ Function Uninstall(bool abSilent = false, bool abRemoveDevice = true)
         SettingManager = None
     ElseIf MutexRunning && ! MutexBusy
         ; fail (running)
-        If !abSilent
-            MessageUninstallFailRunning.Show()
-        EndIf
+        MessageUninstallFailRunning.Show()
     Else
         ; fail (busy)
-        If !abSilent
-            MessageUninstallFailBusy.Show()
-        EndIf
+        MessageUninstallFailBusy.Show()
     EndIf
 EndFunction
