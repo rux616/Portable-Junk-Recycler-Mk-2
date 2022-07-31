@@ -300,6 +300,7 @@ General FormIDs:
 - `FExxx84*` Ingestible
 - `FExxx85*` Transform
 - `FExxx86*` Constructable Object
+- `FExxx87*` Keyword
 - `FExxx9**` Message
 
 Note: "xxx" is the load order position of the mod.
@@ -388,6 +389,7 @@ Recycler Interface:
     - Return Items Silently [Default = `ON`, Possible Values = `OFF`/`ON`]
     - Inventory Removal Protection [Default = `OFF`, Possible Values = `OFF`/`Ask First`/`Automatic`]
 - Crafting
+    - Use Simple Crafting Recipe [Default = `OFF`, Possible Values = `OFF`/`ON`]
     - Crafting Station [Default = `Dynamic`, Possible Values = `Dynamic`/`Chemistry Station (Vanilla)`/`Electronics Workbench (SW)`/`Engineering Workbench (SW)`/`Manufacturing Workbench (SW)`/`Utility Workbench (SW)`/`Adv. Engineering Workbench AWKCR)`/`Electronics Workstation (AWKCR)`/`Utility Workbench (AWKCR)`/`Utility Station (ECO)`]
 - Hotkeys
     - Activate Portable Junk Recycler Mk 2 [Default = `None`]

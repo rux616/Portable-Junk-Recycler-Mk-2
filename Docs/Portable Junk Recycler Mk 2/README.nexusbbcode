@@ -273,6 +273,7 @@ Submit yourself to the will of RNGesus.
 - [font=Courier New][color=#b2b2b2]FExxx84*[/color][/font] Ingestible
 - [font=Courier New][color=#b2b2b2]FExxx85*[/color][/font] Transform
 - [font=Courier New][color=#b2b2b2]FExxx86*[/color][/font] Constructable Object
+- [font=Courier New][color=#b2b2b2]FExxx87*[/color][/font] Keyword
 - [font=Courier New][color=#b2b2b2]FExxx9**[/color][/font] Message
 
 [b]Note:[/b] "xxx" is the load order position of the mod.
@@ -358,6 +359,7 @@ These lists are reread every time a game is loaded.
     - Return Items Silently [Default = [font=Courier New][color=#b2b2b2]ON[/color][/font], Possible Values = [font=Courier New][color=#b2b2b2]OFF[/color][/font]/[font=Courier New][color=#b2b2b2]ON[/color][/font]]
     - Inventory Removal Protection [Default = [font=Courier New][color=#b2b2b2]OFF[/color][/font], Possible Values = [font=Courier New][color=#b2b2b2]OFF[/color][/font]/[font=Courier New][color=#b2b2b2]Ask First[/color][/font]/[font=Courier New][color=#b2b2b2]Automatic[/color][/font]]
 - Crafting
+    - Use Simple Crafting Recipe [Default = [font=Courier New][color=#b2b2b2]OFF[/color][/font], Possible Values = [font=Courier New][color=#b2b2b2]OFF[/color][/font]/[font=Courier New][color=#b2b2b2]ON[/color][/font]]
     - Crafting Station [Default = [font=Courier New][color=#b2b2b2]Dynamic[/color][/font], Possible Values = [font=Courier New][color=#b2b2b2]Dynamic[/color][/font]/[font=Courier New][color=#b2b2b2]Chemistry Station (Vanilla)[/color][/font]/[font=Courier New][color=#b2b2b2]Electronics Workbench (SW)[/color][/font]/[font=Courier New][color=#b2b2b2]Engineering Workbench (SW)[/color][/font]/[font=Courier New][color=#b2b2b2]Manufacturing Workbench (SW)[/color][/font]/[font=Courier New][color=#b2b2b2]Utility Workbench (SW)[/color][/font]/[font=Courier New][color=#b2b2b2]Adv. Engineering Workbench AWKCR)[/color][/font]/[font=Courier New][color=#b2b2b2]Electronics Workstation (AWKCR)[/color][/font]/[font=Courier New][color=#b2b2b2]Utility Workbench (AWKCR)[/color][/font]/[font=Courier New][color=#b2b2b2]Utility Station (ECO)[/color][/font]]
 - Hotkeys
     - Activate Portable Junk Recycler Mk 2 [Default = [font=Courier New][color=#b2b2b2]None[/color][/font]]
