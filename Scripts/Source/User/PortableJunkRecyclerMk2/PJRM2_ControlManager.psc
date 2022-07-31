@@ -135,7 +135,7 @@ int Property iSaveFileMonitor Auto Hidden ; Do not mess with ever - this is used
 
 PJRM2_SettingManager SettingManager
 PJRM2_ThreadManager ThreadManager
-string ModVersion = "1.1.3" const
+string ModVersion = "1.2.0" const
 SettingChangeType AvailableChangeTypes
 string ModName
 bool EnableLogging = false
@@ -919,7 +919,7 @@ MultiplierSet Function GetMultipliers(bool abPlayerAtOwnedWorkshop)
 EndFunction
 
 ; prep for uninstall of mod
-Function Uninstall()
+Function Uninstall(bool abSilent = false, bool abRemoveDevice = true)
     If ! MutexRunning && ! MutexBusy
         MutexBusy = true
         Self._Log("Uninstallation sequence initialized!", 1, abForce = true)
@@ -939,7 +939,9 @@ Function Uninstall()
         SettingManager.Uninstall()
 
         ; remove recycler devices in inventory, if any
-        PlayerRef.RemoveItem(Game.GetFormFromFile(0x840, SettingManager.ModName + ".esp"), -1, true)
+        If abRemoveDevice
+            PlayerRef.RemoveItem(PortableRecyclerItem, -1, true)
+        EndIf
 
         ; properties
         ; group Components
@@ -1024,9 +1026,13 @@ Function Uninstall()
         SettingManager = None
     ElseIf MutexRunning && ! MutexBusy
         ; fail (running)
-        MessageUninstallFailRunning.Show()
+        If !abSilent
+            MessageUninstallFailRunning.Show()
+        EndIf
     Else
         ; fail (busy)
-        MessageUninstallFailBusy.Show()
+        If !abSilent
+            MessageUninstallFailBusy.Show()
+        EndIf
     EndIf
 EndFunction
