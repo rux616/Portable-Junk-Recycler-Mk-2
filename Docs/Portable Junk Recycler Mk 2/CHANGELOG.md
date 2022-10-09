@@ -6,6 +6,7 @@ Table Of Contents
 - [Portable Junk Recycler Mk 2](#portable-junk-recycler-mk-2)
     - [Table Of Contents](#table-of-contents)
 - [Changelogs](#changelogs)
+    - [v1.2.1](#v121)
     - [v1.2.0](#v120)
     - [v1.1.3](#v113)
     - [v1.1.2](#v112)
@@ -29,6 +30,12 @@ Table Of Contents
 
 Changelogs
 ==========
+
+v1.2.1
+------
+- Fixed packaging of loose debug scripts
+
+([TOC](#table-of-contents))
 
 v1.2.0
 ------
