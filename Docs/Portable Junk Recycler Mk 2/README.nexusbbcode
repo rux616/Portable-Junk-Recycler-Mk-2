@@ -529,6 +529,15 @@ These lists are reread every time a game is loaded.
     - Enable Script Profiling [Default = [font=Courier New][color=#b2b2b2]OFF[/color][/font], Possible Values = [font=Courier New][color=#b2b2b2]OFF[/color][/font]/[font=Courier New][color=#b2b2b2]ON[/color][/font]]
 - Methodology
     - Use "Direct Move" Method To Update Recyclable Item List [Default = [font=Courier New][color=#b2b2b2]OFF[/color][/font], Possible Values = [font=Courier New][color=#b2b2b2]OFF[/color][/font]/[font=Courier New][color=#b2b2b2]ON[/color][/font]]
+- Resets
+    - Reset Settings To Defaults [Button]
+    - Reset Locks [Button]
+    - Reset Lists: Recyclable Items and Low Weight Ratio Items [Button]
+    - Reset List: Always Automatically Transfer [Button]
+    - Reset List: Never Automatically Transfer [Button]
+- Uninstall
+    - Show "Uninstall Mod" Button
+        - Uninstall Mod [Button]
 
 
 [size=5][b]Troubleshooting Info[/b][/size]
