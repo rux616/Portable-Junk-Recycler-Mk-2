@@ -18,8 +18,8 @@
         <Variable Name="ModNameShort" Value="PJRM2"/>
         <Variable Name="ModNameRelease" Value="Portable_Junk_Recycler_Mk_2"/>
         <Variable Name="ModResourceName" Value="PortableJunkRecyclerMk2"/>
-        <Variable Name="ModVersion" Value="1.2.0"/>
-        <Variable Name="ModVersionWithBuild" Value="1.2.0+342"/>
+        <Variable Name="ModVersion" Value="1.2.1"/>
+        <Variable Name="ModVersionWithBuild" Value="1.2.1+343"/>
         <Variable Name="ModPath" Value="..\..\.."/>
         <Variable Name="BuildPath" Value="@ModPath\Build"/>
         <Variable Name="CompilePath" Value="@BuildPath\Scripts"/>
@@ -67,7 +67,7 @@
             <Include Path="Options\Archives\Low Res Textures">**\Low Res Textures\@ModName - Textures.ba2</Include>
             <Include Path="Options\Crafting Category Overrides">@ModNameShort Crafting Category Override *.esp</Include>
             <Include Path="Options\Interesting Configurations">MCM\Settings\@ModName\*.ini</Include>
-            <Include Path="Options\Loose Files\Debug Scripts\Scripts\@ModResourceName">Scripts\**\*.pex</Include>
+            <Include Path="Options\Loose Files\Debug Scripts\@ModResourceName">Scripts\**\*.pex</Include>
             <Include Path="Options\Loose Files\High Res Textures\@ModResourceName">Textures\@ModResourceName\*.dds</Include>
             <Include Path="Options\Loose Files\Low Res Textures\@ModResourceName">Textures\@ModResourceName\lowres\*.dds</Include>
             <Include Path="Options\Loose Files\Meshes\@ModResourceName">Meshes\**\*.nif</Include>

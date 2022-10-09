@@ -559,6 +559,15 @@ Advanced:
     - Enable Script Profiling [Default = `OFF`, Possible Values = `OFF`/`ON`]
 - Methodology
     - Use "Direct Move" Method To Update Recyclable Item List [Default = `OFF`, Possible Values = `OFF`/`ON`]
+- Resets
+    - Reset Settings To Defaults [Button]
+    - Reset Locks [Button]
+    - Reset Lists: Recyclable Items and Low Weight Ratio Items [Button]
+    - Reset List: Always Automatically Transfer [Button]
+    - Reset List: Never Automatically Transfer [Button]
+- Uninstall
+    - Show "Uninstall Mod" Button
+        - Uninstall Mod [Button]
 
 
 Troubleshooting Info
