@@ -109,7 +109,7 @@ var[] Function ChangeSettingBool(SettingBool akSettingToChange, int aiChangeType
         toReturn.Add(akSettingToChange.CallbackScript)
         toReturn.Add(akSettingToChange.CallbackFunction)
         toReturn.Add(akSettingToChange.CallbackArgumentType)
-        toReturn.add(oldValue) ; old value
+        toReturn.Add(oldValue) ; old value
         toReturn.Add(akSettingToChange.Value) ; new value
         toReturn.Add(akSettingToChange.WaitOnCallback)
     EndIf
@@ -147,7 +147,7 @@ var[] Function ChangeSettingFloat(SettingFloat akSettingToChange, int aiChangeTy
         toReturn.Add(akSettingToChange.CallbackScript)
         toReturn.Add(akSettingToChange.CallbackFunction)
         toReturn.Add(akSettingToChange.CallbackArgumentType)
-        toReturn.add(oldValue) ; old value
+        toReturn.Add(oldValue) ; old value
         toReturn.Add(akSettingToChange.Value) ; new value
         toReturn.Add(akSettingToChange.WaitOnCallback)
     EndIf
@@ -185,7 +185,7 @@ var[] Function ChangeSettingInt(SettingInt akSettingToChange, int aiChangeType, 
         toReturn.Add(akSettingToChange.CallbackScript)
         toReturn.Add(akSettingToChange.CallbackFunction)
         toReturn.Add(akSettingToChange.CallbackArgumentType)
-        toReturn.add(oldValue) ; old value
+        toReturn.Add(oldValue) ; old value
         toReturn.Add(akSettingToChange.Value) ; new value
         toReturn.Add(akSettingToChange.WaitOnCallback)
     EndIf
@@ -216,7 +216,7 @@ var[] Function ChangeSettingString(SettingString akSettingToChange, int aiChange
         toReturn.Add(akSettingToChange.CallbackScript)
         toReturn.Add(akSettingToChange.CallbackFunction)
         toReturn.Add(akSettingToChange.CallbackArgumentType)
-        toReturn.add(oldValue) ; old value
+        toReturn.Add(oldValue) ; old value
         toReturn.Add(akSettingToChange.Value) ; new value
         toReturn.Add(akSettingToChange.WaitOnCallback)
     EndIf
