@@ -1,6 +1,6 @@
 .version eol=lf
+MCM/Config/**/*.json eol=lf
 *.jsonnet eol=lf
 *.libsonnet eol=lf
-*.md eol=lf
 *.py eol=lf
 *.sh eol=lf
