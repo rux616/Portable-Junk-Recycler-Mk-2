@@ -1,17 +1,14 @@
 {
-    // created by vscode papyrus-lang papyrus.fallout4.generateProject
     "folders": [
         {
             "path": "."
-        }
+        },
     ],
     "settings": {
-        "papyrus.fallout4.enabled": true,
-        "papyrus.skyrim.enabled": false,
-        "papyrus.skyrimSpecialEdition.enabled": false,
-        "jsonnet.executablePath": "C:\\Program Files\\jsonnet\\jsonnet.exe",
-        "jsonnet.libPaths": [
-            "${workspaceFolder}\\MCM\\Config\\Portable Junk Recycler Mk 2\\lib"
+        "cSpell.enableFiletypes": [
+            "jsonnet",
+            "papyrus",
+            "papyrus-project",
         ],
         "cSpell.words": [
             "additem",
@@ -33,6 +30,7 @@
             "fomod",
             "formid",
             "Grospolina",
+            "Hmmss",
             "holotape",
             "HOMEPATH",
             "jsonnet",
@@ -54,6 +52,7 @@
             "Mutex",
             "mutexes",
             "Neanka",
+            "nexusbbcode",
             "PJRM",
             "Ptbr",
             "pyro",
@@ -74,32 +73,27 @@
             "Unregistering",
             "Unscrappable",
             "Valdacil",
-            "Wabbajack"
+            "Wabbajack",
         ],
-        "cSpell.enableFiletypes": [
-            "jsonnet",
-            "papyrus",
-            "papyrus-project"
-        ],
+        "markdown.extension.italic.indicator": "_",
+        "markdown.extension.list.indentationSize": "inherit",
         "markdownlint.config": {
-            "MD007": { "indent": 4 },
+            "MD007": {
+                "indent": 4
+            },
             "MD012": false,
             "MD022": false,
             "MD025": false,
             "MD032": false,
             "MD033": false,
         },
-        "markdown.extension.list.indentationSize": "inherit",
-        "markdown-pdf.displayHeaderFooter": false,
-        "markdown-pdf.margin.bottom": "0px",
-        "markdown-pdf.margin.left": "0px",
-        "markdown-pdf.margin.right": "0px",
-        "markdown-pdf.margin.top": "0px",
-        "trailing-spaces.trimOnSave": true,
-        "python.formatting.provider": "black",
+        "papyrus.skyrim.enabled": false,
+        "papyrus.skyrimSpecialEdition.enabled": false,
+        "powershell.powerShellDefaultVersion": "PowerShell (x64)",
         "python.formatting.blackArgs": [
-            "--line-length 100"
+            "--line-length 100",
         ],
-        "markdown.extension.italic.indicator": "_"
+        "python.formatting.provider": "black",
+        "trailing-spaces.trimOnSave": true,
     }
 }
