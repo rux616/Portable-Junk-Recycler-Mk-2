@@ -1,5 +1,5 @@
 /meta.ini
 *.ba2
-*.backup.*
+*.backup
 *.pex
 *.zip
