@@ -18,8 +18,8 @@
         <Variable Name="ModNameShort" Value="PJRM2"/>
         <Variable Name="ModNameRelease" Value="Portable_Junk_Recycler_Mk_2"/>
         <Variable Name="ModResourceName" Value="PortableJunkRecyclerMk2"/>
-        <Variable Name="ModVersion" Value="1.2.1"/>
-        <Variable Name="ModVersionWithBuild" Value="1.2.1+343"/>
+        <Variable Name="ModVersion" Value="2.0.0-alpha.1"/>
+        <Variable Name="ModVersionWithBuild" Value="2.0.0-alpha.1+356"/>
         <Variable Name="ModPath" Value="..\..\.."/>
         <Variable Name="BuildPath" Value="@ModPath\Build"/>
         <Variable Name="CompilePath" Value="@BuildPath\Scripts"/>
