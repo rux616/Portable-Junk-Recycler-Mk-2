@@ -24,14 +24,13 @@ import hashlib
 import re
 import shutil
 import struct
-import sys
 
 
 SIG_LENGTH = 4
 UINT16_LENGTH = 2
 UINT32_LENGTH = 4
-VERSION_CHECK = r"^v?\d+\.\d+\.\d+" + r"($|(-(rc|beta|alpha)(\.\d+)?))" + r"($|(\+\d+))"
-VERSION_REGEX = r"v?\d+\.\d+\.\d+" + r"(-(rc|beta|alpha)(\.\d+)?)?" + r"(\+\d+)?"
+VERSION_CHECK = r"^v?\d+\.\d+\.\d+" + r"($|(-(pre|rc|beta|alpha)(\.\d+)?))" + r"($|(\+\d+))"
+VERSION_REGEX = r"v?\d+\.\d+\.\d+" + r"(-(pre|rc|beta|alpha)(\.\d+)?)?" + r"(\+\d+)?"
 
 
 def replace_data(data, start, stop, new_data):
@@ -158,8 +157,8 @@ def main(filename, version, write_data=True, make_backup=True):
     if write_data:
         # make a backup of the plugin if not disabled
         if make_backup:
-            current_time = datetime.now()
-            backup = f"{filename}.backup.{current_time.strftime('%Y_%m_%d_%H_%M_%S')}"
+            current_time = datetime.utcnow()
+            backup = f"{filename}.{current_time.strftime('%Y%m%dT%H%M%SZ')}.backup"
             print(f"Making backup of plugin at '{backup}'...")
             shutil.copy2(filename, backup)
 
@@ -187,7 +186,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "version",
-        help="The version to use. Must be of the format '(v)X.Y.Z(-rc|beta|alpha(.A))(+B)' where items in () are optional, and items X, Y, Z, A, and B are non-negative integers. Examples: 'v1.2.3', '0.1.2-beta', 'v1.0.0-rc.1', 'v1.2.3+3827', 'v0.3.2-alpha.1+4567'. If '(v)' is not present and the version is not present in the SNAM record, version will be preceded with 'Version: ' when added. Example: '1.0.0' -> 'Version: 1.0.0'.",
+        help="The version to use. Must be of the format '(v)X.Y.Z(-pre|rc|beta|alpha(.A))(+B)' where items in () are optional, and items X, Y, Z, A, and B are non-negative integers. Examples: 'v1.2.3', '0.1.2-beta', 'v1.0.0-rc.1', 'v1.2.3+3827', 'v0.3.2-alpha.1+4567'. If '(v)' is not present and the version is not present in the SNAM record, version will be preceded with 'Version: ' when added. Example: '1.0.0' -> 'Version: 1.0.0'.",
     )
     parser.add_argument(
         "plugin_file",

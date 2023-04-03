@@ -1,6 +1,16 @@
 {
-    // created by vscode papyrus-lang papyrus.skyrimSpecialEdition.generateProject
     "version": "2.0.0",
+    "options": {
+        "shell": {
+            "executable": "pwsh.exe",
+            "args": [
+                "-ExecutionPolicy",
+                "Bypass",
+                "-Command",
+            ]
+        },
+        "cwd": "${workspaceFolder}",
+    },
     "tasks": [
         {
             "type": "pyro",
@@ -33,15 +43,12 @@
         {
             "label": "Render JSON",
             "type": "shell",
-            "command": "jsonnet",
+            "command": "./Working/bin/jsonnet/jsonnet.exe",
             "args": [
                 "-m",
-                ".",
-                "Portable Junk Recycler Mk 2.jsonnet"
+                "./MCM/Config/Portable Junk Recycler Mk 2",
+                "./MCM/Config/Portable Junk Recycler Mk 2/Portable Junk Recycler Mk 2.jsonnet",
             ],
-            "options": {
-                "cwd": "${workspaceFolder}/MCM/Config/Portable Junk Recycler Mk 2",
-            },
             "dependsOn": [
                 "Format Jsonnet"
             ],
@@ -49,14 +56,12 @@
         {
             "label": "Format Jsonnet",
             "type": "shell",
-            "command": "jsonnetfmt",
+            "command": "./Working/bin/jsonnet/jsonnetfmt.exe",
             "args": [
                 "-i",
-                "Portable Junk Recycler Mk 2.jsonnet"
+                "./MCM/Config/Portable Junk Recycler Mk 2/Portable Junk Recycler Mk 2.jsonnet",
+                "./MCM/Config/Portable Junk Recycler Mk 2/lib/mcm.libsonnet",
             ],
-            "options": {
-                "cwd": "${workspaceFolder}/MCM/Config/Portable Junk Recycler Mk 2",
-            },
             "dependsOn": [
                 "Render Markdown to Nexus BBCode"
             ],
@@ -64,14 +69,10 @@
         {
             "label": "Render Markdown to Nexus BBCode",
             "type": "shell",
-            "command": "bash",
+            "command": "./Working/Scripts/markdown-to-nexusbbcode.ps1",
             "args": [
-                "-c",
-                "../../Working/Scripts/markdown-to-nexusbbcode.sh README.md"
+                "./Docs/Portable Junk Recycler Mk 2/README.md",
             ],
-            "options": {
-                "cwd": "${workspaceFolder}/Docs/Portable Junk Recycler Mk 2",
-            },
             "dependsOn": [
                 "Render Markdown to Plaintext"
             ],
@@ -79,14 +80,11 @@
         {
             "label": "Render Markdown to Plaintext",
             "type": "shell",
-            "command": "bash",
+            "command": "./Working/Scripts/markdown-to-plaintext.ps1",
             "args": [
-                "-c",
-                "../../Working/Scripts/markdown-to-plaintext.sh README.md CHANGELOG.md"
+                "./Docs/Portable Junk Recycler Mk 2/README.md",
+                "./Docs/Portable Junk Recycler Mk 2/CHANGELOG.md",
             ],
-            "options": {
-                "cwd": "${workspaceFolder}/Docs/Portable Junk Recycler Mk 2",
-            },
             "dependsOn": [
                 "Update Versions"
             ],
@@ -94,21 +92,11 @@
         {
             "label": "Update Versions",
             "type": "shell",
-            "command": "bash",
-            "args": [
-                "-c",
-                "./Working/Scripts/version-updater.sh"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}",
-            }
+            "command": "./Working/Scripts/version-updater.ps1",
         },
         {
             "label": "Remove compiled Papyrus scripts",
             "type": "shell",
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
             "windows": {
                 "command": "Get-ChildItem -Path '.' -Filter '*.pex' -Recurse | Remove-Item"
             },
