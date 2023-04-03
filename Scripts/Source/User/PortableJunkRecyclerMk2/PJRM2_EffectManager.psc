@@ -67,6 +67,9 @@ Group Messages
     Message Property MessageEditAlwaysAutoTransferListFinished Auto Mandatory
 EndGroup
 
+; v2 properties
+ObjectReference Property PortableRecyclerActualContainer Auto Mandatory
+
 
 
 ; VARIABLES
@@ -220,6 +223,33 @@ Function _StopStackProfiling() DebugOnly
         Debug.StopStackProfiling()
         Self._Log("Stack profiling stopped")
     EndIf
+EndFunction
+
+; v2
+; handle recycling weapons
+Function RecycleV2()
+    Self._Log("Recycler v2 process started")
+    ; activate the container (with 1.0s wait prior to, as specified on
+    ; https://www.creationkit.com/fallout4/index.php?title=Activate_-_ObjectReference)
+    Utility.Wait(1.0)
+    ; wait for the async subprocess to complete
+    Self.WaitForAsyncSubprocess()
+    PortableRecyclerActualContainer.Activate(PlayerRef as ObjectReference, true)
+
+    ; trigger a small wait once the container is open because sometimes, if a player has a boatload of items in the
+    ; inventory, it can cause the interface to lag just enough for the script to keep processing
+    Utility.WaitMenuMode(0.5)
+
+    ; (triggered once container closes) wait a moment for the container inventory to update
+    Utility.Wait(0.1)
+
+    ; drop each weapon/armor out into space
+    ; TODO refine to only weapons and armor
+    Form[] containerInventory = PortableRecyclerActualContainer.GetInventoryItems()
+    int index = containerInventory.Length - 1
+    While index >= 0
+        PortableRecyclerActualContainer.DropObject(containerInventory[index], aiCount = 10)
+    EndWhile
 EndFunction
 
 ; handle the recycling functionality of the device
