@@ -68,7 +68,7 @@ Group Messages
 EndGroup
 
 ; v2 properties
-ObjectReference Property PortableRecyclerActualContainer Auto Mandatory
+ObjectReference Property PortableRecyclerContainerRef Auto Mandatory
 
 
 
@@ -77,6 +77,7 @@ ObjectReference Property PortableRecyclerActualContainer Auto Mandatory
 
 PJRM2_ControlManager ControlManager
 PJRM2_SettingManager SettingManager
+PJRM2_ContainerManager ContainerManager
 PJRM2_ThreadManager ThreadManager
 
 string ModName
@@ -97,6 +98,7 @@ bool AsyncSubprocessComplete = false
 Event OnInit()
     ControlManager = PortableRecyclerControl as PJRM2_ControlManager
     SettingManager = PortableRecyclerControl as PJRM2_SettingManager
+    ContainerManager = PortableRecyclerControl as PJRM2_ContainerManager
     ThreadManager = PortableRecyclerControl as PJRM2_ThreadManager
     ModName = SettingManager.ModName
     EnableLogging = SettingManager.EnableLogging
@@ -162,11 +164,12 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
                 MessageEditAlwaysAutoTransferListModeBox, MessageEditAlwaysAutoTransferListModeNotification, \
                 MessageEditAlwaysAutoTransferListFinished)
         Else
-            If SettingManager.EnableBehaviorOverrides
-                Self.Recycle(hotkeyRetain, hotkeyTransfer)
-            Else
-                Self.Recycle(false, false)
-            EndIf
+            Self.RecycleV2()
+            ; If SettingManager.EnableBehaviorOverrides
+            ;     Self.Recycle(hotkeyRetain, hotkeyTransfer)
+            ; Else
+            ;     Self.Recycle(false, false)
+            ; EndIf
         EndIf
 
         ; delete the temp containers
@@ -232,9 +235,7 @@ Function RecycleV2()
     ; activate the container (with 1.0s wait prior to, as specified on
     ; https://www.creationkit.com/fallout4/index.php?title=Activate_-_ObjectReference)
     Utility.Wait(1.0)
-    ; wait for the async subprocess to complete
-    Self.WaitForAsyncSubprocess()
-    PortableRecyclerActualContainer.Activate(PlayerRef as ObjectReference, true)
+    PortableRecyclerContainerRef.Activate(PlayerRef as ObjectReference, true)
 
     ; trigger a small wait once the container is open because sometimes, if a player has a boatload of items in the
     ; inventory, it can cause the interface to lag just enough for the script to keep processing
@@ -245,11 +246,33 @@ Function RecycleV2()
 
     ; drop each weapon/armor out into space
     ; TODO refine to only weapons and armor
-    Form[] containerInventory = PortableRecyclerActualContainer.GetInventoryItems()
+    ; TODO add inventory filter for all items in the container? maybe only WEAP and ARMO
+    Form[] containerInventory = PortableRecyclerContainerRef.GetInventoryItems()
+    Self._Log("containerInventory length: " + containerInventory.Length)
     int index = containerInventory.Length - 1
+    int num_items = 0
+    int num_processing = 0
     While index >= 0
-        PortableRecyclerActualContainer.DropObject(containerInventory[index], aiCount = 10)
+        num_items = PortableRecyclerContainerRef.GetItemCount(containerInventory[index])
+        While num_items > 0
+            num_processing = ContainerManager.ItemsProcessing
+            Self._Log("RecycleV2: item: " + containerInventory[index] + ", qty remaining: " + num_items + ", items being processed: " + num_processing)
+            ; TODO check this for race conditions
+            While num_processing >= 10
+                Self._Log("RecycleV2: WAITING... number of items processing: " + num_processing)
+                Utility.Wait(0.1)
+                num_processing = ContainerManager.ItemsProcessing
+            EndWhile
+            ContainerManager.ItemsProcessing += 1
+            Self._Log("RecycleV2: items processing +1")
+            PortableRecyclerContainerRef.DropObject(containerInventory[index])
+            Self._Log("RecycleV2: dropped item: " + containerInventory[index])
+            num_items -= 1
+        EndWhile
+        index -= 1
     EndWhile
+    ; TODO remove inventory event filters?
+    PlayerRef.AddItem(PortableRecyclerItem as Form, 1, true)
 EndFunction
 
 ; handle the recycling functionality of the device

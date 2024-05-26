@@ -17,11 +17,13 @@
         <Variable Name="ModPath" Value="..\..\.."/>
         <Variable Name="BuildPath" Value="@ModPath\Build"/>
         <Variable Name="CompilePath" Value="@ModPath\Scripts"/>
+        <Variable Name="ScriptsPathSUP" Value="@ModPath\..\[NoDelete] [DEV] SUP F4SE\Scripts\Source"/>
         <Variable Name="ScriptsPathMCM" Value="@ModPath\..\Mod Configuration Menu\Scripts\Source"/>
         <Variable Name="ScriptsPathF4SE" Value="@ModPath\..\F4SE Scripts\Scripts\Source"/>
         <Variable Name="ScriptsPathVanilla" Value="@ModPath\..\[NoDelete] [DEV] Vanilla Scripts Source\Scripts\Source"/>
     </Variables>
     <Imports>
+        <Import>@ScriptsPathSUP\User</Import>
         <Import>@ScriptsPathMCM\User</Import>
         <Import>@ScriptsPathF4SE</Import>
         <Import>@ScriptsPathVanilla\Base</Import>

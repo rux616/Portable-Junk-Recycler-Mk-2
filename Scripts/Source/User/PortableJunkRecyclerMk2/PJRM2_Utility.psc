@@ -274,6 +274,24 @@ Function DestroyArrayContents(var[] akArray) Global
     EndWhile
 EndFunction
 
+; get components of a COBJ
+; ConstructibleObject:ConstructableComponent[] Function GetComponents(Form akItem) Global
+;     ; string function_name = "GetComponents"
+;     ConstructibleObject[] constructable_objects = SUP_F4SE.GetAllConstructibleObjectsFromForm(akItem)
+;     ; Self._Log(function_name + ": item: " + akItem + ", COBJs: " + constructable_objects)
+;     If constructable_objects.Length > 0
+;         int index = 0
+;         ; don't need to set index if length == 1, because it's already 0
+;         If constructable_objects.Length >= 1
+;             index = Utility.RandomInt(0, constructable_objects.Length)
+;         EndIf
+;         ; Self._Log(function_name + ": item " + akItem + ", index: " + index + ", COBJ: " + constructable_objects[index])
+;         Return constructable_objects[index].GetConstructibleComponents()
+;     EndIf
+;     Return None
+; EndFunction
+
+
 ; write text to the user log, opening it if necessary
 Function Log(string asLogName, string asScript, string asLogMessage, int aiSeverity = 0) DebugOnly Global
     string asSeverity = ""

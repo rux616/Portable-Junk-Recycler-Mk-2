@@ -584,6 +584,7 @@ SettingBool UseDirectMoveRecyclableItemListUpdate_Var
 
 PJRM2_ControlManager ControlManager
 PJRM2_ThreadManager ThreadManager
+PJRM2_ContainerManager ContainerManager
 bool EnableLoggingDefault = false const
 bool EnableProfilingDefault = false const
 
@@ -599,6 +600,7 @@ bool ProfilingActive = false
 Event OnInit()
     ControlManager = (Self as Quest) as PJRM2_ControlManager
     ThreadManager = (Self as Quest) as PJRM2_ThreadManager
+    ContainerManager = (Self as Quest) as PJRM2_ContainerManager
 
     ; set up default logging
     EnableLogging_Var = new SettingBool
@@ -1705,6 +1707,8 @@ Function CallbackEnableLogging(bool abOldValue, bool abNewValue)
             Self._Log("Logging disabled", abForce = true)
         EndIf
         ControlManager.SetLogging(abNewValue)
+        ContainerManager.SetLogging(abNewValue)
+        ; the thread manager can be a bit chatty owing to the worker threads, so change its setting last
         ThreadManager.SetLogging(abNewValue)
     EndIf
 EndFunction
@@ -1712,6 +1716,8 @@ EndFunction
 Function CallbackEnableProfiling(bool abNewValue)
     Self._Log("Callback for EnableProfiling triggered")
     ControlManager.SetProfiling(abNewValue)
+    ContainerManager.SetProfiling(abNewValue)
+    ; the thread manager can be a bit chatty owing to the worker threads, so change its setting last
     ThreadManager.SetProfiling(abNewValue)
 EndFunction
 

@@ -134,6 +134,7 @@ int Property iSaveFileMonitor Auto Hidden ; Do not mess with ever - this is used
 ; ---------
 
 PJRM2_SettingManager SettingManager
+PJRM2_ContainerManager ContainerManager
 PJRM2_ThreadManager ThreadManager
 string ModVersion = "2.0.0-alpha.1" const
 SettingChangeType AvailableChangeTypes
@@ -158,6 +159,7 @@ bool ProfilingActive = false
 
 Event OnInit()
     SettingManager = (Self as Quest) as PJRM2_SettingManager
+    ContainerManager = (Self as Quest) as PJRM2_ContainerManager
     ThreadManager = (Self as Quest) as PJRM2_ThreadManager
     ModName = SettingManager.ModName
     EnableLogging = SettingManager.EnableLogging
@@ -366,6 +368,7 @@ EndFunction
 ; consolidated init
 Function Initialize(bool abQuestInit = false)
     Self._Log("SettingManager pre-initialization complete: " + SettingManager.PreInitialized)
+    Self._Log("ContainerManager pre-initialization complete: " + ContainerManager.PreInitialized)
     Self._Log("ThreadManager initialization complete: " + ThreadManager.Initialized)
     Self._Log(SettingManager.ModName + " v" + ModVersion, abForce = true)
     If ! EnableLogging
@@ -380,6 +383,7 @@ Function Initialize(bool abQuestInit = false)
     Self.CheckForF4SE()
     Self.CheckForMCM()
     SettingManager.Initialize(abQuestInit = abQuestInit)
+    ContainerManager.Initialize(abQuestInit = abQuestInit)
     Self.InitFormListWrappers()
     Self.InitComponentMappings()
     Self.InitScrapListAll()

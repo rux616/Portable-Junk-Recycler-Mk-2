@@ -40,6 +40,13 @@ Group PortableJunkRecycler
     FormListWrapper Property PortableRecyclerContents Auto Mandatory
 EndGroup
 
+Group Other
+    bool Property PreInitialized = false Auto
+    bool Property Initialized = false Auto
+EndGroup
+
+int Property ItemsProcessing Auto
+
 
 
 ; VARIABLES
@@ -72,49 +79,74 @@ Event OnInit()
     EnableLogging = SettingManager.EnableLogging
     EnableProfiling = SettingManager.EnableProfiling
     Self._StartStackProfiling()
-    Self._Log("Beginning onetime init process")
-
+    Self._Log("Beginning onetime init process", abForce = true)
+    ; do init stuff
+    ; TODO finish init stuff
+    PreInitialized = true
+    Self._Log("Finished onetime init process", abForce = true)
+    Self._StopStackProfiling()
 EndEvent
 
 Event ObjectReference.OnItemRemoved(ObjectReference akSourceContainer, Form akBaseItem, int aiItemCount, \
         ObjectReference akItemReference, ObjectReference akDestContainer)
-    Self._Log("OnItemRemoved event fired")
-
-    Self._Log("OnItemRemoved: source container " + akSourceContainer + ", base item " + akBaseItem + \
-        ", item count " + aiItemCount + ", item reference " + akItemReference + ", destination container " + akDestContainer)
-
     ; disable havok on the item reference - needed?
     akItemReference.SetMotionType(akItemReference.Motion_Keyframed, True)
+
+    Self._Log("OnItemRemoved: event fired")
+
+    Self._Log("OnItemRemoved: source container: " + akSourceContainer + ", base item: " + akBaseItem + \
+        ", item count: " + aiItemCount + ", item reference: " + akItemReference + ", destination container: " + akDestContainer)
+
+    ConstructibleObject:ConstructibleComponent[] item_components = New ConstructibleObject:ConstructibleComponent[0]
+
     ; get list of mods
     ObjectMod[] mods = akItemReference.GetAllMods()
-    Self._Log("OnItemRemoved: mod list " + mods)
+    Self._Log("OnItemRemoved: mod list: " + mods)
     ; for each mod
     int index = mods.Length - 1
     While index >= 0
-        Self._Log("OnItemRemoved: mod index " + index)
+        Self._Log("OnItemRemoved: mod index: " + index)
         ObjectMod currentMod = mods[index]
-        Self._Log("mod " + currentMod)
-    ;   get materials required to make mod
-        MiscObject currentLooseMod = currentMod.GetLooseMod()
-        Self._Log("OnItemRemoved: loose mod " + currentLooseMod)
-        ConstructibleObject:ConstructibleComponent[] components = (currentLooseMod as ConstructibleObject).GetConstructibleComponents()
-        Self._Log("OnItemRemoved: mod components" + components)
-    ;   divide material qty by 10 and apply any bonuses
+        Self._Log("mod: " + currentMod)
+        ; get materials required to make mod
+        If currentMod
+            ConstructibleObject:ConstructibleComponent[] returned = Self.GetComponents(currentMod)
+            int index2 = returned.Length - 1
+            While index2 >= 0
+                item_components.Add(returned[index2])
+                index2 -= 1
+            EndWhile
+        EndIf
+        index -= 1
+    EndWhile
+    ; get materials required to make base item
+    ConstructibleObject[] constructable_objects = SUP_F4SE.GetAllConstructibleObjectsFromForm(akBaseItem)
+    Self._Log("OnItemRemoved: base item: " + akBaseItem + ", COBJs: " + constructable_objects)
+    index = constructable_objects.Length - 1
+    While index >= 0
+        ConstructibleObject:ConstructibleComponent[] components = constructable_objects[index].GetConstructibleComponents()
+        Self._Log("OnItemRemoved: base item: " + akBaseItem + ", components: " + components)
+        ; divide material qty by 10 and apply any bonuses
         int index2 = components.Length - 1
         While index2 >= 0
             float newCount = components[index2].count / 10.0
-            Self._Log("OnItemRemoved: new count (raw) " + newCount + ", new count (int) " + newCount as int)
+            Self._Log("OnItemRemoved: base item: " + akBaseItem + ", component: " + components[index2] + ", new count (raw): " + newCount + ", new count (int): " + newCount as int)
             ; TODO apply bonuses
-            PlayerRef.AddItem(components[index2].object, Math.Ceiling(newCount))
+            ; TODO put material into chest to give back
+            If (components[index2].Object as Component)
+                PlayerRef.AddItem((components[index2].Object as Component).GetScrapItem(), Math.Ceiling(newCount), true)
+            Else
+                PlayerRef.AddItem(components[index2].Object, Math.Ceiling(newCount), true)
+            EndIf
+            index2 -= 1
         EndWhile
-    ;   put material into chest to give back
-    ;   TODO
+        index -= 1
     EndWhile
-    ; get materials required to make base item
-    ; divide material qty by 10 and apply any bonuses
-    ; put material into chest to give back
     ; delete item
     akItemReference.Delete()
+    Self._Log("OnItemRemoved: reference " + akItemReference + " deleted")
+    ItemsProcessing -= 1
+    Self._Log("OnItemRemoved: items processing -1, items currently processing: " + ItemsProcessing)
 EndEvent
 
 
@@ -190,6 +222,32 @@ Function Initialize(bool abQuestInit = false)
     ;     RegisterForMenuOpenCloseEvent("PauseMenu")
     ; EndIf
     ; Initialized = true
+    ; TODO finish init stuff, including registering for drop event
+    If abQuestInit
+        RegisterForRemoteEvent(PortableRecyclerContainer, "OnItemRemoved")
+        ; TODO temporary - remove once good solution for other inventory event filters is in place
+        AddInventoryEventFilter(none)
+    EndIf
+    Self._Log("Initialized", abForce = true)
+    Initialized = true
+EndFunction
+
+; get components of a COBJ
+ConstructibleObject:ConstructibleComponent[] Function GetComponents(Form akItem)
+    string function_name = "GetComponents"
+    ConstructibleObject[] constructible_objects = SUP_F4SE.GetAllConstructibleObjectsFromForm(akItem)
+    Self._Log(function_name + ": item: " + akItem + ", COBJs: " + constructible_objects)
+    If constructible_objects.Length > 0
+        int index = 0
+        ; don't need to set index if length == 1, because it's already 0
+        If constructible_objects.Length >= 1
+            index = Utility.RandomInt(0, constructible_objects.Length)
+        EndIf
+        Self._Log(function_name + ": item " + akItem + ", index: " + index + ", COBJ: " + constructible_objects[index])
+        Return constructible_objects[index].GetConstructibleComponents()
+    Else
+        Return New ConstructibleObject:ConstructibleComponent[0]
+    EndIf
 EndFunction
 
 Function Recycle()

@@ -11,5 +11,5 @@ $is_beta = $false
 $is_alpha = $true
 
 # build info
-$build_number = 356
+$build_number = 393
 $include_build_in_version = $false
