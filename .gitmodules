@@ -1,3 +1,6 @@
 [submodule "support/common"]
 	path = support/common
 	url = https://github.com/rux616/modding-build-release-scripts
+[submodule "support/jsonnet"]
+	path = support/jsonnet
+	url = https://github.com/rux616/modding-fo4-mcm-jsonnet-library
