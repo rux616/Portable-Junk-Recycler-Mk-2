@@ -18,8 +18,8 @@
         <Variable Name="ModNameShort" Value="PJRM2"/>
         <Variable Name="ModNameRelease" Value="Portable_Junk_Recycler_Mk_2"/>
         <Variable Name="ModResourceName" Value="PortableJunkRecyclerMk2"/>
-        <Variable Name="ModVersion" Value="2.0.0-alpha.1"/>
-        <Variable Name="ModVersionWithBuild" Value="2.0.0-alpha.1+356"/>
+        <Variable Name="ModVersion" Value="1.2.1"/>
+        <Variable Name="ModVersionWithBuild" Value="1.2.1+344"/>
         <Variable Name="ModPath" Value="..\..\.."/>
         <Variable Name="BuildPath" Value="@ModPath\Build"/>
         <Variable Name="CompilePath" Value="@BuildPath\Scripts"/>
@@ -36,13 +36,14 @@
         <Folder>.</Folder>
     </Folders>
     <Packages Output="@BuildPath\BA2">
-        <Package Name="Meshes\@ModName - Meshes" RootDir="@ModPath">
+        <Package Name="Release Scripts\@ModName - Main" RootDir="@ModPath">
             <Include>Meshes\**\*.nif</Include>
+            <!-- Note that "RewriteToPath" is only supported in a custom version of Pyro -->
+            <!-- https://github.com/rux616/pyro -->
+            <Include Path="Scripts\@ModResourceName" RewriteToPath="True">Build\Scripts\@ModResourceName\*.pex</Include>
         </Package>
-        <Package Name="Release Scripts\@ModName - Scripts" RootDir="@BuildPath">
-            <Include>Scripts\**\*.pex</Include>
-        </Package>
-        <Package Name="Debug Scripts\@ModName - Scripts" RootDir="@ModPath">
+        <Package Name="Debug Scripts\@ModName - Main" RootDir="@ModPath">
+            <Include>Meshes\**\*.nif</Include>
             <Include>Scripts\**\*.pex</Include>
         </Package>
         <Package Name="High Res Textures\@ModName - Textures" RootDir="@ModPath">
@@ -60,10 +61,9 @@
             <Include>Interface\**\*.txt</Include>
             <Include>MCM\Config\**\*.ini</Include>
             <Include>MCM\Config\**\*.json</Include>
-            <Include Path=".">**\Meshes\@ModName - Meshes.ba2</Include>
-            <Include Path=".">**\Release Scripts\@ModName - Scripts.ba2</Include>
+            <Include Path=".">**\Release Scripts\@ModName - Main.ba2</Include>
             <Include Path=".">**\High Res Textures\@ModName - Textures.ba2</Include>
-            <Include Path="Options\Archives\Debug Scripts">**\Debug Scripts\@ModName - Scripts.ba2</Include>
+            <Include Path="Options\Archives\Debug Scripts">**\Debug Scripts\@ModName - Main.ba2</Include>
             <Include Path="Options\Archives\Low Res Textures">**\Low Res Textures\@ModName - Textures.ba2</Include>
             <Include Path="Options\Crafting Category Overrides">@ModNameShort Crafting Category Override *.esp</Include>
             <Include Path="Options\Interesting Configurations">MCM\Settings\@ModName\*.ini</Include>
