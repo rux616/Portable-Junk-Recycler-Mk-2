@@ -1,0 +1,100 @@
+FormKey: 000820:Portable Junk Recycler Mk 2.esp
+VersionControl: 11093
+EditorID: PJRM2_Effect
+VirtualMachineAdapter:
+  Scripts:
+  - Name: PortableJunkRecyclerMk2:PJRM2_EffectManager
+    Properties:
+    - MutagenObjectType: ScriptObjectProperty
+      Name: NeverAutoTransferContainer
+      Object: 000832:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageEditNeverAutoTransferListFinished
+      Object: 00091C:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: PlayerRef
+      Object: 000014:Fallout4.esm
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageEditAlwaysAutoTransferListModeBox
+      Object: 000917:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: PortableRecyclerControl
+      Object: 000800:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: SoundRecycle
+      Object: 179F5B:Fallout4.esm
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageBusy
+      Object: 000904:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: KeywordUnscrappableObject
+      Object: 1CC46A:Fallout4.esm
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageEditAlwaysAutoTransferListModeNotification
+      Object: 000918:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: KeywordObjectTypeLooseMod
+      Object: 135C17:Fallout4.esm
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageFinishedUsesLeft
+      Object: 000907:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageFinishedNothing
+      Object: 000906:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: PortableRecyclerContainer
+      Object: 000830:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageFinished
+      Object: 000905:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: SoundPickup
+      Object: 0802A6:Fallout4.esm
+    - MutagenObjectType: ScriptObjectProperty
+      Name: PortableRecyclerContainerFiltered
+      Object: 000831:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: AlwaysAutoTransferContainer
+      Object: 000833:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageAlreadyRunning
+      Object: 000903:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageEditNeverAutoTransferListModeBox
+      Object: 00091A:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: PortableRecyclerItem
+      Object: 000840:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptStructProperty
+      Name: PortableRecyclerContents
+      Members:
+      - Name: ''
+        Properties:
+        - MutagenObjectType: ScriptObjectProperty
+          Name: list
+          Object: 000819:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageF4SENotInstalled
+      Object: 000900:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageEditAlwaysAutoTransferListFinished
+      Object: 000919:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageFinishedNothingUsesLeft
+      Object: 000908:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageEditNeverAutoTransferListModeNotification
+      Object: 00091B:Portable Junk Recycler Mk 2.esp
+Name:
+  TargetLanguage: English
+  Value: Portable Junk Recycler Mk 2
+Archetype:
+  MutagenObjectType: MagicEffectArchetype
+  Type: Script
+CastType: FireAndForget
+DualCastScale: 1
+CastingSoundLevel: Normal
+Sounds: []
+Description:
+  TargetLanguage: English
+  Value: ''

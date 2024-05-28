@@ -1,0 +1,12 @@
+FormKey: 000900:Portable Junk Recycler Mk 2.esp
+VersionControl: 11090
+EditorID: PJRM2_Message_F4SENotDetected
+Description:
+  TargetLanguage: English
+  Value: >-
+    <font size='24'><b><u>Portable Junk Recycler Mk 2</u></b></font>
+
+
+    ERROR: F4SE not detected! Please make sure that it is properly installed.
+Flags:
+- MessageBox

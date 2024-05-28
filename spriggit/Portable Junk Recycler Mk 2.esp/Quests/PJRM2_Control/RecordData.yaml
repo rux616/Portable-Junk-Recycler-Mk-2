@@ -1,0 +1,253 @@
+FormKey: 000800:Portable Junk Recycler Mk 2.esp
+VersionControl: 11161
+EditorID: PJRM2_Control
+VirtualMachineAdapter:
+  Scripts:
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread18
+  - Name: PortableJunkRecyclerMk2:PJRM2_ThreadManager
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread12
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread05
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread07
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread02
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread28
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread03
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread06
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread16
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread15
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread17
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread11
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread01
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread25
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread19
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread13
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread31
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread21
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread10
+  - Name: PortableJunkRecyclerMk2:PJRM2_ControlManager
+    Properties:
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageAlwaysAutoTransferListReset
+      Object: 00091D:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptStructProperty
+      Name: NeverAutoTransferList
+      Members:
+      - Name: ''
+        Properties:
+        - MutagenObjectType: ScriptObjectProperty
+          Name: list
+          Object: 00081D:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptStructProperty
+      Name: RecyclableItemList
+      Members:
+      - Name: ''
+        Properties:
+        - MutagenObjectType: ScriptObjectProperty
+          Name: list
+          Object: 00081A:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageUninstallFailBusy
+      Object: 000915:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageRecyclableItemsListsResetFailBusy
+      Object: 000912:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageUsesLeftUnlimited
+      Object: 00090F:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptStructProperty
+      Name: ComponentListU
+      Members:
+      - Name: ''
+        Properties:
+        - MutagenObjectType: ScriptObjectProperty
+          Name: list
+          Object: 000811:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageSettingsResetFailRunning
+      Object: 00090B:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageUninstalled
+      Object: 000914:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageAlwaysAutoTransferListResetFailRunning
+      Object: 00091F:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageRecyclableItemsListsReset
+      Object: 000911:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptStructProperty
+      Name: ScrapListAll
+      Members:
+      - Name: ''
+        Properties:
+        - MutagenObjectType: ScriptObjectProperty
+          Name: list
+          Object: 000818:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptStructProperty
+      Name: ComponentListR
+      Members:
+      - Name: ''
+        Properties:
+        - MutagenObjectType: ScriptObjectProperty
+          Name: list
+          Object: 000812:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptStructProperty
+      Name: AlwaysAutoTransferList
+      Members:
+      - Name: ''
+        Properties:
+        - MutagenObjectType: ScriptObjectProperty
+          Name: list
+          Object: 00081C:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptStructProperty
+      Name: ComponentListC
+      Members:
+      - Name: ''
+        Properties:
+        - MutagenObjectType: ScriptObjectProperty
+          Name: list
+          Object: 000810:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageUninstallFailRunning
+      Object: 000916:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: PlayerRef
+      Object: 000014:Fallout4.esm
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageLocksReset
+      Object: 00090C:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageNeverAutoTransferListResetFailBusy
+      Object: 000921:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptStructProperty
+      Name: LowWeightRatioItemList
+      Members:
+      - Name: ''
+        Properties:
+        - MutagenObjectType: ScriptObjectProperty
+          Name: list
+          Object: 00081B:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptStructProperty
+      Name: ComponentListS
+      Members:
+      - Name: ''
+        Properties:
+        - MutagenObjectType: ScriptObjectProperty
+          Name: list
+          Object: 000813:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageSettingsReset
+      Object: 000909:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageCurrentMultipliersRng
+      Object: 00090E:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageCurrentMultipliers
+      Object: 00090D:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptStructProperty
+      Name: ScrapListU
+      Members:
+      - Name: ''
+        Properties:
+        - MutagenObjectType: ScriptObjectProperty
+          Name: list
+          Object: 000815:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptStructProperty
+      Name: ScrapListR
+      Members:
+      - Name: ''
+        Properties:
+        - MutagenObjectType: ScriptObjectProperty
+          Name: list
+          Object: 000816:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptStructProperty
+      Name: ScrapListC
+      Members:
+      - Name: ''
+        Properties:
+        - MutagenObjectType: ScriptObjectProperty
+          Name: list
+          Object: 000814:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageF4SENotInstalled
+      Object: 000900:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageInitialized
+      Object: 000902:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageNeverAutoTransferListResetFailRunning
+      Object: 000922:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageUsesLeftLimited
+      Object: 000910:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageNeverAutoTransferListReset
+      Object: 000920:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageSettingsResetFailBusy
+      Object: 00090A:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageRecyclableItemsListsResetFailRunning
+      Object: 000913:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: WorkshopParent
+      Object: 02058E:Fallout4.esm
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageMCMNotInstalled
+      Object: 000901:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageAlwaysAutoTransferListResetFailBusy
+      Object: 00091E:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptStructProperty
+      Name: ScrapListS
+      Members:
+      - Name: ''
+        Properties:
+        - MutagenObjectType: ScriptObjectProperty
+          Name: list
+          Object: 000817:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: PortableRecyclerItem
+      Object: 000840:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageIntentionalMoveQueryContainer
+      Object: 000923:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: MessageIntentionalMoveQueryWorld
+      Object: 000924:Portable Junk Recycler Mk 2.esp
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread04
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread08
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread24
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread30
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread29
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread09
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread27
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread14
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread22
+  - Name: PortableJunkRecyclerMk2:PJRM2_SettingManager
+    Properties:
+    - MutagenObjectType: ScriptObjectProperty
+      Name: PortableJunkRecyclerConstructibleObject
+      Object: 000860:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: PortableJunkRecyclerConstructibleObjectSimple
+      Object: 000861:Portable Junk Recycler Mk 2.esp
+    - MutagenObjectType: ScriptObjectProperty
+      Name: NullWorkbenchKeyword
+      Object: 000870:Portable Junk Recycler Mk 2.esp
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread00
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread26
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread20
+  - Name: PortableJunkRecyclerMk2:PJRM2_WorkerThread23
+  Versioning:
+  - Break0
+  ExtraBindDataVersion: 0
+  Script:
+    Name: ''
+Data:
+  Flags:
+  - StartGameEnabled
+  - AllowRepeatedStages
+  - StartsEnabled
+  - RunOnce
+  Unused: 70
+UnusedConditions: []
+Aliases: []

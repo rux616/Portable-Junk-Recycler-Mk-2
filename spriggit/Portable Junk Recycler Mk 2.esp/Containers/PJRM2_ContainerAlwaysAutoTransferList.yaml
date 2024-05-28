@@ -1,0 +1,11 @@
+FormKey: 000833:Portable Junk Recycler Mk 2.esp
+VersionControl: 11161
+EditorID: PJRM2_ContainerAlwaysAutoTransferList
+Name:
+  TargetLanguage: English
+  Value: Always Auto Transfer List
+Keywords:
+- 091FD4:Fallout4.esm
+OpenSound: 0F40FB:Fallout4.esm
+CloseSound: 0F40FC:Fallout4.esm
+FilterList: 00081A:Portable Junk Recycler Mk 2.esp

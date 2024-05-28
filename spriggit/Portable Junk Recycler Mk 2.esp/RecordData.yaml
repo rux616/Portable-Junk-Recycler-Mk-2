@@ -1,0 +1,21 @@
+SpriggitSource:
+  PackageName: Spriggit.Yaml.Fallout4
+  Version: 0.18.0
+ModKey: Portable Junk Recycler Mk 2.esp
+GameRelease: Fallout4
+ModHeader:
+  Flags:
+  - Light
+  Stats:
+    NumRecords: 71
+    NextFormID: 2341
+  Author: rux616
+  Description: >-
+    A highly configurable device that will scrap junk items transferred into its inventory, returning the component parts.
+
+
+    Version: 1.2.1
+  MasterReferences:
+  - Master: Fallout4.esm
+    FileSize: 0
+  INTV: 0x01000000

@@ -1,0 +1,12 @@
+FormKey: 000916:Portable Junk Recycler Mk 2.esp
+VersionControl: 11103
+EditorID: PJRM2_Message_UninstallFailRunning
+Description:
+  TargetLanguage: English
+  Value: >-
+    <font size='24'><b><u>Portable Junk Recycler Mk 2</u></b></font>
+
+
+    Could not initiate uninstall because there's a recycling process currently running.
+Flags:
+- MessageBox

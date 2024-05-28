@@ -1,0 +1,25 @@
+SpriggitSource:
+  PackageName: Spriggit.Yaml.Fallout4
+  Version: 0.18.0
+ModKey: PJRM2 Crafting Category Override - LKR Devices.esp
+GameRelease: Fallout4
+ModHeader:
+  Flags:
+  - Light
+  Stats:
+    Version: 0.95
+    NumRecords: 3
+    NextFormID: 2048
+  Author: rux616
+  Description: >-
+    Changes the category of the Portable Junk Recycler Mk 2 recipe to "DEVICES" from Lively's Keyword Resource v1.0+.
+
+
+    Version: 1.2.1
+  MasterReferences:
+  - Master: Fallout4.esm
+    FileSize: 0
+  - Master: Portable Junk Recycler Mk 2.esp
+    FileSize: 0
+  - Master: Livelys Keyword Resource.esp
+    FileSize: 0

@@ -1,0 +1,26 @@
+FormKey: 000861:Portable Junk Recycler Mk 2.esp
+EditorID: PJRM2_ItemConstructableSimple
+Components:
+- Component: 01FA9A:Fallout4.esm
+  Count: 5
+- Component: 01FA9B:Fallout4.esm
+  Count: 3
+- Component: 01FAB0:Fallout4.esm
+  Count: 5
+- Component: 01FAB3:Fallout4.esm
+  Count: 20
+- Component: 01FAB7:Fallout4.esm
+  Count: 6
+- Component: 01FABD:Fallout4.esm
+  Count: 20
+- Component: 03D294:Fallout4.esm
+  Count: 12
+Description:
+  TargetLanguage: English
+  Value: ''
+CreatedObject: 000840:Portable Junk Recycler Mk 2.esp
+WorkbenchKeyword: 000870:Portable Junk Recycler Mk 2.esp
+Categories:
+- 001768:ArmorKeywords.esm
+CreatedObjectCounts:
+- Count: 1
