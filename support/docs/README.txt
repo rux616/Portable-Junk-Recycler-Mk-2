@@ -2,6 +2,8 @@ Portable Junk Recycler Mk 2
 ===========================
 by rux616
 
+Version: 1.2.1
+
 Table Of Contents
 -----------------
 - Portable Junk Recycler Mk 2
