@@ -1,0 +1,19 @@
+SpriggitSource:
+  PackageName: Spriggit.Yaml.Fallout4
+  Version: 0.18.0
+ModKey: PJRM2 Test Items.esp
+GameRelease: Fallout4
+ModHeader:
+  Flags:
+  - Light
+  Stats:
+    NumRecords: 7
+    NextFormID: 2054
+  Author: rux616
+  Description: 1.2.1
+  MasterReferences:
+  - Master: Fallout4.esm
+    FileSize: 0
+  - Master: Portable Junk Recycler Mk 2.esp
+    FileSize: 0
+  INTV: 0x01000000

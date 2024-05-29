@@ -1,0 +1,42 @@
+FormKey: 000802:PJRM2 Test Items.esp
+VersionControl: 11043
+EditorID: PJRM2TestItemU
+ObjectBounds:
+  First: -4, -2, 0
+  Second: 4, 2, 3
+PreviewTransform: 23E9EF:Fallout4.esm
+Name:
+  TargetLanguage: English
+  Value: PJRM2 Test Item U
+Model:
+  File: Props\SynthChip\SynthChip.nif
+  Data: 0x0400000000000000000000000000000000000000
+Value: 1
+Weight: 1
+Components:
+- Component: 01FAA5:Fallout4.esm
+  Count: 100
+- Component: 01FA91:Fallout4.esm
+  Count: 100
+- Component: 01FA9C:Fallout4.esm
+  Count: 100
+- Component: 01FA9D:Fallout4.esm
+  Count: 100
+- Component: 05A0C7:Fallout4.esm
+  Count: 100
+- Component: 01FAA1:Fallout4.esm
+  Count: 100
+- Component: 01FAB0:Fallout4.esm
+  Count: 100
+- Component: 01FAA4:Fallout4.esm
+  Count: 100
+- Component: 01FAAD:Fallout4.esm
+  Count: 100
+- Component: 01FAB4:Fallout4.esm
+  Count: 100
+- Component: 03D294:Fallout4.esm
+  Count: 100
+- Component: 01FABB:Fallout4.esm
+  Count: 100
+- Component: 01FABC:Fallout4.esm
+  Count: 100

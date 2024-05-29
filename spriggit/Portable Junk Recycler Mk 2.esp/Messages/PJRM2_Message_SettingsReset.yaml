@@ -1,0 +1,12 @@
+FormKey: 000909:Portable Junk Recycler Mk 2.esp
+VersionControl: 11065
+EditorID: PJRM2_Message_SettingsReset
+Description:
+  TargetLanguage: English
+  Value: >-
+    <font size='24'><b><u>Portable Junk Recycler Mk 2</u></b></font>
+
+
+    Settings have been reset to their default values.
+Flags:
+- MessageBox

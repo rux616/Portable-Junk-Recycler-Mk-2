@@ -1,0 +1,7 @@
+FormKey: 000908:Portable Junk Recycler Mk 2.esp
+VersionControl: 11051
+EditorID: PJRM2_Message_FinishedNothingUsesLeft
+Description:
+  TargetLanguage: English
+  Value: Recycling process complete; nothing to recycle. (%.0f uses remaining)
+DisplayTime: 2

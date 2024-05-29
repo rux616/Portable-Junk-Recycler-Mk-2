@@ -1,0 +1,19 @@
+FormKey: 000923:Portable Junk Recycler Mk 2.esp
+VersionControl: 11161
+EditorID: PJRM2_Message_IntentionalMoveQueryContainer
+Description:
+  TargetLanguage: English
+  Value: >-
+    <font size='24'><b><u>Portable Junk Recycler Mk 2</u></b></font>
+
+
+    The last Portable Junk Recycler Mk 2 has been moved out of your inventory. Move one back?
+Flags:
+- MessageBox
+MenuButtons:
+- Text:
+    TargetLanguage: English
+    Value: No
+- Text:
+    TargetLanguage: English
+    Value: Yes

@@ -1,0 +1,12 @@
+FormKey: 00091D:Portable Junk Recycler Mk 2.esp
+VersionControl: 11112
+EditorID: PJRM2_Message_AlwaysAutoTransferListReset
+Description:
+  TargetLanguage: English
+  Value: >-
+    <font size='24'><b><u>Portable Junk Recycler Mk 2</u></b></font>
+
+
+    Always auto transfer list has been cleared.
+Flags:
+- MessageBox

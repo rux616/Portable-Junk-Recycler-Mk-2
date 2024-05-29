@@ -1,0 +1,12 @@
+FormKey: 000921:Portable Junk Recycler Mk 2.esp
+VersionControl: 11112
+EditorID: PJRM2_Message_NeverAutoTransferListResetFailBusy
+Description:
+  TargetLanguage: English
+  Value: >-
+    <font size='24'><b><u>Portable Junk Recycler Mk 2</u></b></font>
+
+
+    Could not reset the never auto transfer list because the control script is currently busy. Try again in a few seconds.
+Flags:
+- MessageBox

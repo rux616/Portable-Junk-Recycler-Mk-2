@@ -1,0 +1,26 @@
+FormKey: 000840:Portable Junk Recycler Mk 2.esp
+VersionControl: 11035
+EditorID: PJRM2_Item
+ObjectBounds:
+  First: -12, -5, 0
+  Second: 13, 5, 17
+PreviewTransform: 000850:Portable Junk Recycler Mk 2.esp
+Name:
+  TargetLanguage: English
+  Value: Portable Junk Recycler Mk 2
+Model:
+  File: Meshes\PortableJunkRecyclerMk2\PortableJunkRecyclerMk2.nif
+  Data: 0x0400000000000000000000000000000000000000
+Description:
+  TargetLanguage: English
+  Value: Scrap junk items on the go.
+Weight: 3
+Value: 150
+Flags:
+- NoAutoCalc
+AddictionName:
+  TargetLanguage: English
+  Value: ''
+Effects:
+- BaseEffect: 000820:Portable Junk Recycler Mk 2.esp
+  Data: {}

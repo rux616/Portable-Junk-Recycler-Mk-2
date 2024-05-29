@@ -1,0 +1,12 @@
+FormKey: 000901:Portable Junk Recycler Mk 2.esp
+VersionControl: 11090
+EditorID: PJRM2_Message_MCMNotDetected
+Description:
+  TargetLanguage: English
+  Value: >-
+    <font size='24'><b><u>Portable Junk Recycler Mk 2</u></b></font>
+
+
+    ERROR: MCM not detected! Please make sure that it is properly installed.
+Flags:
+- MessageBox

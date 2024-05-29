@@ -1,0 +1,12 @@
+FormKey: 00091F:Portable Junk Recycler Mk 2.esp
+VersionControl: 11112
+EditorID: PJRM2_Message_AlwaysAutoTransferListResetFailRunning
+Description:
+  TargetLanguage: English
+  Value: >-
+    <font size='24'><b><u>Portable Junk Recycler Mk 2</u></b></font>
+
+
+    Could not reset the always auto transfer list because there's a recycling process currently running.
+Flags:
+- MessageBox

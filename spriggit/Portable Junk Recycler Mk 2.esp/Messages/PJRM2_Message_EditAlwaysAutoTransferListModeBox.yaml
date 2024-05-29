@@ -1,0 +1,15 @@
+FormKey: 000917:Portable Junk Recycler Mk 2.esp
+VersionControl: 11112
+EditorID: PJRM2_Message_EditAlwaysAutoTransferListModeBox
+Description:
+  TargetLanguage: English
+  Value: >-
+    <font size='24'><b><u>Portable Junk Recycler Mk 2</u></b></font>
+
+
+    You are now editing the list of items that will <u>always</u> be automatically transferred to the recycler inventory.
+
+
+    Any excess items (i.e. more than 1) will be returned.
+Flags:
+- MessageBox

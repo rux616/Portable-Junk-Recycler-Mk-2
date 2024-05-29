@@ -1,0 +1,31 @@
+<?xml version='1.0'?>
+<!-- Created by vscode papyrus-lang papyrus.fallout4.generateProject -->
+<PapyrusProject
+    xmlns="PapyrusProject.xsd"
+    Game="fo4"
+    Flags="Institute_Papyrus_Flags.flg"
+    Output="@CompilePath"
+    Asm="Discard"
+    Optimize="false"
+    Release="false"
+    Final="false"
+    Anonymize="true"
+    Package="false"
+    Zip="false"
+>
+    <Variables>
+        <Variable Name="RepoPath" Value="."/>
+        <Variable Name="ImportPath" Value="@RepoPath\support\papyrus-imports"/>
+        <Variable Name="DataPath" Value="@RepoPath\data"/>
+        <Variable Name="CompilePath" Value="@DataPath\Scripts"/>
+        <Variable Name="ScriptsPath" Value="@CompilePath\Source\User"/>
+    </Variables>
+    <Imports>
+        <Import>@ImportPath\mcm\Source</Import>
+        <Import>@ImportPath\f4se\Source</Import>
+        <Import>@ImportPath\vanilla\Source</Import>
+    </Imports>
+    <Folders>
+        <Folder>@ScriptsPath</Folder>
+    </Folders>
+</PapyrusProject>
