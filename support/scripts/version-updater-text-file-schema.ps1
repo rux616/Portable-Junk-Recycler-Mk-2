@@ -75,19 +75,3 @@ $text_files.Add(@{
             }
         )
     })
-$text_files.Add(@{
-        # data\Scripts\Source\User\Portable Junk Recycler Mk 2 - Release.ppj
-        # <Variable Name="ModVersion" Value="..."/>
-        # <Variable Name="ModVersionWithBuild" Value="..."/>
-        file               = ".\data\Scripts\Source\User\Portable Junk Recycler Mk 2 - Release.ppj"
-        search_and_replace = @(
-            @{
-                search  = "(<Variable Name=`"ModVersion`" Value=`").*(`"/>)"
-                replace = "`${1}$version`${2}"
-            },
-            @{
-                search  = "(<Variable Name=`"ModVersionWithBuild`" Value=`").*(`"/>)"
-                replace = "`${1}$($version.ToString($true))`${2}"
-            }
-        )
-    })
