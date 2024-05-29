@@ -1,105 +1,108 @@
 {
-    "version": "2.0.0",
-    "options": {
-        "shell": {
-            "executable": "pwsh.exe",
-            "args": [
-                "-ExecutionPolicy",
-                "Bypass",
-                "-Command",
-            ]
-        },
-        "cwd": "${workspaceFolder}",
+  "version": "2.0.0",
+  "options": {
+    "shell": {
+      "executable": "pwsh.exe",
+      "args": ["-ExecutionPolicy", "Bypass", "-Command"]
+    }
+  },
+  "tasks": [
+    {
+      "label": "Build",
+      "type": "shell",
+      "command": "echo",
+      "args": ["Build complete!"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Update Versions",
+        "Render Markdown to Nexus BBCode",
+        "Render Markdown to Plaintext",
+        "Format Jsonnet",
+        "Render JSON",
+        "Serialize Plugins",
+        "pyro: Compile Project",
+        "Create Archives"
+      ]
     },
-    "tasks": [
-        {
-            "type": "pyro",
-            "projectFile": "Scripts\\Source\\User\\Portable Junk Recycler Mk 2 - Release.ppj",
-            "gamePath": "D:\\Games\\SteamLibrary\\steamapps\\common\\Fallout 4",
-            "problemMatcher": [
-                "$PapyrusCompiler"
-            ],
-            "label": "pyro: Compile Project (Release)",
-            "group": {
-                "kind": "build",
-                "isDefault": true,
-            },
-            "dependsOn": [
-                "pyro: Compile Project (Debug)"
-            ],
-        },
-        {
-            "type": "pyro",
-            "projectFile": "Scripts\\Source\\User\\Portable Junk Recycler Mk 2 - Debug.ppj",
-            "gamePath": "D:\\Games\\SteamLibrary\\steamapps\\common\\Fallout 4",
-            "problemMatcher": [
-                "$PapyrusCompiler"
-            ],
-            "label": "pyro: Compile Project (Debug)",
-            "dependsOn": [
-                "Render JSON"
-            ],
-        },
-        {
-            "label": "Render JSON",
-            "type": "shell",
-            "command": "./Working/bin/jsonnet/jsonnet.exe",
-            "args": [
-                "-m",
-                "./MCM/Config/Portable Junk Recycler Mk 2",
-                "./MCM/Config/Portable Junk Recycler Mk 2/Portable Junk Recycler Mk 2.jsonnet",
-            ],
-            "dependsOn": [
-                "Format Jsonnet"
-            ],
-        },
-        {
-            "label": "Format Jsonnet",
-            "type": "shell",
-            "command": "./Working/bin/jsonnet/jsonnetfmt.exe",
-            "args": [
-                "-i",
-                "./MCM/Config/Portable Junk Recycler Mk 2/Portable Junk Recycler Mk 2.jsonnet",
-                "./MCM/Config/Portable Junk Recycler Mk 2/lib/mcm.libsonnet",
-            ],
-            "dependsOn": [
-                "Render Markdown to Nexus BBCode"
-            ],
-        },
-        {
-            "label": "Render Markdown to Nexus BBCode",
-            "type": "shell",
-            "command": "./Working/Scripts/markdown-to-nexusbbcode.ps1",
-            "args": [
-                "./Docs/Portable Junk Recycler Mk 2/README.md",
-            ],
-            "dependsOn": [
-                "Render Markdown to Plaintext"
-            ],
-        },
-        {
-            "label": "Render Markdown to Plaintext",
-            "type": "shell",
-            "command": "./Working/Scripts/markdown-to-plaintext.ps1",
-            "args": [
-                "./Docs/Portable Junk Recycler Mk 2/README.md",
-                "./Docs/Portable Junk Recycler Mk 2/CHANGELOG.md",
-            ],
-            "dependsOn": [
-                "Update Versions"
-            ],
-        },
-        {
-            "label": "Update Versions",
-            "type": "shell",
-            "command": "./Working/Scripts/version-updater.ps1",
-        },
-        {
-            "label": "Remove compiled Papyrus scripts",
-            "type": "shell",
-            "windows": {
-                "command": "Get-ChildItem -Path '.' -Filter '*.pex' -Recurse | Remove-Item"
-            },
-        },
-    ]
+    {
+      "label": "Update Versions",
+      "type": "shell",
+      "command": "./support/common/scripts/version-updater.ps1",
+      "args": ["-SkipBackup", "-SkipBuildIncrement"]
+    },
+    {
+      "label": "Render Markdown to Nexus BBCode",
+      "type": "shell",
+      "command": "./support/common/scripts/markdown-to-nexusbbcode.ps1",
+      "args": ["./support/docs/README.md"]
+    },
+    {
+      "label": "Render Markdown to Plaintext",
+      "type": "shell",
+      "command": "./support/common/scripts/markdown-to-plaintext.ps1",
+      "args": ["./support/docs//README.md", "./support/docs/CHANGELOG.md"]
+    },
+    {
+      "label": "Format Jsonnet",
+      "type": "shell",
+      "command": "./support/jsonnet/bin/jsonnetfmt.exe",
+      "args": [
+        "-i",
+        "./support/scripts/Portable Junk Recycler Mk 2.jsonnet",
+        "./support/jsonnet/lib/mcm.libsonnet"
+      ]
+    },
+    {
+      "label": "Render JSON",
+      "type": "shell",
+      "command": "./support/jsonnet/bin/jsonnet.exe",
+      "args": [
+        "-J",
+        "./support/jsonnet",
+        "-m",
+        "./data/MCM/Config/Portable Junk Recycler Mk 2",
+        "./support/scripts/Portable Junk Recycler Mk 2.jsonnet"
+      ]
+    },
+    {
+      "label": "Serialize Plugins",
+      "type": "shell",
+      "command": "./support/common/scripts/serialize-plugins.ps1",
+      "args": ["-Fallout4", "-YAML"]
+    },
+    {
+      "label": "pyro: Compile Project",
+      "type": "pyro",
+      "projectFile": "Portable Junk Recycler Mk 2.ppj",
+      "gamePath": "./support/papyrus-imports/vanilla/bin",
+      "problemMatcher": ["$PapyrusCompiler"]
+    },
+    {
+      "label": "Create Archives",
+      "type": "shell",
+      "command": "./support/common/scripts/build-archives.ps1",
+      "args": [
+        "-ModName",
+        "Portable Junk Recycler Mk 2",
+        "-PluginName",
+        "Portable Junk Recycler Mk 2",
+        "-Exclude",
+        "PJRM2 Test Items.esp",
+        "-IncludeBuildNumber",
+        "-PutInVersionSubdirectory",
+        "-Fallout4"
+      ]
+    },
+    {
+      "label": "Remove compiled Papyrus scripts",
+      "type": "shell",
+      "windows": {
+        "command": "Get-ChildItem -Path '.' -Filter '*.pex' -Recurse | Remove-Item"
+      }
+    }
+  ]
 }
