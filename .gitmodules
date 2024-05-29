@@ -10,3 +10,6 @@
 [submodule "support/papyrus-imports/f4se"]
 	path = support/papyrus-imports/f4se
 	url = https://github.com/rux616/modding-fo4-scripts-f4se
+[submodule "support/papyrus-imports/mcm"]
+	path = support/papyrus-imports/mcm
+	url = https://github.com/rux616/modding-fo4-scripts-mcm
