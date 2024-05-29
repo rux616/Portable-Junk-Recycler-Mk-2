@@ -54,9 +54,9 @@ $text_files.Add(@{
         encoding           = "Unicode"
     })
 $text_files.Add(@{
-        # data\MCM\Config\Portable Junk Recycler Mk 2\Portable Junk Recycler Mk 2.jsonnet
+        # support\scripts\Portable Junk Recycler Mk 2.jsonnet
         # version: '...',
-        file               = ".\data\MCM\Config\Portable Junk Recycler Mk 2\Portable Junk Recycler Mk 2.jsonnet"
+        file               = ".\support\scripts\Portable Junk Recycler Mk 2.jsonnet"
         search_and_replace = @(
             @{
                 search  = "(version: ').*(',)"
