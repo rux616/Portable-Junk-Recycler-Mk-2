@@ -19,6 +19,7 @@
       "dependsOrder": "sequence",
       "dependsOn": [
         "Update Versions",
+        "Sanitize FOMOD XML Files",
         "Render Markdown to Nexus BBCode",
         "Render Markdown to Plaintext",
         "Format Jsonnet",
@@ -32,7 +33,12 @@
       "label": "Update Versions",
       "type": "shell",
       "command": "./support/common/scripts/version-updater.ps1",
-      "args": ["-SkipBackup", "-SkipBuildIncrement"]
+      "args": ["-SkipBackup"]
+    },
+    {
+      "label": "Sanitize FOMOD XML Files",
+      "type": "shell",
+      "command": "./support/common/scripts/sanitize-fomod-xml.ps1"
     },
     {
       "label": "Render Markdown to Nexus BBCode",
