@@ -87,6 +87,7 @@
     },
     "papyrus.skyrim.enabled": false,
     "papyrus.skyrimSpecialEdition.enabled": false,
-    "trailing-spaces.trimOnSave": true
+    "trailing-spaces.trimOnSave": true,
+    "powershell.powerShellDefaultVersion": "PowerShell (Store)"
   }
 }
