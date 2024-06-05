@@ -59,7 +59,7 @@ local threads_step = 1;
   local mod = {
     name: 'Portable Junk Recycler Mk 2',
     localized_name: '$PortableJunkRecyclerMk2',
-    version: '1.2.1',
+    version: '1.3.0',
     plugin_name: mod.name + '.esp',
     quest_form: mod.plugin_name + '|800',
     control_script: 'PortableJunkRecyclerMk2:PJRM2_ControlManager',

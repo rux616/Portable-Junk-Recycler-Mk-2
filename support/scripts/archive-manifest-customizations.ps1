@@ -1,4 +1,4 @@
-# Copyright 2023 Dan Cassidy
+# Copyright 2024 Dan Cassidy
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,20 +16,11 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 
-# define the version of the project
+# customizations for the archive manifests
 
-# version info
-$version_major = 1
-$version_minor = 3
-$version_patch = 0
+$additional_exclude_all = @("dummy_placeholder.STRINGS")
 
-# prerelease info
-$version_prerelease = 0
-$is_pre = $false
-$is_rc = $false
-$is_beta = $false
-$is_alpha = $false
+$additional_exclude_ba2 = @("Interface\Translations\*.txt")
 
-# build info
-$build_number = 357
-$include_build_in_version = $false
+$additional_exclude_7z = @("PJRM2 Test Items.esp")
+$additional_include_7z = @("Interface\Translations\*.txt", "Scripts\Source\*.psc")

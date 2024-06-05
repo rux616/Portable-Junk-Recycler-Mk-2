@@ -14,7 +14,7 @@ ModHeader:
     A highly configurable device that will scrap junk items transferred into its inventory, returning the component parts.
 
 
-    Version: 1.2.1
+    Version: 1.3.0
   MasterReferences:
   - Master: Fallout4.esm
     FileSize: 0

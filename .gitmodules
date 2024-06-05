@@ -1,15 +1,20 @@
 [submodule "support/common"]
 	path = support/common
 	url = https://github.com/rux616/modding-build-release-scripts
+	branch = main
 [submodule "support/jsonnet"]
 	path = support/jsonnet
 	url = https://github.com/rux616/modding-fo4-mcm-jsonnet-library
+	branch = main
 [submodule "support/papyrus-imports/vanilla"]
 	path = support/papyrus-imports/vanilla
 	url = https://github.com/rux616/modding-fo4-scripts-vanilla
+	branch = main
 [submodule "support/papyrus-imports/f4se"]
 	path = support/papyrus-imports/f4se
 	url = https://github.com/rux616/modding-fo4-scripts-f4se
+	branch = main
 [submodule "support/papyrus-imports/mcm"]
 	path = support/papyrus-imports/mcm
 	url = https://github.com/rux616/modding-fo4-scripts-mcm
+	branch = main
