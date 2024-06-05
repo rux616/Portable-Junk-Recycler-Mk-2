@@ -3,7 +3,9 @@
 	<Author>rux616</Author>
 	<Version>1.2.1</Version>
 	<Website>https://www.nexusmods.com/fallout4/mods/54138</Website>
-	<Description>A highly configurable device that will scrap junk items transferred into its inventory, returning the component parts.</Description>
+	<Description>A highly configurable device that will scrap junk items transferred into its inventory, returning the component parts.
+
+Source code available at https://github.com/rux616/Portable-Junk-Recycler-Mk-2/.</Description>
 	<Groups>
 		<element>Items (Food, Drinks, Chems, etc)</element>
 	</Groups>
