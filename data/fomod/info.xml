@@ -5,7 +5,7 @@
 	<Website>https://www.nexusmods.com/fallout4/mods/54138</Website>
 	<Description>A highly configurable device that will scrap junk items transferred into its inventory, returning the component parts.
 
-Source code available at https://github.com/rux616/Portable-Junk-Recycler-Mk-2/.</Description>
+The Papyrus script source code and other supporting files are also available from the mod's repository on GitHub (https://github.com/rux616/Portable-Junk-Recycler-Mk-2).</Description>
 	<Groups>
 		<element>Items (Food, Drinks, Chems, etc)</element>
 	</Groups>
