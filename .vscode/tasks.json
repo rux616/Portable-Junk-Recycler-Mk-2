@@ -56,11 +56,7 @@
       "label": "Format Jsonnet",
       "type": "shell",
       "command": "./support/jsonnet/bin/jsonnetfmt.exe",
-      "args": [
-        "-i",
-        "./support/scripts/Portable Junk Recycler Mk 2.jsonnet",
-        "./support/jsonnet/lib/mcm.libsonnet"
-      ]
+      "args": ["-i", "./support/scripts/Portable Junk Recycler Mk 2.jsonnet", "./support/jsonnet/lib/mcm.libsonnet"]
     },
     {
       "label": "Render JSON",
@@ -91,17 +87,7 @@
       "label": "Create Archives",
       "type": "shell",
       "command": "./support/common/scripts/build-archives.ps1",
-      "args": [
-        "-ModName",
-        "Portable Junk Recycler Mk 2",
-        "-PluginName",
-        "Portable Junk Recycler Mk 2",
-        "-Exclude",
-        "PJRM2 Test Items.esp",
-        "-IncludeBuildNumber",
-        "-PutInVersionSubdirectory",
-        "-Fallout4"
-      ]
+      "args": ["-ModName", "Portable Junk Recycler Mk 2", "-PluginName", "Portable Junk Recycler Mk 2", "-Fallout4"]
     },
     {
       "label": "Remove compiled Papyrus scripts",
