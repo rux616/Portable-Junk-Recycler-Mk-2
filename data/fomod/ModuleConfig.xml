@@ -3,6 +3,8 @@
 	<moduleName>Portable Junk Recycler Mk 2</moduleName>
 	<requiredInstallFiles>
 		<file source="Portable Junk Recycler Mk 2.esp" destination="Portable Junk Recycler Mk 2.esp" />
+		<file source="Portable Junk Recycler Mk 2 - Main.ba2" destination="Portable Junk Recycler Mk 2 - Main.ba2" />
+		<file source="Portable Junk Recycler Mk 2 - Textures.ba2" destination="Portable Junk Recycler Mk 2 - Textures.ba2" />
 		<folder source="Docs" destination="Docs" />
 		<folder source="Interface" destination="Interface" />
 		<folder source="MCM" destination="MCM" />
@@ -16,98 +18,6 @@
 							<description>The main plugin file. Required.
 
 A highly configurable device that will scrap junk items transferred into its inventory, returning the component parts.</description>
-							<typeDescriptor>
-								<type name="Optional"/>
-							</typeDescriptor>
-						</plugin>
-					</plugins>
-				</group>
-				<group name="Textures" type="SelectExactlyOne">
-					<plugins order="Explicit">
-						<plugin name="High Res Textures (Default)">
-							<description>High resolution (2048x2048) textures.</description>
-							<conditionFlags>
-								<flag name="high_res_textures">On</flag>
-							</conditionFlags>
-							<typeDescriptor>
-								<type name="Optional"/>
-							</typeDescriptor>
-						</plugin>
-						<plugin name="Low Res Textures">
-							<description>Low resolution (512x512) textures. Matches vanilla resolution.</description>
-							<conditionFlags>
-								<flag name="high_res_textures">Off</flag>
-							</conditionFlags>
-							<typeDescriptor>
-								<type name="Optional"/>
-							</typeDescriptor>
-						</plugin>
-					</plugins>
-				</group>
-				<group name="Scripts" type="SelectExactlyOne">
-					<plugins order="Explicit">
-						<plugin name="Release Scripts (Default)">
-							<description>Installs scripts that have debugging features like logging and profiling disabled. Faster. Most people will want to use this option.</description>
-							<conditionFlags>
-								<flag name="release_scripts">On</flag>
-							</conditionFlags>
-							<typeDescriptor>
-								<type name="Optional"/>
-							</typeDescriptor>
-						</plugin>
-						<plugin name="Debug Scripts">
-							<description>Installs compiled scripts that have some debugging functionality like logging and profiling.
-
-Note that logging and profiling are dependent on both having their relevant settings turned on in the fallout4custom.ini file (bEnableLogging=1 and bEnableTrace=1 for logging, bEnableProfiling=1 for profiling, all in the [Papyrus] section), and having the relevant setting turned on in the Portable Junk Recycler Mk 2 Mod Config Menu ("Advanced" page).
-
-If none of this means anything to you, you are probably wanting to use the "Release Scripts" option.</description>
-							<conditionFlags>
-								<flag name="release_scripts">Off</flag>
-							</conditionFlags>
-							<typeDescriptor>
-								<type name="Optional"/>
-							</typeDescriptor>
-						</plugin>
-					</plugins>
-				</group>
-				<group name="Archives (Textures)" type="SelectExactlyOne">
-					<plugins order="Explicit">
-						<plugin name="Archives (Default)">
-							<description>This option installs the textures packed in a BA2 archive. Most people will want to use this option.</description>
-							<conditionFlags>
-								<flag name="archives_textures">On</flag>
-							</conditionFlags>
-							<typeDescriptor>
-								<type name="Optional"/>
-							</typeDescriptor>
-						</plugin>
-						<plugin name="Loose Files">
-							<description>This option installs the textures as loose files instead of packed inside a BA2 archive.</description>
-							<conditionFlags>
-								<flag name="archives_textures">Off</flag>
-							</conditionFlags>
-							<typeDescriptor>
-								<type name="Optional"/>
-							</typeDescriptor>
-						</plugin>
-					</plugins>
-				</group>
-				<group name="Archives (Other)" type="SelectExactlyOne">
-					<plugins order="Explicit">
-						<plugin name="Archives (Default)">
-							<description>This option installs meshes and scripts packed in BA2 archives. Most people will want to use this option.</description>
-							<conditionFlags>
-								<flag name="archives_other">On</flag>
-							</conditionFlags>
-							<typeDescriptor>
-								<type name="Optional"/>
-							</typeDescriptor>
-						</plugin>
-						<plugin name="Loose Files">
-							<description>This option installs meshes and scripts as loose files instead of packed inside BA2 archives.</description>
-							<conditionFlags>
-								<flag name="archives_other">Off</flag>
-							</conditionFlags>
 							<typeDescriptor>
 								<type name="Optional"/>
 							</typeDescriptor>
@@ -374,19 +284,6 @@ The plugin files for the other overrides are installed into the "Optional" folde
 						</plugin>
 					</plugins>
 				</group>
-				<group name="Other" type="SelectAny">
-					<plugins order="Explicit">
-						<plugin name="Script Source">
-							<description>Installs the source code for the mod. Licensed under the GPL 3.0 (or later).</description>
-							<conditionFlags>
-								<flag name="source">On</flag>
-							</conditionFlags>
-							<typeDescriptor>
-								<type name="Optional"/>
-							</typeDescriptor>
-						</plugin>
-					</plugins>
-				</group>
 			</optionalFileGroups>
 		</installStep>
 	</installSteps>
@@ -394,102 +291,14 @@ The plugin files for the other overrides are installed into the "Optional" folde
 		<patterns>
 			<pattern>
 				<dependencies operator="And">
-					<flagDependency flag="archives_other" value="On"/>
-				</dependencies>
-				<files>
-					<file source="Portable Junk Recycler Mk 2 - Meshes.ba2" destination="Portable Junk Recycler Mk 2 - Meshes.ba2" priority="0" />
-				</files>
-			</pattern>
-			<pattern>
-				<dependencies operator="And">
-					<flagDependency flag="archives_other" value="Off"/>
-				</dependencies>
-				<files>
-					<folder source="Options\Loose Files\Meshes" destination="Meshes" priority="0" />
-				</files>
-			</pattern>
-			<pattern>
-				<dependencies operator="And">
-					<flagDependency flag="archives_textures" value="On"/>
-					<flagDependency flag="high_res_textures" value="On"/>
-				</dependencies>
-				<files>
-					<file source="Portable Junk Recycler Mk 2 - Textures.ba2" destination="Portable Junk Recycler Mk 2 - Textures.ba2" priority="0" />
-				</files>
-			</pattern>
-			<pattern>
-				<dependencies operator="And">
-					<flagDependency flag="archives_textures" value="On"/>
-					<flagDependency flag="high_res_textures" value="Off"/>
-				</dependencies>
-				<files>
-					<file source="Options\Archives\Low Res Textures\Portable Junk Recycler Mk 2 - Textures.ba2" destination="Portable Junk Recycler Mk 2 - Textures.ba2" priority="0" />
-				</files>
-			</pattern>
-			<pattern>
-				<dependencies operator="And">
-					<flagDependency flag="archives_textures" value="Off"/>
-					<flagDependency flag="high_res_textures" value="On"/>
-				</dependencies>
-				<files>
-					<folder source="Options\Loose Files\High Res Textures" destination="Textures" priority="0" />
-				</files>
-			</pattern>
-			<pattern>
-				<dependencies operator="And">
-					<flagDependency flag="archives_textures" value="Off"/>
-					<flagDependency flag="high_res_textures" value="Off"/>
-				</dependencies>
-				<files>
-					<folder source="Options\Loose Files\Low Res Textures" destination="Textures" priority="0" />
-				</files>
-			</pattern>
-			<pattern>
-				<dependencies operator="And">
-					<flagDependency flag="archives_other" value="On"/>
-					<flagDependency flag="release_scripts" value="On"/>
-				</dependencies>
-				<files>
-					<file source="Portable Junk Recycler Mk 2 - Scripts.ba2" destination="Portable Junk Recycler Mk 2 - Scripts.ba2" priority="0" />
-				</files>
-			</pattern>
-			<pattern>
-				<dependencies operator="And">
-					<flagDependency flag="archives_other" value="On"/>
-					<flagDependency flag="release_scripts" value="Off"/>
-				</dependencies>
-				<files>
-					<file source="Options\Archives\Debug Scripts\Portable Junk Recycler Mk 2 - Scripts.ba2" destination="Portable Junk Recycler Mk 2 - Scripts.ba2" priority="0" />
-				</files>
-			</pattern>
-			<pattern>
-				<dependencies operator="And">
-					<flagDependency flag="archives_other" value="Off"/>
-					<flagDependency flag="release_scripts" value="On"/>
-				</dependencies>
-				<files>
-					<folder source="Options\Loose Files\Release Scripts" destination="Scripts" priority="0" />
-				</files>
-			</pattern>
-			<pattern>
-				<dependencies operator="And">
-					<flagDependency flag="archives_other" value="Off"/>
-					<flagDependency flag="release_scripts" value="Off"/>
-				</dependencies>
-				<files>
-					<folder source="Options\Loose Files\Debug Scripts" destination="Scripts" priority="0" />
-				</files>
-			</pattern>
-			<pattern>
-				<dependencies operator="And">
 					<flagDependency flag="cco_awkcr_devices" value="On"/>
 				</dependencies>
 				<files>
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - AWKCR Devices.esp" destination="PJRM2 Crafting Category Override - AWKCR Devices.esp" priority="0" />
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - AWKCR Other.esp" destination="Optional\PJRM2 Crafting Category Override - AWKCR Other.esp" priority="0" />
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - AWKCR Tools.esp" destination="Optional\PJRM2 Crafting Category Override - AWKCR Tools.esp" priority="0" />
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - LKR Devices.esp" destination="Optional\PJRM2 Crafting Category Override - LKR Devices.esp" priority="0" />
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - LKR Utility.esp" destination="Optional\PJRM2 Crafting Category Override - LKR Utility.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - AWKCR Devices.esp" destination="PJRM2 Crafting Category Override - AWKCR Devices.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - AWKCR Other.esp" destination="optional\PJRM2 Crafting Category Override - AWKCR Other.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - AWKCR Tools.esp" destination="optional\PJRM2 Crafting Category Override - AWKCR Tools.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - LKR Devices.esp" destination="optional\PJRM2 Crafting Category Override - LKR Devices.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - LKR Utility.esp" destination="optional\PJRM2 Crafting Category Override - LKR Utility.esp" priority="0" />
 				</files>
 			</pattern>
 			<pattern>
@@ -497,11 +306,11 @@ The plugin files for the other overrides are installed into the "Optional" folde
 					<flagDependency flag="cco_awkcr_other" value="On"/>
 				</dependencies>
 				<files>
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - AWKCR Devices.esp" destination="Optional\PJRM2 Crafting Category Override - AWKCR Devices.esp" priority="0" />
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - AWKCR Other.esp" destination="PJRM2 Crafting Category Override - AWKCR Other.esp" priority="0" />
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - AWKCR Tools.esp" destination="Optional\PJRM2 Crafting Category Override - AWKCR Tools.esp" priority="0" />
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - LKR Devices.esp" destination="Optional\PJRM2 Crafting Category Override - LKR Devices.esp" priority="0" />
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - LKR Utility.esp" destination="Optional\PJRM2 Crafting Category Override - LKR Utility.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - AWKCR Devices.esp" destination="optional\PJRM2 Crafting Category Override - AWKCR Devices.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - AWKCR Other.esp" destination="PJRM2 Crafting Category Override - AWKCR Other.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - AWKCR Tools.esp" destination="optional\PJRM2 Crafting Category Override - AWKCR Tools.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - LKR Devices.esp" destination="optional\PJRM2 Crafting Category Override - LKR Devices.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - LKR Utility.esp" destination="optional\PJRM2 Crafting Category Override - LKR Utility.esp" priority="0" />
 				</files>
 			</pattern>
 			<pattern>
@@ -509,11 +318,11 @@ The plugin files for the other overrides are installed into the "Optional" folde
 					<flagDependency flag="cco_awkcr_tools" value="On"/>
 				</dependencies>
 				<files>
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - AWKCR Devices.esp" destination="Optional\PJRM2 Crafting Category Override - AWKCR Devices.esp" priority="0" />
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - AWKCR Other.esp" destination="Optional\PJRM2 Crafting Category Override - AWKCR Other.esp" priority="0" />
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - AWKCR Tools.esp" destination="PJRM2 Crafting Category Override - AWKCR Tools.esp" priority="0" />
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - LKR Devices.esp" destination="Optional\PJRM2 Crafting Category Override - LKR Devices.esp" priority="0" />
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - LKR Utility.esp" destination="Optional\PJRM2 Crafting Category Override - LKR Utility.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - AWKCR Devices.esp" destination="optional\PJRM2 Crafting Category Override - AWKCR Devices.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - AWKCR Other.esp" destination="optional\PJRM2 Crafting Category Override - AWKCR Other.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - AWKCR Tools.esp" destination="PJRM2 Crafting Category Override - AWKCR Tools.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - LKR Devices.esp" destination="optional\PJRM2 Crafting Category Override - LKR Devices.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - LKR Utility.esp" destination="optional\PJRM2 Crafting Category Override - LKR Utility.esp" priority="0" />
 				</files>
 			</pattern>
 			<pattern>
@@ -521,11 +330,11 @@ The plugin files for the other overrides are installed into the "Optional" folde
 					<flagDependency flag="cco_lkr_devices" value="On"/>
 				</dependencies>
 				<files>
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - AWKCR Devices.esp" destination="Optional\PJRM2 Crafting Category Override - AWKCR Devices.esp" priority="0" />
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - AWKCR Other.esp" destination="Optional\PJRM2 Crafting Category Override - AWKCR Other.esp" priority="0" />
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - AWKCR Tools.esp" destination="Optional\PJRM2 Crafting Category Override - AWKCR Tools.esp" priority="0" />
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - LKR Devices.esp" destination="PJRM2 Crafting Category Override - LKR Devices.esp" priority="0" />
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - LKR Utility.esp" destination="Optional\PJRM2 Crafting Category Override - LKR Utility.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - AWKCR Devices.esp" destination="optional\PJRM2 Crafting Category Override - AWKCR Devices.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - AWKCR Other.esp" destination="optional\PJRM2 Crafting Category Override - AWKCR Other.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - AWKCR Tools.esp" destination="optional\PJRM2 Crafting Category Override - AWKCR Tools.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - LKR Devices.esp" destination="PJRM2 Crafting Category Override - LKR Devices.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - LKR Utility.esp" destination="optional\PJRM2 Crafting Category Override - LKR Utility.esp" priority="0" />
 				</files>
 			</pattern>
 			<pattern>
@@ -533,11 +342,11 @@ The plugin files for the other overrides are installed into the "Optional" folde
 					<flagDependency flag="cco_lkr_utility" value="On"/>
 				</dependencies>
 				<files>
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - AWKCR Devices.esp" destination="Optional\PJRM2 Crafting Category Override - AWKCR Devices.esp" priority="0" />
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - AWKCR Other.esp" destination="Optional\PJRM2 Crafting Category Override - AWKCR Other.esp" priority="0" />
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - AWKCR Tools.esp" destination="Optional\PJRM2 Crafting Category Override - AWKCR Tools.esp" priority="0" />
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - LKR Devices.esp" destination="Optional\PJRM2 Crafting Category Override - LKR Devices.esp" priority="0" />
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - LKR Utility.esp" destination="PJRM2 Crafting Category Override - LKR Utility.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - AWKCR Devices.esp" destination="optional\PJRM2 Crafting Category Override - AWKCR Devices.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - AWKCR Other.esp" destination="optional\PJRM2 Crafting Category Override - AWKCR Other.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - AWKCR Tools.esp" destination="optional\PJRM2 Crafting Category Override - AWKCR Tools.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - LKR Devices.esp" destination="optional\PJRM2 Crafting Category Override - LKR Devices.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - LKR Utility.esp" destination="PJRM2 Crafting Category Override - LKR Utility.esp" priority="0" />
 				</files>
 			</pattern>
 			<pattern>
@@ -549,11 +358,11 @@ The plugin files for the other overrides are installed into the "Optional" folde
 					<flagDependency flag="cco_lkr_utility" value="Off"/>
 				</dependencies>
 				<files>
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - AWKCR Devices.esp" destination="Optional\PJRM2 Crafting Category Override - AWKCR Devices.esp" priority="0" />
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - AWKCR Other.esp" destination="Optional\PJRM2 Crafting Category Override - AWKCR Other.esp" priority="0" />
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - AWKCR Tools.esp" destination="Optional\PJRM2 Crafting Category Override - AWKCR Tools.esp" priority="0" />
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - LKR Devices.esp" destination="Optional\PJRM2 Crafting Category Override - LKR Devices.esp" priority="0" />
-					<file source="Options\Crafting Category Overrides\PJRM2 Crafting Category Override - LKR Utility.esp" destination="Optional\PJRM2 Crafting Category Override - LKR Utility.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - AWKCR Devices.esp" destination="optional\PJRM2 Crafting Category Override - AWKCR Devices.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - AWKCR Other.esp" destination="optional\PJRM2 Crafting Category Override - AWKCR Other.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - AWKCR Tools.esp" destination="optional\PJRM2 Crafting Category Override - AWKCR Tools.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - LKR Devices.esp" destination="optional\PJRM2 Crafting Category Override - LKR Devices.esp" priority="0" />
+					<file source="PJRM2 Crafting Category Override - LKR Utility.esp" destination="optional\PJRM2 Crafting Category Override - LKR Utility.esp" priority="0" />
 				</files>
 			</pattern>
 			<pattern>
@@ -561,7 +370,7 @@ The plugin files for the other overrides are installed into the "Optional" folde
 					<flagDependency flag="ic_brainiac" value="On"/>
 				</dependencies>
 				<files>
-					<file source="Options\Interesting Configurations\Brainiac.ini" destination="MCM\Settings\Portable Junk Recycler Mk 2.ini" priority="0" />
+					<file source="MCM\Settings\Portable Junk Recycler Mk 2\Brainiac.ini" destination="MCM\Settings\Portable Junk Recycler Mk 2.ini" priority="0" />
 				</files>
 			</pattern>
 			<pattern>
@@ -569,7 +378,7 @@ The plugin files for the other overrides are installed into the "Optional" folde
 					<flagDependency flag="ic_leprechaun" value="On"/>
 				</dependencies>
 				<files>
-					<file source="Options\Interesting Configurations\Leprechaun.ini" destination="MCM\Settings\Portable Junk Recycler Mk 2.ini" priority="0" />
+					<file source="MCM\Settings\Portable Junk Recycler Mk 2\Leprechaun.ini" destination="MCM\Settings\Portable Junk Recycler Mk 2.ini" priority="0" />
 				</files>
 			</pattern>
 			<pattern>
@@ -577,7 +386,7 @@ The plugin files for the other overrides are installed into the "Optional" folde
 					<flagDependency flag="ic_loot_pinata" value="On"/>
 				</dependencies>
 				<files>
-					<file source="Options\Interesting Configurations\Loot Piñata.ini" destination="MCM\Settings\Portable Junk Recycler Mk 2.ini" priority="0" />
+					<file source="MCM\Settings\Portable Junk Recycler Mk 2\Loot Piñata.ini" destination="MCM\Settings\Portable Junk Recycler Mk 2.ini" priority="0" />
 				</files>
 			</pattern>
 			<pattern>
@@ -585,7 +394,7 @@ The plugin files for the other overrides are installed into the "Optional" folde
 					<flagDependency flag="ic_magnum_opus" value="On"/>
 				</dependencies>
 				<files>
-					<file source="Options\Interesting Configurations\Magnum Opus Wabbajack Modlist.ini" destination="MCM\Settings\Portable Junk Recycler Mk 2.ini" priority="0" />
+					<file source="MCM\Settings\Portable Junk Recycler Mk 2\Magnum Opus Wabbajack Modlist.ini" destination="MCM\Settings\Portable Junk Recycler Mk 2.ini" priority="0" />
 				</files>
 			</pattern>
 			<pattern>
@@ -593,7 +402,7 @@ The plugin files for the other overrides are installed into the "Optional" folde
 					<flagDependency flag="ic_no_bonuses" value="On"/>
 				</dependencies>
 				<files>
-					<file source="Options\Interesting Configurations\No Bonuses.ini" destination="MCM\Settings\Portable Junk Recycler Mk 2.ini" priority="0" />
+					<file source="MCM\Settings\Portable Junk Recycler Mk 2\No Bonuses.ini" destination="MCM\Settings\Portable Junk Recycler Mk 2.ini" priority="0" />
 				</files>
 			</pattern>
 			<pattern>
@@ -601,7 +410,7 @@ The plugin files for the other overrides are installed into the "Optional" folde
 					<flagDependency flag="ic_no_scrapper_no_scrap" value="On"/>
 				</dependencies>
 				<files>
-					<file source="Options\Interesting Configurations\No Scrapper, No Scrap.ini" destination="MCM\Settings\Portable Junk Recycler Mk 2.ini" priority="0" />
+					<file source="MCM\Settings\Portable Junk Recycler Mk 2\No Scrapper, No Scrap.ini" destination="MCM\Settings\Portable Junk Recycler Mk 2.ini" priority="0" />
 				</files>
 			</pattern>
 			<pattern>
@@ -609,7 +418,7 @@ The plugin files for the other overrides are installed into the "Optional" folde
 					<flagDependency flag="ic_og_portable_junk_recycler" value="On"/>
 				</dependencies>
 				<files>
-					<file source="Options\Interesting Configurations\OG Portable Junk Recycler.ini" destination="MCM\Settings\Portable Junk Recycler Mk 2.ini" priority="0" />
+					<file source="MCM\Settings\Portable Junk Recycler Mk 2\OG Portable Junk Recycler.ini" destination="MCM\Settings\Portable Junk Recycler Mk 2.ini" priority="0" />
 				</files>
 			</pattern>
 			<pattern>
@@ -617,7 +426,7 @@ The plugin files for the other overrides are installed into the "Optional" folde
 					<flagDependency flag="ic_punishing_field_use" value="On"/>
 				</dependencies>
 				<files>
-					<file source="Options\Interesting Configurations\Punishing Field Use.ini" destination="MCM\Settings\Portable Junk Recycler Mk 2.ini" priority="0" />
+					<file source="MCM\Settings\Portable Junk Recycler Mk 2\Punishing Field Use.ini" destination="MCM\Settings\Portable Junk Recycler Mk 2.ini" priority="0" />
 				</files>
 			</pattern>
 			<pattern>
@@ -625,15 +434,7 @@ The plugin files for the other overrides are installed into the "Optional" folde
 					<flagDependency flag="ic_gambler" value="On"/>
 				</dependencies>
 				<files>
-					<file source="Options\Interesting Configurations\The Gambler.ini" destination="MCM\Settings\Portable Junk Recycler Mk 2.ini" priority="0" />
-				</files>
-			</pattern>
-			<pattern>
-				<dependencies operator="And">
-					<flagDependency flag="source" value="On"/>
-				</dependencies>
-				<files>
-					<folder source="Options\Source\Scripts" destination="Scripts" priority="0" />
+					<file source="MCM\Settings\Portable Junk Recycler Mk 2\The Gambler.ini" destination="MCM\Settings\Portable Junk Recycler Mk 2.ini" priority="0" />
 				</files>
 			</pattern>
 		</patterns>
