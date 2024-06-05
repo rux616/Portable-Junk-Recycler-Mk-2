@@ -10,7 +10,7 @@ ModHeader:
     NumRecords: 7
     NextFormID: 2054
   Author: rux616
-  Description: 1.2.1
+  Description: 1.3.0
   MasterReferences:
   - Master: Fallout4.esm
     FileSize: 0

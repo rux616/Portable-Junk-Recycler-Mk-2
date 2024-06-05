@@ -2,7 +2,7 @@ Portable Junk Recycler Mk 2
 ===========================
 by rux616
 
-Version: 1.2.1
+Version: 1.3.0
 
 Table Of Contents
 -----------------
@@ -37,7 +37,6 @@ Table Of Contents
     - Scrap Categories
     - Settings Layout in MCM
 - Troubleshooting Info
-    - Installing Debug Scripts
     - Enable Debug Logging (Fallout 4)
     - Enable Debug Logging (Portable Junk Recycler Mk 2)
     - Log Location
@@ -575,10 +574,6 @@ Advanced:
 Troubleshooting Info
 ====================
 
-Installing Debug Scripts
-------------------------
-When installing the mod via a FOMOD-capable mod manager like Mod Organizer 2 or Vortex, you will get a screen that allows you to choose some installation options. One of those option categories is "Scripts", under which the option "Debug Scripts" will install scripts that have some debugging capabilities built in (or more technically, left in), such as logging and profiling (tracking how fast various function calls inside a script are).
-
 Enable Debug Logging (Fallout 4)
 ------------------------------------------
 Note: If you are using Mod Organizer 2, use the built-in INI editor via the "Tools" menu > "Tool Plugins" sub-menu > "INI Editor" option.
@@ -587,7 +582,7 @@ By default, Fallout 4 has its debug logging capabilities disabled. To enable the
 
 Enable Debug Logging (Portable Junk Recycler Mk 2)
 --------------------------------------------------
-Also by default, the logging and profiling capabilities of the mod are disabled. To enable them, go into the Mod Config menu, then to the Portable Junk Recycler Mk 2 mod, then to the "Advanced" page. The "Enable Script Logging" and "Enable Script Profiling" options are what you are looking for.
+Also by default, the logging and profiling capabilities of the mod are disabled. To enable them, go into the Mod Config menu, then to the Portable Junk Recycler Mk 2 mod, then to the "Advanced" page. The "Enable Script Logging" option is probably what you're looking for, but the "Enable Script Profiling" option is also there as well.
 
 Log Location
 ------------
