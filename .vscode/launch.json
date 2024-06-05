@@ -3,6 +3,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "PowerShell: Launch build-archives.ps1",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "./support/common/scripts/build-archives.ps1",
+      "args": ["-ModName", "'Portable Junk Recycler Mk 2'", "-PluginName", "'Portable Junk Recycler Mk 2'", "-Fallout4"]
+    },
+    {
       "name": "Fallout 4",
       "type": "papyrus",
       "request": "attach",
